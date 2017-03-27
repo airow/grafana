@@ -77,10 +77,6 @@
     .search-result-icon::before {
       content: "\f009";
     }
-
-    &.search-item-dash-home .search-result-icon::before {
-      content: "\f015";
-    }
   }
 
   .search-result-tags {
@@ -91,6 +87,18 @@
     float: right;
     padding-left: 20px;
   }
+}
+
+.search-item-child {
+  margin-left: 20px;
+}
+
+.search-item-dash-home > .search-result-link > .search-result-icon::before {
+  content: "\f015";
+}
+
+.search-item-dash-folder > .search-result-link > .search-result-icon::before {
+  content: "\f07c";
 }
 
 .search-switches {

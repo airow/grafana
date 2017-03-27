@@ -25,6 +25,7 @@ func AddMigrations(mg *Migrator) {
 	addAlertMigrations(mg)
 	addAnnotationMig(mg)
 	addTestDataMigrations(mg)
+	addUserGroupMigrations(mg)
 }
 
 func addMigrationLogMigrations(mg *Migrator) {
