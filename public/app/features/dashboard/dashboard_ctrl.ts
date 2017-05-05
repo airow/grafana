@@ -28,14 +28,17 @@ export class DashboardCtrl {
       $scope.editor = { index: 0 };
 
       //接收PostMessage发送过来的消息，通过Angular-Post-Message组件
-      $scope.$root.$on('$messageIncoming', messageIncoming.bind(this));
-
+      let messageIncomingHandler = $scope.$root.$on('$messageIncoming', messageIncoming.bind(this));
       function messageIncoming(event, data){
         console.group("grafana");
         console.log(angular.fromJson(event));
         console.log(angular.fromJson(data));
         console.groupEnd();
       }
+      $scope.$on('$destroy',function() {
+        messageIncomingHandler();
+        messageIncomingHandler = null;
+      });
 
       var resizeEventTimeout;
 
