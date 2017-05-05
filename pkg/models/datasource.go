@@ -13,6 +13,7 @@ const (
 	DS_INFLUXDB      = "influxdb"
 	DS_INFLUXDB_08   = "influxdb_08"
 	DS_ES            = "elasticsearch"
+	DS_ES_TELD       = "teld-elasticsearch-datasource" //teld-elasticsearch-datasource plugin.json文件中的id
 	DS_OPENTSDB      = "opentsdb"
 	DS_CLOUDWATCH    = "cloudwatch"
 	DS_KAIROSDB      = "kairosdb"
@@ -55,6 +56,7 @@ type DataSource struct {
 
 var knownDatasourcePlugins map[string]bool = map[string]bool{
 	DS_ES:          true,
+	DS_ES_TELD:     true,
 	DS_GRAPHITE:    true,
 	DS_INFLUXDB:    true,
 	DS_INFLUXDB_08: true,

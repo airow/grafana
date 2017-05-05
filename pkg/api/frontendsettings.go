@@ -88,6 +88,10 @@ func getFrontendSettingsMap(c *middleware.Context) (map[string]interface{}, erro
 		if ds.Type == m.DS_ES {
 			dsMap["index"] = ds.Database
 		}
+		//处理自定义组件 teld-elasticsearch-datasource 在config页面验证链接 angular.js?bust=1493995089745:12410 GET http://localhost:3000/api/datasources/proxy/10/undefined/_stats 404 (Not Found)
+		if ds.Type == m.DS_ES_TELD {
+			dsMap["index"] = ds.Database
+		}
 
 		if ds.Type == m.DS_INFLUXDB {
 			dsMap["database"] = ds.Database
