@@ -1,5 +1,4 @@
-<div style='position: absolute; margin: 30px 20px 20px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
-  <button ng-click="ctrl.sendMessage();">Send response</button>
-  <div style="background-color: wheat; height:100%;"
-  ng-bind-html="ctrl.content" ng-show="ctrl.content"></div>
+<div ng-show="ctrl.isloaded" style='position: absolute; margin: 30px 20px 20px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
+  <!--<button ng-click="ctrl.sendMessage();">Send response</button>-->
+  <div style="height:100%;" ng-bind-html="ctrl.content" ng-show="ctrl.content"></div>
 </div>

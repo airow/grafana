@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import angular from 'angular';
 import {PanelCtrl} from 'app/plugins/sdk';
+import appEvents from 'app/core/app_events';
 
 export class TeldIframePanelCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -16,7 +17,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   };
 
   /** @ngInject **/
-  constructor($scope, $injector, private templateSrv, private $sce) {
+  constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -24,6 +25,51 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
+    appEvents.on('time-range-changed', this.onTimeRangeChanged.bind(this));
+
+    let messageIncomingHandler = $scope.$root.$on('$messageIncoming', this.messageIncoming.bind(this));
+  }
+
+  isloaded = false;
+
+  messageIncoming(event, data) {
+    console.group("grafana");
+    console.log(angular.fromJson(event));
+    console.log(angular.fromJson(data));
+
+    let eventData = angular.fromJson(data);
+
+    console.group("messageIncoming.data");
+    console.log(eventData);
+
+    let that = this;
+
+    let messageIncomingHandlerConfin = {
+      "syncTimeRange": function (eventData) {
+        that.onTimeRangeChanged(that.timeSrv.time);
+        that.isloaded = true;
+      }
+    };
+
+    let messageIncomingHandler = messageIncomingHandlerConfin[eventData.eventType] || function (eventData) {
+      console.log(eventData);
+      console.log(`无${eventData.eventType}对应消息的处理方法`);
+    };
+
+    messageIncomingHandler(eventData);
+
+    console.groupEnd();
+
+    console.groupEnd();
+  }
+
+  onTimeRangeChanged(time){
+    let postMessage = {
+      "eventType" : "timeRangeChanged",
+      "eventArgs" : time
+    };
+    console.log(postMessage);
+    this.$scope.$emit('$messageOutgoing', angular.toJson(postMessage));
   }
 
   sendMessage(){
