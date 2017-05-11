@@ -8,7 +8,9 @@ import {DatasourceVariable} from './datasource_variable';
 import {CustomVariable} from './custom_variable';
 import {ConstantVariable} from './constant_variable';
 import {AdhocVariable} from './adhoc_variable';
+
 import {TeldCustomVariable} from './teld_custom_variable';
+import {TeldAdhocVariable} from './teld_adhoc_variable';
 
 export {
   VariableSrv,
@@ -18,5 +20,7 @@ export {
   CustomVariable,
   ConstantVariable,
   AdhocVariable,
+
   TeldCustomVariable,
+  TeldAdhocVariable,
 }

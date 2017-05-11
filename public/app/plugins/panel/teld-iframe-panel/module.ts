@@ -17,7 +17,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   };
 
   /** @ngInject **/
-  constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv) {
+  constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
+  private variableSrv, private dashboardSrv) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -48,6 +49,70 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       "syncTimeRange": function (eventData) {
         that.onTimeRangeChanged(that.timeSrv.time);
         that.isloaded = true;
+      },
+      "kibana.Query": function(eventData){
+
+        let esQueryDSL = eventData.eventArgs.esQueryDSL;
+
+        let tmpSrv = that.templateSrv;
+
+        that.templateSrv.getAdhocFilters("TeldElasticsearch");
+
+        //let variable_teldCustom = that.variableSrv.addVariable({type: 'teldCustom',name : 'teldana.TeldCustom'});
+
+        let teldanaAdhocModel = {type: 'adhoc',name: 'teldana_Adhoc'};
+        let indexOf = _.findIndex(that.variableSrv.variables, teldanaAdhocModel);
+        let variable_adhoc;
+        if (indexOf === -1) {
+           teldanaAdhocModel["hide"] = 0;
+           variable_adhoc = that.variableSrv.addVariable(teldanaAdhocModel);
+        }else{
+           variable_adhoc = that.variableSrv.variables[indexOf];
+        }
+
+        _(esQueryDSL).forEach(function(value) {
+          console.log(value);
+        });
+
+        //_.get(esQueryDSL, 'must[0].match["电站名称.keyword"]').query
+
+        if (esQueryDSL.must.length>0) {
+          let filters = [
+            {key: "电站名称.keyword", operator: "=", value: _.get(esQueryDSL, 'must[0].match["电站名称.keyword"]').query}
+          ];
+          variable_adhoc.setFilters(filters);
+        }
+        that.refreshDashboard();
+        console.log(eventData);
+      },
+      "kibana.RowSelected": function(eventData){
+        let row = eventData.eventArgs.row;
+
+        let teldCustomModel = {type: 'teldCustom',name : 'statName'};
+        let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
+        let variable;
+        let current = {text: row._source["电站编号"], value: row._source["电站编号"]};
+        if (indexOf === -1) {
+            teldCustomModel["hide"] = 0;
+            teldCustomModel["label"] = teldCustomModel.name;
+            teldCustomModel["query"] = current.text;
+            teldCustomModel["current"] = current;
+            variable = that.variableSrv.addVariable(teldCustomModel);
+            //that.variableSrv.setOptionAsCurrent(variable,  current);
+
+            // that.variableSrv.updateOptions(variable);
+            that.variableSrv.templateSrv.updateTemplateData();
+
+            that.dashboardSrv.getCurrent().updateSubmenuVisibility();
+            //that.variableSrv.init(that.variableSrv.dashboard);
+        }else{
+            variable = that.variableSrv.variables[indexOf];
+            variable.query = current.text;
+            that.variableSrv.setOptionAsCurrent(variable,  current);
+        }
+
+        that.refreshDashboard();
+        console.log(eventData);
       }
     };
 
@@ -72,12 +137,17 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.$scope.$emit('$messageOutgoing', angular.toJson(postMessage));
   }
 
+  refreshDashboard() {
+    this.$rootScope.$broadcast('refresh');
+  }
+
   sendMessage(){
     this.$scope.$emit('$messageOutgoing', angular.toJson({"response" : "I'm grafana."}));
   };
 
   onInitEditMode() {
-    this.addEditorTab('Options', 'partials/editor.html');
+    //this.addEditorTab('Options', 'partials/editor.html');
+    this.addEditorTab('Options', 'public/app/plugins/panel/teld-iframe-panel/partials/editor.html');
     this.editorTabIndex = 1;
 
     if (this.panel.mode === 'text') {
