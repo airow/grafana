@@ -36,7 +36,7 @@ function (angular, _, kbn) {
         var variable = this.variables[i];
 
         // add adhoc filters to it's own index
-        if (variable.type === 'adhoc') {
+        if (variable.type === 'adhoc' || variable.type === 'teldAdhoc') {
           this._adhocVariables[variable.datasource] = variable;
           continue;
         }

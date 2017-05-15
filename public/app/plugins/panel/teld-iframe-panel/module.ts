@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import angular from 'angular';
-import {PanelCtrl} from 'app/plugins/sdk';
+import { PanelCtrl } from 'app/plugins/sdk';
 import appEvents from 'app/core/app_events';
 
 export class TeldIframePanelCtrl extends PanelCtrl {
@@ -10,15 +10,28 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
   remarkable: any;
   content: string;
+
+  src: string;
+  datasource: string;
+  style: any;
+  dsSegment: any;
+  metricSources: any[];
+  variables: any[];
   // Set and populate defaults
   panelDefaults = {
-    mode    : "markdown", // 'html', 'markdown', 'text'
-    content : "# title",
+    mode: "markdown", // 'html', 'markdown', 'text'
+    content: "# title",
+
+    iframeWidth: '100%',
+    iframeHeight: '100%',
+    src: '',
+    datasource: 'default',
+    variables: []
   };
 
   /** @ngInject **/
   constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
-  private variableSrv, private dashboardSrv) {
+    private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -27,6 +40,15 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
     appEvents.on('time-range-changed', this.onTimeRangeChanged.bind(this));
+
+    this.datasource = this.panel.datasource || this.panelDefaults.datasource;
+    this.metricSources = datasourceSrv.getMetricSources();
+    this.dsSegment = uiSegmentSrv.newSegment({ value: this.datasource, selectMode: true });
+
+    this.variables = this.panel.variables || this.panelDefaults.variables;
+
+    this.currentVariable = {};
+    this.variableSegment = uiSegmentSrv.newSegment({ value: 'default', selectMode: true });
 
     let messageIncomingHandler = $scope.$root.$on('$messageIncoming', this.messageIncoming.bind(this));
   }
@@ -50,7 +72,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         that.onTimeRangeChanged(that.timeSrv.time);
         that.isloaded = true;
       },
-      "kibana.Query": function(eventData){
+      "kibana.Query": function (eventData) {
 
         let esQueryDSL = eventData.eventArgs.esQueryDSL;
 
@@ -60,56 +82,66 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         //let variable_teldCustom = that.variableSrv.addVariable({type: 'teldCustom',name : 'teldana.TeldCustom'});
 
-        let teldanaAdhocModel = {type: 'adhoc',name: 'teldana_Adhoc'};
+        let teldanaAdhocModel = { type: 'teldAdhoc', name: 'teldana_Adhoc' };
         let indexOf = _.findIndex(that.variableSrv.variables, teldanaAdhocModel);
-        let variable_adhoc;
+        let variable;
         if (indexOf === -1) {
-           teldanaAdhocModel["hide"] = 0;
-           variable_adhoc = that.variableSrv.addVariable(teldanaAdhocModel);
-        }else{
-           variable_adhoc = that.variableSrv.variables[indexOf];
+          variable = that.variableSrv.addVariable(teldanaAdhocModel);
+          variable.hide = 2;
+        } else {
+          variable = that.variableSrv.variables[indexOf];
         }
-
-        _(esQueryDSL).forEach(function(value) {
-          console.log(value);
-        });
+        variable.datasource = that.datasource;
 
         //_.get(esQueryDSL, 'must[0].match["电站名称.keyword"]').query
+        let filters = [];
+        // if (esQueryDSL.must.length > 0) {
+        //   filters.push(
+        //     { key: "电站名称.keyword", operator: "=", value: _.get(esQueryDSL, 'must[0].match["电站名称.keyword"]').query }
+        //   );
 
-        if (esQueryDSL.must.length>0) {
-          let filters = [
-            {key: "电站名称.keyword", operator: "=", value: _.get(esQueryDSL, 'must[0].match["电站名称.keyword"]').query}
-          ];
-          variable_adhoc.setFilters(filters);
-        }
+        // }
+
+        variable.esQueryDSL = esQueryDSL;
+
+        variable.setFilters(filters);
+
+        that.variableSrv.templateSrv.updateTemplateData();
+        that.dashboardSrv.getCurrent().updateSubmenuVisibility();
+
         that.refreshDashboard();
         console.log(eventData);
       },
-      "kibana.RowSelected": function(eventData){
+      "kibana.RowSelected": function (eventData) {
         let row = eventData.eventArgs.row;
 
-        let teldCustomModel = {type: 'teldCustom',name : 'statName'};
-        let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
-        let variable;
-        let current = {text: row._source["电站编号"], value: row._source["电站编号"]};
-        if (indexOf === -1) {
-            teldCustomModel["hide"] = 0;
-            teldCustomModel["label"] = teldCustomModel.name;
-            teldCustomModel["query"] = current.text;
-            teldCustomModel["current"] = current;
-            variable = that.variableSrv.addVariable(teldCustomModel);
-            //that.variableSrv.setOptionAsCurrent(variable,  current);
+        let def = that.variables;
 
-            // that.variableSrv.updateOptions(variable);
-            that.variableSrv.templateSrv.updateTemplateData();
-
-            that.dashboardSrv.getCurrent().updateSubmenuVisibility();
-            //that.variableSrv.init(that.variableSrv.dashboard);
-        }else{
+        function setT(config) {
+          let teldCustomModel = { type: 'teldCustom', name: config.name };
+          let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
+          let variable;
+          let current = { text: config.value, value: config.value };
+          if (indexOf === -1) {
+            variable = that.variableSrv.addVariable({ type: 'teldCustom' });
+            variable.hide = 2;
+            variable.name = variable.label = teldCustomModel.name;
+          } else {
             variable = that.variableSrv.variables[indexOf];
-            variable.query = current.text;
-            that.variableSrv.setOptionAsCurrent(variable,  current);
+          }
+          that.variableSrv.setOptionAsCurrent(variable, current);
         }
+
+
+        def.forEach(element => {
+          if (row._source[element.field]) {
+            let value = _.defaults({ value: row._source[element.field] }, element);
+            setT(value);
+          }
+        });
+
+        that.variableSrv.templateSrv.updateTemplateData();
+        that.dashboardSrv.getCurrent().updateSubmenuVisibility();
 
         that.refreshDashboard();
         console.log(eventData);
@@ -128,31 +160,59 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     console.groupEnd();
   }
 
-  onTimeRangeChanged(time){
+  onTimeRangeChanged(time) {
     let postMessage = {
-      "eventType" : "timeRangeChanged",
-      "eventArgs" : time
+      "eventType": "timeRangeChanged",
+      "eventArgs": time
     };
     console.log(postMessage);
     this.$scope.$emit('$messageOutgoing', angular.toJson(postMessage));
+  }
+
+  getOptions() {
+    return Promise.resolve(this.metricSources.map(value => {
+      return this.uiSegmentSrv.newSegment(value.name);
+    }));
+  }
+
+  newVariable() {
+    this.currentVariable = {};
+    this.variables.push(this.currentVariable);
+  }
+
+  currentVariable: any;
+  variableSegment: any;
+
+  removeVariable(variable) {
+    var index = _.indexOf(this.variables, variable);
+    this.variables.splice(index, 1);
+    this.panel.Variables = this.variables;
+  }
+
+  getOptionsWithMapping() {
+    return Promise.resolve(this.metricSources.map(value => {
+      return this.uiSegmentSrv.newSegment(value.name);
+    }));
+  }
+
+  datasourceChanged() {
+    this.panel.datasource = this.panelDefaults.datasource = this.datasource = this.dsSegment.value;
+    this.renderingCompleted();
   }
 
   refreshDashboard() {
     this.$rootScope.$broadcast('refresh');
   }
 
-  sendMessage(){
-    this.$scope.$emit('$messageOutgoing', angular.toJson({"response" : "I'm grafana."}));
+  sendMessage() {
+    this.$scope.$emit('$messageOutgoing', angular.toJson({ "response": "I'm grafana." }));
   };
 
   onInitEditMode() {
     //this.addEditorTab('Options', 'partials/editor.html');
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-iframe-panel/partials/editor.html');
+    this.addEditorTab('Variables', 'public/app/plugins/panel/teld-iframe-panel/partials/variables.html');
     this.editorTabIndex = 1;
-
-    if (this.panel.mode === 'text') {
-      this.panel.mode = 'markdown';
-    }
   }
 
   onRefresh() {
@@ -160,44 +220,15 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   }
 
   onRender() {
-    if (this.panel.mode === 'markdown') {
-      this.renderMarkdown(this.panel.content);
-    } else if (this.panel.mode === 'html') {
-      this.updateContent(this.panel.content);
-    }
+    this.src = this.$sce.trustAsResourceUrl(this.panel.src);
+    this.style = {
+      "border": 'none',
+      "width": this.panel.iframeWidth,
+      "height": this.panel.iframeHeight
+    };
+    //this.datasource = this.panel.datasource;
     this.renderingCompleted();
-  }
-
-  renderText(content) {
-    content = content
-    .replace(/&/g, '&amp;')
-    .replace(/>/g, '&gt;')
-    .replace(/</g, '&lt;')
-    .replace(/\n/g, '<br/>');
-    this.updateContent(content);
-  }
-
-  renderMarkdown(content) {
-    if (!this.remarkable) {
-      return System.import('remarkable').then(Remarkable => {
-        this.remarkable = new Remarkable();
-        this.$scope.$apply(() => {
-          this.updateContent(this.remarkable.render(content));
-        });
-      });
-    }
-
-    this.updateContent(this.remarkable.render(content));
-  }
-
-  updateContent(html) {
-    try {
-      this.content = this.$sce.trustAsHtml(this.templateSrv.replace(html, this.panel.scopedVars));
-    } catch (e) {
-      console.log('Text panel error: ', e);
-      this.content = this.$sce.trustAsHtml(html);
-    }
   }
 }
 
-export {TeldIframePanelCtrl as PanelCtrl}
+export { TeldIframePanelCtrl as PanelCtrl }

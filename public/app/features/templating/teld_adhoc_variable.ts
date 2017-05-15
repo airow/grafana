@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 import kbn from 'app/core/utils/kbn';
-import {Variable, assignModelProperties, variableTypes} from './variable';
-import {VariableSrv} from './variable_srv';
+import { Variable, assignModelProperties, variableTypes } from './variable';
+import { VariableSrv } from './variable_srv';
 
 export class TeldAdhocVariable implements Variable {
   filters: any[];
@@ -15,6 +15,7 @@ export class TeldAdhocVariable implements Variable {
     hide: 0,
     datasource: null,
     filters: [],
+    esQueryDSL: {}
   };
 
   /** @ngInject **/

@@ -239,6 +239,18 @@
         </div>
       </div>
 
+      <div ng-if="current.type === 'teldAdhoc'" class="gf-form-group">
+        <h5 class="section-heading">Options</h5>
+        <div class="gf-form max-width-21">
+          <span class="gf-form-label width-8">Data source</span>
+          <div class="gf-form-select-wrapper max-width-14">
+            <select class="gf-form-input" ng-model="current.datasource" ng-options="f.value as f.name for f in datasources" required ng-change="validate()">
+              <option value="" ng-if="false"></option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div ng-if="current.type === 'teldCustom'" class="gf-form-group">
         <h5 class="section-heading">Custom Options</h5>
         <div class="gf-form">
