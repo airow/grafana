@@ -7,6 +7,7 @@ import 'jquery.flot.stack';
 import 'jquery.flot.stackpercent';
 import 'jquery.flot.fillbelow';
 import 'jquery.flot.crosshair';
+import 'jquery.flot.categories';
 import './jquery.flot.events';
 
 import $ from 'jquery';
@@ -296,6 +297,12 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
             addXTableAxis(options);
             break;
           }
+          case 'field': {
+            options.series.bars.barWidth = 0.7;
+            options.series.bars.align = 'center';
+            addXFieldAxis(options);
+            break;
+          }
           default: {
             options.series.bars.barWidth = getMinTimeStepOfSeries(data) / 1.5;
             addTimeAxis(options);
@@ -309,9 +316,95 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
 
         sortedSeries = _.sortBy(data, function(series) { return series.zindex; });
 
+        function Setting_various_options() {
+          var d1 = [];
+          for (var i = 0; i < Math.PI * 2; i += 0.25) {
+            d1.push([i, Math.sin(i)]);
+          }
+
+          var d2 = [];
+          for (var i = 0; i < Math.PI * 2; i += 0.25) {
+            d2.push([i, Math.cos(i)]);
+          }
+
+          var d3 = [];
+          for (var i = 0; i < Math.PI * 2; i += 0.1) {
+            d3.push([i, Math.tan(i)]);
+          }
+
+          plot = $.plot(elem, [
+            { label: "sin(x)", data: d1 },
+            { label: "cos(x)", data: d2 },
+            { label: "tan(x)", data: d3 }
+          ], {
+              series: {
+                lines: { show: true },
+                points: { show: true }
+              },
+              xaxis: {
+                ticks: [
+                  0, [Math.PI / 2, "\u03c0/2"], [Math.PI, "\u03c0"],
+                  [Math.PI * 3 / 2, "3\u03c0/2"], [Math.PI * 2, "2\u03c0"]
+                ]
+              },
+              yaxis: {
+                ticks: 10,
+                min: -2,
+                max: 2,
+                tickDecimals: 3
+              },
+              grid: {
+                backgroundColor: { colors: ["#fff", "#eee"] },
+                borderWidth: {
+                  top: 1,
+                  right: 1,
+                  bottom: 2,
+                  left: 2
+                }
+              }
+            });
+        }
+
+        function categories() {
+          var data = [["January", 10], ["February", 8], ["March", 4], ["April", 13], ["May", 17], ["June", 9]];
+
+          plot = $.plot(elem, [data], {
+            series: {
+              bars: {
+                show: true,
+                barWidth: 0.6,
+                align: "center"
+              }
+            },
+            xaxis: {
+              mode: "categories",
+              tickLength: 0
+            }
+          });
+        }
+
         function callPlot(incrementRenderCounter) {
           try {
             plot = $.plot(elem, sortedSeries, options);
+
+            // var data = [ ["January", 10], ["February", 8], ["March", 4], ["April", 13], ["May", 17], ["June", 9] ];
+            // plot = $.plot(elem, [data], {
+            //   series: {
+            //     bars: {
+            //       show: true,
+            //       barWidth: 0.6,
+            //       align: "center"
+            //     }
+            //   },
+            //   xaxis: {
+            //     mode: "categories",
+            //     tickLength: 0
+            //   }
+            // });
+
+            //categories();
+
+            //plot = $.plot(elem, [[[0, 3], [4, 8], [8, 5], [9, 13]]]);
             if (ctrl.renderError) {
               delete ctrl.error;
               delete ctrl.inspector;
@@ -381,6 +474,13 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
           max: ticks.length + 1,
           label: "Datetime",
           ticks: ticks
+        };
+      }
+
+      function addXFieldAxis(options) {
+        options.xaxis = {
+          mode: "categories",
+          tickLength: 0
         };
       }
 

@@ -102,7 +102,18 @@ export class DataProcessor {
     if (!nameField) {
       throw {message: 'No field name specified to use for x-axis, check your axes settings'};
     }
-    return [];
+
+    var alias = this.panel.xaxis.values[0];
+    var colorIndex = 0 % colors.length;
+    var color = this.panel.aliasColors[alias] || colors[colorIndex];
+
+    var datapoints = dataItem.datapoints.map(item=>{
+      return [item["Count"],item[this.panel.xaxis.name]];
+    });
+
+    var series = new TimeSeries({datapoints: datapoints, alias: alias, color: color});
+
+    return [series];
   }
 
   validateXAxisSeriesValue() {
