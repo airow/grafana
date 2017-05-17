@@ -197,7 +197,11 @@ define([
         // add global adhoc filters to timeFilter
         var adhocFilters = templateSrv.getAdhocFilters(this.name);
 
-        var esQueryDSL = variableSrv.variables[_.findIndex(variableSrv.variables, { type: 'teldAdhoc', name: 'teldana_Adhoc' })].esQueryDSL;
+        var teldanaIndex = _.findIndex(variableSrv.variables, { type: 'teldAdhoc', name: 'teldana_Adhoc' });
+        var esQueryDSL;
+        if (teldanaIndex >= 0) {
+          esQueryDSL = variableSrv.variables[teldanaIndex].esQueryDSL;
+        }
 
         for (var i = 0; i < options.targets.length; i++) {
           target = options.targets[i];
@@ -207,8 +211,10 @@ define([
           var queryObj = this.queryBuilder.build(target, adhocFilters, queryString);
           //queryObj.query.bool = esQueryDSL;
 
-          for (var key in esQueryDSL) {
-            queryObj.query.bool[key] = esQueryDSL[key];
+          if (esQueryDSL) {
+            for (var key in esQueryDSL) {
+              queryObj.query.bool[key] = esQueryDSL[key];
+            }
           }
 
           var esQuery = angular.toJson(queryObj);

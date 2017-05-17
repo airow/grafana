@@ -3,7 +3,7 @@
     "name": "Torkel Ödegaard",
     "company": "Coding Instinct AB"
   },
-  "name": "grafana",
+  "name": "teld.grafana",
   "version": "4.2.0",
   "repository": {
     "type": "git",

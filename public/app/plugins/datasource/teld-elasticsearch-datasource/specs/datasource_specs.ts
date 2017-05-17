@@ -5,7 +5,7 @@ import angular from 'angular';
 import helpers from 'test/specs/helpers';
 import {ElasticDatasource} from "../datasource";
 
-describe('ElasticDatasource', function() {
+describe('TeldElasticDatasource', function() {
   var ctx = new helpers.ServiceTestContext();
   var instanceSettings: any = {jsonData: {}};
 

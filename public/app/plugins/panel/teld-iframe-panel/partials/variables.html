@@ -8,8 +8,8 @@
     </div>
     <div class="gf-form" ng-repeat="variable in ctrl.variables">
       <span class="gf-form-label width-25">${{variable.name}}</span>
-      <input type="text" class="gf-form-input width-25 " ng-model="variable.name" placeholder="100%">
-      <input type="text" class="gf-form-input width-25 " ng-model="variable.field" placeholder="100%">
+      <input type="text" class="gf-form-input width-25 " ng-model="variable.name" placeholder="变量名">
+      <input type="text" class="gf-form-input width-25 " ng-model="variable.field" placeholder="绑定字段">
       <a ng-click="ctrl.removeVariable(variable)" class="btn btn-danger btn-mini">
         <i class="fa fa-remove"></i>
       </a>
