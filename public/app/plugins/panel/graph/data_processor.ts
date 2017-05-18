@@ -4,7 +4,7 @@ import kbn from 'app/core/utils/kbn';
 import _ from 'lodash';
 import moment from 'moment';
 import TimeSeries from 'app/core/time_series2';
-import {colors} from 'app/core/core';
+import { colors } from 'app/core/core';
 
 export class DataProcessor {
 
@@ -84,7 +84,7 @@ export class DataProcessor {
     var colorIndex = index % colors.length;
     var color = this.panel.aliasColors[alias] || colors[colorIndex];
 
-    var series = new TimeSeries({datapoints: datapoints, alias: alias, color: color, unit: seriesData.unit});
+    var series = new TimeSeries({ datapoints: datapoints, alias: alias, color: color, unit: seriesData.unit });
 
     if (datapoints && datapoints.length > 0) {
       var last = datapoints[datapoints.length - 1][1];
@@ -100,18 +100,18 @@ export class DataProcessor {
   customHandler(dataItem) {
     let nameField = this.panel.xaxis.name;
     if (!nameField) {
-      throw {message: 'No field name specified to use for x-axis, check your axes settings'};
+      throw { message: 'No field name specified to use for x-axis, check your axes settings' };
     }
 
     var alias = this.panel.xaxis.values[0];
     var colorIndex = 0 % colors.length;
-    var color = this.panel.aliasColors[alias] || colors[colorIndex];
+    var color = this.panel.aliasColors && this.panel.aliasColors[alias] || colors[colorIndex];
 
-    var datapoints = dataItem.datapoints.map(item=>{
-      return [item["Count"],item[this.panel.xaxis.name]];
+    var datapoints = dataItem.datapoints.map(item => {
+      return [item[this.panel.xaxis.values[0]], item[this.panel.xaxis.name]];
     });
 
-    var series = new TimeSeries({datapoints: datapoints, alias: alias, color: color});
+    var series = new TimeSeries({ datapoints: datapoints, alias: alias, color: color });
 
     return [series];
   }
@@ -125,7 +125,7 @@ export class DataProcessor {
         }
 
         var validOptions = this.getXAxisValueOptions({});
-        var found = _.find(validOptions, {value: this.panel.xaxis.values[0]});
+        var found = _.find(validOptions, { value: this.panel.xaxis.values[0] });
         if (!found) {
           this.panel.xaxis.values = ['total'];
         }
@@ -143,20 +143,20 @@ export class DataProcessor {
     var firstItem = dataList[0];
     let fieldParts = [];
     function getPropertiesRecursive(obj) {
-        _.forEach(obj, (value, key) => {
-          if (_.isObject(value)) {
-            fieldParts.push(key);
-            getPropertiesRecursive(value);
-          } else {
-            if (!onlyNumbers || _.isNumber(value)) {
-              let field = fieldParts.concat(key).join('.');
-              fields.push(field);
-            }
+      _.forEach(obj, (value, key) => {
+        if (_.isObject(value)) {
+          fieldParts.push(key);
+          getPropertiesRecursive(value);
+        } else {
+          if (!onlyNumbers || _.isNumber(value)) {
+            let field = fieldParts.concat(key).join('.');
+            fields.push(field);
           }
-        });
-        fieldParts.pop();
+        }
+      });
+      fieldParts.pop();
     }
-    if (firstItem.type === 'docs'){
+    if (firstItem.type === 'docs') {
       if (firstItem.datapoints.length === 0) {
         return [];
       }
@@ -172,11 +172,11 @@ export class DataProcessor {
       }
       case 'series': {
         return [
-          {text: 'Avg', value: 'avg'},
-          {text: 'Min', value: 'min'},
-          {text: 'Max', value: 'max'},
-          {text: 'Total', value: 'total'},
-          {text: 'Count', value: 'count'},
+          { text: 'Avg', value: 'avg' },
+          { text: 'Min', value: 'min' },
+          { text: 'Max', value: 'max' },
+          { text: 'Total', value: 'total' },
+          { text: 'Count', value: 'count' },
         ];
       }
     }
