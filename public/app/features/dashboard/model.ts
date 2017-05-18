@@ -6,8 +6,8 @@ import moment from 'moment';
 import _ from 'lodash';
 import $ from 'jquery';
 
-import {Emitter, contextSrv, appEvents} from 'app/core/core';
-import {DashboardRow} from './row/row_model';
+import { Emitter, contextSrv, appEvents } from 'app/core/core';
+import { DashboardRow } from './row/row_model';
 import sortByKeys from 'app/core/utils/sort_by_keys';
 
 export class DashboardModel {
@@ -108,6 +108,11 @@ export class DashboardModel {
     this.rows = _.map(rows, row => row.getSaveModel());
     this.templating.list = _.map(variables, variable => variable.getSaveModel ? variable.getSaveModel() : variable);
 
+    // 去除teldxxx变量类型的保存
+    _.remove(this.templating.list, function (n) {
+      return _.startsWith(n.type, 'teld');
+    });
+
     // make clone
     var copy = $.extend(true, {}, this);
     //  sort clone
@@ -123,7 +128,7 @@ export class DashboardModel {
   }
 
   addEmptyRow() {
-    this.rows.push(new DashboardRow({isNew: true}));
+    this.rows.push(new DashboardRow({ isNew: true }));
   }
 
   private ensureListExist(data) {
@@ -214,7 +219,7 @@ export class DashboardModel {
       return;
     }
 
-    var visibleVars = _.filter(this.templating.list, function(template) {
+    var visibleVars = _.filter(this.templating.list, function (template) {
       return template.hide !== 2;
     });
 
@@ -223,8 +228,8 @@ export class DashboardModel {
 
   getPanelInfoById(panelId) {
     var result: any = {};
-    _.each(this.rows, function(row) {
-      _.each(row.panels, function(panel, index) {
+    _.each(this.rows, function (row) {
+      _.each(row.panels, function (panel, index) {
         if (panel.id === panelId) {
           result.panel = panel;
           result.row = row;
@@ -294,8 +299,8 @@ export class DashboardModel {
   getNextQueryLetter(panel) {
     var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    return _.find(letters, function(refId) {
-      return _.every(panel.targets, function(other) {
+    return _.find(letters, function (refId) {
+      return _.every(panel.targets, function (other) {
         return other.refId !== refId;
       });
     });
@@ -329,7 +334,7 @@ export class DashboardModel {
         }
       }
 
-      panelUpgrades.push(function(panel) {
+      panelUpgrades.push(function (panel) {
         // rename panel type
         if (panel.type === 'graphite') {
           panel.type = 'graph';
@@ -369,7 +374,7 @@ export class DashboardModel {
     if (oldVersion < 3) {
       // ensure panel ids
       var maxId = this.getNextPanelId();
-      panelUpgrades.push(function(panel) {
+      panelUpgrades.push(function (panel) {
         if (!panel.id) {
           panel.id = maxId;
           maxId += 1;
@@ -380,9 +385,9 @@ export class DashboardModel {
     // schema version 4 changes
     if (oldVersion < 4) {
       // move aliasYAxis changes
-      panelUpgrades.push(function(panel) {
+      panelUpgrades.push(function (panel) {
         if (panel.type !== 'graph') { return; }
-        _.each(panel.aliasYAxis, function(value, key) {
+        _.each(panel.aliasYAxis, function (value, key) {
           panel.seriesOverrides = [{ alias: key, yaxis: value }];
         });
         delete panel.aliasYAxis;
@@ -400,7 +405,7 @@ export class DashboardModel {
       }
 
       // update template variables
-      for (i = 0 ; i < this.templating.list.length; i++) {
+      for (i = 0; i < this.templating.list.length; i++) {
         var variable = this.templating.list[i];
         if (variable.datasource === void 0) { variable.datasource = null; }
         if (variable.type === 'filter') { variable.type = 'query'; }
@@ -415,225 +420,225 @@ export class DashboardModel {
       }
 
       // ensure query refIds
-      panelUpgrades.push(function(panel) {
-        _.each(panel.targets, function(target) {
+      panelUpgrades.push(function (panel) {
+        _.each(panel.targets, function (target) {
           if (!target.refId) {
             target.refId = this.getNextQueryLetter(panel);
-            }
-          }.bind(this));
-        });
-      }
+          }
+        }.bind(this));
+      });
+    }
 
-      if (oldVersion < 8) {
-        panelUpgrades.push(function(panel) {
-          _.each(panel.targets, function(target) {
-            // update old influxdb query schema
-            if (target.fields && target.tags && target.groupBy) {
-              if (target.rawQuery) {
-                delete target.fields;
-                delete target.fill;
-              } else {
-                target.select = _.map(target.fields, function(field) {
-                  var parts = [];
-                  parts.push({type: 'field', params: [field.name]});
-                  parts.push({type: field.func, params: []});
-                  if (field.mathExpr) {
-                    parts.push({type: 'math', params: [field.mathExpr]});
-                  }
-                  if (field.asExpr) {
-                    parts.push({type: 'alias', params: [field.asExpr]});
-                  }
-                  return parts;
-                });
-                delete target.fields;
-                _.each(target.groupBy, function(part) {
-                  if (part.type === 'time' && part.interval)  {
-                    part.params = [part.interval];
-                    delete part.interval;
-                  }
-                  if (part.type === 'tag' && part.key) {
-                    part.params = [part.key];
-                    delete part.key;
-                  }
-                });
-
-                if (target.fill) {
-                  target.groupBy.push({type: 'fill', params: [target.fill]});
-                  delete target.fill;
+    if (oldVersion < 8) {
+      panelUpgrades.push(function (panel) {
+        _.each(panel.targets, function (target) {
+          // update old influxdb query schema
+          if (target.fields && target.tags && target.groupBy) {
+            if (target.rawQuery) {
+              delete target.fields;
+              delete target.fill;
+            } else {
+              target.select = _.map(target.fields, function (field) {
+                var parts = [];
+                parts.push({ type: 'field', params: [field.name] });
+                parts.push({ type: field.func, params: [] });
+                if (field.mathExpr) {
+                  parts.push({ type: 'math', params: [field.mathExpr] });
                 }
+                if (field.asExpr) {
+                  parts.push({ type: 'alias', params: [field.asExpr] });
+                }
+                return parts;
+              });
+              delete target.fields;
+              _.each(target.groupBy, function (part) {
+                if (part.type === 'time' && part.interval) {
+                  part.params = [part.interval];
+                  delete part.interval;
+                }
+                if (part.type === 'tag' && part.key) {
+                  part.params = [part.key];
+                  delete part.key;
+                }
+              });
+
+              if (target.fill) {
+                target.groupBy.push({ type: 'fill', params: [target.fill] });
+                delete target.fill;
               }
             }
-          });
+          }
         });
-      }
+      });
+    }
 
-      // schema version 9 changes
-      if (oldVersion < 9) {
-        // move aliasYAxis changes
-        panelUpgrades.push(function(panel) {
-          if (panel.type !== 'singlestat' && panel.thresholds !== "") { return; }
+    // schema version 9 changes
+    if (oldVersion < 9) {
+      // move aliasYAxis changes
+      panelUpgrades.push(function (panel) {
+        if (panel.type !== 'singlestat' && panel.thresholds !== "") { return; }
 
-          if (panel.thresholds) {
-            var k = panel.thresholds.split(",");
+        if (panel.thresholds) {
+          var k = panel.thresholds.split(",");
 
-            if (k.length >= 3) {
-              k.shift();
-              panel.thresholds = k.join(",");
+          if (k.length >= 3) {
+            k.shift();
+            panel.thresholds = k.join(",");
+          }
+        }
+      });
+    }
+
+    // schema version 10 changes
+    if (oldVersion < 10) {
+      // move aliasYAxis changes
+      panelUpgrades.push(function (panel) {
+        if (panel.type !== 'table') { return; }
+
+        _.each(panel.styles, function (style) {
+          if (style.thresholds && style.thresholds.length >= 3) {
+            var k = style.thresholds;
+            k.shift();
+            style.thresholds = k;
+          }
+        });
+      });
+    }
+
+    if (oldVersion < 12) {
+      // update template variables
+      _.each(this.templating.list, function (templateVariable) {
+        if (templateVariable.refresh) { templateVariable.refresh = 1; }
+        if (!templateVariable.refresh) { templateVariable.refresh = 0; }
+        if (templateVariable.hideVariable) {
+          templateVariable.hide = 2;
+        } else if (templateVariable.hideLabel) {
+          templateVariable.hide = 1;
+        }
+      });
+    }
+
+    if (oldVersion < 12) {
+      // update graph yaxes changes
+      panelUpgrades.push(function (panel) {
+        if (panel.type !== 'graph') { return; }
+        if (!panel.grid) { return; }
+
+        if (!panel.yaxes) {
+          panel.yaxes = [
+            {
+              show: panel['y-axis'],
+              min: panel.grid.leftMin,
+              max: panel.grid.leftMax,
+              logBase: panel.grid.leftLogBase,
+              format: panel.y_formats[0],
+              label: panel.leftYAxisLabel,
+            },
+            {
+              show: panel['y-axis'],
+              min: panel.grid.rightMin,
+              max: panel.grid.rightMax,
+              logBase: panel.grid.rightLogBase,
+              format: panel.y_formats[1],
+              label: panel.rightYAxisLabel,
             }
+          ];
+
+          panel.xaxis = {
+            show: panel['x-axis'],
+          };
+
+          delete panel.grid.leftMin;
+          delete panel.grid.leftMax;
+          delete panel.grid.leftLogBase;
+          delete panel.grid.rightMin;
+          delete panel.grid.rightMax;
+          delete panel.grid.rightLogBase;
+          delete panel.y_formats;
+          delete panel.leftYAxisLabel;
+          delete panel.rightYAxisLabel;
+          delete panel['y-axis'];
+          delete panel['x-axis'];
+        }
+      });
+    }
+
+    if (oldVersion < 13) {
+      // update graph yaxes changes
+      panelUpgrades.push(function (panel) {
+        if (panel.type !== 'graph') { return; }
+        if (!panel.grid) { return; }
+
+        panel.thresholds = [];
+        var t1: any = {}, t2: any = {};
+
+        if (panel.grid.threshold1 !== null) {
+          t1.value = panel.grid.threshold1;
+          if (panel.grid.thresholdLine) {
+            t1.line = true;
+            t1.lineColor = panel.grid.threshold1Color;
+            t1.colorMode = 'custom';
+          } else {
+            t1.fill = true;
+            t1.fillColor = panel.grid.threshold1Color;
+            t1.colorMode = 'custom';
           }
-        });
-      }
+        }
 
-      // schema version 10 changes
-      if (oldVersion < 10) {
-        // move aliasYAxis changes
-        panelUpgrades.push(function(panel) {
-          if (panel.type !== 'table') { return; }
-
-          _.each(panel.styles, function(style) {
-            if (style.thresholds && style.thresholds.length >= 3) {
-              var k = style.thresholds;
-              k.shift();
-              style.thresholds = k;
-            }
-          });
-        });
-      }
-
-      if (oldVersion < 12) {
-        // update template variables
-        _.each(this.templating.list, function(templateVariable) {
-          if (templateVariable.refresh) { templateVariable.refresh = 1; }
-          if (!templateVariable.refresh) { templateVariable.refresh = 0; }
-          if (templateVariable.hideVariable) {
-            templateVariable.hide = 2;
-          } else if (templateVariable.hideLabel) {
-            templateVariable.hide = 1;
+        if (panel.grid.threshold2 !== null) {
+          t2.value = panel.grid.threshold2;
+          if (panel.grid.thresholdLine) {
+            t2.line = true;
+            t2.lineColor = panel.grid.threshold2Color;
+            t2.colorMode = 'custom';
+          } else {
+            t2.fill = true;
+            t2.fillColor = panel.grid.threshold2Color;
+            t2.colorMode = 'custom';
           }
-        });
-      }
+        }
 
-      if (oldVersion < 12) {
-        // update graph yaxes changes
-        panelUpgrades.push(function(panel) {
-          if (panel.type !== 'graph') { return; }
-          if (!panel.grid) { return; }
-
-          if (!panel.yaxes) {
-            panel.yaxes = [
-              {
-                show: panel['y-axis'],
-                min: panel.grid.leftMin,
-                max: panel.grid.leftMax,
-                logBase: panel.grid.leftLogBase,
-                format: panel.y_formats[0],
-                label: panel.leftYAxisLabel,
-              },
-              {
-                show: panel['y-axis'],
-                min: panel.grid.rightMin,
-                max: panel.grid.rightMax,
-                logBase: panel.grid.rightLogBase,
-                format: panel.y_formats[1],
-                label: panel.rightYAxisLabel,
-              }
-            ];
-
-            panel.xaxis = {
-              show: panel['x-axis'],
-            };
-
-            delete panel.grid.leftMin;
-            delete panel.grid.leftMax;
-            delete panel.grid.leftLogBase;
-            delete panel.grid.rightMin;
-            delete panel.grid.rightMax;
-            delete panel.grid.rightLogBase;
-            delete panel.y_formats;
-            delete panel.leftYAxisLabel;
-            delete panel.rightYAxisLabel;
-            delete panel['y-axis'];
-            delete panel['x-axis'];
-          }
-        });
-      }
-
-      if (oldVersion < 13) {
-        // update graph yaxes changes
-        panelUpgrades.push(function(panel) {
-          if (panel.type !== 'graph') { return; }
-          if (!panel.grid) { return; }
-
-          panel.thresholds = [];
-          var t1: any = {}, t2: any = {};
-
-          if (panel.grid.threshold1 !== null) {
-            t1.value = panel.grid.threshold1;
-            if (panel.grid.thresholdLine) {
-              t1.line = true;
-              t1.lineColor = panel.grid.threshold1Color;
-              t1.colorMode = 'custom';
-            } else {
-              t1.fill = true;
-              t1.fillColor = panel.grid.threshold1Color;
-              t1.colorMode = 'custom';
-            }
-          }
-
-          if (panel.grid.threshold2 !== null) {
-            t2.value = panel.grid.threshold2;
-            if (panel.grid.thresholdLine) {
-              t2.line = true;
-              t2.lineColor = panel.grid.threshold2Color;
-              t2.colorMode = 'custom';
-            } else {
-              t2.fill = true;
-              t2.fillColor = panel.grid.threshold2Color;
-              t2.colorMode = 'custom';
-            }
-          }
-
-          if (_.isNumber(t1.value)) {
-            if (_.isNumber(t2.value)) {
-              if (t1.value > t2.value) {
-                t1.op = t2.op = 'lt';
-                panel.thresholds.push(t1);
-                panel.thresholds.push(t2);
-              } else {
-                t1.op = t2.op = 'gt';
-                panel.thresholds.push(t1);
-                panel.thresholds.push(t2);
-              }
-            } else {
-              t1.op = 'gt';
+        if (_.isNumber(t1.value)) {
+          if (_.isNumber(t2.value)) {
+            if (t1.value > t2.value) {
+              t1.op = t2.op = 'lt';
               panel.thresholds.push(t1);
+              panel.thresholds.push(t2);
+            } else {
+              t1.op = t2.op = 'gt';
+              panel.thresholds.push(t1);
+              panel.thresholds.push(t2);
             }
+          } else {
+            t1.op = 'gt';
+            panel.thresholds.push(t1);
           }
+        }
 
-          delete panel.grid.threshold1;
-          delete panel.grid.threshold1Color;
-          delete panel.grid.threshold2;
-          delete panel.grid.threshold2Color;
-          delete panel.grid.thresholdLine;
-        });
-      }
+        delete panel.grid.threshold1;
+        delete panel.grid.threshold1Color;
+        delete panel.grid.threshold2;
+        delete panel.grid.threshold2Color;
+        delete panel.grid.thresholdLine;
+      });
+    }
 
-      if (oldVersion < 14) {
-        this.graphTooltip = old.sharedCrosshair ? 1 : 0;
-      }
+    if (oldVersion < 14) {
+      this.graphTooltip = old.sharedCrosshair ? 1 : 0;
+    }
 
-      if (panelUpgrades.length === 0) {
-        return;
-      }
+    if (panelUpgrades.length === 0) {
+      return;
+    }
 
-      for (i = 0; i < this.rows.length; i++) {
-        var row = this.rows[i];
-        for (j = 0; j < row.panels.length; j++) {
-          for (k = 0; k < panelUpgrades.length; k++) {
-            panelUpgrades[k].call(this, row.panels[j]);
-          }
+    for (i = 0; i < this.rows.length; i++) {
+      var row = this.rows[i];
+      for (j = 0; j < row.panels.length; j++) {
+        for (k = 0; k < panelUpgrades.length; k++) {
+          panelUpgrades[k].call(this, row.panels[j]);
         }
       }
     }
+  }
 }
 
