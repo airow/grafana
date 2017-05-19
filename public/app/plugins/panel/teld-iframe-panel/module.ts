@@ -75,6 +75,10 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     let that = this;
 
     let messageIncomingHandlerConfin = {
+      "kibanaLoaded": function(eventData){
+        that.grafanaLink2Kibana();
+        that.isloaded = true;
+      },
       "syncTimeRange": function (eventData) {
         that.onTimeRangeChanged(that.timeSrv.time);
         that.isloaded = true;
@@ -121,21 +125,6 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       },
       "kibana.RowSelected": function (eventData) {
         let row = eventData.eventArgs.row;
-        let timeRange = eventData.eventArgs.timeRange;
-
-        //根据配置同步时间范围
-        if (that.panel.syncRowTimeRange) {
-
-          var startTime = row._source[that.panel.startDateField] || timeRange.min;
-          var endTime = row._source[that.panel.endDateField] || timeRange.max;
-
-          that.$scope.$apply(function () {
-              that.timeSrv.setTime({
-                from: moment.utc(startTime),
-                to: moment.utc(endTime),
-              });
-            });
-        }
 
         let def = that.variables;
 
@@ -168,9 +157,22 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         that.variableSrv.templateSrv.updateTemplateData();
         that.dashboardSrv.getCurrent().updateSubmenuVisibility();
 
-        /* 在此处执行刷新会产生重复查询的情况，故注释掉
-        //that.refreshDashboard();
-        */
+        /* 如果设置的时间会自动触发取数，否则手动执行触发*/
+        //根据配置同步时间范围
+        let timeRange = eventData.eventArgs.timeRange;
+        if (that.panel.syncRowTimeRange) {
+          var startTime = row._source[that.panel.startDateField] || timeRange.min;
+          var endTime = row._source[that.panel.endDateField] || timeRange.max;
+
+          that.$scope.$apply(function () {
+            that.timeSrv.setTime({
+              from: moment.utc(startTime),
+              to: moment.utc(endTime),
+            });
+          });
+        } else {
+          that.refreshDashboard();
+        }
         console.log(eventData);
       }
     };
@@ -189,6 +191,22 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     let postMessage = {
       "eventType": "timeRangeChanged",
       "eventArgs": time
+    };
+    console.log(postMessage);
+    this.$scope.$emit('$messageOutgoing', angular.toJson(postMessage));
+  }
+
+  grafanaLink2Kibana(){
+
+    let dash = this.dashboardSrv.getCurrent();
+
+    this.sendPostMessage("grafanaLink", { "dashTheme": dash.style });
+  }
+
+  sendPostMessage(eventType, eventArgs) {
+    let postMessage = {
+      "eventType": eventType,
+      "eventArgs": eventArgs
     };
     console.log(postMessage);
     this.$scope.$emit('$messageOutgoing', angular.toJson(postMessage));
