@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import angular from 'angular';
+import moment from 'moment';
 import { PanelCtrl } from 'app/plugins/sdk';
 import appEvents from 'app/core/app_events';
 
@@ -39,7 +40,13 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
+
+    /*grafana与kibana时间同步
     appEvents.on('time-range-changed', this.onTimeRangeChanged.bind(this));
+    */
+
+    /*控制grafana时间空间是否显示*/
+    this.$rootScope.showTimepicker = !(this.panel.syncRowTimeRange = this.panel.syncRowTimeRange || false);
 
     this.datasource = this.panel.datasource || this.panelDefaults.datasource;
     this.metricSources = datasourceSrv.getMetricSources();
@@ -50,20 +57,20 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.currentVariable = {};
     this.variableSegment = uiSegmentSrv.newSegment({ value: 'default', selectMode: true });
 
+    //接收PostMessage发送过来的消息，通过Angular-Post-Message组件
     let messageIncomingHandler = $scope.$root.$on('$messageIncoming', this.messageIncoming.bind(this));
+    $scope.$on('$destroy', function () {
+      messageIncomingHandler();
+      messageIncomingHandler = null;
+    });
   }
 
   isloaded = false;
 
   messageIncoming(event, data) {
     console.group("grafana");
-    console.log(angular.fromJson(event));
-    console.log(angular.fromJson(data));
 
     let eventData = angular.fromJson(data);
-
-    console.group("messageIncoming.data");
-    console.log(eventData);
 
     let that = this;
 
@@ -114,6 +121,21 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       },
       "kibana.RowSelected": function (eventData) {
         let row = eventData.eventArgs.row;
+        let timeRange = eventData.eventArgs.timeRange;
+
+        //根据配置同步时间范围
+        if (that.panel.syncRowTimeRange) {
+
+          var startTime = row._source[that.panel.startDateField] || timeRange.min;
+          var endTime = row._source[that.panel.endDateField] || timeRange.max;
+
+          that.$scope.$apply(function () {
+              that.timeSrv.setTime({
+                from: moment.utc(startTime),
+                to: moment.utc(endTime),
+              });
+            });
+        }
 
         let def = that.variables;
 
@@ -128,6 +150,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
             variable.name = variable.label = teldCustomModel.name;
           } else {
             variable = that.variableSrv.variables[indexOf];
+            if (variable.current.value === current.value) {
+              current.text = current.value = '';
+            }
           }
           that.variableSrv.setOptionAsCurrent(variable, current);
         }
@@ -143,7 +168,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         that.variableSrv.templateSrv.updateTemplateData();
         that.dashboardSrv.getCurrent().updateSubmenuVisibility();
 
-        that.refreshDashboard();
+        /* 在此处执行刷新会产生重复查询的情况，故注释掉
+        //that.refreshDashboard();
+        */
         console.log(eventData);
       }
     };
@@ -154,8 +181,6 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     };
 
     messageIncomingHandler(eventData);
-
-    console.groupEnd();
 
     console.groupEnd();
   }
@@ -173,6 +198,31 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     return Promise.resolve(this.metricSources.map(value => {
       return this.uiSegmentSrv.newSegment(value.name);
     }));
+  }
+
+  getFieldsInternal() {
+    // if ($scope.agg.type === 'cardinality') {
+    //   return $scope.getFields();
+    // }
+    //return this.getFields({ $fieldType: 'number' });
+    return this.getFields();
+  }
+
+  getFields() {
+    var that = this;
+    var jsonStr = angular.toJson({ find: 'fields' });
+    var dsName = this.datasource;
+
+    return this.datasourceSrv.get(dsName).then(function (ds) {
+      return ds.metricFindQuery(jsonStr);
+    })
+    .then(this.uiSegmentSrv.transformToSegments(false))
+    .catch(this.handleQueryError.bind(this));
+  }
+
+  handleQueryError(err) {
+    this.error = err.message || 'Failed to issue metric query';
+    return [];
   }
 
   newVariable() {

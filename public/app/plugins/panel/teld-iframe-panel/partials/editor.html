@@ -29,4 +29,23 @@
                       on-change="ctrl.datasourceChanged()"></metric-segment>
 		</div>
 	</div>
+
+  <div class="section gf-form-group">
+
+		<h5 class="section-heading">发布记录范围</h5>
+
+		<gf-form-switch class="gf-form" label="启用" label-class="width-5" checked="ctrl.panel.syncRowTimeRange" on-change="ctrl.render()"></gf-form-switch>
+
+		<div ng-if="ctrl.panel.syncRowTimeRange">
+			<div class="gf-form">
+				<label class="gf-form-label width-7">开始时间</label>
+        <metric-segment-model property="ctrl.panel.startDateField" get-options="ctrl.getFieldsInternal()" on-change="ctrl.onChange()" css-class="width-12"></metric-segment-model>
+			</div>
+
+			<div class="gf-form">
+				<label class="gf-form-label width-7">结束时间</label>
+				<metric-segment-model property="ctrl.panel.endDateField" get-options="ctrl.getFieldsInternal()" on-change="ctrl.onChange()" css-class="width-12"></metric-segment-model>
+			</div>
+		</div>
+	</div>
 </div>

@@ -4,14 +4,15 @@ import _ from 'lodash';
 import moment from 'moment';
 import angular from 'angular';
 
-import {DashboardExporter} from '../export/exporter';
+import { DashboardExporter } from '../export/exporter';
 
 export class DashNavCtrl {
 
   /** @ngInject */
   constructor($scope, $rootScope, dashboardSrv, $location, playlistSrv, backendSrv, $timeout, datasourceSrv) {
 
-    $scope.init = function() {
+    $rootScope.showTimepicker = true;
+    $scope.init = function () {
       $scope.onAppEvent('save-dashboard', $scope.saveDashboard);
       $scope.onAppEvent('delete-dashboard', $scope.deleteDashboard);
       $scope.onAppEvent('quick-snapshot', $scope.quickSnapshot);
@@ -28,28 +29,28 @@ export class DashNavCtrl {
       }
     };
 
-    $scope.openEditView = function(editview) {
-      var search = _.extend($location.search(), {editview: editview});
+    $scope.openEditView = function (editview) {
+      var search = _.extend($location.search(), { editview: editview });
       $location.search(search);
     };
 
-    $scope.showHelpModal = function() {
-      $scope.appEvent('show-modal', {templateHtml: '<help-modal></help-modal>'});
+    $scope.showHelpModal = function () {
+      $scope.appEvent('show-modal', { templateHtml: '<help-modal></help-modal>' });
     };
 
-    $scope.starDashboard = function() {
+    $scope.starDashboard = function () {
       if ($scope.dashboardMeta.isStarred) {
-        backendSrv.delete('/api/user/stars/dashboard/' + $scope.dashboard.id).then(function() {
+        backendSrv.delete('/api/user/stars/dashboard/' + $scope.dashboard.id).then(function () {
           $scope.dashboardMeta.isStarred = false;
         });
       } else {
-        backendSrv.post('/api/user/stars/dashboard/' + $scope.dashboard.id).then(function() {
+        backendSrv.post('/api/user/stars/dashboard/' + $scope.dashboard.id).then(function () {
           $scope.dashboardMeta.isStarred = true;
         });
       }
     };
 
-    $scope.shareDashboard = function(tabIndex) {
+    $scope.shareDashboard = function (tabIndex) {
       var modalScope = $scope.$new();
       modalScope.tabIndex = tabIndex;
 
@@ -59,33 +60,33 @@ export class DashNavCtrl {
       });
     };
 
-    $scope.quickSnapshot = function() {
+    $scope.quickSnapshot = function () {
       $scope.shareDashboard(1);
     };
 
-    $scope.openSearch = function() {
+    $scope.openSearch = function () {
       $scope.appEvent('show-dash-search');
     };
 
-    $scope.hideTooltip = function(evt) {
+    $scope.hideTooltip = function (evt) {
       angular.element(evt.currentTarget).tooltip('hide');
       $scope.appEvent('hide-dash-search');
     };
 
-    $scope.makeEditable = function() {
+    $scope.makeEditable = function () {
       $scope.dashboard.editable = true;
 
-      return dashboardSrv.saveDashboard({makeEditable: true, overwrite: false}).then(function() {
+      return dashboardSrv.saveDashboard({ makeEditable: true, overwrite: false }).then(function () {
         // force refresh whole page
         window.location.href = window.location.href;
       });
     };
 
-    $scope.saveDashboard = function(options) {
+    $scope.saveDashboard = function (options) {
       return dashboardSrv.saveDashboard(options);
     };
 
-    $scope.deleteDashboard = function() {
+    $scope.deleteDashboard = function () {
       var confirmText = "";
       var text2 = $scope.dashboard.title;
       var alerts = $scope.dashboard.rows.reduce((memo, row) => {
@@ -105,48 +106,48 @@ export class DashNavCtrl {
         icon: 'fa-trash',
         confirmText: confirmText,
         yesText: 'Delete',
-        onConfirm: function() {
+        onConfirm: function () {
           $scope.dashboardMeta.canSave = false;
           $scope.deleteDashboardConfirmed();
         }
       });
     };
 
-    $scope.deleteDashboardConfirmed = function() {
-      backendSrv.delete('/api/dashboards/db/' + $scope.dashboardMeta.slug).then(function() {
+    $scope.deleteDashboardConfirmed = function () {
+      backendSrv.delete('/api/dashboards/db/' + $scope.dashboardMeta.slug).then(function () {
         $scope.appEvent('alert-success', ['Dashboard Deleted', $scope.dashboard.title + ' has been deleted']);
         $location.url('/');
       });
     };
 
-    $scope.saveDashboardAs = function() {
+    $scope.saveDashboardAs = function () {
       return dashboardSrv.saveDashboardAs();
     };
 
-    $scope.viewJson = function() {
+    $scope.viewJson = function () {
       var clone = $scope.dashboard.getSaveModelClone();
       var html = angular.toJson(clone, true);
       var uri = "data:application/json;charset=utf-8," + encodeURIComponent(html);
       var newWindow = window.open(uri);
     };
 
-    $scope.snapshot = function() {
+    $scope.snapshot = function () {
       $scope.dashboard.snapshot = true;
       $rootScope.$broadcast('refresh');
 
-      $timeout(function() {
+      $timeout(function () {
         $scope.dashboard.snapshot = false;
         $scope.appEvent('dashboard-snapshot-cleanup');
       }, 1000);
 
     };
 
-    $scope.editJson = function() {
+    $scope.editJson = function () {
       var clone = $scope.dashboard.getSaveModelClone();
       $scope.appEvent('show-json-editor', { object: clone });
     };
 
-    $scope.stopPlaylist = function() {
+    $scope.stopPlaylist = function () {
       playlistSrv.stop(1);
     };
 
