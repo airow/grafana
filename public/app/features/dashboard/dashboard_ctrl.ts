@@ -27,6 +27,7 @@ export class DashboardCtrl {
 
       $scope.editor = { index: 0 };
 
+      /* move public\app\plugins\panel\teld-iframe-panel\module.ts
       //接收PostMessage发送过来的消息，通过Angular-Post-Message组件
       let messageIncomingHandler = $scope.$root.$on('$messageIncoming', messageIncoming.bind(this));
       function messageIncoming(event, data){
@@ -39,6 +40,7 @@ export class DashboardCtrl {
         messageIncomingHandler();
         messageIncomingHandler = null;
       });
+      */
 
       var resizeEventTimeout;
 
