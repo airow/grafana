@@ -128,6 +128,10 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         let def = that.variables;
 
+        let rowVariables = [];
+
+        that.panel.rowEvents = [{ eventName: "RMapC" }];
+
         function setT(config) {
           let teldCustomModel = { type: 'teldCustom', name: config.name };
           let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
@@ -144,6 +148,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
             }
           }
           that.variableSrv.setOptionAsCurrent(variable, current);
+          rowVariables.push(variable);
         }
 
 
@@ -156,6 +161,12 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         that.variableSrv.templateSrv.updateTemplateData();
         that.dashboardSrv.getCurrent().updateSubmenuVisibility();
+
+        that.panel.rowEvents.forEach(element => {
+          //that.publishAppEvent(element.eventName, { eventName: element.eventName, rowVariables });
+          that.$scope.$root.$broadcast(element.eventName, { eventName: element.eventName, rowVariables });
+        });
+
 
         /* 如果设置的时间会自动触发取数，否则手动执行触发*/
         //根据配置同步时间范围

@@ -1,0 +1,28 @@
+<div class="editor-row">
+
+  <div class="section gf-form-group">
+
+		<h5 class="section-heading">iframe URL</h5>
+
+		<gf-form-switch class="gf-form" label="启用" label-class="width-5" checked="ctrl.panel.staticPage" on-change="ctrl.render()"></gf-form-switch>
+
+		<div ng-if="ctrl.panel.staticPage">
+			<div class="gf-form">
+				<textarea class="gf-form-input width-25" ng-model="ctrl.panel.staticPageSrc" rows="5" style="width:95%" ng-change="ctrl.render()">
+        </textarea>
+			</div>
+		</div>
+	</div>
+
+	<div class="section gf-form-group">
+		<h5 class="section-heading">Size</h5>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">Width</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeWidth" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">Height</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeHeight" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+	</div>
+</div>

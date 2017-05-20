@@ -1,0 +1,17 @@
+{
+  "type": "panel",
+  "name": "Teld linkage-iframe",
+  "id": "teld-linkage-iframe-panel",
+
+  "info": {
+    "author": {
+      "name": "Teld Inc.",
+      "url": "https://teld.cn"
+},
+    "logos": {
+      "small": "img/icn-text-panel.svg",
+      "large": "img/icn-text-panel.svg"
+    }
+  }
+}
+
