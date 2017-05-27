@@ -211,7 +211,14 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
     let dash = this.dashboardSrv.getCurrent();
 
-    this.sendPostMessage("grafanaLink", { "dashTheme": dash.style });
+    let href = angular.element("link[href$='/public/css/grafana.light.min.css']").attr('href');
+
+    let dashStyle = 'dark';
+    if (href) {
+      dashStyle = 'light';
+    }
+
+    this.sendPostMessage("grafanaLink", { "dashTheme": dashStyle });
   }
 
   sendPostMessage(eventType, eventArgs) {
