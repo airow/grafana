@@ -97,6 +97,10 @@ export class KeybindingSrv {
       dashboard.hideControls = !dashboard.hideControls;
     });
 
+    this.bind('mod+b', () => {
+      dashboard.hideDashNavbar = !dashboard.hideDashNavbar;
+    });
+
     this.bind('mod+s', e => {
       scope.appEvent('save-dashboard');
     });

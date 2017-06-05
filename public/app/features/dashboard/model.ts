@@ -24,6 +24,7 @@ export class DashboardModel {
   time: any;
   timepicker: any;
   hideControls: any;
+  hideDashNavbar: any;
   templating: any;
   annotations: any;
   refresh: any;
@@ -54,6 +55,7 @@ export class DashboardModel {
     this.editable = data.editable !== false;
     this.graphTooltip = data.graphTooltip || 0;
     this.hideControls = data.hideControls || false;
+    this.hideDashNavbar = data.hideDashNavbar || false;
     this.time = data.time || { from: 'now-6h', to: 'now' };
     this.timepicker = data.timepicker || {};
     this.templating = this.ensureListExist(data.templating);

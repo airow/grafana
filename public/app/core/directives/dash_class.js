@@ -31,6 +31,26 @@ function (_, $, coreModule) {
           }
         });
 
+        var lasthideDashNavbarVal;
+        $scope.$watch('dashboard.hideDashNavbar', function() {
+          if (!$scope.dashboard) {
+            return;
+          }
+
+          var hideDashNavbar = $scope.dashboard.hideDashNavbar;
+          if (lasthideDashNavbarVal !== hideDashNavbar) {
+            elem.toggleClass('hide-dashnavbar', hideDashNavbar);
+            var navbarHeight = 52;
+            var lastGrafanaPanel = elem.find("grafana-panel:last");
+            if (hideDashNavbar) {
+              lastGrafanaPanel.find(".panel-container").height(lastGrafanaPanel.find(".panel-container").height() + navbarHeight);
+            } else {
+              lastGrafanaPanel.find(".panel-container").height(lastGrafanaPanel.find(".panel-container").height() - navbarHeight);
+            }
+            lasthideDashNavbarVal = hideDashNavbar;
+          }
+        });
+
         $scope.$watch('playlistSrv', function(newValue) {
           elem.toggleClass('playlist-active', _.isObject(newValue));
         });
