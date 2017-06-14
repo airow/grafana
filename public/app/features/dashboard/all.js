@@ -21,4 +21,6 @@ define([
   './ad_hoc_filters',
   './row/row_ctrl',
   './repeat_option/repeat_option',
+  '../signalr/dash_signalr_svr',
+  '../signalr/grafana_screen_signalr_hub',
 ], function () {});

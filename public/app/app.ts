@@ -10,6 +10,8 @@ import 'angular-dragdrop';
 import 'angular-bindonce';
 import 'angular-ui';
 import 'angular-post-message';
+import 'angular-signalr-hub';
+import 'jquery.signalR';
 
 import $ from 'jquery';
 import angular from 'angular';
@@ -86,6 +88,7 @@ export class GrafanaApp {
       'ui.bootstrap',
       'ui.bootstrap.tpls',
       'ngPostMessage',
+      'SignalR',
     ];
 
     var module_types = ['controllers', 'directives', 'factories', 'services', 'filters', 'routes'];

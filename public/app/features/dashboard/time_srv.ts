@@ -17,7 +17,7 @@ class TimeSrv {
   timeAtLoad: any;
 
   /** @ngInject **/
-  constructor(private $rootScope, private $timeout, private $location, private timer, private contextSrv) {
+  constructor(private $rootScope, private $timeout, private $location, private timer, private contextSrv, private grafanaScreenSignalrHub) {
     // default time
     this.time = {from: '6h', to: 'now'};
 
@@ -129,6 +129,9 @@ class TimeSrv {
 
   refreshDashboard() {
     this.$rootScope.$broadcast('refresh');
+    this.$rootScope.$broadcast('refresh');
+    this.$rootScope.$emit('signalr_screen', 'parent');
+    this.grafanaScreenSignalrHub.send('timeSrv', new Date().valueOf());
   }
 
   private startNextRefreshTimer(afterMs) {

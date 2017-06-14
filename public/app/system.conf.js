@@ -21,6 +21,8 @@ System.config({
     "angular-dragdrop":       "vendor/angular-native-dragdrop/draganddrop.js",
     "angular-bindonce":       "vendor/angular-bindonce/bindonce.js",
     "angular-post-message":   "vendor/angular-post-message/src/angular-post-message.js",
+    "angular-signalr-hub":   "vendor/angular-signalr-hub/signalr-hub.js",
+    "jquery.signalR":   "vendor/jquery.signalR/jquery.signalR-2.2.2.js",
     "spectrum": "vendor/spectrum.js",
     "bootstrap-tagsinput": "vendor/tagsinput/bootstrap-tagsinput.js",
     "jquery.flot": "vendor/flot/jquery.flot",

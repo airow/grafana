@@ -23,7 +23,20 @@ export class DashboardCtrl {
     dashboardViewStateSrv,
     contextSrv,
     alertSrv,
-    $timeout) {
+    $timeout,
+    // dashSignalRSvr
+    grafanaScreenSignalrHub
+    ) {
+
+      //dashSignalRSvr.editEmployee();
+      //grafanaScreenSignalrHub.send('grafana@dashboard_ctrl',new Date().valueOf());
+
+    // grafanaScreenSignalrHub.promise.done(function () {
+    //   console.log('Invocation of NewContosoChatMessage succeeded');
+    //   grafanaScreenSignalrHub.send('grafana@dashboard_ctrl@'+grafanaScreenSignalrHub.connection.id, new Date().valueOf());
+    // }).fail(function (error) {
+    //   console.log('Invocation of NewContosoChatMessage failed. Error: ' + error);
+    // });
 
       $scope.editor = { index: 0 };
 

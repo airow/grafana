@@ -1,0 +1,95 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "angular-signalr-hub",
+        "scope": null,
+        "escapedName": "angular-signalr-hub",
+        "name": "angular-signalr-hub",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "D:\\Teld\\Source\\teld.grafana\\src\\github.com\\grafana\\grafana"
+    ]
+  ],
+  "_cnpm_publish_time": 1461119741607,
+  "_from": "angular-signalr-hub@latest",
+  "_hasShrinkwrap": false,
+  "_id": "angular-signalr-hub@1.6.2",
+  "_inCache": true,
+  "_location": "/angular-signalr-hub",
+  "_nodeVersion": "0.12.7",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/angular-signalr-hub-1.6.2.tgz_1461119739480_0.2985533319879323"
+  },
+  "_npmUser": {
+    "name": "justmaier",
+    "email": "just.maier@gmail.com"
+  },
+  "_npmVersion": "2.11.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "angular-signalr-hub",
+    "scope": null,
+    "escapedName": "angular-signalr-hub",
+    "name": "angular-signalr-hub",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/angular-signalr-hub/download/angular-signalr-hub-1.6.2.tgz",
+  "_shasum": "cd1ab4084abb90709d54d9650ef9757206d7d294",
+  "_shrinkwrap": null,
+  "_spec": "angular-signalr-hub",
+  "_where": "D:\\Teld\\Source\\teld.grafana\\src\\github.com\\grafana\\grafana",
+  "author": {
+    "name": "Justin Maier",
+    "email": "just.maier@gmail.com",
+    "url": "http://justinmaier.com"
+  },
+  "bugs": {
+    "url": "https://github.com/justmaier/angular-signalr-hub/issues"
+  },
+  "dependencies": {},
+  "description": "A handy wrapper for SignalR Hubs. Just specify the hub name, listening functions, and methods that you're going to use.",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "cd1ab4084abb90709d54d9650ef9757206d7d294",
+    "size": 5329,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/angular-signalr-hub/download/angular-signalr-hub-1.6.2.tgz"
+  },
+  "gitHead": "0409717936cf085738a368d5b34eb3cc4e2a1c61",
+  "homepage": "https://github.com/justmaier/angular-signalr-hub",
+  "keywords": [
+    "angular",
+    "angularjs",
+    "signalr",
+    "hub",
+    "service"
+  ],
+  "license": "MIT",
+  "main": "signalr-hub.js",
+  "maintainers": [
+    {
+      "name": "justmaier",
+      "email": "just.maier@gmail.com"
+    }
+  ],
+  "name": "angular-signalr-hub",
+  "optionalDependencies": {},
+  "publish_time": 1461119741607,
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/justmaier/angular-signalr-hub.git"
+  },
+  "scripts": {},
+  "version": "1.6.2"
+}
