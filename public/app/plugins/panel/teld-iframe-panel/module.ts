@@ -134,10 +134,13 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         that.panel.rowEvents = [{ eventName: "RMapC" }];
 
         function setT(config) {
+          /* 为了通用使用统一使用custom类型的系统自带变量
           let variableType = config.variableType || 'teldCustom';
           if (!!config.variableType) {
             config.variableType = variableType;
           }
+          */
+          let variableType = 'custom';
           let teldCustomModel = { type: variableType, name: config.name };
           let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
           let variable;
