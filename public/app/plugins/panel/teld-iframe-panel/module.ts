@@ -18,6 +18,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   dsSegment: any;
   metricSources: any[];
   variables: any[];
+  variableTypeDataSource: any[];
   // Set and populate defaults
   panelDefaults = {
     mode: "markdown", // 'html', 'markdown', 'text'
@@ -34,6 +35,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
     private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv) {
     super($scope, $injector);
+
+    this.variableTypeDataSource = ["custom", "teldCustom"];
 
     _.defaults(this.panel, this.panelDefaults);
 
@@ -91,8 +94,6 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         that.templateSrv.getAdhocFilters("TeldElasticsearch");
 
-        //let variable_teldCustom = that.variableSrv.addVariable({type: 'teldCustom',name : 'teldana.TeldCustom'});
-
         let teldanaAdhocModel = { type: 'teldAdhoc', name: 'teldana_Adhoc' };
         let indexOf = _.findIndex(that.variableSrv.variables, teldanaAdhocModel);
         let variable;
@@ -133,12 +134,16 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         that.panel.rowEvents = [{ eventName: "RMapC" }];
 
         function setT(config) {
-          let teldCustomModel = { type: 'teldCustom', name: config.name };
+          let variableType = config.variableType || 'teldCustom';
+          if (!!config.variableType) {
+            config.variableType = variableType;
+          }
+          let teldCustomModel = { type: variableType, name: config.name };
           let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
           let variable;
           let current = { text: config.value, value: config.value };
           if (indexOf === -1) {
-            variable = that.variableSrv.addVariable({ type: 'teldCustom' });
+            variable = that.variableSrv.addVariable({ type: variableType });
             variable.hide = 2;
             variable.name = variable.label = teldCustomModel.name;
           } else {

@@ -5,11 +5,14 @@
       <span class="gf-form-label width-25">&nbsp;</span>
       <span class="gf-form-label width-25">变量名</span>
       <span class="gf-form-label width-25">绑定字段</span>
+      <span class="gf-form-label width-25">变量类型</span>
     </div>
     <div class="gf-form" ng-repeat="variable in ctrl.variables">
       <span class="gf-form-label width-25">${{variable.name}}</span>
       <input type="text" class="gf-form-input width-25 " ng-model="variable.name" placeholder="变量名">
       <input type="text" class="gf-form-input width-25 " ng-model="variable.field" placeholder="绑定字段">
+      <select ng-model="variable.variableType" ng-options="x for x in ctrl.variableTypeDataSource">
+      </select>
       <a ng-click="ctrl.removeVariable(variable)" class="btn btn-danger btn-mini">
         <i class="fa fa-remove"></i>
       </a>
