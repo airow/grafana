@@ -13,6 +13,7 @@ describe('timeSrv', function() {
 
   beforeEach(angularMocks.module('grafana.core'));
   beforeEach(angularMocks.module('grafana.services'));
+  beforeEach(angularMocks.module('SignalR'));
   beforeEach(ctx.createService('timeSrv'));
 
   beforeEach(function() {

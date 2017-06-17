@@ -10,6 +10,7 @@ define([
 
     beforeEach(module('grafana.core'));
     beforeEach(module('grafana.services'));
+    beforeEach(module('SignalR'));
 
     beforeEach(inject(function(linkSrv) {
       _linkSrv = linkSrv;
