@@ -129,9 +129,9 @@ class TimeSrv {
 
   refreshDashboard() {
     this.$rootScope.$broadcast('refresh');
-    this.$rootScope.$broadcast('refresh');
-    this.$rootScope.$emit('signalr_screen', 'parent');
-    this.grafanaScreenSignalrHub.send('timeSrv', new Date().valueOf());
+    // todo:Signalr
+    // this.$rootScope.$emit('signalr_screen', 'parent');
+    // this.grafanaScreenSignalrHub.send('timeSrv', new Date().valueOf());
   }
 
   private startNextRefreshTimer(afterMs) {
