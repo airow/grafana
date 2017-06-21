@@ -23,6 +23,7 @@ export class TeldCustomVariable implements Variable {
     includeAll: false,
     multi: false,
     allValue: null,
+    canSaved: false,
   };
 
   /** @ngInject **/

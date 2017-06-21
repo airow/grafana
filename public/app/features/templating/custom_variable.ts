@@ -23,6 +23,7 @@ export class CustomVariable implements Variable {
     includeAll: false,
     multi: false,
     allValue: null,
+    canSaved: true,
   };
 
   /** @ngInject **/

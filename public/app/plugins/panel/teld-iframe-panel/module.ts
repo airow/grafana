@@ -146,7 +146,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
           let variable;
           let current = { text: config.value, value: config.value };
           if (indexOf === -1) {
-            variable = that.variableSrv.addVariable({ type: variableType });
+            variable = that.variableSrv.addVariable({ type: variableType, canSaved: false });
             variable.hide = 2;
             variable.name = variable.label = teldCustomModel.name;
           } else {
@@ -155,13 +155,14 @@ export class TeldIframePanelCtrl extends PanelCtrl {
               current.text = current.value = '';
             }
           }
+          //variable.ext = 'teld';
           that.variableSrv.setOptionAsCurrent(variable, current);
           rowVariables.push(variable);
         }
 
 
         def.forEach(element => {
-          if (row._source[element.field]) {
+          if (typeof(row._source[element.field])!=="undefined") {
             let value = _.defaults({ value: row._source[element.field] }, element);
             setT(value);
           }
