@@ -79,6 +79,27 @@ function (queryDef) {
     return esAgg;
   };
 
+  ElasticQueryBuilder.prototype.getDateHistogramAggTime_zoneShanghai = function(aggDef) {
+    var esAgg = {};
+    var settings = aggDef.settings || {};
+    esAgg.interval = settings.interval;
+    esAgg.field = this.timeField;
+    esAgg.min_doc_count = settings.min_doc_count || 0;
+    //esAgg.extended_bounds = {min: "$timeFrom", max: "$timeTo"};
+    esAgg.time_zone = "Asia/Shanghai";
+    esAgg.format = "epoch_millis";
+
+    if (esAgg.interval === 'auto') {
+      esAgg.interval = "$__interval";
+    }
+
+    if (settings.missing) {
+      esAgg.missing = settings.missing;
+    }
+
+    return esAgg;
+  };
+
   ElasticQueryBuilder.prototype.getFiltersAgg = function(aggDef) {
     var filterObj = {};
     for (var i = 0; i < aggDef.settings.filters.length; i++) {
@@ -189,7 +210,7 @@ function (queryDef) {
 
       switch(aggDef.type) {
         case 'date_histogram': {
-          esAgg["date_histogram"] = this.getDateHistogramAgg(aggDef);
+          esAgg["date_histogram"] = this.getDateHistogramAggTime_zoneShanghai(aggDef);
           break;
         }
         case 'filters': {
