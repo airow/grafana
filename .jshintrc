@@ -33,5 +33,7 @@
     "require": true,
     "Chromath": false,
     "setImmediate": true
-  }
+  },
+
+  "esversion": 6
 }
