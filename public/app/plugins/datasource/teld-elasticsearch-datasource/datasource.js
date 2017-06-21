@@ -208,6 +208,26 @@ define([
           if (target.hide) { continue; }
 
           var queryString = templateSrv.replace(target.query || '*', options.scopedVars, 'lucene');
+
+          // vSrc.variables.map(function(eachItem){
+          //   if (eachItem.current === "") {
+          //     queryString = queryString.replace(new RegExp('.*:"\$' + eachItem.name + '"'), "");
+          //   }
+          // });
+
+          var whileCount = 0;
+          var m = queryString.match(/.*:"(\$.*)"\s?(and|or)?/);
+          while (m && whileCount < 100) {
+            var varName = m[1];
+            queryString = queryString.replace(new RegExp('.*:"\\' + varName + '"'), "");
+
+            m = queryString.match(/.*:"(\$.*)"\s+(and|or)?/);
+            whileCount++;
+          }
+          queryString = queryString || "*";
+
+          //"所属城市:\"$citycode\" AND 所属3城市:\"$cit3ycode\"".replace(/.*:"\$citycode"/,"").replace(/(and|or)/i,'')
+
           var queryObj = this.queryBuilder.build(target, adhocFilters, queryString);
           //queryObj.query.bool = esQueryDSL;
 
