@@ -135,6 +135,35 @@ function (angular, _, kbn) {
       return name && (self._index[name] !== void 0);
     };
 
+    this.variableDefined = function (expression, variableType) {
+      var name = this.getVariableName(expression);
+
+      let teldCustomModel = { type: variableType, name: name };
+      let indexOf = _.findIndex(this.variables, teldCustomModel);
+
+      return indexOf >= 0;
+    };
+
+    this.removeVariable = function (expression, variableType) {
+      var name = this.getVariableName(expression);
+
+      let teldCustomModel = { type: variableType, name: name };
+      let indexOf = _.findIndex(this.variables, teldCustomModel);
+
+      if(indexOf !== -1){
+        this.variables.splice(indexOf,1);
+      }
+    };
+
+    this.getVariable = function (expression, variableType) {
+      var name = this.getVariableName(expression);
+
+      let teldCustomModel = { type: variableType, name: name };
+      let indexOf = _.findIndex(this.variables, teldCustomModel);
+
+      return indexOf === -1 ? null : this.variables[indexOf];
+    };
+
     this.highlightVariablesAsHtml = function(str) {
       if (!str || !_.isString(str)) { return str; }
 
@@ -177,6 +206,52 @@ function (angular, _, kbn) {
 
         if (!variable) {
           return match;
+        }
+
+        systemValue = self._grafanaVariables[variable.current.value];
+        if (systemValue) {
+          return self.formatValue(systemValue, format, variable);
+        }
+
+        value = variable.current.value;
+        if (self.isAllValue(value)) {
+          value = self.getAllValue(variable);
+          // skip formating of custom all values
+          if (variable.allValue) {
+            return value;
+          }
+        }
+
+        var res = self.formatValue(value, format, variable);
+        return res;
+      });
+    };
+
+    this.replaceWithEmpty = function(target, scopedVars, format) {
+      if (!target) { return target; }
+
+      var variable, systemValue, value;
+      this._regex.lastIndex = 0;
+
+      return target.replace(this._regex, function(match, g1, g2) {
+        variable = self._index[g1 || g2];
+
+        if (scopedVars) {
+          value = scopedVars[g1 || g2];
+          if (value) {
+            return self.formatValue(value.value, format, variable);
+          }
+        }
+
+        if (!variable) {
+          var returnValue = match;
+          variable = self.getVariable(match, "custom");
+
+          if (variable && variable.current.value === "") {
+            returnValue = match.replace("$", "@");
+          }
+
+          return returnValue;
         }
 
         systemValue = self._grafanaVariables[variable.current.value];

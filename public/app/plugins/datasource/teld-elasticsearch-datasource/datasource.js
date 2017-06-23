@@ -207,21 +207,17 @@ define([
           target = options.targets[i];
           if (target.hide) { continue; }
 
-          var queryString = templateSrv.replace(target.query || '*', options.scopedVars, 'lucene');
-
-          // vSrc.variables.map(function(eachItem){
-          //   if (eachItem.current === "") {
-          //     queryString = queryString.replace(new RegExp('.*:"\$' + eachItem.name + '"'), "");
-          //   }
-          // });
+          //var queryString = templateSrv.replace(target.query || '*', options.scopedVars, 'lucene');
+          var queryString = templateSrv.replaceWithEmpty(target.query || '*', options.scopedVars, 'lucene');
 
           var whileCount = 0;
-          var m = queryString.match(/.*:"(\$.*)"\s?(and|or)?/);
+          var exp = /.*:"(\@.*)"\s?(and|or)?/;
+          var m = queryString.match(exp);
           while (m && whileCount < 100) {
             var varName = m[1];
             queryString = queryString.replace(new RegExp('.*:"\\' + varName + '"'), "");
 
-            m = queryString.match(/.*:"(\$.*)"\s+(and|or)?/);
+            m = queryString.match(exp);
             whileCount++;
           }
           queryString = queryString || "*";

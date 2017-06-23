@@ -1,8 +1,9 @@
 define([
   'jquery',
-  'lodash'
+  'lodash',
+  'numeral'
 ],
-function($, _) {
+function($, _, numeral) {
   'use strict';
 
   var kbn = {};
@@ -696,6 +697,15 @@ function($, _) {
     return kbn.toDuration(size, decimals, 'second');
   };
 
+  //千位分割符
+  kbn.valueFormats.thousandsSeparator = function (size, decimals) {
+    // var d = "";
+    // for (var i = 0; i < decimals; i++) {
+    //   d = d + '0';
+    // }
+    return numeral(size).format('0,0.' + _.repeat('0', decimals));
+  };
+
   ///// FORMAT MENU /////
 
   kbn.getUnitFormats = function() {
@@ -868,6 +878,12 @@ function($, _) {
           {text: 'Cubic meters/sec (cms)',  value: 'flowcms'  },
           {text: 'Cubic feet/sec (cfs)',    value: 'flowcfs'  },
           {text: 'Cubic feet/min (cfm)',    value: 'flowcfm'  },
+        ]
+      },
+      {
+        text: 'teld',
+        submenu: [
+          {text: '千分位',       value: 'thousandsSeparator'  },
         ]
       }
     ];

@@ -17,7 +17,7 @@ describe('ElasticQueryBuilder', function() {
     });
 
     expect(query.query.bool.filter[0].range["@timestamp"].gte).to.be("$timeFrom");
-    expect(query.aggs["1"].date_histogram.extended_bounds.min).to.be("$timeFrom");
+    //expect(query.aggs["1"].date_histogram.extended_bounds.min).to.be("$timeFrom");
   });
 
   it('with defaults on es5.x', function() {
@@ -33,7 +33,7 @@ describe('ElasticQueryBuilder', function() {
     });
 
     expect(query.query.bool.filter[0].range["@timestamp"].gte).to.be("$timeFrom");
-    expect(query.aggs["1"].date_histogram.extended_bounds.min).to.be("$timeFrom");
+    //expect(query.aggs["1"].date_histogram.extended_bounds.min).to.be("$timeFrom");
   });
 
   it('with multiple bucket aggs', function() {

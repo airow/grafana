@@ -126,6 +126,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       },
       "kibana.RowSelected": function (eventData) {
         let row = eventData.eventArgs.row;
+        let isSelected = eventData.eventArgs.isSelected;
 
         let def = that.variables;
 
@@ -145,29 +146,32 @@ export class TeldIframePanelCtrl extends PanelCtrl {
           let indexOf = _.findIndex(that.variableSrv.variables, teldCustomModel);
           let variable;
           let current = { text: config.value, value: config.value };
+
           if (indexOf === -1) {
             variable = that.variableSrv.addVariable({ type: variableType, canSaved: false });
             variable.hide = 2;
             variable.name = variable.label = teldCustomModel.name;
           } else {
             variable = that.variableSrv.variables[indexOf];
-            if (variable.current.value === current.value) {
-              current.text = current.value = '';
-            }
           }
-          //variable.ext = 'teld';
+          variable.current === current;
+
           that.variableSrv.setOptionAsCurrent(variable, current);
           rowVariables.push(variable);
         }
 
-
-        def.forEach(element => {
-          if (typeof(row._source[element.field])!=="undefined") {
-            let value = _.defaults({ value: row._source[element.field] }, element);
-            setT(value);
-          }
-        });
-
+        if (isSelected) {
+          def.forEach(element => {
+            if (typeof (row._source[element.field]) !== "undefined") {
+              let value = _.defaults({ value: row._source[element.field] }, element);
+              setT(value);
+            }
+          });
+        }else{
+          def.forEach(element => {
+            that.variableSrv.templateSrv.removeVariable(`$${element.name}`, 'custom');
+          });
+        }
         that.variableSrv.templateSrv.updateTemplateData();
         that.dashboardSrv.getCurrent().updateSubmenuVisibility();
 
@@ -227,7 +231,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       dashStyle = 'light';
     }
 
-    this.sendPostMessage("grafanaLink", { "dashTheme": dashStyle });
+    this.sendPostMessage("grafanaLink", { "dashTheme": dashStyle, topNavMenu: this.panel.kibanaTopNavMenu });
   }
 
   sendPostMessage(eventType, eventArgs) {
