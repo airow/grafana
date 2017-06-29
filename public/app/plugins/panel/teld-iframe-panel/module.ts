@@ -92,13 +92,16 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         let tmpSrv = that.templateSrv;
 
+        /**
+         * 2017-06-29弃用
+         *
         that.templateSrv.getAdhocFilters("TeldElasticsearch");
 
         let teldanaAdhocModel = { type: 'teldAdhoc', name: 'teldana_Adhoc' };
         let indexOf = _.findIndex(that.variableSrv.variables, teldanaAdhocModel);
         let variable;
         if (indexOf === -1) {
-          variable = that.variableSrv.addVariable(teldanaAdhocModel);
+          variable = that.variableSrv.addVariable({ type: teldanaAdhocModel.type, canSaved: false });
           variable.hide = 2;
         } else {
           variable = that.variableSrv.variables[indexOf];
@@ -115,6 +118,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         // }
 
         variable.esQueryDSL = esQueryDSL;
+        delete variable.esQueryDSL;//2017-06-29弃用
 
         variable.setFilters(filters);
 
@@ -123,6 +127,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         that.refreshDashboard();
         console.log(eventData);
+        */
       },
       "kibana.RowSelected": function (eventData) {
         let row = eventData.eventArgs.row;

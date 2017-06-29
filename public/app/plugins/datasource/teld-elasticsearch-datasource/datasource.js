@@ -197,11 +197,14 @@ define([
         // add global adhoc filters to timeFilter
         var adhocFilters = templateSrv.getAdhocFilters(this.name);
 
+        /**
+         * 2017-06-29放弃
         var teldanaIndex = _.findIndex(variableSrv.variables, { type: 'teldAdhoc', name: 'teldana_Adhoc' });
         var esQueryDSL;
         if (teldanaIndex >= 0) {
           esQueryDSL = variableSrv.variables[teldanaIndex].esQueryDSL;
         }
+        */
 
         for (var i = 0; i < options.targets.length; i++) {
           target = options.targets[i];
@@ -227,11 +230,14 @@ define([
           var queryObj = this.queryBuilder.build(target, adhocFilters, queryString);
           //queryObj.query.bool = esQueryDSL;
 
+          /**
+           *
           if (esQueryDSL) {
             for (var key in esQueryDSL) {
               queryObj.query.bool[key] = esQueryDSL[key];
             }
           }
+          */
 
           var esQuery = angular.toJson(queryObj);
 
