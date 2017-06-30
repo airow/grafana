@@ -42,6 +42,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   onInitEditMode() {
     //this.addEditorTab('Options', 'partials/editor.html');
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/editor.html');
+    this.addEditorTab('watchEvents', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/watchEvents.html');
     this.editorTabIndex = 1;
   }
 
@@ -66,7 +67,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       this.ecOption.baseOption.timeline.autoPlay = true;
     });
   }
-  init() {
+  initEcharts() {
     this.ecConfig = {
       theme: 'default',
       event: [{
@@ -98,85 +99,66 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       },
     ];
 
-    // this.ecOption = {
-    //   baseOption: {
-    //     timeline: {
-    //       controlStyle: {
-    //         show: true
-    //       },
-    //       // y: 0,
-    //       axisType: 'category',
-    //       // realtime: false,
-    //       loop: false,
-    //       autoPlay: false,
-    //       // currentIndex: 2,
-    //       playInterval: 1000,
-    //       // controlStyle: {
-    //       //     position: 'left'
-    //       // },
-    //       data: timelineData,
-    //       label: {
-    //         formatter: function (s) {
-    //           return (new Date(s)).getFullYear();
-    //         }
-    //       }
-    //     },
-    //     tooltip: { trigger: "item", show: true },
-    //     animation: true,
-    //     bmap: {
-    //       center: [120.13066322374, 30.240018034923],
-    //       zoom: 14,
-    //       roam: true
-    //     },
-    //     visualMap: {
-    //       show: true,
-    //       top: 'top',
-    //       min: 0,
-    //       max: 10,
-    //       seriesIndex: 0,
-    //       calculable: true,
-    //       inRange: {
-    //         color: ['blue', 'blue', 'green', 'yellow', 'red']
-    //       }
-    //     },
-    //     series: [{
-    //       type: 'heatmap',
-    //       coordinateSystem: 'bmap',
-    //       geoIndex: 1,
-    //       label: {
-    //         normal: {
-    //           show: true
-    //         }
-    //       },
-    //       pointSize: 5,
-    //       blurSize: 6
-    //     }]
-    //   },
-    //   options: timelineData.map(item => { return {}; })
-    // };
-
     this.ecOption = {
-      title: {
-        text: 'ECharts 入门示例'
+      baseOption: {
+        timeline: {
+          controlStyle: {
+            show: true
+          },
+          // y: 0,
+          axisType: 'category',
+          // realtime: false,
+          loop: false,
+          autoPlay: false,
+          // currentIndex: 2,
+          playInterval: 1000,
+          // controlStyle: {
+          //     position: 'left'
+          // },
+          data: timelineData,
+          label: {
+            formatter: function (s) {
+              return (new Date(s)).getFullYear();
+            }
+          }
+        },
+        tooltip: { trigger: "item", show: true },
+        animation: true,
+        bmap: {
+          center: [120.13066322374, 30.240018034923],
+          zoom: 14,
+          roam: true
+        },
+        visualMap: {
+          show: true,
+          top: 'top',
+          min: 0,
+          max: 10,
+          seriesIndex: 0,
+          calculable: true,
+          inRange: {
+            color: ['blue', 'blue', 'green', 'yellow', 'red']
+          }
+        },
+        series: [{
+          type: 'heatmap',
+          coordinateSystem: 'bmap',
+          geoIndex: 1,
+          label: {
+            normal: {
+              show: true
+            }
+          },
+          pointSize: 5,
+          blurSize: 6
+        }]
       },
-      tooltip: {},
-      legend: {
-        data: ['销量']
-      },
-      xAxis: {
-        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-      },
-      yAxis: {},
-      series: [{
-        name: '销量',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
-      }]
+      options: timelineData.map(item => { return {}; })
     };
   }
 
   loadData() {
-    this.init();
+    this.initEcharts();
 
     this.callSG(0);
   }
@@ -212,7 +194,6 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   }
 
   onRender() {
-    this.init();
-    //this.loadData();
+    this.loadData();
   }
 }
