@@ -1,0 +1,79 @@
+define([
+  'jquery',
+  'angular',
+  'lodash',
+  'echarts',
+  'echarts.bmap',
+  '../core_module',
+],
+  function ($, angular, _, echarts, ecBmap, coreModule) {
+    'use strict';
+
+    coreModule.default.directive('teldEcharts', function () {
+      return {
+        link: function (scope, element) {
+          function refreshChart() {
+            var theme = (scope.config && scope.config.theme)
+              ? scope.config.theme : 'default';
+
+            var ecContainer = element.find(".ecContainer");
+            if (ecContainer.length === 0) {
+              ecContainer = $('<div class="ecContainer" style="height:100%;">');
+              element.append(ecContainer);
+            }
+            var chart = scope.instance || (scope.instance = echarts.init(ecContainer[0], theme));
+            if (scope.config && scope.config.dataLoaded === false) {
+              chart.showLoading();
+            }
+
+            if (scope.config && scope.config.dataLoaded) {
+              chart.setOption(scope.option, scope.option.ff);
+              chart.resize();
+              chart.hideLoading();
+            }
+
+            if (scope.config && scope.config.event) {
+              if (angular.isArray(scope.config.event)) {
+                angular.forEach(scope.config.event, function (value) {
+                  for (var e in value) {
+                    chart.off(e, value[e]);
+                    chart.on(e, value[e]);
+                  }
+                });
+              }
+            }
+
+            // chart.off('click');
+            // chart.on('click', function (params) {
+            //   // 控制台打印数据的名称
+            //   console.log(params.name);
+            // });
+          }
+
+          //自定义参数 - config
+          // event 定义事件
+          // theme 主题名称
+          // dataLoaded 数据是否加载
+          scope.$watch(
+            function () { return scope.config; },
+            function (value) { if (value) { refreshChart(); } },
+            true
+          );
+
+          //图表原生option
+          scope.$watch(
+            function () { return scope.option; },
+            function (value) { if (value) { refreshChart(); } },
+            true
+          );
+        },
+        scope: {
+          option: '=ecOption',
+          config: '=ecConfig',
+          instance: '=?ecInstance',
+        },
+        restrict: 'EA'
+      };
+    });
+
+  });
