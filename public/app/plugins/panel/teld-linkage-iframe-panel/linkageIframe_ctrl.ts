@@ -85,15 +85,15 @@ export class TeldLinkageIframePanelCtrl extends PanelCtrl {
     this.panel.Variables = this.watchEvents;
   }
 
-   addMethodArg(watchEvent) {
-     watchEvent.methodArgs = watchEvent.methodArgs || [];
-     watchEvent.methodArgs.push({});
+  addMethodArg(watchEvent) {
+    watchEvent.methodArgs = watchEvent.methodArgs || [];
+    watchEvent.methodArgs.push({});
   }
 
-   removeMethodArg(methodArgs, arg) {
-     var index = _.indexOf(methodArgs, arg);
-     methodArgs.splice(index, 1);
-   }
+  removeMethodArg(methodArgs, arg) {
+    var index = _.indexOf(methodArgs, arg);
+    methodArgs.splice(index, 1);
+  }
 
   refreshDashboard() {
     this.$rootScope.$broadcast('refresh');
