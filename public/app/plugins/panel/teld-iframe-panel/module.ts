@@ -137,7 +137,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         let rowVariables = [];
 
-        that.panel.rowEvents = [{ eventName: "RMapC" }];
+        that.panel.rowEvents = [{ eventName: "RMapC" }, { eventName: "heatmap" }];
 
         function setT(config) {
           /* 为了通用使用统一使用custom类型的系统自带变量
