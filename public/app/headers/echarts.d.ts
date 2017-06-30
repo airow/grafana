@@ -32,7 +32,7 @@ declare namespace ECharts {
 
         getDom():HTMLCanvasElement|HTMLDivElement
 
-        getOption():Object
+        getOption():EChartOption
 
         resize():void
 
@@ -69,7 +69,7 @@ declare namespace ECharts {
         isDisposed():boolean
 
         dispose():void
-        
+
         // 转换逻辑点到像素
         convertToPixel(finder: {
             seriesIndex?: number,
