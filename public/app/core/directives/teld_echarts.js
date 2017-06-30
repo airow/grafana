@@ -36,7 +36,7 @@ define([
               if (angular.isArray(scope.config.event)) {
                 angular.forEach(scope.config.event, function (value) {
                   for (var e in value) {
-                    chart.off(e, value[e]);
+                    chart.off(e);
                     chart.on(e, value[e]);
                   }
                 });
