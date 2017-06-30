@@ -13,13 +13,6 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
 
   isloaded = true;
-  src: string;
-  datasource: string;
-  style: any;
-  myChart: echarts.ECharts;
-  heatmapOpt: any;
-
-  echartsContainer: string;
 
   ecInstance: echarts.ECharts;
   ecConfig: any;
@@ -27,11 +20,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
-    iframeWidth: '100%',
-    iframeHeight: '100%',
-    src: 'about:bank',
-    staticPage: false,
-    staticPageSrc: 'about:bank'
+
   };
 
   /** @ngInject **/
@@ -44,7 +33,6 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
-
   }
 
   refreshDashboard() {
@@ -59,118 +47,6 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
 
   onRefresh() {
     this.render();
-  }
-
-  loadData2() {
-    this.$http.get('/public/mockJson/hangzhou-tracks.json')
-      .then(response => {
-        console.log(response);
-
-        var points = [].concat.apply([], response.data.map(function (track) {
-          return track.map(function (seg) {
-            return seg.coord.concat([1]);
-          });
-        }));
-
-        this.ecConfig = {
-          theme: 'default',
-          event: [{
-            'timelinechanged': function () { alert(1); },
-            'click': function () { alert('click'); }
-          }],
-          dataLoaded: true
-        };
-
-        this.ecOption = {
-          baseOption: {
-            timeline: {
-              controlStyle: {
-                show: true
-              },
-              // y: 0,
-              axisType: 'category',
-              // realtime: false,
-              loop: false,
-              autoPlay: false,
-              // currentIndex: 2,
-              playInterval: 1000,
-              // controlStyle: {
-              //     position: 'left'
-              // },
-              data: [
-                '2002-01-01', '2003-01-01', '2004-01-01',
-                {
-                  value: '2005-01-01',
-                  tooltip: {
-                    formatter: '{b} GDP达到一个高度'
-                  },
-                  symbol: 'diamond',
-                  symbolSize: 16
-                },
-                '2006-01-01', '2007-01-01', '2008-01-01', '2009-01-01', '2010-01-01',
-                {
-                  value: '2011-01-01',
-                  tooltip: {
-                    formatter: function (params) {
-                      return params.name + 'GDP达到又一个高度';
-                    }
-                  },
-                  symbol: 'diamond',
-                  symbolSize: 18
-                },
-              ],
-              label: {
-                formatter: function (s) {
-                  return (new Date(s)).getFullYear();
-                }
-              }
-            },
-            tooltip: { trigger: "item", show: true },
-            animation: true,
-            bmap: {
-              center: [120.13066322374, 30.240018034923],
-              zoom: 14,
-              roam: true
-            },
-            visualMap: {
-              show: true,
-              top: 'top',
-              min: 0,
-              max: 10,
-              seriesIndex: 0,
-              calculable: true,
-              inRange: {
-                color: ['blue', 'blue', 'green', 'yellow', 'red']
-              }
-            },
-            series: [{
-              type: 'heatmap',
-              coordinateSystem: 'bmap',
-              geoIndex: 1,
-              data: points,
-              label: {
-                normal: {
-                  show: true
-                }
-              },
-              pointSize: 5,
-              blurSize: 6
-            }]
-          },
-          options: [
-            {
-              title: { text: '2002全国宏观经济指标' },
-              series: [
-                { data: points }//{data: dataMap.dataGDP['2002']}
-              ]
-            }
-          ]
-        };
-
-      }, function errorCallback(response) {
-        console.log(response);
-      });
-
   }
 
   genJJ() {
@@ -222,61 +98,80 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       },
     ];
 
+    // this.ecOption = {
+    //   baseOption: {
+    //     timeline: {
+    //       controlStyle: {
+    //         show: true
+    //       },
+    //       // y: 0,
+    //       axisType: 'category',
+    //       // realtime: false,
+    //       loop: false,
+    //       autoPlay: false,
+    //       // currentIndex: 2,
+    //       playInterval: 1000,
+    //       // controlStyle: {
+    //       //     position: 'left'
+    //       // },
+    //       data: timelineData,
+    //       label: {
+    //         formatter: function (s) {
+    //           return (new Date(s)).getFullYear();
+    //         }
+    //       }
+    //     },
+    //     tooltip: { trigger: "item", show: true },
+    //     animation: true,
+    //     bmap: {
+    //       center: [120.13066322374, 30.240018034923],
+    //       zoom: 14,
+    //       roam: true
+    //     },
+    //     visualMap: {
+    //       show: true,
+    //       top: 'top',
+    //       min: 0,
+    //       max: 10,
+    //       seriesIndex: 0,
+    //       calculable: true,
+    //       inRange: {
+    //         color: ['blue', 'blue', 'green', 'yellow', 'red']
+    //       }
+    //     },
+    //     series: [{
+    //       type: 'heatmap',
+    //       coordinateSystem: 'bmap',
+    //       geoIndex: 1,
+    //       label: {
+    //         normal: {
+    //           show: true
+    //         }
+    //       },
+    //       pointSize: 5,
+    //       blurSize: 6
+    //     }]
+    //   },
+    //   options: timelineData.map(item => { return {}; })
+    // };
+
     this.ecOption = {
-      baseOption: {
-        timeline: {
-          controlStyle: {
-            show: true
-          },
-          // y: 0,
-          axisType: 'category',
-          // realtime: false,
-          loop: false,
-          autoPlay: false,
-          // currentIndex: 2,
-          playInterval: 1000,
-          // controlStyle: {
-          //     position: 'left'
-          // },
-          data: timelineData,
-          label: {
-            formatter: function (s) {
-              return (new Date(s)).getFullYear();
-            }
-          }
-        },
-        tooltip: { trigger: "item", show: true },
-        animation: true,
-        bmap: {
-          center: [120.13066322374, 30.240018034923],
-          zoom: 14,
-          roam: true
-        },
-        visualMap: {
-          show: true,
-          top: 'top',
-          min: 0,
-          max: 10,
-          seriesIndex: 0,
-          calculable: true,
-          inRange: {
-            color: ['blue', 'blue', 'green', 'yellow', 'red']
-          }
-        },
-        series: [{
-          type: 'heatmap',
-          coordinateSystem: 'bmap',
-          geoIndex: 1,
-          label: {
-            normal: {
-              show: true
-            }
-          },
-          pointSize: 5,
-          blurSize: 6
-        }]
+      title: {
+        text: 'ECharts 入门示例'
       },
-      options: timelineData.map(item => { return {}; })
+      tooltip: {},
+      legend: {
+        data: ['销量']
+      },
+      xAxis: {
+        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+      },
+      yAxis: {},
+      series: [{
+        name: '销量',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+      }]
     };
   }
 
@@ -317,6 +212,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   }
 
   onRender() {
-    this.loadData();
+    this.init();
+    //this.loadData();
   }
 }
