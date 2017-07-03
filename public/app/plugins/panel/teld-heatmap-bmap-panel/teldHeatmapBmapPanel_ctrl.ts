@@ -26,6 +26,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   isLoadAllData: Boolean;
   timelineIndex: any;
   loadCount: any;
+  isSelected: Boolean;
 
   // Set and populate defaults
   panelDefaults = {
@@ -48,6 +49,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
 
     this.isPlay = this.panel.timeline.autoPlay;
     this.isLoadAllData = false;
+    this.isSelected = false;
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
@@ -56,6 +58,13 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     this.sgConfig = {
       sgUrl: function () {
         return "/public/mockJson/hangzhou-tracks.json";
+      },
+      transform: function (data, context) {
+        return [].concat.apply([], data.map(function (track) {
+          return track.map(function (seg) {
+            return seg.coord.concat([context.timelineIndex + 1]);
+          });
+        }));
       }
     };
 
@@ -74,7 +83,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     let eventHandlerSrv = this.$injector.get('heatmapEventHandlerSrv');
 
     let config = {};
-
+    this.isSelected = eventArgs.isSelected;
     watchEvent.methodArgs.forEach(element => {
       config[element.key] = element.value;
     });
@@ -274,14 +283,9 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
         let option = this.ecOption.options[timelineIndex];
         if (false === this.isLoadAllData) {
           option = {
-            //title: { text: '2002全国宏观经济指标' },
             series: [
               {
-                data: [].concat.apply([], response.data.map(function (track) {
-                  return track.map(function (seg) {
-                    return seg.coord.concat([timelineIndex + 1]);
-                  });
-                }))
+                data: this.sgConfig.transform(response.data, { timelineIndex })
               }
             ]
           };
@@ -289,6 +293,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
         }
       },
       response => {
+        this.ecInstance.clear();
         console.log(response);
       },
     );
@@ -299,6 +304,12 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     this.isPlay = this.panel.timeline.autoPlay;
     this.timelineIndex = 0;
     this.loadCount = 0;
-    this.loadData();
+    if (this.isSelected) {
+      this.loadData();
+    } else {
+      if (this.ecInstance) {
+        this.ecInstance.clear();
+      }
+    }
   }
 }

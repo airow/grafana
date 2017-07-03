@@ -182,7 +182,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
         that.panel.rowEvents.forEach(element => {
           //that.publishAppEvent(element.eventName, { eventName: element.eventName, rowVariables });
-          that.$scope.$root.$broadcast(element.eventName, { eventName: element.eventName, rowVariables });
+          that.$scope.$root.$broadcast(element.eventName, { eventName: element.eventName, rowVariables, isSelected });
         });
 
 

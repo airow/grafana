@@ -26,9 +26,9 @@ export class HeatmapEventHandlerSrv {
 
     };
 
-    context.sgConf = sgConf;
+    context.sgConfig = _.defaults(sgConf, context.sgConfig);
 
-    return sgConf;
+    return context.sgConfig;
   }
 }
 

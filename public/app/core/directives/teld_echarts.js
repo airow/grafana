@@ -27,7 +27,7 @@ define([
             }
 
             if (scope.config && scope.config.dataLoaded) {
-              chart.setOption(scope.option, scope.option.ff);
+              chart.setOption(scope.option);
               chart.resize();
               chart.hideLoading();
             }
