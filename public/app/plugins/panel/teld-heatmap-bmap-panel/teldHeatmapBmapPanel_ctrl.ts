@@ -62,7 +62,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       positioning: function (echartsInstance, center, zoom?) {
         let bmap = echartsInstance.getModel().getComponent('bmap');
         if (bmap) {
-          bmap.getBMap();
+          bmap = bmap.getBMap();
           bmap.centerAndZoom(center, zoom);
         }
       },
