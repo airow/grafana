@@ -1,12 +1,9 @@
-<!--<div ng-show="ctrl.isloaded" style='position: absolute; margin: 30px 0px 20px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
-  <div style="height:100%;" ng-bind-html="ctrl.content" ng-show="ctrl.content"></div>
-</div>-->
 <div ng-show="ctrl.isloaded" style='position: absolute; margin: 30px 0px 20px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
   <!--<teld-echarts ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance"></teld-echarts>-->
+  <button ng-show="!ctrl.isPlay" ng-click="ctrl.isPlay=!ctrl.isPlay;ctrl.ecOption.baseOption.timeline.autoPlay=true">play</button>
+  <button ng-show="ctrl.isPlay" ng-click="ctrl.isPlay=!ctrl.isPlay;ctrl.ecOption.baseOption.timeline.autoPlay=false">pluse</button>
+  {{ctrl.isPlay}}||{{ctrl.ecOption.baseOption.timeline.autoPlay}}||{{ctrl.loadCount}}||{{ctrl.isLoadAllData}}
   <teld-echarts ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
-    <!--<div style="height:100%;"></div>-->
+    <!--<div class="ecContainer" style="height:50%;"></div>-->
   </teld-echarts>
 </div>
-<!--<div ng-show="ctrl.isloaded" style='position: absolute; margin: 30px 0px 20px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
-  <teld-echarts ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance"></teld-echarts>
-</div>-->

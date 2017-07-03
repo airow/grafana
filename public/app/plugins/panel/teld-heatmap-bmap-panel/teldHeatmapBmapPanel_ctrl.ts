@@ -7,7 +7,7 @@ import moment from 'moment';
 import { PanelCtrl } from 'app/plugins/sdk';
 import appEvents from 'app/core/app_events';
 import echarts from 'echarts';
-import 'echarts.bmap';
+import './eventHandler_srv';
 
 export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -18,9 +18,25 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   ecConfig: any;
   ecOption: any;
 
+  currentEvent: any;
+  watchEvents: any[];
+
+  sgConfig: any;
+  isPlay: Boolean;
+  isLoadAllData: Boolean;
+  timelineIndex: any;
+  loadCount: any;
+
   // Set and populate defaults
   panelDefaults = {
-
+    timeline: {
+      // realtime: false,
+      loop: false,
+      autoPlay: false,
+      // currentIndex: 2,
+      playInterval: 1000
+    },
+    watchEvents: []
   };
 
   /** @ngInject **/
@@ -30,9 +46,62 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
 
     _.defaults(this.panel, this.panelDefaults);
 
+    this.isPlay = this.panel.timeline.autoPlay;
+    this.isLoadAllData = false;
+
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
+
+    this.sgConfig = {
+      sgUrl: function () {
+        return "/public/mockJson/hangzhou-tracks.json";
+      }
+    };
+
+    //注册事件
+    this.watchEvents = this.panel.watchEvents;
+    this.watchEvents.forEach(element => {
+      this.$scope.$on(element.name, this.watchEventHandler.bind(this));
+    });
+  }
+
+  watchEventHandler(event, eventArgs) {
+    //$injector.get(eve)
+
+    let watchEvent = _.find(this.watchEvents, { name: event.name });
+
+    let eventHandlerSrv = this.$injector.get('heatmapEventHandlerSrv');
+
+    let config = {};
+
+    watchEvent.methodArgs.forEach(element => {
+      config[element.key] = element.value;
+    });
+
+    this.sgConfig = eventHandlerSrv[watchEvent.method](eventArgs, config, this);
+    console.log(eventArgs);
+  }
+
+  add() {
+    this.currentEvent = { methodArgs: [{}] };
+    this.watchEvents.push(this.currentEvent);
+  }
+
+  remove(watchEvent) {
+    var index = _.indexOf(this.watchEvents, watchEvent);
+    this.watchEvents.splice(index, 1);
+    this.panel.Variables = this.watchEvents;
+  }
+
+  addMethodArg(watchEvent) {
+    watchEvent.methodArgs = watchEvent.methodArgs || [];
+    watchEvent.methodArgs.push({});
+  }
+
+  removeMethodArg(methodArgs, arg) {
+    var index = _.indexOf(methodArgs, arg);
+    methodArgs.splice(index, 1);
   }
 
   refreshDashboard() {
@@ -42,6 +111,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   onInitEditMode() {
     //this.addEditorTab('Options', 'partials/editor.html');
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/editor.html');
+    this.addEditorTab('Timeline', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/timeline.html');
     this.addEditorTab('watchEvents', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/watchEvents.html');
     this.editorTabIndex = 1;
   }
@@ -51,27 +121,60 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   }
 
   genJJ() {
-    let variable = this.templateSrv.getVariable("$code", 'custom');
-    let returnValue = '/public/mockJson/hangzhou-tracks.json';
-    // if (variable && variable.current && variable.current.value) {
-    //   returnValue = `/public/mockJson/tracks-${variable.current.value}.json`;
-    // }
+    let returnValue = this.sgConfig.sgUrl();
+    // let returnValue = '/public/mockJson/hangzhou-tracks.json';
+    // let variable = this.templateSrv.getVariable("$code", 'custom');
+    // // if (variable && variable.current && variable.current.value) {
+    // //   returnValue = `/public/mockJson/tracks-${variable.current.value}.json`;
+    // // }
     return returnValue;
   }
 
   timelinechanged(params) {
-    console.log(params.currentIndex);
-    this.ecInstance.dispatchAction({type: 'timelinePlayChange',playState: false});
+    console.group('timelinechanged');
 
-    this.callSG(params.currentIndex).then(() => {
-      this.ecOption.baseOption.timeline.autoPlay = true;
-    });
+    console.log(params.currentIndex + '@');
+    this.timelineIndex = params.currentIndex;
+    this.ecOption.baseOption.timeline.autoPlay = false;
+    this.loadCount++;
+
+    let isLast = params.currentIndex === this.ecOption.baseOption.timeline.data.length - 1;
+    this.isLoadAllData = this.loadCount >= this.ecOption.baseOption.timeline.data.length;
+    if (false === this.isLoadAllData) {
+      this.callSG(params.currentIndex).then(() => {
+        if (this.isPlay) {
+          if (isLast) {
+            if (false === this.ecOption.baseOption.timeline.loop) {
+              this.isPlay = false;
+            }else{
+              this.ecOption.baseOption.timeline.autoPlay = true;
+            }
+          } else {
+            this.ecOption.baseOption.timeline.autoPlay = true;
+          }
+        }
+      });
+    } else {
+      if (isLast && false === this.ecOption.baseOption.timeline.loop) {
+        //this.isPlay = false;
+        let that = this;
+        this.$scope.$apply(function () {
+          that.isPlay = false;
+        });
+      }
+    }
+    console.groupEnd();
   }
   initEcharts() {
     this.ecConfig = {
       theme: 'default',
       event: [{
-        'timelinechanged': this.timelinechanged.bind(this)
+        'timelinechanged': this.timelinechanged.bind(this),
+        'timelineplaychanged': (params) => {
+          console.group('timelineplaychanged');
+          console.log(`${params.playState}=${this.ecOption.baseOption.timeline.autoPlay}`);
+          console.groupEnd();
+        }
       }],
       dataLoaded: true
     };
@@ -99,29 +202,24 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       },
     ];
 
+    let timeline = {
+      controlStyle: {
+        show: true,
+        showPlayBtn: false
+      },
+      axisType: 'category',
+      data: timelineData,
+      autoPlay: false,
+      label: {
+        formatter: function (s) {
+          return (new Date(s)).getFullYear();
+        }
+      }
+    };
     this.ecOption = {
       baseOption: {
-        timeline: {
-          controlStyle: {
-            show: true
-          },
-          // y: 0,
-          axisType: 'category',
-          // realtime: false,
-          loop: false,
-          autoPlay: false,
-          // currentIndex: 2,
-          playInterval: 1000,
-          // controlStyle: {
-          //     position: 'left'
-          // },
-          data: timelineData,
-          label: {
-            formatter: function (s) {
-              return (new Date(s)).getFullYear();
-            }
-          }
-        },
+        timeline: _.defaults(_.cloneDeep(this.panel.timeline), timeline),
+        //timeline: timeline,
         tooltip: { trigger: "item", show: true },
         animation: true,
         bmap: {
@@ -160,7 +258,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   loadData() {
     this.initEcharts();
 
-    this.callSG(0);
+    this.callSG(this.timelineIndex);
   }
 
   callSG(timelineIndex: any) {
@@ -173,19 +271,22 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
 
     return this.$http.get(this.genJJ()).then(
       response => {
-
-        this.ecOption.options[timelineIndex] = {
-          //title: { text: '2002全国宏观经济指标' },
-          series: [
-            {
-              data: [].concat.apply([], response.data.map(function (track) {
-                return track.map(function (seg) {
-                  return seg.coord.concat([timelineIndex + 1]);
-                });
-              }))
-            }
-          ]
-        };
+        let option = this.ecOption.options[timelineIndex];
+        if (false === this.isLoadAllData) {
+          option = {
+            //title: { text: '2002全国宏观经济指标' },
+            series: [
+              {
+                data: [].concat.apply([], response.data.map(function (track) {
+                  return track.map(function (seg) {
+                    return seg.coord.concat([timelineIndex + 1]);
+                  });
+                }))
+              }
+            ]
+          };
+          this.ecOption.options[timelineIndex] = option;
+        }
       },
       response => {
         console.log(response);
@@ -194,6 +295,10 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   }
 
   onRender() {
+    this.isLoadAllData = false;
+    this.isPlay = this.panel.timeline.autoPlay;
+    this.timelineIndex = 0;
+    this.loadCount = 0;
     this.loadData();
   }
 }

@@ -1,0 +1,26 @@
+<div class="editor-row">
+
+  <div class="section gf-form-group">
+
+		<h5 class="section-heading">Play</h5>
+
+		<gf-form-switch class="gf-form" label="Auto Play" label-class="width-7" checked="ctrl.panel.timeline.autoPlay" on-change="ctrl.render()"></gf-form-switch>
+		<gf-form-switch class="gf-form" label="Loop" label-class="width-7" checked="ctrl.panel.timeline.loop" on-change="ctrl.render()"></gf-form-switch>
+    <div class="gf-form">
+			<span class="gf-form-label width-7">interval</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.timeline.playInterval" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+	</div>
+
+	<div class="section gf-form-group">
+		<h5 class="section-heading">Size</h5>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">Width</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeWidth" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">Height</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeHeight" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+	</div>
+</div>
