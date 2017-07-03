@@ -59,6 +59,13 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       sgUrl: function () {
         return "/public/mockJson/hangzhou-tracks.json";
       },
+      positioning: function (echartsInstance, center, zoom?) {
+        let bmap = echartsInstance.getModel().getComponent('bmap');
+        if (bmap) {
+          bmap.getBMap();
+          bmap.centerAndZoom(center, zoom);
+        }
+      },
       transform: function (data, context) {
         return [].concat.apply([], data.map(function (track) {
           return track.map(function (seg) {
@@ -232,7 +239,8 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
         tooltip: { trigger: "item", show: true },
         animation: true,
         bmap: {
-          center: [120.13066322374, 30.240018034923],
+          //center: [120.13066322374, 30.240018034923],
+          center: [116.403903, 39.915743],
           zoom: 14,
           roam: true
         },
@@ -266,6 +274,12 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
 
   loadData() {
     this.initEcharts();
+
+    //地图定位
+    let cityName = this.templateSrv.getVariable("$name", 'custom');
+    if (cityName && cityName.current && cityName.current.value) {
+      this.sgConfig.positioning(this.ecInstance, cityName.current.value);
+    }
 
     this.callSG(this.timelineIndex);
   }
@@ -309,6 +323,8 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     } else {
       if (this.ecInstance) {
         this.ecInstance.clear();
+      }else{
+        this.initEcharts();
       }
     }
   }

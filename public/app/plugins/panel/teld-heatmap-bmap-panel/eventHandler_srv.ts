@@ -22,8 +22,7 @@ export class HeatmapEventHandlerSrv {
           returnValue = `/public/mockJson/tracks-${variable.current.value}.json`;
         }
         return returnValue;
-      },
-
+      }
     };
 
     context.sgConfig = _.defaults(sgConf, context.sgConfig);
