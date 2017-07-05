@@ -664,6 +664,10 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
         });
       });
 
+      elem.bind("plotclick", function (event, pos, item) {
+        alert(JSON.stringify(item));
+      });
+
       scope.$on('$destroy', function() {
         tooltip.destroy();
         elem.off();

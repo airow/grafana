@@ -4,12 +4,13 @@
 import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
-import { PanelCtrl } from 'app/plugins/sdk';
+import { MetricsPanelCtrl, PanelCtrl } from 'app/plugins/sdk';
+import TimeSeries from 'app/core/time_series2';
 import appEvents from 'app/core/app_events';
 import echarts from 'echarts';
 import './eventHandler_srv';
 
-export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
+export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
 
   isloaded = true;
@@ -27,6 +28,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   timelineIndex: any;
   loadCount: any;
   isSelected: Boolean;
+  islo: Boolean;
 
   // Set and populate defaults
   panelDefaults = {
@@ -41,8 +43,8 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
   };
 
   /** @ngInject **/
-  constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
-    private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv, private $http) {
+  constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
+    private dashboardSrv, private uiSegmentSrv, private $http) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -52,8 +54,9 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     this.isSelected = false;
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    this.events.on('refresh', this.onRefresh.bind(this));
-    this.events.on('render', this.onRender.bind(this));
+    //this.events.on('refresh', this.onRefresh.bind(this));
+    //this.events.on('render', this.onRender.bind(this));
+    //this.events.on('data-received', this.onDataReceived.bind(this));
 
     this.sgConfig = {
       sgUrl: function () {
@@ -63,7 +66,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
         let bmap = echartsInstance.getModel().getComponent('bmap');
         if (bmap) {
           bmap = bmap.getBMap();
-          bmap.centerAndZoom(center, zoom);
+          //bmap.centerAndZoom(center, zoom);
         }
       },
       transform: function (data, context) {
@@ -96,6 +99,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     });
 
     this.sgConfig = eventHandlerSrv[watchEvent.method](eventArgs, config, this);
+    this.onRender();
     console.log(eventArgs);
   }
 
@@ -146,7 +150,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     return returnValue;
   }
 
-  timelinechanged(params) {
+  timelinechanged_bak(params) {
     console.group('timelinechanged');
 
     console.log(params.currentIndex + '@');
@@ -181,6 +185,142 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     }
     console.groupEnd();
   }
+
+  timelinechanged(params) {
+    console.group('timelinechanged');
+
+    console.log(params.currentIndex + '@');
+    this.timelineIndex = params.currentIndex;
+    this.ecOption.baseOption.timeline.autoPlay = false;
+    this.loadCount++;
+
+    let data = this.ecOption.baseOption.timeline.data[params.currentIndex];
+
+    let variableType = 'custom';
+    let teldCustomModel = { type: variableType, name: 'timeline' };
+    let indexOf = _.findIndex(this.variableSrv.variables, teldCustomModel);
+    let variable;
+    let current = { text: data, value: data };
+
+    if (indexOf === -1) {
+      variable = this.variableSrv.addVariable({ type: variableType, canSaved: false });
+      variable.hide = 2;
+      variable.name = variable.label = teldCustomModel.name;
+    } else {
+      variable = this.variableSrv.variables[indexOf];
+    }
+    variable.current === current;
+
+    this.variableSrv.setOptionAsCurrent(variable, current);
+    this.variableSrv.templateSrv.updateTemplateData();
+    this.dashboardSrv.getCurrent().updateSubmenuVisibility();
+
+
+    let isLast = params.currentIndex === this.ecOption.baseOption.timeline.data.length - 1;
+    this.isLoadAllData = this.loadCount >= this.ecOption.baseOption.timeline.data.length;
+    if (false === this.isLoadAllData) {
+      this.onMetricsPanelRefresh2(params.currentIndex).then(() => {
+        if (this.isPlay) {
+          if (isLast) {
+            if (false === this.ecOption.baseOption.timeline.loop) {
+              this.isPlay = false;
+            } else {
+              this.ecOption.baseOption.timeline.autoPlay = true;
+            }
+          } else {
+            this.ecOption.baseOption.timeline.autoPlay = true;
+          }
+        }
+      });
+    } else {
+      if (isLast && false === this.ecOption.baseOption.timeline.loop) {
+        //this.isPlay = false;
+        let that = this;
+        this.$scope.$apply(function () {
+          that.isPlay = false;
+        });
+      }else{
+        if (this.isPlay) {
+          this.ecOption.baseOption.timeline.autoPlay = true;
+        }
+      }
+    }
+    console.groupEnd();
+  }
+
+
+  private onMetricsPanelRefresh2(params) {
+    // ignore fetching data if another panel is in fullscreen
+    if (this.otherPanelInFullscreenMode()) { return; }
+
+    // // ignore if we have data stream
+    if (this.dataStream) {
+      return;
+    }
+
+    // clear loading/error state
+    delete this.error;
+    this.loading = true;
+
+    this.updateTimeRange();
+    let isLast = params.currentIndex === this.ecOption.baseOption.timeline.data.length - 1;
+    // load datasource service
+    this.setTimeQueryStart();
+    return this.datasourceSrv.get(this.panel.datasource)
+      .then(this.issueQueries.bind(this))
+      //.then(this.handleQueryResult.bind(this))
+      .then(this.handleQueryResultWithOutevents.bind(this))
+      // .then(() => {
+      //   //this.onDataReceived(result);
+      //   if (this.isPlay) {
+      //     if (isLast) {
+      //       if (false === this.ecOption.baseOption.timeline.loop) {
+      //         this.isPlay = false;
+      //       } else {
+      //         this.ecOption.baseOption.timeline.autoPlay = true;
+      //       }
+      //     } else {
+      //       this.ecOption.baseOption.timeline.autoPlay = true;
+      //     }
+      //   }
+      // })
+      .catch(err => {
+        // if cancelled  keep loading set to true
+        if (err.cancelled) {
+          console.log('Panel request cancelled', err);
+          return;
+        }
+
+        this.loading = false;
+        this.error = err.message || "Request Error";
+        this.inspector = { error: err };
+        this.events.emit('data-error', err);
+        console.log('Panel data error:', err);
+      });
+  }
+
+  handleQueryResultWithOutevents(result) {
+    this.setTimeQueryEnd();
+    this.loading = false;
+
+    // check for if data source returns subject
+    if (result && result.subscribe) {
+      this.handleDataStream(result);
+      return;
+    }
+
+    if (this.dashboard.snapshot) {
+      this.panel.snapshotData = result.data;
+    }
+
+    if (!result || !result.data) {
+      console.log('Data source query result invalid, missing data field:', result);
+      result = {data: []};
+    }
+
+    this.onDataReceived(result.data);
+  }
+
   initEcharts() {
     this.ecConfig = {
       theme: 'default',
@@ -196,26 +336,7 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     };
 
     let timelineData = [
-      '2002-01-01', '2003-01-01', '2004-01-01',
-      {
-        value: '2005-01-01',
-        tooltip: {
-          formatter: '{b} GDP达到一个高度'
-        },
-        symbol: 'diamond',
-        symbolSize: 16
-      },
-      '2006-01-01', '2007-01-01', '2008-01-01', '2009-01-01', '2010-01-01',
-      {
-        value: '2011-01-01',
-        tooltip: {
-          formatter: function (params) {
-            return params.name + 'GDP达到又一个高度';
-          }
-        },
-        symbol: 'diamond',
-        symbolSize: 18
-      },
+      '天津市', '北京市', '青岛市'
     ];
 
     let timeline = {
@@ -240,15 +361,16 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
         animation: true,
         bmap: {
           //center: [120.13066322374, 30.240018034923],
-          center: [116.403903, 39.915743],
-          zoom: 14,
+          center: [117.693091,39.056709],/*天津 */
+          //center: [116.403903, 39.915743],
+          zoom: 5,
           roam: true
         },
         visualMap: {
           show: true,
           top: 'top',
           min: 0,
-          max: 10,
+          max: 7000,
           seriesIndex: 0,
           calculable: true,
           inRange: {
@@ -264,8 +386,8 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
               show: true
             }
           },
-          pointSize: 5,
-          blurSize: 6
+          pointSize: 20,
+          blurSize: 20
         }]
       },
       options: timelineData.map(item => { return {}; })
@@ -281,7 +403,8 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
       this.sgConfig.positioning(this.ecInstance, cityName.current.value);
     }
 
-    this.callSG(this.timelineIndex);
+    //this.callSG(this.timelineIndex);
+    this.onMetricsPanelRefresh2(this.timelineIndex);
   }
 
   callSG(timelineIndex: any) {
@@ -313,11 +436,62 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
     );
   }
 
+  onDataReceived(dataList) {
+    // const data: any = {};
+    // if (dataList.length > 0 && dataList[0].type === 'table'){
+    //   this.dataType = 'table';
+    //   const tableData = dataList.map(this.tableHandler.bind(this));
+    //   //this.setTableValues(tableData, data);
+    // } else {
+    //   this.dataType = 'timeseries';
+    //   this.series = dataList.map(this.seriesHandler.bind(this));
+    //   //this.setValues(data);
+    // }
+    // this.data = data;
+
+    if (dataList.length > 0) {
+      let option = this.ecOption.options[this.timelineIndex];
+      let max = 100;
+      let min = 9000000;
+      if (false === this.isLoadAllData) {
+        option = {
+          series: [
+            {
+              data: dataList[0].datapoints.map(item => {
+                let r = item["电站位置"].split(',');
+                r = [parseFloat(r[1]), parseFloat(r[0])];
+                r.push(item.Sum);
+                //r = [120.13066322374 + this.timelineIndex, 30.240018034923 + this.timelineIndex, item.Sum];
+                //r = [120.13066322374, 30.240018034923, (item.Sum + 1) * this.timelineIndex];
+                //r = [120.13066322374, 30.240018034923, item.Sum];
+                console.log(r);
+                if (item.Sum > max) {
+                  max = item.Sum;
+                }
+                if (item.Sum < min) {
+                  min = item.Sum;
+                }
+                return r;
+              })
+            }
+          ]
+        };
+        this.ecOption.baseOption.visualMap.min = min;
+        this.ecOption.baseOption.visualMap.max = max;
+        this.ecOption.options[this.timelineIndex] = option;
+      }
+    }
+
+    //this.data = data;
+    //this.render();
+  }
+
   onRender() {
     this.isLoadAllData = false;
     this.isPlay = this.panel.timeline.autoPlay;
     this.timelineIndex = 0;
     this.loadCount = 0;
+    console.log(this.isSelected);
     if (this.isSelected) {
       this.loadData();
     } else {
@@ -327,5 +501,62 @@ export class TeldHeatmapBmapPanelCtrl extends PanelCtrl {
         this.initEcharts();
       }
     }
+  }
+
+  seriesHandler(seriesData) {
+    var series = new TimeSeries({
+      datapoints: seriesData.datapoints,
+      alias: seriesData.target,
+    });
+
+    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    return series;
+  }
+
+
+  dataType = 'timeseries';
+  series: any[];
+  data: any;
+  fontSizes: any[];
+  unitFormats: any[];
+  invalidGaugeRange: boolean;
+  panel: any;
+  events: any;
+  valueNameOptions: any[] = ['min', 'max', 'avg', 'current', 'total', 'name', 'first', 'delta', 'diff', 'range'];
+  tableColumnOptions: any;
+
+  setTableColumnToSensibleDefault(tableData) {
+    if (this.tableColumnOptions.length === 1) {
+      this.panel.tableColumn = this.tableColumnOptions[0];
+    } else {
+      this.panel.tableColumn = _.find(tableData.columns, (col) => { return col.type !== 'time'; }).text;
+    }
+  }
+
+  tableHandler(tableData) {
+    const datapoints = [];
+    const columnNames = {};
+
+    tableData.columns.forEach((column, columnIndex) => {
+      columnNames[columnIndex] = column.text;
+    });
+
+    this.tableColumnOptions = columnNames;
+    if (!_.find(tableData.columns, ['text', this.panel.tableColumn])) {
+      this.setTableColumnToSensibleDefault(tableData);
+    }
+
+    tableData.rows.forEach((row) => {
+      const datapoint = {};
+
+      row.forEach((value, columnIndex) => {
+        const key = columnNames[columnIndex];
+        datapoint[key] = value;
+      });
+
+      datapoints.push(datapoint);
+    });
+
+    return datapoints;
   }
 }
