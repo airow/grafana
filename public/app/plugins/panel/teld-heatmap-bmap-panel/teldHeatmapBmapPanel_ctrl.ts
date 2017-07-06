@@ -28,7 +28,6 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   timelineIndex: any;
   loadCount: any;
   isSelected: Boolean;
-  islo: Boolean;
 
   // Set and populate defaults
   panelDefaults = {
@@ -99,8 +98,9 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     });
 
     this.sgConfig = eventHandlerSrv[watchEvent.method](eventArgs, config, this);
+    console.group('watchEventHandler');
     this.onRender();
-    console.log(eventArgs);
+    console.groupEnd();
   }
 
   add() {
@@ -217,7 +217,14 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
 
     let isLast = params.currentIndex === this.ecOption.baseOption.timeline.data.length - 1;
-    this.isLoadAllData = this.loadCount >= this.ecOption.baseOption.timeline.data.length;
+    //this.isLoadAllData = this.loadCount >= this.ecOption.baseOption.timeline.data.length;
+    this.isLoadAllData = true;
+    this.ecOption.options.forEach(item => {
+      if (_.isEmpty(item)) {
+        this.isLoadAllData = false;
+      }
+    });
+
     if (false === this.isLoadAllData) {
       this.onMetricsPanelRefresh2(params.currentIndex).then(() => {
         if (this.isPlay) {
@@ -250,6 +257,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
 
   private onMetricsPanelRefresh2(params) {
+    console.log("onMetricsPanelRefresh2");
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
 
@@ -268,22 +276,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.setTimeQueryStart();
     return this.datasourceSrv.get(this.panel.datasource)
       .then(this.issueQueries.bind(this))
-      //.then(this.handleQueryResult.bind(this))
       .then(this.handleQueryResultWithOutevents.bind(this))
-      // .then(() => {
-      //   //this.onDataReceived(result);
-      //   if (this.isPlay) {
-      //     if (isLast) {
-      //       if (false === this.ecOption.baseOption.timeline.loop) {
-      //         this.isPlay = false;
-      //       } else {
-      //         this.ecOption.baseOption.timeline.autoPlay = true;
-      //       }
-      //     } else {
-      //       this.ecOption.baseOption.timeline.autoPlay = true;
-      //     }
-      //   }
-      // })
       .catch(err => {
         // if cancelled  keep loading set to true
         if (err.cancelled) {
@@ -327,16 +320,18 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       event: [{
         'timelinechanged': this.timelinechanged.bind(this),
         'timelineplaychanged': (params) => {
-          console.group('timelineplaychanged');
-          console.log(`${params.playState}=${this.ecOption.baseOption.timeline.autoPlay}`);
-          console.groupEnd();
+          // console.group('timelineplaychanged');
+          // console.log(`${params.playState}=${this.ecOption.baseOption.timeline.autoPlay}`);
+          // console.groupEnd();
         }
       }],
       dataLoaded: true
     };
 
     let timelineData = [
-      '天津市', '北京市', '青岛市'
+      '天津市', '北京市', '青岛市', {
+        value: '上海市'
+      }
     ];
 
     let timeline = {
@@ -347,11 +342,11 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       axisType: 'category',
       data: timelineData,
       autoPlay: false,
-      label: {
-        formatter: function (s) {
-          return (new Date(s)).getFullYear();
-        }
-      }
+      // label: {
+      //   formatter: function (s) {
+      //     return (new Date(s)).getFullYear();
+      //   }
+      // }
     };
     this.ecOption = {
       baseOption: {
@@ -369,8 +364,6 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
         visualMap: {
           show: true,
           top: 'top',
-          min: 0,
-          max: 7000,
           seriesIndex: 0,
           calculable: true,
           inRange: {
@@ -398,13 +391,13 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.initEcharts();
 
     //地图定位
-    let cityName = this.templateSrv.getVariable("$name", 'custom');
-    if (cityName && cityName.current && cityName.current.value) {
-      this.sgConfig.positioning(this.ecInstance, cityName.current.value);
-    }
+    // let cityName = this.templateSrv.getVariable("$name", 'custom');
+    // if (cityName && cityName.current && cityName.current.value) {
+    //   this.sgConfig.positioning(this.ecInstance, cityName.current.value);
+    // }
 
     //this.callSG(this.timelineIndex);
-    this.onMetricsPanelRefresh2(this.timelineIndex);
+    //this.onMetricsPanelRefresh2(this.timelineIndex);
   }
 
   callSG(timelineIndex: any) {
@@ -437,18 +430,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    // const data: any = {};
-    // if (dataList.length > 0 && dataList[0].type === 'table'){
-    //   this.dataType = 'table';
-    //   const tableData = dataList.map(this.tableHandler.bind(this));
-    //   //this.setTableValues(tableData, data);
-    // } else {
-    //   this.dataType = 'timeseries';
-    //   this.series = dataList.map(this.seriesHandler.bind(this));
-    //   //this.setValues(data);
-    // }
-    // this.data = data;
-
+    console.log("onDataReceived");
     if (dataList.length > 0) {
       let option = this.ecOption.options[this.timelineIndex];
       let max = 100;
@@ -464,7 +446,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
                 //r = [120.13066322374 + this.timelineIndex, 30.240018034923 + this.timelineIndex, item.Sum];
                 //r = [120.13066322374, 30.240018034923, (item.Sum + 1) * this.timelineIndex];
                 //r = [120.13066322374, 30.240018034923, item.Sum];
-                console.log(r);
+                //console.log(r);
                 if (item.Sum > max) {
                   max = item.Sum;
                 }
@@ -476,14 +458,14 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
             }
           ]
         };
-        this.ecOption.baseOption.visualMap.min = min;
-        this.ecOption.baseOption.visualMap.max = max;
+        // this.ecOption.baseOption.visualMap.min = min;
+        // this.ecOption.baseOption.visualMap.max = max;
+        option.visualMap = _.cloneDeep(this.ecOption.baseOption.visualMap);
+        option.visualMap.min = min;
+        option.visualMap.max = max;
         this.ecOption.options[this.timelineIndex] = option;
       }
     }
-
-    //this.data = data;
-    //this.render();
   }
 
   onRender() {
@@ -491,72 +473,33 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.isPlay = this.panel.timeline.autoPlay;
     this.timelineIndex = 0;
     this.loadCount = 0;
-    console.log(this.isSelected);
+
     if (this.isSelected) {
-      this.loadData();
+      this.initEcharts();
+      this.timelinechanged({ currentIndex: this.timelineIndex });
     } else {
       if (this.ecInstance) {
-        this.ecInstance.clear();
+        this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => {
+          return {
+            series: [
+              {
+                data: []
+              }
+            ]
+          };
+        });
+        //this.ecInstance.clear();
       }else{
         this.initEcharts();
       }
     }
-  }
 
-  seriesHandler(seriesData) {
-    var series = new TimeSeries({
-      datapoints: seriesData.datapoints,
-      alias: seriesData.target,
-    });
+    // if (this.ecInstance) {
+    //   this.ecInstance.dispatchAction({ type: 'timelineChange', currentIndex: this.timelineIndex });
+    // } else {
+    //   this.timelinechanged({ currentIndex: this.timelineIndex });
+    // }
 
-    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-    return series;
-  }
-
-
-  dataType = 'timeseries';
-  series: any[];
-  data: any;
-  fontSizes: any[];
-  unitFormats: any[];
-  invalidGaugeRange: boolean;
-  panel: any;
-  events: any;
-  valueNameOptions: any[] = ['min', 'max', 'avg', 'current', 'total', 'name', 'first', 'delta', 'diff', 'range'];
-  tableColumnOptions: any;
-
-  setTableColumnToSensibleDefault(tableData) {
-    if (this.tableColumnOptions.length === 1) {
-      this.panel.tableColumn = this.tableColumnOptions[0];
-    } else {
-      this.panel.tableColumn = _.find(tableData.columns, (col) => { return col.type !== 'time'; }).text;
-    }
-  }
-
-  tableHandler(tableData) {
-    const datapoints = [];
-    const columnNames = {};
-
-    tableData.columns.forEach((column, columnIndex) => {
-      columnNames[columnIndex] = column.text;
-    });
-
-    this.tableColumnOptions = columnNames;
-    if (!_.find(tableData.columns, ['text', this.panel.tableColumn])) {
-      this.setTableColumnToSensibleDefault(tableData);
-    }
-
-    tableData.rows.forEach((row) => {
-      const datapoint = {};
-
-      row.forEach((value, columnIndex) => {
-        const key = columnNames[columnIndex];
-        datapoint[key] = value;
-      });
-
-      datapoints.push(datapoint);
-    });
-
-    return datapoints;
+    console.log("onRender");
   }
 }
