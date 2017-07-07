@@ -73,6 +73,68 @@ transformers['timeseries_to_columns'] = {
   }
 };
 
+transformers['druid_arithmetic_to_rows'] = {
+  description: 'druid arithmetic to rows',
+  getColumns: function(data) {
+    return [];
+  },
+  addColumn: function (columnsObj, columns, value) {
+    columnsObj[value] || columns.push(columnsObj[value] = { text: value });
+  },
+  transform: function(data, panel, model) {
+
+    let target = panel.targets[0];
+    let postAggregator = target.postAggregators[0];
+    let groupBy = target.groupBy;
+    if (groupBy && !Array.isArray(groupBy)) {
+      groupBy = groupBy.split(",");
+    }
+
+    let postAggregators = target.postAggregators;
+    let columnsObj = {};
+    let columns = [];
+    postAggregators.forEach(postAggregator => {
+      switch (postAggregator.type) {
+        case "arithmetic":
+          this.addColumn(columnsObj, columns, postAggregator.fields[0].fieldName);
+          this.addColumn(columnsObj, columns, postAggregator.fields[1].fieldName);
+          this.addColumn(columnsObj, columns, postAggregator.name);
+          break;
+      }
+    });
+
+    let rows = [];
+    var rowIndex = 0;
+    for (var dataIndex = 0; dataIndex < data.length; dataIndex += columns.length) {
+      var row = rows[rowIndex++] = [];
+      for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+        var i = dataIndex + columnIndex;
+        var series = data[i];
+
+        for (var y = 0; y < series.datapoints.length; y++) {
+          var dp = series.datapoints[y];
+
+          if (columnIndex === 0) {
+            row.push(dp[1]);
+            _.dropRight(series.target.split(":")).forEach(item => {
+              item.split("-").forEach(groupField => { row.push(groupField); });
+            });
+          }
+
+          row.push(dp[0]);
+          //rows[series.target] = [dp[1], series.target, dp[0]];
+        }
+      }
+    }
+    model.rows = rows;
+    model.columns = _.concat([
+      { text: 'Time', type: 'date' }
+    ],
+      groupBy.map(text => { return { text }; }),
+      columns);
+  },
+};
+
 transformers['druid_select_to_columns'] = {
   description: 'druid select to columns',
   getColumns: function(data) {
