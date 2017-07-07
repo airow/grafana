@@ -73,6 +73,76 @@ transformers['timeseries_to_columns'] = {
   }
 };
 
+transformers['druid_select_to_columns'] = {
+  description: 'druid select to columns',
+  getColumns: function(data) {
+    if (!data || data.length === 0) {
+      return [];
+    }
+    let columns = data.map(item => { return { text: item.target }; });
+    return columns;
+  },
+  transform: function(originalData, panel, model) {
+    model.columns.push({text: 'Time', type: 'date'});
+
+    let columns = [];
+    if (false === _.isEmpty(panel.targets)) {
+      let target = panel.targets[0];
+      //columns = columns.concat(target.selectDimensions, target.selectMetrics);
+      columns = _.concat(target.selectDimensions, target.selectMetrics);
+    }
+
+    if (false === _.isEmpty(panel.columns)) {
+      columns = panel.columns.map(item => item.text);
+    }
+
+    var points = {};
+
+
+    var data = originalData;
+
+    if (columns.length > 0) {
+      data = [];
+
+      columns.forEach(column => {
+        let findIndex = _.findIndex(originalData, item => item.target === column);
+        if (findIndex >= 0) {
+          data.push(originalData[findIndex]);
+        }
+      });
+    }
+
+    for (var i = 0; i < data.length; i++) {
+      var series = data[i];
+      model.columns.push({text: series.target});
+
+      for (var y = 0; y < series.datapoints.length; y++) {
+        var dp = series.datapoints[y];
+        var key = y + '@' + dp[1].toString();
+
+        if (!points[key]) {
+          points[key] = {key: dp[1]};
+          points[key][i] = dp[0];
+        } else {
+          points[key][i] = dp[0];
+        }
+      }
+    }
+
+    for (var key in points) {
+      var point = points[key];
+      var values = [point.key];
+
+      for (var i = 0; i < data.length; i++) {
+        var value = point[i];
+        values.push(value);
+      }
+
+      model.rows.push(values);
+    }
+  }
+};
+
 transformers['timeseries_aggregations'] = {
   description: 'Time series aggregations',
   getColumns: function() {
