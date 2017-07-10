@@ -62,7 +62,7 @@ class MetricsPanelCtrl extends PanelCtrl {
     this.addEditorTab('Time range', 'public/app/features/panel/partials/panelTime.html');
   }
 
-  private onMetricsPanelRefresh() {
+  onMetricsPanelRefresh() {
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
 

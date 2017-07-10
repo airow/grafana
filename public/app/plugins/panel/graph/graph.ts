@@ -665,7 +665,21 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
       });
 
       elem.bind("plotclick", function (event, pos, item) {
-        alert(JSON.stringify(item));
+        let eventArgs = { targetPanelId: "", clickPoint: !!item };
+
+        if (item) {
+          console.group('点击数据');
+          console.log(item.datapoint);//=>[1499406720000, 535.2230895541453] 0位时间轴
+          console.log(item.series.data[item.dataIndex]);//=>[1499406720000, 20.098296726168925, 0] 0位时间轴
+          console.groupEnd();
+
+          let from = moment(item.datapoint[0]);
+          let to = from.clone().add(1, 's');
+          eventArgs["timeRange"] = { from, to };
+        }
+
+
+        $rootScope.$broadcast('timePlotclick', eventArgs);
       });
 
       scope.$on('$destroy', function() {
