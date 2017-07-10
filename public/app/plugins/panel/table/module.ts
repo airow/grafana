@@ -107,11 +107,11 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       this.range.to = this.overwriteTimeRange.to;
       this.overwriteTimeRange = undefined;
     }
-    return super.issueQueries(datasource).then(p => {
+    return super.issueQueries(datasource).then(data => {
       if (originalRange) {
         this.range = originalRange;
       }
-      return p;
+      return data;
     });
   }
 

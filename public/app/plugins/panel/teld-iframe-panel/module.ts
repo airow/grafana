@@ -299,7 +299,18 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       dashStyle = 'light';
     }
 
-    this.sendPostMessage("grafanaLink", { "dashTheme": dashStyle, topNavMenu: this.panel.kibanaTopNavMenu });
+    let initKibabaRowSelectIndex = -1;
+    if (this.panel.kibanaSelected) {
+      initKibabaRowSelectIndex = 0;
+    }
+
+    this.sendPostMessage("grafanaLink",
+      {
+        "dashTheme": dashStyle,
+        "topNavMenu": this.panel.kibanaTopNavMenu,
+        "initRowSelectIndex": initKibabaRowSelectIndex
+      }
+    );
   }
 
   sendPostMessage(eventType, eventArgs) {
