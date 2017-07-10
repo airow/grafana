@@ -17,6 +17,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   dataRaw: any;
   table: any;
   overwriteTimeRange: any;
+  originalTitle: string;
 
   panelDefaults = {
     drill_timePlotclick: false,
@@ -66,7 +67,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
-
+    this.originalTitle = this.panel.title;
     //graph 钻取处理函数
     if (this.panel.drill_timePlotclick) {
       this.$scope.$on('timePlotclick', (event, eventArgs) => {
