@@ -706,6 +706,13 @@ function($, _, numeral) {
     return numeral(size).format('0,0.' + _.repeat('0', decimals));
   };
 
+  kbn.valueFormats.teldPercent = function (size, decimals) {
+    if (size === null) { return ""; }
+    let value = kbn.toFixed(100 * size, decimals);
+    value = value > 100 ? 100 : value;
+    return value + '%';
+  };
+
   ///// FORMAT MENU /////
 
   kbn.getUnitFormats = function() {
@@ -884,6 +891,7 @@ function($, _, numeral) {
         text: 'teld',
         submenu: [
           {text: '千分位',       value: 'thousandsSeparator'  },
+          {text: '百分比',       value: 'teldPercent'  },
         ]
       }
     ];
