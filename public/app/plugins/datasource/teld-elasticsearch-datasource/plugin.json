@@ -6,8 +6,8 @@
   "info": {
     "description": "Elasticsearch Data Source for Grafana",
     "author": {
-      "name": "Grafana Project",
-      "url": "https://grafana.com"
+      "name": "Teld Inc.",
+      "url": "https://teld.cn"
     },
     "keywords": ["elasticsearch"],
     "logos": {
