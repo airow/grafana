@@ -9,6 +9,7 @@ import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import {transformDataToTable} from './transformers';
 import {tablePanelEditor} from './editor';
 import {TableRenderer} from './renderer';
+import * as rangeUtil from 'app/core/utils/rangeutil';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -109,6 +110,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
     return super.issueQueries(datasource).then(data => {
       if (originalRange) {
+        this.rangeStringPanel = this.range.from.format('YYYY-MM-DD HH:mm:ss');
         this.range = originalRange;
       }
       return data;

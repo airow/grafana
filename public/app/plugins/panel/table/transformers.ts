@@ -6,6 +6,7 @@ import flatten from '../../../core/utils/flatten';
 import TimeSeries from '../../../core/time_series2';
 import TableModel from '../../../core/table_model';
 import angular from "angular";
+import kbn from 'app/core/utils/kbn';
 
 var transformers = {};
 
@@ -351,6 +352,24 @@ transformers['json'] = {
   }
 };
 
+
+function setColumnAlias(panel, model) {
+  let aliasStyles = panel.styles.filter(style => {
+    return false === _.isEmpty(style.alias);
+  });
+
+  aliasStyles.forEach(style => {
+    model.columns.forEach(column => {
+      var regex = kbn.stringToJsRegex(style.pattern);
+      if (column.text.match(regex)) {
+        if (style.alias) {
+          column.alias = style.alias;
+        }
+      }
+    });
+  });
+};
+
 function transformDataToTable(data, panel) {
   var model = new TableModel(),
     copyData = angular.copy(data);
@@ -371,6 +390,9 @@ function transformDataToTable(data, panel) {
   }
 
   transformer.transform(copyData, panel, model);
+
+  setColumnAlias(panel, model);
+
   return model;
 }
 

@@ -67,6 +67,12 @@
 						<select class="gf-form-input" ng-model="style.type" ng-options="c.value as c.text for c in editor.columnTypes" ng-change="editor.render()"></select>
 					</div>
 				</div>
+				<div class="gf-form">
+					<label class="gf-form-label">Alias</label>
+					<div class="gf-form-select-wrapper">
+						<input type="text" class="gf-form-input" ng-model="style.alias" ng-blur="editor.render()" data-min-length=0  ng-model-onblur>
+					</div>
+				</div>
 				<div class="gf-form" ng-if="style.type === 'date'">
 					<label class="gf-form-label">Format</label>
 					<metric-segment-model property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()" custom="true"></metric-segment-model>
