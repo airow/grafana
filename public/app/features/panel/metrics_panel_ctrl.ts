@@ -30,6 +30,7 @@ class MetricsPanelCtrl extends PanelCtrl {
   skipDataOnInit: boolean;
   dataStream: any;
   dataSubscription: any;
+  rangeStringPanel: string;
 
   constructor($scope, $injector) {
     super($scope, $injector);
@@ -122,6 +123,8 @@ class MetricsPanelCtrl extends PanelCtrl {
   updateTimeRange() {
     this.range = this.timeSrv.timeRange();
     this.rangeRaw = this.range.raw;
+
+    this.rangeStringPanel = rangeUtil.describeTimeRange(this.rangeRaw);
 
     this.applyPanelTimeOverrides();
 
