@@ -9,6 +9,7 @@ import TimeSeries from 'app/core/time_series2';
 import appEvents from 'app/core/app_events';
 import echarts from 'echarts';
 import './eventHandler_srv';
+import ZoomControl from './zoomControl';
 
 export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -57,6 +58,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     //this.events.on('render', this.onRender.bind(this));
     //this.events.on('data-received', this.onDataReceived.bind(this));
 
+    //this.initEcharts();
+
     this.sgConfig = {
       sgUrl: function () {
         return "/public/mockJson/hangzhou-tracks.json";
@@ -82,6 +85,15 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.watchEvents.forEach(element => {
       this.$scope.$on(element.name, this.watchEventHandler.bind(this));
     });
+  }
+
+  getBmap(echartsInstance) {
+    let bmap = echartsInstance.getModel().getComponent('bmap');
+    if (bmap) {
+      bmap = bmap.getBMap();
+    }
+
+    return bmap;
   }
 
   watchEventHandler(event, eventArgs) {
@@ -385,6 +397,13 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       },
       options: timelineData.map(item => { return {}; })
     };
+
+    // let bmap = this.getBmap(this.ecInstance);
+
+    // // 创建控件实例
+    // var myZoomCtrl = new ZoomControl();
+    // // 添加到地图当中
+    // bmap.addControl(myZoomCtrl);
   }
 
   loadData() {
@@ -395,6 +414,14 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     // if (cityName && cityName.current && cityName.current.value) {
     //   this.sgConfig.positioning(this.ecInstance, cityName.current.value);
     // }
+
+
+    let bmap = this.getBmap(this.ecInstance);
+
+    // 创建控件实例
+    var myZoomCtrl = new ZoomControl(this.variableSrv, this.dashboardSrv);
+    // 添加到地图当中
+    bmap.addControl(myZoomCtrl);
 
     //this.callSG(this.timelineIndex);
     //this.onMetricsPanelRefresh2(this.timelineIndex);
@@ -477,6 +504,15 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     if (this.isSelected) {
       this.initEcharts();
       this.timelinechanged({ currentIndex: this.timelineIndex });
+
+      if (this.ecInstance) {
+        let bmap = this.getBmap(this.ecInstance);
+
+        // 创建控件实例
+        var myZoomCtrl = new ZoomControl(this.variableSrv, this.dashboardSrv);
+        // 添加到地图当中
+        bmap.addControl(myZoomCtrl);
+      }
     } else {
       if (this.ecInstance) {
         this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => {
