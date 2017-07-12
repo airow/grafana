@@ -713,6 +713,12 @@ function($, _, numeral) {
     return value + '%';
   };
 
+  kbn.valueFormats.teldInt = function (size) {
+    if (size === null) { return ""; }
+    let value = kbn.toFixed(size, 0);
+    return value;
+  };
+
   ///// FORMAT MENU /////
 
   kbn.getUnitFormats = function() {
@@ -892,6 +898,7 @@ function($, _, numeral) {
         submenu: [
           {text: '千分位',       value: 'thousandsSeparator'  },
           {text: '百分比',       value: 'teldPercent'  },
+          {text: '整数',       value: 'teldInt'  },
         ]
       }
     ];
