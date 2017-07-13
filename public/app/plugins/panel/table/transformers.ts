@@ -74,6 +74,83 @@ transformers['timeseries_to_columns'] = {
   }
 };
 
+transformers['druid_groupby_to_rows'] = {
+  description: 'druid groupby to rows',
+  getColumns: function(data) {
+    return [];
+  },
+  addColumn: function (columnsObj, columns, value) {
+    columnsObj[value] || columns.push(columnsObj[value] = { text: value });
+  },
+  transform: function(data, panel, model) {
+
+    let target = panel.targets[0];
+    let groupBy = target.groupBy;
+    if (groupBy && !Array.isArray(groupBy)) {
+      groupBy = groupBy.split(",");
+    }
+
+    let columnsObj = {};
+    let columns = [];
+
+    let aggregators = target.aggregators || [];
+    aggregators.forEach(aggregator => {
+      switch (aggregator.type) {
+        default:
+          this.addColumn(columnsObj, columns, aggregator.name);
+          break;
+      }
+    });
+
+    let tempData = [];
+    for (var dataIndex = 0; dataIndex < data.length; dataIndex += columns.length) {
+      var series = data[dataIndex];
+      for (var y = 0; y < series.datapoints.length; y++) {
+
+        for (var index = 0; index < columns.length; index++) {
+          var item = data[dataIndex + index];
+          var t = { target: item.target, datapoints: [item.datapoints[y]] };
+          tempData.push(t);
+        }
+      }
+    }
+    let rows = groupby(tempData, columns);
+
+    model.rows = rows;
+    model.columns = _.concat([
+      { text: 'Time', type: 'date' }
+    ],
+      groupBy.map(text => { return { text }; }),
+      columns);
+  },
+};
+
+function groupby(data, columns) {
+  var rowIndex = 0, rows = [];
+
+  for (var dataIndex = 0; dataIndex < data.length; dataIndex += columns.length) {
+    var row = rows[rowIndex++] = [];
+    for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+      var i = dataIndex + columnIndex;
+      var series = data[i];
+
+      for (var y = 0; y < series.datapoints.length; y++) {
+        var dp = series.datapoints[y];
+
+        if (columnIndex === 0) {
+          row.push(dp[1]);
+          _.dropRight(series.target.split(":")).forEach(item => {
+            item.split("-").forEach(groupField => { row.push(groupField); });
+          });
+        }
+        row.push(dp[0]);
+      }
+    }
+  }
+
+  return rows;
+}
+
 transformers['druid_arithmetic_to_rows'] = {
   description: 'druid arithmetic to rows',
   getColumns: function(data) {
@@ -85,15 +162,23 @@ transformers['druid_arithmetic_to_rows'] = {
   transform: function(data, panel, model) {
 
     let target = panel.targets[0];
-    let postAggregator = target.postAggregators[0];
     let groupBy = target.groupBy;
     if (groupBy && !Array.isArray(groupBy)) {
       groupBy = groupBy.split(",");
     }
-
-    let postAggregators = target.postAggregators;
     let columnsObj = {};
     let columns = [];
+
+    let aggregators = target.aggregators || [];
+    aggregators.forEach(aggregator => {
+      switch (aggregator.type) {
+        default:
+          this.addColumn(columnsObj, columns, aggregator.name);
+          break;
+      }
+    });
+
+    let postAggregators = target.postAggregators || [];
     postAggregators.forEach(postAggregator => {
       switch (postAggregator.type) {
         case "arithmetic":
@@ -104,29 +189,45 @@ transformers['druid_arithmetic_to_rows'] = {
       }
     });
 
-    let rows = [];
-    var rowIndex = 0;
-    for (var dataIndex = 0; dataIndex < data.length; dataIndex += columns.length) {
-      var row = rows[rowIndex++] = [];
-      for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
-        var i = dataIndex + columnIndex;
-        var series = data[i];
+    let rows = groupby(data, columns);
+    // var rowIndex = 0;
+    // if (columns.length > 0) {
+    //   for (var dataIndex = 0; dataIndex < data.length; dataIndex += columns.length) {
+    //     var row = rows[rowIndex++] = [];
+    //     for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+    //       var i = dataIndex + columnIndex;
+    //       var series = data[i];
 
-        for (var y = 0; y < series.datapoints.length; y++) {
-          var dp = series.datapoints[y];
+    //       for (var y = 0; y < series.datapoints.length; y++) {
+    //         var dp = series.datapoints[y];
 
-          if (columnIndex === 0) {
-            row.push(dp[1]);
-            _.dropRight(series.target.split(":")).forEach(item => {
-              item.split("-").forEach(groupField => { row.push(groupField); });
-            });
-          }
+    //         if (columnIndex === 0) {
+    //           row.push(dp[1]);
+    //           _.dropRight(series.target.split(":")).forEach(item => {
+    //             item.split("-").forEach(groupField => { row.push(groupField); });
+    //           });
+    //         }
 
-          row.push(dp[0]);
-          //rows[series.target] = [dp[1], series.target, dp[0]];
-        }
-      }
-    }
+    //         row.push(dp[0]);
+    //         //rows[series.target] = [dp[1], series.target, dp[0]];
+    //       }
+    //     }
+    //   }
+    // } else {
+    //   data.forEach(series => {
+    //     var row = rows[rowIndex++] = [];
+    //     for (var y = 0; y < series.datapoints.length; y++) {
+    //       var dp = series.datapoints[y];
+
+    //       row.push(dp[1]);
+    //       _.dropRight(series.target.split(":")).forEach(item => {
+    //         item.split("-").forEach(groupField => { row.push(groupField); });
+    //       });
+    //       row.push(dp[0]);
+    //       //rows[series.target] = [dp[1], series.target, dp[0]];
+    //     }
+    //   });
+    // }
     model.rows = rows;
     model.columns = _.concat([
       { text: 'Time', type: 'date' }
