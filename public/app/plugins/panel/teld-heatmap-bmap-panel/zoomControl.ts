@@ -25,14 +25,24 @@ class ZoomControl extends BMap.Control {
   initialize(map) {
     // 创建一个 DOM 元素
     var div = document.createElement("div");
-    // 添加文字说明
-    div.appendChild(document.createTextNode("放大2级"));
+
+
+    var d1 = document.createElement("div");
+    d1.appendChild(document.createTextNode('总电量'));
+    d1.onclick = this.click.bind(this);
+    div.appendChild(d1);
+
+    var d2 = document.createElement("div");
+    d2.appendChild(document.createTextNode('快充收入(元)'));
+    d2.onclick = this.click.bind(this);
+    div.appendChild(d2);
+
     // 设置样式
     div.style.cursor = "pointer";
     div.style.border = "1px solid gray";
     div.style.backgroundColor = "white";
     // 绑定事件，点击一次放大两级
-    div.onclick = this.click.bind(this);
+
     // 添加 DOM 元素到地图中
     map.getContainer().appendChild(div);
     // 将 DOM 元素返回

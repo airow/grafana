@@ -1,0 +1,26 @@
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Legend</h5>
+    <div class="gf-form">
+      <a class="btn btn-mini" style="width:25px;">
+        <i class="fa "></i>
+      </a>
+      <span class="gf-form-label width-25">name</span>
+      <span class="gf-form-label width-25">icon</span>
+      <span class="gf-form-label width-6">selected</span>
+    </div>
+    <div class="gf-form" ng-repeat="legend in ctrl.panel.legend.data">
+      <a ng-click="ctrl.remove(legend)" class="btn btn-danger btn-mini">
+        <i class="fa fa-remove"></i>
+      </a>
+      <input type="text" class="gf-form-input width-25" ng-model="legend.name" placeholder="name">
+      <input type="text" class="gf-form-input width-25" ng-model="legend.icoe" placeholder="icon">
+      <input type="checkbox" class="width-6" ng-model="legend.selected">
+    </div>
+  </div>
+</div>
+<div class="gf-form">
+  <div class="gf-form-button-row">
+    <a type="button" class="btn gf-form-button btn-success" ng-click="ctrl.add()"><i class="fa fa-plus"></i>&nbsp;&nbsp;New</a>
+  </div>
+</div>
