@@ -25,7 +25,8 @@ export class DashboardCtrl {
     alertSrv,
     $timeout,
     // dashSignalRSvr
-    grafanaScreenSignalrHub
+    grafanaScreenSignalrHub,
+    $location
     ) {
 
       //dashSignalRSvr.editEmployee();
@@ -95,6 +96,29 @@ export class DashboardCtrl {
           $scope.setWindowTitleAndTheme();
 
           $scope.appEvent("dashboard-initialized", $scope.dashboard);
+
+          let search = $location.search();
+          let variableType = 'custom';
+          for (var key in search) {
+            if (/^_\$.*/.test(key)) {
+              let varName = key.replace("_$", "");
+              var variable = variableSrv.templateSrv.getVariable(`$${varName}`, variableType);
+              let current = { text: search[key], value: search[key] };
+              if (variable) {
+                variableSrv.setOptionFromUrl(variable, search[key]);
+              } else {
+                variable = variableSrv.addVariable({ type: variableType, canSaved: false });
+                variable.hide = 2;
+                variable.name = variable.label = varName;
+              }
+              variable.current === current;
+
+              //variableSrv.updateOptions(variable);
+              variableSrv.setOptionAsCurrent(variable, current);
+              variableSrv.templateSrv.updateTemplateData();
+              dashboardSrv.getCurrent().updateSubmenuVisibility();
+            }
+          }
         })
         .catch($scope.onInitFailed.bind(this, 'Dashboard init failed', true));
       };
