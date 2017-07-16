@@ -11,7 +11,10 @@ import echarts from 'echarts';
 import './eventHandler_srv';
 import ZoomControl from './zoomControl';
 import {legendEditorComponent} from './legend_editor';
-import bmapStyle from './bmapStyle';
+import bmapStyle from './theme/bmap/all';
+import symbol from './theme/symbol/all';
+import './theme/echarts/all';
+import config from 'app/core/config';
 
 export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -27,7 +30,10 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   city: any;
 
-  sgConfig: any;
+  bmapCL: {
+    center: any
+    zoom: any
+  };
   isPlay: Boolean;
   isLoadAllData: Boolean;
   timelineIndex: any;
@@ -38,8 +44,9 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
+    varMetric: 'varMetric',
     legend: {
-      data: []
+      data: [],
     },
     timeline: {
       // realtime: false,
@@ -58,15 +65,24 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
     _.defaults(this.panel, this.panelDefaults);
 
-    this.isPlay = this.panel.timeline.autoPlay;
+    //this.isPlay = this.panel.timeline.autoPlay;
     this.isLoadAllData = false;
     this.isSelected = false;
+    this.bmapCL = { center: {}, zoom: 12 };
 
-    this.timelineDataOpts = { "每小时": [] };
-    //this.timelineDataOpts = { "每2小时": [] };
-    for (var index = 0; index < 24; index++) {
-      this.timelineDataOpts["每小时"].push(`${index}`);
+    this.timelineDataOpts = { "每小时": [], '城市': [] };
+    for (var index = 1; index <= 24; index++) {
+      this.timelineDataOpts["每小时"].push(_.padStart(`${index}`, 2, '0'));
     }
+    this.timelineDataOpts["城市"] = ['北京市',
+      '青岛市',
+      '天津市',
+      '上海市',
+      '重庆市',
+      '杭州市',
+      '武汉市',
+      '深圳市',
+      '广州市'];
 
     this.city = {
       "china": { g: [116.395645, 39.929986], zoom: 5 },
@@ -76,7 +92,15 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       "山西": { g: [112.515496, 37.866566], zoom: 7 },
     };
 
-    this.action_paly.text = this.isPlay ? "暂停" : "播放";
+    this.$scope.$watch(() => { return this.isPlay; }, (newValue, oldValue, scope) => {
+      //alert(`${newValue},${oldValue},${scope},${scope.ctrl.isPlay}`);
+      this.action_paly.text = newValue ? "暂停" : "播放";
+      // if (newValue) {
+      //   this.ecOption.baseOption.timeline.controlStyle.playIcon = symbol.timeline.controlStyle.stopIcon;
+      // } else {
+      //   this.ecOption.baseOption.timeline.controlStyle.playIcon = symbol.timeline.controlStyle.playIcon;
+      // }
+    });
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
@@ -84,94 +108,29 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     //this.events.on('render', this.onRender.bind(this));
     //this.events.on('data-received', this.onDataReceived.bind(this));
 
-    //this.initEcharts();
-
-    this.sgConfig = {
-      sgUrl: function () {
-        return "/public/mockJson/hangzhou-tracks.json";
-      },
-      positioning: function (echartsInstance, center, zoom?) {
-        let bmap = echartsInstance.getModel().getComponent('bmap');
-        if (bmap) {
-          bmap = bmap.getBMap();
-          //bmap.centerAndZoom(center, zoom);
-        }
-      },
-      transform: function (data, context) {
-        return [].concat.apply([], data.map(function (track) {
-          return track.map(function (seg) {
-            return seg.coord.concat([context.timelineIndex + 1]);
-          });
-        }));
-      }
-    };
-
     //注册事件
-    this.watchEvents = this.panel.watchEvents;
-    this.watchEvents.forEach(element => {
-      this.$scope.$on(element.name, this.watchEventHandler.bind(this));
-    });
+    this.$scope.$on('heatmap', this.heatmapEventHandler.bind(this));
   }
 
   action_paly = { text: '播放', click: 'ctrl.paly()' };
   onInitPanelActions(actions) {
-    //actions.push({ text: '最小化', click: 'ctrl.min()' });
     actions.push(this.action_paly);
   }
 
   paly() {
     this.isPlay = !this.isPlay;
     this.ecOption.baseOption.timeline.autoPlay = this.isPlay;
-    this.action_paly.text = this.isPlay ? "暂停" : "播放";
   }
 
-  getBmap(echartsInstance) {
-    let bmap = echartsInstance.getModel().getComponent('bmap');
-    if (bmap) {
-      bmap = bmap.getBMap();
+  heatmapEventHandler(event, eventArgs) {
+    this.isSelected = eventArgs.isSelected;
+
+    var varPID = _.find(eventArgs.rowVariables, variable => { return variable.name === 'PID'; });
+    if (varPID && _.isEmpty(varPID.current.value)) {
+      varPID.current = { text: '.', value: '.' };
     }
 
-    return bmap;
-  }
-
-  watchEventHandler(event, eventArgs) {
-    //$injector.get(eve)
-
-    let watchEvent = _.find(this.watchEvents, { name: event.name });
-
-    let eventHandlerSrv = this.$injector.get('heatmapEventHandlerSrv');
-
-    let config = {};
-    this.isSelected = eventArgs.isSelected;
-    watchEvent.methodArgs.forEach(element => {
-      config[element.key] = element.value;
-    });
-
-    this.sgConfig = eventHandlerSrv[watchEvent.method](eventArgs, config, this);
-    console.group('watchEventHandler');
     this.onRender();
-    console.groupEnd();
-  }
-
-  add() {
-    this.currentEvent = { methodArgs: [{}] };
-    this.watchEvents.push(this.currentEvent);
-  }
-
-  remove(watchEvent) {
-    var index = _.indexOf(this.watchEvents, watchEvent);
-    this.watchEvents.splice(index, 1);
-    this.panel.Variables = this.watchEvents;
-  }
-
-  addMethodArg(watchEvent) {
-    watchEvent.methodArgs = watchEvent.methodArgs || [];
-    watchEvent.methodArgs.push({});
-  }
-
-  removeMethodArg(methodArgs, arg) {
-    var index = _.indexOf(methodArgs, arg);
-    methodArgs.splice(index, 1);
   }
 
   refreshDashboard() {
@@ -181,7 +140,6 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.addEditorTab('Timeline', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/timeline.html');
     this.addEditorTab('Legend', legendEditorComponent);
-    this.addEditorTab('watchEvents', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/watchEvents.html');
     this.editorTabIndex = 1;
   }
 
@@ -189,19 +147,16 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  genJJ() {
-    let returnValue = this.sgConfig.sgUrl();
-    // let returnValue = '/public/mockJson/hangzhou-tracks.json';
-    // let variable = this.templateSrv.getVariable("$code", 'custom');
-    // // if (variable && variable.current && variable.current.value) {
-    // //   returnValue = `/public/mockJson/tracks-${variable.current.value}.json`;
-    // // }
-    return returnValue;
-  }
-
   setLegendSelect(value) {
+
+    /**别名 */
+    let legend = _.find(this.panel.legend.data, (item) => { return item.display === value; });
+    if (legend) {
+      value = legend.name;
+    }
+
     let variableType = 'custom';
-    let teldCustomModel = { type: variableType, name: 'fff' };
+    let teldCustomModel = { type: variableType, name: this.panel.varMetric };
     let variable = this.getLegendSelect();
     let current = { text: value, value: value };
 
@@ -220,7 +175,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   }
 
   getLegendSelect() {
-    return this.templateSrv.getVariable("$fff", 'custom');
+    return this.templateSrv.getVariable(`$${this.panel.varMetric}`, 'custom');
   }
 
   legendselectchanged(params) {
@@ -245,7 +200,12 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
     console.log(params.currentIndex + '@');
     this.timelineIndex = params.currentIndex;
-    this.ecOption.baseOption.timeline.autoPlay = false;
+
+    // if (this.isPlay) {
+    //   this.ecOption.baseOption.timeline.controlStyle.playIcon = symbol.timeline.controlStyle.stopIcon;
+    // }
+    // this.ecOption.baseOption.timeline.autoPlay = false;
+
     this.loadCount++;
 
     let data = this.ecOption.baseOption.timeline.data[params.currentIndex];
@@ -280,32 +240,40 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     });
 
     if (false === this.isLoadAllData) {
+      this.ecOption.baseOption.timeline.controlStyle.playIcon = symbol.timeline.controlStyle.stopIcon;
+      this.ecOption.baseOption.timeline.autoPlay = false;
       this.onMetricsPanelRefresh2(params.currentIndex).then(() => {
+        this.ecOption.baseOption.timeline.controlStyle.playIcon = symbol.timeline.controlStyle.playIcon;
         if (this.isPlay) {
-          if (isLast) {
-            if (false === this.ecOption.baseOption.timeline.loop) {
-              this.isPlay = false;
+            if (isLast) {
+              if (false === this.ecOption.baseOption.timeline.loop) {
+                this.isPlay = false;
+              } else {
+                this.ecOption.baseOption.timeline.autoPlay = true;
+              }
             } else {
               this.ecOption.baseOption.timeline.autoPlay = true;
             }
-          } else {
-            this.ecOption.baseOption.timeline.autoPlay = true;
-          }
         }
       });
     } else {
       if (isLast && false === this.ecOption.baseOption.timeline.loop) {
-        //this.isPlay = false;
+        this.isPlay = false;
+        /**
         let that = this;
         this.$scope.$apply(function () {
           that.isPlay = false;
         });
+         */
       }else{
         if (this.isPlay) {
           this.ecOption.baseOption.timeline.autoPlay = true;
         }
       }
     }
+
+    this.ecOption.baseOption.bmap.center = [this.bmapCL.center.lng, this.bmapCL.center.lat];
+    this.ecOption.baseOption.bmap.zoom = this.bmapCL.zoom;
     console.groupEnd();
   }
 
@@ -368,48 +336,46 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.onDataReceived(result.data);
   }
 
+  bmapLocation(params) {
+    let { type, target } = params;
+    let location = { center: target.getCenter(), zoom: target.getZoom() };
+    this.bmapCL = location;
+  }
+
   initEcharts() {
     this.ecConfig = {
-      theme: 'default',
+      //theme: 'default',
+      //theme: config.bootData.user.lightTheme ? 'light' : 'drak',
+      theme: 'teld',
       event: [{
         'legendselectchanged': this.legendselectchanged.bind(this),
-
         'timelinechanged': this.timelinechanged.bind(this),
         'timelineplaychanged': (params) => {
-          // console.group('timelineplaychanged');
-          // console.log(`${params.playState}=${this.ecOption.baseOption.timeline.autoPlay}`);
-          // console.groupEnd();
+          this.isPlay = params.playState;
+          console.log(params.playState);
         }
       }],
+      bmap: { event: [{
+        'moveend': this.bmapLocation.bind(this),
+        'zoomend': this.bmapLocation.bind(this),
+      }] },
       dataLoaded: true
     };
 
-    let timelineData = [
-      '北京市',
-      '青岛市',
-      '天津市',
-      '上海市',
-      '重庆市',
-      '杭州市',
-      '武汉市',
-      '深圳市',
-      '广州市'
-      // '天津市', '北京市', '青岛市', {
-      //   value: '上海市'
-      // }
-    ];
-
-    timelineData = this.timelineDataOpts[this.panel.timelineOptData] || timelineData;
-
-    // for (var i = 0; i < 24; i++) {
-    //   var day = i + 5;
-    //   timelineData.push(`2017070${day}`);
-    // }
+    let timelineData = this.timelineDataOpts[this.panel.timelineOptData] || [];
 
     let timeline = {
+      symbol: symbol.timeline.symbol,
+      symbolSize: 20,
+      bottom: 20,
       controlStyle: {
         show: true,
-        showPlayBtn: false
+        showPlayBtn: true,
+        playIcon: symbol.timeline.controlStyle.playIcon,
+        stopIcon: symbol.timeline.controlStyle.stopIcon,
+      },
+      checkpointStyle: {
+        symbol: symbol.timeline.checkpointStyle
       },
       axisType: 'category',
       data: timelineData,
@@ -421,16 +387,26 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       // }
     };
 
-    let cityVar = this.templateSrv.getVariable(`$name`, "custom");
+    let varCityPosition = this.templateSrv.getVariable(`$CityPosition`, "custom");
+    let coordinates = varCityPosition.current.value;
+    //"china": { g: [116.395645, 39.929986], zoom: 5 },
+    let position = { g: [116.395645, 39.929986], zoom: 5 };
+    if (false === _.isEmpty(coordinates)) {
+      position.g = _.reverse(_.split(coordinates, ',', 2));
+      position.zoom = 12;
+    }
 
-    let c = this.city[cityVar.current.value];
+    // let [lng, lat] = position.g;
+    // this.bmapCL.center = { lng, lat };
+    this.bmapCL.center = _.zipObject(['lng', 'lat'], position.g);
+    this.bmapCL.zoom = position.zoom;
+    //this.bmapCL = { center: { lng, lat }, zoom: position.zoom };
 
-    //let confLegend = [{ name: '总电量', selected: false }, { name: '快充收入(元)', selected: true }];
+    //let c = this.city[cityVar.current.value];
+
     let confLegend = _.cloneDeep(this.panel.legend.data);
 
     let legendSelect;
-
-    let bmap;
 
     if (this.ecInstance === undefined) {
       confLegend.forEach(legend => {
@@ -448,10 +424,21 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
 
     let legend = {
+      padding: 20,
       selectedMode: 'single',
-      data: confLegend.map(legend => { return legend.name; }),
+      orient: 'vertical',//horizontal
+      width: 800,
+      height: 500,
+      top: 20,
+      right: 20,
+      data: confLegend.map(legend => {
+        return {
+          name: legend.display || legend.name,
+          icon: legend.icon
+        };
+      }),
       selected: _.fromPairs(confLegend.map(legend => { return [legend.name, legend.name === legendSelect]; })),
-      align: 'left'
+      // align: 'left'
     };
 
     let heatmapSerie = {
@@ -467,18 +454,34 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       blurSize: 20
     };
 
+    let mockLegendSeries = legend.data.map(item => { return { show: false, name: item.name, type: 'bar', data: [] }; });
 
-    let mockLegendSeries = legend.data.map(item => { return { show: false, name: item, type: 'bar', data: [] }; });
+    let bmap = {
+      //center: [120.13066322374, 30.240018034923],
+      center: position.g,/*天津 */
+      //center: [116.403903, 39.915743],
+      zoom: this.bmapCL.zoom,
+      //mapStyle: { styleJson: config.bootData.user.lightTheme ?  bmapStyle.light : bmapStyle.drak },
+      mapStyle: { styleJson: bmapStyle.default },
+      roam: true
+    };
 
     let baseOption = {
-      legend: legend,
+      /**关键配置*/
+      bmap,
+      legend,
+      series: [].concat(
+        heatmapSerie,
+        mockLegendSeries
+      ),
+      timeline: _.defaults(_.cloneDeep(this.panel.timeline), timeline),
+      /***/
       xAxis: {
         show: false
       },
       yAxis: {
         show: false
       },
-      timeline: _.defaults(_.cloneDeep(this.panel.timeline), timeline),
       tooltip: { trigger: "item", show: true },
       animation: true,
       visualMap: {
@@ -489,26 +492,17 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
         inRange: {
           color: ['blue', 'blue', 'green', 'yellow', 'red']
         }
-      },
-      bmap: {
-        //center: [120.13066322374, 30.240018034923],
-        center: c.g,/*天津 */
-        //center: [116.403903, 39.915743],
-        zoom: c.zoom,
-        mapStyle: { styleJson: bmapStyle.drak },
-        roam: true
-      },
-      series: [].concat(
-        heatmapSerie,
-        mockLegendSeries
-      )
+      }
     };
 
-
+    /**
+     * 处理黑色背景时间轴播放地图闪烁的问题
+     * 2017-07-15@ 次逻辑移动到 onDataReceived(dataList) 方法中效果更好，
+     *             第一次时间轴播放也不会闪烁
     if (this.ecInstance) {
-      /*处理黑色背景时间轴播放地图闪烁的问题*/
       delete baseOption.bmap.mapStyle;
     }
+    */
 
     this.ecOption = {
       baseOption: baseOption,
@@ -523,96 +517,68 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     // bmap.addControl(myZoomCtrl);
   }
 
-  loadData() {
-    this.initEcharts();
-  }
-
-  callSG(timelineIndex: any) {
-
-    timelineIndex = timelineIndex || 0;
-
-    //let timeline = this.ecInstance.getOption().timeline[timelineIndex];
-    //let tlData = timeline.data[timelineIndex];
-    //console.log(tlData);
-
-    return this.$http.get(this.genJJ()).then(
-      response => {
-        let option = this.ecOption.options[timelineIndex];
-        if (false === this.isLoadAllData) {
-          option = {
-            series: [
-              {
-                data: this.sgConfig.transform(response.data, { timelineIndex })
-              }
-            ]
-          };
-          this.ecOption.options[timelineIndex] = option;
-        }
-      },
-      response => {
-        this.ecInstance.clear();
-        console.log(response);
-      },
-    );
-  }
-
   onDataReceived(dataList) {
+
+    if (this.ecInstance) {
+      /**
+       * 处理黑色背景时间轴播放地图闪烁的问题 */
+      delete this.ecOption.baseOption.bmap.mapStyle;
+    }
     console.log("onDataReceived");
+
+    let option = this.ecOption.options[this.timelineIndex];
     if (dataList.length > 0) {
-      let option = this.ecOption.options[this.timelineIndex];
       let max = 100;
       let min = 9000000;
       let sum = 0;
       if (false === this.isLoadAllData) {
-        let he = [];
         option = {
           series: [
             {
               data: dataList[0].datapoints.map(item => {
-                let r = item["电站位置"].split(',');
+
+                let agg = this.panel.targets[0].bucketAggs[0].field;
+                let metric = this.panel.targets[0].metrics[0].type;
+
+                let metricValue = item[_.upperFirst(metric)];
+
+                let r = item[agg].split(',');
                 r = [parseFloat(r[1]), parseFloat(r[0])];
-                r.push(item.Sum);
-                sum += item.Sum;
-                //r = [120.13066322374 + this.timelineIndex, 30.240018034923 + this.timelineIndex, item.Sum];
-                //r = [120.13066322374, 30.240018034923, (item.Sum + 1) * this.timelineIndex];
-                //r = [120.13066322374, 30.240018034923, item.Sum];
-                //console.log(r);
-                he.push({ "lat": parseFloat(r[1]), "lng": parseFloat(r[0]), "count": item.Sum });
-                if (item.Sum > max) {
-                  max = item.Sum;
+                r.push(metricValue);
+                sum += metricValue;
+                if (metricValue > max) {
+                  max = metricValue;
                 }
-                if (item.Sum < min) {
-                  min = item.Sum;
+                if (metricValue < min) {
+                  min = metricValue;
                 }
                 return r;
               })
             }
           ]
         };
-         this.ecOption.baseOption.visualMap.min = min;
-         this.ecOption.baseOption.visualMap.max = sum / dataList[0].datapoints.length * 2;
-         //console.log(JSON.stringify(he));
+        this.ecOption.baseOption.visualMap.min = min;
+        this.ecOption.baseOption.visualMap.max = sum / dataList[0].datapoints.length * 2;
         option.visualMap = _.cloneDeep(this.ecOption.baseOption.visualMap);
-        // option.visualMap.min = min;
-        // option.visualMap.max = 1000;
-        this.ecOption.options[this.timelineIndex] = option;
+
       }
+    }else{
+        option = {
+          series: [
+            {
+              data: []
+            }
+          ]
+        };
     }
+    this.ecOption.options[this.timelineIndex] = option;
   }
 
   clearCache() {
-    this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => {
-      return {
-        series: [
-          {
-            data: []
-          }
-        ]
-      };
-    });
+    this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => { return {}; });
   }
 
-  onRender() {
+onRender() {
     this.isLoadAllData = false;
     this.isPlay = this.panel.timeline.autoPlay;
     this.timelineIndex = 0;
@@ -622,9 +588,30 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       this.initEcharts();
       this.timelinechanged({ currentIndex: this.timelineIndex });
     } else {
+      this.isPlay = false;
+      this.initEcharts();
+    }
+  }
+
+  onRender2() {
+    this.isLoadAllData = false;
+    this.isPlay = this.panel.timeline.autoPlay;
+    this.timelineIndex = 0;
+    this.loadCount = 0;
+
+    if (this.isSelected) {
+      this.initEcharts();
+      this.timelinechanged({ currentIndex: this.timelineIndex });
+    } else {
+      this.isPlay = false;
       if (this.ecInstance) {
-        this.clearCache();
-        //this.ecInstance.clear();
+        // this.ecInstance.dispatchAction({
+        //   type: 'timelinePlayChange',
+        //   // 播放状态，true 为自动播放
+        //   playState: this.isPlay
+        // });
+        // this.clearCache();
+        this.initEcharts();
       }else{
         this.initEcharts();
       }

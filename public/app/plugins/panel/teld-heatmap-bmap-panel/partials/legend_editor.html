@@ -1,6 +1,6 @@
 <div class="editor-row">
   <div class="section gf-form-group">
-    <h5 class="section-heading">Legend</h5>
+    <h5 class="section-heading">Legend ${{ctrl.panel.varMetric}}</h5>
     <div class="gf-form">
       <a class="btn btn-mini" style="width:25px;">
         <i class="fa "></i>
@@ -14,7 +14,8 @@
         <i class="fa fa-remove"></i>
       </a>
       <input type="text" class="gf-form-input width-25" ng-model="legend.name" placeholder="name">
-      <input type="text" class="gf-form-input width-25" ng-model="legend.icoe" placeholder="icon">
+      <input type="text" class="gf-form-input width-25" ng-model="legend.display" placeholder="display">
+      <input type="text" class="gf-form-input width-25" ng-model="legend.icon" placeholder="icon">
       <input type="checkbox" class="width-6" ng-model="legend.selected">
     </div>
   </div>

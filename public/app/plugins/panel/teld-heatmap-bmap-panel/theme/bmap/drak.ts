@@ -1,4 +1,4 @@
-var drak = [
+export default [
   {
     "featureType": "land",
     "elementType": "geometry",
@@ -121,7 +121,3 @@ var drak = [
     }
   }
 ];
-
-var bmapStyle = { drak };
-
-export default bmapStyle;
