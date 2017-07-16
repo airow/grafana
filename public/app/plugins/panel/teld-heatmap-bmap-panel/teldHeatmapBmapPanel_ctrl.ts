@@ -589,6 +589,7 @@ onRender() {
       this.timelinechanged({ currentIndex: this.timelineIndex });
     } else {
       this.isPlay = false;
+      this.clearCache();
       this.initEcharts();
     }
   }
