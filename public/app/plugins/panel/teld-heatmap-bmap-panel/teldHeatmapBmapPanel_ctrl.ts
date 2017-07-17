@@ -1,5 +1,6 @@
 ///<reference path="../../../headers/common.d.ts" />
 ///<reference path="../../../headers/echarts.d.ts" />
+///<reference path="../../../headers/baidumap-web-sdk/index.d.ts" />
 
 import _ from 'lodash';
 import angular from 'angular';
@@ -21,6 +22,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   isloaded = true;
 
+  ecBmap: BMap.Map;
   ecInstance: echarts.ECharts;
   ecConfig: any;
   ecOption: any;
@@ -31,6 +33,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   city: any;
 
   bmapCL: {
+    bounds: BMap.Bounds,
     center: any
     zoom: any
   };
@@ -47,6 +50,10 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     varMetric: 'varMetric',
     legend: {
       data: [],
+    },
+    heatmap: {
+      pointSize: 10,
+      blurSize: 10
     },
     timeline: {
       // realtime: false,
@@ -68,7 +75,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     //this.isPlay = this.panel.timeline.autoPlay;
     this.isLoadAllData = false;
     this.isSelected = false;
-    this.bmapCL = { center: {}, zoom: 12 };
+    this.bmapCL = { bounds: null, center: {}, zoom: 12 };
 
     this.timelineDataOpts = { "每小时": [], '城市': [] };
     for (var index = 1; index <= 24; index++) {
@@ -104,6 +111,13 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+    this.events.on('refresh', () => {
+      /**处理界面切换，弊端会影响播放等待时间 */
+      if (this.ecInstance) { this.ecInstance.resize(); }
+    });
+    // this.events.on('render', () => {
+    //   if (this.ecInstance) this.ecInstance.resize();
+    // });
     //this.events.on('refresh', this.onRefresh.bind(this));
     //this.events.on('render', this.onRender.bind(this));
     //this.events.on('data-received', this.onDataReceived.bind(this));
@@ -148,14 +162,20 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   }
 
   setLegendSelect(value) {
+    let variableType = 'custom';
 
+    let currentTitle = { text: value, value: value };
     /**别名 */
-    let legend = _.find(this.panel.legend.data, (item) => { return item.display === value; });
+    let legend = _.find(this.panel.legend.data, (item) => {
+      return item.display === value || item.name === value;
+    });
     if (legend) {
       value = legend.name;
+      let display = legend.display || legend.name;
+      currentTitle = { text: display, value: display };
     }
 
-    let variableType = 'custom';
+
     let teldCustomModel = { type: variableType, name: this.panel.varMetric };
     let variable = this.getLegendSelect();
     let current = { text: value, value: value };
@@ -167,15 +187,41 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       variable.hide = 2;
       variable.name = variable.label = teldCustomModel.name;
     }
-    variable.current === current;
+
 
     this.variableSrv.setOptionAsCurrent(variable, current);
+
+    let legendTitle = this.getLegendSelectTitle();
+    this.variableSrv.setOptionAsCurrent(legendTitle, currentTitle);
     this.variableSrv.templateSrv.updateTemplateData();
     this.dashboardSrv.getCurrent().updateSubmenuVisibility();
   }
 
   getLegendSelect() {
     return this.templateSrv.getVariable(`$${this.panel.varMetric}`, 'custom');
+  }
+
+  getLegendSelectTitle() {
+    let variableName = `${this.panel.varMetric}Title`;
+
+    let variable = this.getVariableByName(variableName);
+
+    return variable;
+  }
+
+  getVariableByName(variableName) {
+
+    let variableType = 'custom';
+
+    let variable = this.templateSrv.getVariable(`$${variableName}`, variableType);
+    if (variable) {
+
+    } else {
+      variable = this.variableSrv.addVariable({ type: variableType, canSaved: false });
+      variable.hide = 2;
+      variable.name = variable.label = variableName;
+    }
+    return variable;
   }
 
   legendselectchanged(params) {
@@ -338,7 +384,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   bmapLocation(params) {
     let { type, target } = params;
-    let location = { center: target.getCenter(), zoom: target.getZoom() };
+    let location = { bounds: target.getBounds(), center: target.getCenter(), zoom: target.getZoom() };
     this.bmapCL = location;
   }
 
@@ -371,6 +417,9 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       controlStyle: {
         show: true,
         showPlayBtn: true,
+        showPrevBtn: false,
+        showNextBtn: false,
+        itemGap: 22,
         playIcon: symbol.timeline.controlStyle.playIcon,
         stopIcon: symbol.timeline.controlStyle.stopIcon,
       },
@@ -393,7 +442,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     let position = { g: [116.395645, 39.929986], zoom: 5 };
     if (false === _.isEmpty(coordinates)) {
       position.g = _.reverse(_.split(coordinates, ',', 2));
-      position.zoom = 12;
+      position.zoom = 9;
     }
 
     // let [lng, lat] = position.g;
@@ -424,11 +473,11 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
 
     let legend = {
-      padding: 20,
+      padding: 15,
       selectedMode: 'single',
       orient: 'vertical',//horizontal
-      width: 800,
-      height: 500,
+      // width: 800,
+      // height: 500,
       top: 20,
       right: 20,
       data: confLegend.map(legend => {
@@ -450,8 +499,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
           show: true
         }
       },
-      pointSize: 20,
-      blurSize: 20
+      pointSize: this.panel.heatmap.pointSize,
+      blurSize: this.panel.heatmap.blurSize
     };
 
     let mockLegendSeries = legend.data.map(item => { return { show: false, name: item.name, type: 'bar', data: [] }; });
@@ -485,7 +534,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       tooltip: { trigger: "item", show: true },
       animation: true,
       visualMap: {
-        show: true,
+        show: false,
         top: 'top',
         seriesIndex: 0,
         calculable: true,
@@ -549,7 +598,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
                 if (metricValue > max) {
                   max = metricValue;
                 }
-                if (metricValue < min) {
+                if (metricValue < min && metricValue !== 0) {
                   min = metricValue;
                 }
                 return r;
@@ -558,7 +607,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
           ]
         };
         this.ecOption.baseOption.visualMap.min = min;
-        this.ecOption.baseOption.visualMap.max = sum / dataList[0].datapoints.length * 2;
+        //this.ecOption.baseOption.visualMap.max = sum / dataList[0].datapoints.length * 2;
+        this.ecOption.baseOption.visualMap.max = max;
         option.visualMap = _.cloneDeep(this.ecOption.baseOption.visualMap);
 
       }

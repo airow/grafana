@@ -26,5 +26,17 @@
 			<span class="gf-form-label width-7">Height</span>
 			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeHeight" placeholder="100%" ng-change="ctrl.render()">
 		</div>
+  </div>
+
+  <div class="section gf-form-group">
+		<h5 class="section-heading">heatmap</h5>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">pointSize</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.heatmap.pointSize" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">blurSize</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.heatmap.blurSize" placeholder="100%" ng-change="ctrl.render()">
+		</div>
 	</div>
 </div>

@@ -53,7 +53,6 @@ define([
               }
             }
 
-
             if (scope.config && scope.config.bmap) {
               let bmapConf = scope.config.bmap;
               if (bmapConf.event) {
