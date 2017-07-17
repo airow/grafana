@@ -56,6 +56,7 @@ func setIndexViewData(c *middleware.Context) (*dtos.IndexViewData, error) {
 			GravatarUrl:    dtos.GetGravatarUrl(c.Email),
 			IsGrafanaAdmin: c.IsGrafanaAdmin,
 			LightTheme:     prefs.Theme == "light",
+			ThemeName:      prefs.Theme,
 			Timezone:       prefs.Timezone,
 			Locale:         locale,
 			HelpFlags1:     c.HelpFlags1,

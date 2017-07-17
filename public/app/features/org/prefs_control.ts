@@ -19,6 +19,7 @@ export class PrefsControlCtrl {
     {value: '', text: 'Default'},
     {value: 'dark', text: 'Dark'},
     {value: 'light', text: 'Light'},
+    {value: 'screen', text: 'Screen'},
   ];
 
   /** @ngInject **/

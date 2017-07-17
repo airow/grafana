@@ -9,6 +9,7 @@ module.exports = function(config) {
       files: {
         "<%= genDir %>/css/bootstrap.dark.min.css": "<%= srcDir %>/less/grafana.dark.less",
         "<%= genDir %>/css/bootstrap.light.min.css": "<%= srcDir %>/less/grafana.light.less",
+        "<%= genDir %>/css/bootstrap.light.Screen.css": "<%= srcDir %>/less.screen/grafana.Screen.less",
         "<%= genDir %>/css/bootstrap-responsive.min.css": "<%= srcDir %>/less/grafana-responsive.less"
       }
     }

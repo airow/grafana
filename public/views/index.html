@@ -12,8 +12,9 @@
 
 		[[if .User.LightTheme]]
 		  <link rel="stylesheet" href="[[.AppSubUrl]]/public/css/grafana.light.min.css">
-		[[else]]
-		  <link rel="stylesheet" href="[[.AppSubUrl]]/public/css/grafana.dark.min.css">
+    [[else]]
+      <!-- <link rel="stylesheet" href="[[.AppSubUrl]]/public/css/grafana.dark.min.css"> -->
+      <link rel="stylesheet" href="[[.AppSubUrl]]/public/css/grafana.[[.User.ThemeName]].min.css">
 		[[end]]
 
     <!--<link rel="icon" type="image/png" href="[[.AppSubUrl]]/public/img/fav32.png">-->
