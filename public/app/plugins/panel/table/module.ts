@@ -9,6 +9,7 @@ import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import {transformDataToTable} from './transformers';
 import {tablePanelEditor} from './editor';
 import {TableRenderer} from './renderer';
+import * as rangeUtil from 'app/core/utils/rangeutil';
 
 class TablePanelCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -16,8 +17,11 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   pageIndex: number;
   dataRaw: any;
   table: any;
+  overwriteTimeRange: any;
+  originalTitle: string;
 
   panelDefaults = {
+    drill_timePlotclick: false,
     targets: [{}],
     transform: 'timeseries_to_columns',
     pageSize: null,
@@ -64,10 +68,23 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+    this.originalTitle = this.panel.title;
+    //graph 钻取处理函数
+    if (this.panel.drill_timePlotclick) {
+      this.$scope.$on('timePlotclick', (event, eventArgs) => {
+        if (eventArgs.clickPoint) {
+          this.overwriteTimeRange = eventArgs.timeRange;
+        } else {
+          this.overwriteTimeRange = undefined;
+        }
+        this.onMetricsPanelRefresh();
+      });
+    }
   }
 
   onInitEditMode() {
     this.addEditorTab('Options', tablePanelEditor, 2);
+    this.addEditorTab('Drill', 'public/app/plugins/panel/table/partials/drill.html');
   }
 
   onInitPanelActions(actions) {
@@ -84,8 +101,20 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         return {data: annotations};
       });
     }
-
-    return super.issueQueries(datasource);
+    let originalRange;
+    if (false === _.isEmpty(this.overwriteTimeRange)) {
+      originalRange = _.clone(this.range);
+      this.range.from = this.overwriteTimeRange.from;
+      this.range.to = this.overwriteTimeRange.to;
+      this.overwriteTimeRange = undefined;
+    }
+    return super.issueQueries(datasource).then(data => {
+      if (originalRange) {
+        this.rangeStringPanel = this.range.from.format('YYYY-MM-DD HH:mm:ss');
+        this.range = originalRange;
+      }
+      return data;
+    });
   }
 
   onDataError(err) {

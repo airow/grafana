@@ -3,6 +3,8 @@
 import config from 'app/core/config';
 import $ from 'jquery';
 import _ from 'lodash';
+import angular from 'angular';
+import moment from 'moment';
 import kbn from 'app/core/utils/kbn';
 import {PanelCtrl} from './panel_ctrl';
 
@@ -30,6 +32,7 @@ class MetricsPanelCtrl extends PanelCtrl {
   skipDataOnInit: boolean;
   dataStream: any;
   dataSubscription: any;
+  rangeStringPanel: string;
 
   constructor($scope, $injector) {
     super($scope, $injector);
@@ -62,7 +65,7 @@ class MetricsPanelCtrl extends PanelCtrl {
     this.addEditorTab('Time range', 'public/app/features/panel/partials/panelTime.html');
   }
 
-  private onMetricsPanelRefresh() {
+  onMetricsPanelRefresh() {
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
 
@@ -119,9 +122,28 @@ class MetricsPanelCtrl extends PanelCtrl {
     this.timing.queryEnd = new Date().getTime();
   }
 
+  setRangeString() {
+    var time = angular.copy(this.timeSrv.timeRange());
+    var timeRaw = angular.copy(time.raw);
+
+    if (!this.dashboard.isTimezoneUtc()) {
+      time.from.local();
+      time.to.local();
+      if (moment.isMoment(timeRaw.from)) {
+        timeRaw.from.local();
+      }
+      if (moment.isMoment(timeRaw.to)) {
+        timeRaw.to.local();
+      }
+    }
+    this.rangeStringPanel = rangeUtil.describeTimeRange(timeRaw);
+  }
+
   updateTimeRange() {
     this.range = this.timeSrv.timeRange();
     this.rangeRaw = this.range.raw;
+
+    this.setRangeString();
 
     this.applyPanelTimeOverrides();
 

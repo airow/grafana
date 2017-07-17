@@ -8,7 +8,11 @@
 		<gf-form-switch class="gf-form" label="Loop" label-class="width-7" checked="ctrl.panel.timeline.loop" on-change="ctrl.render()"></gf-form-switch>
     <div class="gf-form">
 			<span class="gf-form-label width-7">interval</span>
-			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.timeline.playInterval" placeholder="100%" ng-change="ctrl.render()">
+			<input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.timeline.playInterval" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+    <div class="gf-form">
+			<span class="gf-form-label width-7">data</span>
+      <select class="gf-form-input width-7" ng-model="ctrl.panel.timelineOptData" ng-options="f for f in ['每小时','城市']"><option label="0" value="number:0">0</option><option label="1" value="number:1">1</option><option label="2" value="number:2">2</option><option label="3" value="number:3">3</option><option label="4" value="number:4">4</option><option label="5" value="number:5">5</option><option label="6" value="number:6">6</option><option label="7" value="number:7">7</option><option label="8" value="number:8">8</option><option label="9" value="number:9">9</option><option label="10" value="number:10" selected="selected">10</option><option label="11" value="number:11">11</option><option label="12" value="number:12">12</option></select>
 		</div>
 	</div>
 
@@ -21,6 +25,18 @@
 		<div class="gf-form">
 			<span class="gf-form-label width-7">Height</span>
 			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeHeight" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+  </div>
+
+  <div class="section gf-form-group">
+		<h5 class="section-heading">heatmap</h5>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">pointSize</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.heatmap.pointSize" placeholder="100%" ng-change="ctrl.render()">
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-7">blurSize</span>
+			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.heatmap.blurSize" placeholder="100%" ng-change="ctrl.render()">
 		</div>
 	</div>
 </div>

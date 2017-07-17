@@ -13,6 +13,7 @@ define([
       return {
         link: function (scope, element) {
           function refreshChart() {
+            var firstInit = false;
             var theme = (scope.config && scope.config.theme)
               ? scope.config.theme : 'default';
 
@@ -21,7 +22,7 @@ define([
               ecContainer = $('<div class="ecContainer" style="height:100%;">');
               element.append(ecContainer);
             }
-            var chart = scope.instance || (scope.instance = echarts.init(ecContainer[0], theme));
+            var chart = scope.instance || (firstInit = true, scope.instance = echarts.init(ecContainer[0], theme));
             if (scope.config && scope.config.dataLoaded === false) {
               chart.showLoading();
             }
@@ -32,6 +33,15 @@ define([
               chart.hideLoading();
             }
 
+            if (chart) {
+              let option = chart.getOption();
+
+              let hasBmap = _.has(option, ['bmap']);
+              if (hasBmap) {
+                scope.bmap = chart.getModel().getComponent('bmap').getBMap();
+              }
+            }
+
             if (scope.config && scope.config.event) {
               if (angular.isArray(scope.config.event)) {
                 angular.forEach(scope.config.event, function (value) {
@@ -40,6 +50,22 @@ define([
                     chart.on(e, value[e]);
                   }
                 });
+              }
+            }
+
+            if (scope.config && scope.config.bmap) {
+              let bmapConf = scope.config.bmap;
+              if (bmapConf.event) {
+                if (angular.isArray(bmapConf.event)) {
+                  angular.forEach(bmapConf.event, function (value) {
+                    for (var e in value) {
+                      scope.bmap.removeEventListener(e, value[e]);
+                      scope.bmap.addEventListener(e, value[e]);
+                    }
+                  });
+                }
+              } else {
+                alert('bmap 组件加载失败');
               }
             }
 
@@ -71,6 +97,7 @@ define([
           option: '=ecOption',
           config: '=ecConfig',
           instance: '=?ecInstance',
+          bmap: '=?ecBmap'
         },
         restrict: 'EA'
       };
