@@ -36,6 +36,8 @@ export class PanelCtrl {
   events: Emitter;
   timing: any;
 
+  panelState: boolean;
+
   constructor($scope, $injector) {
     this.$injector = $injector;
     this.$scope = $scope;
@@ -43,7 +45,6 @@ export class PanelCtrl {
     this.editorTabIndex = 0;
     this.events = new Emitter();
     this.timing = {};
-
     var plugin = config.panels[this.panel.type];
     if (plugin) {
       this.pluginId = plugin.id;
@@ -147,6 +148,71 @@ export class PanelCtrl {
     }
     menu.push({text: 'Share', click: 'ctrl.sharePanel(); dismiss();'});
     return menu;
+  }
+
+  action_panelstate = { isMin: false, text: '最小化', click: 'ctrl.changePanelState()' };
+  changePanelState($event) {
+    this.action_panelstate.isMin = !this.action_panelstate.isMin;
+    this.action_panelstate.text = (this.action_panelstate.isMin ? "还原" : "最小化");
+
+    let orgSpan = this.panel.orgSpan;
+    let thisSpan = orgSpan || this.panel.span;
+    let panelArray = [];
+    this.row.panels.forEach(panel => {
+      if (panel.orgSpan) {
+        panel.span = panel.orgSpan;
+        delete panel["orgSpan"];
+      } else {
+        panel.orgSpan = panel.span;
+        panel.orgHeight = panel.height;
+
+        if (panel !== this.panel) {
+          panelArray.push(panel);
+          //panel.span = 12;
+        }
+      }
+    });
+
+    let panelRow = [];
+    let p = [];
+    let ss = 0;
+    panelArray.forEach(panel => {
+      let count = panel.span + ss + thisSpan;
+      p.push(panel);
+      if (count >= 12) {
+        panelRow.push(p);
+        p = [];
+        ss = 0;
+      } else {
+        ss += panel.span;
+      }
+    });
+
+    panelRow.forEach(row => {
+      if (row.length === 1) {
+        row[0].span = 12;
+      } else {
+        row[row.length - 1].span += thisSpan;
+      }
+    });
+
+
+    if (orgSpan) {
+      this.panel.span = orgSpan;
+      if (this.panel.orgHeight) {
+        this.panel.height = this.panel.orgHeight;
+      } else {
+        delete this.panel['height'];
+      }
+    } else {
+      this.panel.span = 1;
+      this.panel.height = 1;
+    }
+    if ($event) {
+      $event.stopPropagation();
+    }
+    //this.refresh();
+    this.$scope.$root.$broadcast('refresh');
   }
 
   getExtendedMenu() {

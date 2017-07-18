@@ -19,6 +19,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   metricSources: any[];
   variables: any[];
   variableTypeDataSource: any[];
+
   // Set and populate defaults
   panelDefaults = {
     mode: "markdown", // 'html', 'markdown', 'text'
@@ -40,6 +41,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
     _.defaults(this.panel, this.panelDefaults);
 
+    this.panelState = true;
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
@@ -69,66 +71,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     });
   }
 
-  action_min = { text: '最小化', click: 'ctrl.min()' };
   onInitPanelActions(actions) {
     //actions.push({ text: '最小化', click: 'ctrl.min()' });
-    actions.push(this.action_min);
-  }
-
-  min(){
-    this.action_min.text = (this.action_min.text === "最小化" ? "还原" : "最小化");
-
-    let orgSpan = this.panel.orgSpan;
-    let thisSpan = orgSpan || this.panel.span;
-    let panelArray = [];
-    this.row.panels.forEach(panel => {
-      if (panel.orgSpan) {
-        panel.span = panel.orgSpan;
-        delete panel["orgSpan"];
-      } else {
-        panel.orgSpan = panel.span;
-
-        if (panel !== this.panel) {
-          panelArray.push(panel);
-          //panel.span = 12;
-        }
-      }
-    });
-
-    let panelRow = [];
-    let p = [];
-    let ss = 0;
-    panelArray.forEach(panel => {
-      let count = panel.span + ss + thisSpan;
-      p.push(panel);
-      if (count >= 12) {
-        panelRow.push(p);
-        p = [];
-        ss = 0;
-      } else {
-        ss += panel.span;
-      }
-    });
-
-    panelRow.forEach(row => {
-      if (row.length === 1) {
-        row[0].span = 12;
-      } else {
-        row[row.length - 1].span += thisSpan;
-      }
-    });
-
-
-    if (orgSpan) {
-      this.panel.span = orgSpan;
-      delete this.panel['height'];
-    } else {
-      this.panel.span = 1;
-      this.panel.height = 1;
-    }
-
-
-    this.timeSrv.refreshDashboard();
+    actions.push(this.action_panelstate);
   }
 
   isloaded = false;

@@ -19,6 +19,10 @@ function (angular, $, _, Tether) {
               '</span>' +
               '{{ctrl.panel.title | interpolateTemplateVars:this}}' +
             '</span>' +
+            '<span style="padding-left:10px;" ng-show="ctrl.panelState">' +
+              '<i ng-hide="ctrl.action_panelstate.isMin" class="fa fa-window-minimize" title="缩小" ng-click="ctrl.changePanelState($event);"></i>' +
+              '<i ng-show="ctrl.action_panelstate.isMin" class="fa fa-window-restore" title="还原" ng-click="ctrl.changePanelState($event);"></i>' +
+            '</span>' +
             '<span class="panel-time-info" ng-show="ctrl.timeInfo"><i class="fa fa-clock-o"></i> {{ctrl.timeInfo}}</span>' +
           '</span>';
 
