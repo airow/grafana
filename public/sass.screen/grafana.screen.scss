@@ -1,0 +1,8 @@
+@import "variables";
+@import "variables.screen";
+@import "grafana";
+
+.ecContainer .ec-extension-bmap
+{
+  background-color: $body-bg !important;
+}
