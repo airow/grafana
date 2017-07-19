@@ -41,7 +41,6 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
     _.defaults(this.panel, this.panelDefaults);
 
-    this.panel.panelState = true;
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('render', this.onRender.bind(this));
