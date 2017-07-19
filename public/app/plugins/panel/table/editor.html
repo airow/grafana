@@ -25,6 +25,13 @@
                     label="Filter null values"
                     checked="editor.panel.filterNull"
                     on-change="editor.render()"></gf-form-switch>
+
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Ext Columns</label>
+        <input type="text" class="gf-form-input" ng-model="editor.panel.extColumn">
+      </div>
+		</div>
 	</div>
 
 	<div class="section gf-form-group">
@@ -135,6 +142,37 @@
           </div>
         </div>
       </div>
+
+      <div class="gf-form-inline" ng-if="style.type === 'link'">
+        <div class="gf-form offset-width-8">
+					<label class="gf-form-label">Text</label>
+					<input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.text" ng-change="editor.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-5">Color</label>
+          <span class="gf-form-label">
+            <spectrum-picker ng-model="style.color" ng-change="editor.render()"></spectrum-picker>
+          </span>
+        </div>
+        <div class="gf-form ng-hide">
+					<label class="gf-form-label">Target</label>
+					<input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.target" ng-change="editor.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+
+      <div class="gf-form-inline" ng-if="style.type === 'link'">
+        <div class="gf-form offset-width-8">
+					<label class="gf-form-label">UrlTemplate</label>
+					<input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.urlTemplate" ng-change="editor.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+
 
     </div>
   </div>

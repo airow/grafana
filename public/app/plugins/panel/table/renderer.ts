@@ -2,11 +2,13 @@
 
 import _ from 'lodash';
 import moment from 'moment';
+import config from 'app/core/config';
 import kbn from 'app/core/utils/kbn';
 
 export class TableRenderer {
   formaters: any[];
   colorState: any;
+  rowObj: any;
 
   constructor(private panel, private table, private isUtc, private sanitize) {
     this.formaters = [];
@@ -86,6 +88,31 @@ export class TableRenderer {
       };
     }
 
+    if (style.type === 'link') {
+      let valueFormater = kbn.valueFormats[column.unit || style.unit];
+      let url = style.urlTemplate || "https://user.teld.cn";
+      let target = style.target || column.text;//"_black";
+      let text = (style.text || "联查") + '&nbsp;';
+      let iconColor = style.color || "#33B5E5";
+      let templateString =
+        `<span>
+          <a href="${url}" target='${target}'>${text}
+            <i style='color:${iconColor}' class='fa fa-external-link' aria-hidden='true'></i>
+          </a>
+        </span>`;
+
+      return v =>  {
+        let bindData = _.assign({
+          timestamp: (new Date()).valueOf(),
+          currentUser: config.bootData.user
+        }, this.rowObj);
+        let compiled = _.template(templateString);
+        let returnValue = compiled(bindData);
+        return returnValue;
+        //return "<span><a href='https://www.baidu.com' target='_black'>asdfasdf</a></span>";
+      };
+    }
+
     return (value) => {
       return this.defaultCellFormater(value, style);
     };
@@ -145,8 +172,11 @@ export class TableRenderer {
     let endPos = Math.min(startPos + pageSize, this.table.rows.length);
     var html = "";
 
+    let columnKey = this.table.columns.map(i => i.text);
+
     for (var y = startPos; y < endPos; y++) {
       let row = this.table.rows[y];
+      this.rowObj = _.zipObject(columnKey, row);
       let cellHtml = '';
       let rowStyle = '';
       for (var i = 0; i < this.table.columns.length; i++) {

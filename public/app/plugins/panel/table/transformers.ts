@@ -128,6 +128,9 @@ transformers['druid_groupby_to_rows'] = {
 function groupby(data, columns) {
   var rowIndex = 0, rows = [];
 
+  var groupBySeparator = { group: "[-]", metric: "[:]" };
+
+
   for (var dataIndex = 0; dataIndex < data.length; dataIndex += columns.length) {
     var row = rows[rowIndex++] = [];
     for (var columnIndex = 0; columnIndex < columns.length; columnIndex++) {
@@ -139,8 +142,8 @@ function groupby(data, columns) {
 
         if (columnIndex === 0) {
           row.push(dp[1]);
-          _.dropRight(series.target.split(":")).forEach(item => {
-            item.split("-").forEach(groupField => { row.push(groupField); });
+          _.dropRight(series.target.split(groupBySeparator.metric)).forEach(item => {
+            item.split(groupBySeparator.group).forEach(groupField => { row.push(groupField); });
           });
         }
         row.push(dp[0]);
@@ -455,6 +458,16 @@ transformers['json'] = {
 
 
 function setColumnAlias(panel, model) {
+
+
+  if (panel.extColumn && panel.extColumn !== "") {
+    let extColumnArray = _.split((panel.extColumn || ""), ',').map(itme => { return _.trim(itme, ' '); });
+
+    _(extColumnArray).forEach(function (value) {
+      model.columns.push({ text: value, type: 'link' });
+    });
+  }
+
   let aliasStyles = panel.styles.filter(style => {
     return false === _.isEmpty(style.alias);
   });

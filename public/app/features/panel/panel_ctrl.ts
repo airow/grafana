@@ -36,7 +36,7 @@ export class PanelCtrl {
   events: Emitter;
   timing: any;
 
-  panelState: boolean;
+  //panelState: boolean;
 
   constructor($scope, $injector) {
     this.$injector = $injector;

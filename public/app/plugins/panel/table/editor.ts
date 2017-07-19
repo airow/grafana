@@ -39,7 +39,8 @@ export class TablePanelEditorCtrl {
       {text: 'Number', value: 'number'},
       {text: 'String', value: 'string'},
       {text: 'Date', value: 'date'},
-      {text: 'Hidden', value: 'hidden'}
+      {text: 'Hidden', value: 'hidden'},
+      {text: 'link', value: 'link'},
     ];
     this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
     this.dateFormats = [
@@ -95,6 +96,23 @@ export class TablePanelEditorCtrl {
 
   removeColumn(column) {
     this.panel.columns = _.without(this.panel.columns, column);
+    this.panelCtrl.render();
+  }
+
+  extColumn: any;
+  addExtColumn() {
+    this.extColumn = {text: 'this.addColumnSegment.value'};
+
+    if (this.extColumn) {
+      this.panel.extColumns.push(this.extColumn);
+      this.render();
+    }
+
+    var plusButton = this.uiSegmentSrv.newPlusButton();
+  }
+
+  removeExtColumn(column) {
+    this.panel.extColumns = _.without(this.panel.extColumns, column);
     this.panelCtrl.render();
   }
 
