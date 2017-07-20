@@ -6,5 +6,10 @@
 
 		<gf-form-switch class="gf-form" label="启用" label-class="width-5" checked="ctrl.panel.drill_timePlotclick" on-change="ctrl.render()"></gf-form-switch>
 
-	</div>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">_Plotclick</h5>
+    <input type="text" ng-model="ctrl.panel.subscribePlotClick " ng-blur="ctrl.render()" data-min-length=0 data-items=100 class="gf-form-input width-15">
+  </div>
 </div>

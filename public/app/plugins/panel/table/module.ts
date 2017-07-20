@@ -19,6 +19,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   table: any;
   overwriteTimeRange: any;
   originalTitle: string;
+  isPlotClick: boolean;
 
   panelDefaults = {
     drill_timePlotclick: false,
@@ -71,14 +72,19 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     this.originalTitle = this.panel.title;
     //graph 钻取处理函数
     if (this.panel.drill_timePlotclick) {
-      this.$scope.$on('timePlotclick', (event, eventArgs) => {
-        if (eventArgs.clickPoint) {
-          this.overwriteTimeRange = eventArgs.timeRange;
-        } else {
-          this.overwriteTimeRange = undefined;
-        }
-        this.onMetricsPanelRefresh();
-      });
+
+      if (this.panel.subscribePlotClick && this.panel.subscribePlotClick !== "") {
+        _.split(this.panel.subscribePlotClick, ',').forEach(subscribeEvent => {
+          this.$scope.$on(`${subscribeEvent}_Plotclick`, (event, eventArgs) => {
+            if (eventArgs.clickPoint) {
+              this.overwriteTimeRange = eventArgs.timeRange;
+            } else {
+              this.overwriteTimeRange = undefined;
+            }
+            this.onMetricsPanelRefresh();
+          });
+        });
+      }
     }
   }
 
@@ -102,6 +108,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       });
     }
     let originalRange;
+    this.isPlotClick = false;
     if (false === _.isEmpty(this.overwriteTimeRange)) {
       originalRange = _.clone(this.range);
       this.range.from = this.overwriteTimeRange.from;
@@ -110,6 +117,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
     return super.issueQueries(datasource).then(data => {
       if (originalRange) {
+        this.isPlotClick = true;
         this.rangeStringPanel = this.range.from.format('YYYY-MM-DD HH:mm:ss');
         this.range = originalRange;
       }

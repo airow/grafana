@@ -13,6 +13,11 @@
 				<a ng-click="ctrl.subTabIndex = 2">
 					Thresholds <span class="muted">({{ctrl.panel.thresholds.length}})</span>
 				</a>
+      </li>
+      <li ng-class="{active: ctrl.subTabIndex === 3}">
+				<a ng-click="ctrl.subTabIndex = 3">
+					Plot Event
+				</a>
 			</li>
 		</ul>
 	</aside>
@@ -130,6 +135,13 @@
 
 	<div class="edit-tab-content" ng-if="ctrl.subTabIndex === 2">
 		<graph-threshold-form panel-ctrl="ctrl"></graph-threshold-form>
+  </div>
+
+  <div class="edit-tab-content" ng-if="ctrl.subTabIndex === 3">
+		<div class="section gf-form-group">
+			<h5 class="section-heading">plotclick</h5>
+			<input type="text" ng-model="ctrl.panel.publishPlotClick" ng-blur="ctrl.render()" data-min-length=0 data-items=100 class="gf-form-input width-15">
+		</div>
 	</div>
 
 </div>

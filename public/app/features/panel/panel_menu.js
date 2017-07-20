@@ -14,7 +14,7 @@ function (angular, $, _, Tether) {
           '<span class="panel-title drag-handle pointer">' +
             '<span class="icon-gf panel-alert-icon"></span>' +
             '<span class="panel-title-text drag-handle">' +
-              '<span ng-show="!ctrl.timeInfo && ctrl.panel.showTimeRange">' +
+              '<span ng-show="(!ctrl.timeInfo || ctrl.isPlotClick) && ctrl.panel.showTimeRange">' +
                 '{{ctrl.rangeStringPanel}} &nbsp;'+
               '</span>' +
               '{{ctrl.panel.title | interpolateTemplateVars:this}}' +

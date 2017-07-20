@@ -678,8 +678,11 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
           eventArgs["timeRange"] = { from, to };
         }
 
-
-        $rootScope.$broadcast('timePlotclick', eventArgs);
+        if (panel.publishPlotClick && panel.publishPlotClick !== "") {
+          _.split(panel.publishPlotClick, ',').forEach(publishEvent => {
+            $rootScope.$broadcast(`${publishEvent}_Plotclick`, eventArgs);
+          });
+        }
       });
 
       scope.$on('$destroy', function() {
