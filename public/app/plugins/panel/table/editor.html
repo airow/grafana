@@ -154,6 +154,15 @@
             <spectrum-picker ng-model="style.color" ng-change="editor.render()"></spectrum-picker>
           </span>
         </div>
+        <div class="gf-form">
+          <gf-form-switch class="gf-form" label-class="width-5" label="Time" checked="style.calcDateRange" change="editor.render()"></gf-form-switch>
+        </div>
+        <div class="gf-form" ng-if="style.calcDateRange">
+          <input type="text" class="gf-form-input" ng-model="style.timeField" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()" data-min-length=0 data-items=100 ng-model-onblur>
+          <span class="gf-form-label" ng-show="style.timeField">
+            {{style.timeField}}Start - {{style.timeField}}End
+          </span>
+        </div>
         <div class="gf-form ng-hide">
 					<label class="gf-form-label">Target</label>
 					<input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.target" ng-change="editor.render()" ng-model-onblur>

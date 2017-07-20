@@ -106,6 +106,16 @@ export class TableRenderer {
           timestamp: (new Date()).valueOf(),
           currentUser: config.bootData.user
         }, this.rowObj);
+
+        if (style.calcDateRange) {
+          let time = this.rowObj[style.timeField];
+          let m = moment(time);
+          if (moment.isMoment(m)) {
+            bindData[`${style.timeField}Start`] = m.subtract(5, 'm').toISOString();
+            bindData[`${style.timeField}End`] = m.add(5 * 2, 'm').toISOString();
+          }
+        }
+
         let compiled = _.template(templateString);
         let returnValue = compiled(bindData);
         return returnValue;
