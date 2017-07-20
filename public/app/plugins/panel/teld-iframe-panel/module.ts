@@ -88,6 +88,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       "kibanaLoaded": function(eventData){
         that.grafanaLink2Kibana();
         that.isloaded = true;
+        if (that.panel.panelState && that.panel.panelStateMin && that.changePanelState) {
+          that.changePanelState(null);
+        }
       },
       "syncTimeRange": function (eventData) {
         that.onTimeRangeChanged(that.timeSrv.time);
