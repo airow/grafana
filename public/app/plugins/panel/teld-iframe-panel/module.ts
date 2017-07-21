@@ -4,6 +4,7 @@ import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
 import { PanelCtrl } from 'app/plugins/sdk';
+import { kibanaEditor } from './editor/kibana';
 import appEvents from 'app/core/app_events';
 
 export class TeldIframePanelCtrl extends PanelCtrl {
@@ -255,7 +256,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       {
         "dashTheme": dashStyle,
         "topNavMenu": this.panel.kibanaTopNavMenu,
-        "initRowSelectIndex": initKibabaRowSelectIndex
+        "initRowSelectIndex": initKibabaRowSelectIndex,
+        "kibanaConf": this.panel.kibanaConf
       }
     );
   }
@@ -336,6 +338,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   onInitEditMode() {
     //this.addEditorTab('Options', 'partials/editor.html');
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-iframe-panel/partials/editor.html');
+    this.addEditorTab('KibanaConf', kibanaEditor);
     this.addEditorTab('Variables', 'public/app/plugins/panel/teld-iframe-panel/partials/variables.html');
     this.editorTabIndex = 1;
   }
