@@ -151,7 +151,12 @@ export class PanelCtrl {
   }
 
   action_panelstate = { isMin: false, text: '最小化', click: 'ctrl.changePanelState()' };
+
   changePanelState($event) {
+    this.changePanelState_v2($event);
+  }
+
+  changePanelState_v1($event) {
     this.action_panelstate.isMin = !this.action_panelstate.isMin;
     this.action_panelstate.text = (this.action_panelstate.isMin ? "还原" : "最小化");
 
@@ -159,6 +164,80 @@ export class PanelCtrl {
     let thisSpan = orgSpan || this.panel.span;
     let panelArray = [];
     this.row.panels.forEach(panel => {
+      if (panel.orgSpan) {
+        panel.span = panel.orgSpan;
+        delete panel["orgSpan"];
+      } else {
+        panel.orgSpan = panel.span;
+        panel.orgHeight = panel.height;
+
+        if (panel !== this.panel) {
+          panelArray.push(panel);
+          //panel.span = 12;
+        }
+      }
+    });
+
+    let panelRow = [];
+    let p = [];
+    let ss = 0;
+    panelArray.forEach(panel => {
+      let count = panel.span + ss + thisSpan;
+      p.push(panel);
+      if (count >= 12) {
+        panelRow.push(p);
+        p = [];
+        ss = 0;
+      } else {
+        ss += panel.span;
+      }
+    });
+
+    panelRow.forEach(row => {
+      if (row.length === 1) {
+        row[0].span = 12;
+      } else {
+        row[row.length - 1].span += thisSpan;
+      }
+    });
+
+
+    if (orgSpan) {
+      this.panel.span = orgSpan;
+      if (this.panel.orgHeight) {
+        this.panel.height = this.panel.orgHeight;
+      } else {
+        delete this.panel['height'];
+      }
+    } else {
+      this.panel.span = 1;
+      this.panel.height = 1;
+    }
+    if ($event) {
+      $event.stopPropagation();
+    }
+    //this.refresh();
+    this.$scope.$root.$broadcast('refresh');
+  }
+
+  changePanelState_v2($event) {
+    this.action_panelstate.isMin = !this.action_panelstate.isMin;
+    this.action_panelstate.text = (this.action_panelstate.isMin ? "还原" : "最小化");
+
+    let orgSpan = this.panel.orgSpan;
+    let thisSpan = orgSpan || this.panel.span;
+    let panelArray = [];
+
+    let thisIndex = _.findIndex(this.row.panels, this.panel);
+
+    let span12 = 0;
+    let panelArray2 = [];
+    for (let index = thisIndex; index < this.row.panels.length && span12 < 12; index++) {
+      span12 += this.row.panels[index].span;
+      panelArray2.push(this.row.panels[index]);
+    }
+
+    panelArray2.forEach(panel => {
       if (panel.orgSpan) {
         panel.span = panel.orgSpan;
         delete panel["orgSpan"];
