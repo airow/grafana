@@ -125,6 +125,12 @@ coreModule.directive('dashRow', function($rootScope) {
       row: "=",
     },
     link: function(scope, element) {
+      //row展开时，处罚内部panel的refresh
+      scope.$watch('ctrl.row.collapse', function (newValue, oldValue, scope) {
+        if (false === newValue) {
+          scope.$broadcast('refresh');
+        }
+      });
       scope.$watchGroup(['ctrl.row.collapse', 'ctrl.row.height'], function() {
         element.toggleClass('dash-row--collapse', scope.ctrl.row.collapse);
         element.find('.panels-wrapper').css({minHeight: scope.ctrl.row.collapse ? '5px' : scope.ctrl.row.height});

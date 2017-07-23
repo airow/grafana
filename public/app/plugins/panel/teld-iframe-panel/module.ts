@@ -20,6 +20,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   metricSources: any[];
   variables: any[];
   variableTypeDataSource: any[];
+  isloaded: boolean;
 
   // Set and populate defaults
   panelDefaults = {
@@ -77,8 +78,6 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     //actions.push({ text: '最小化', click: 'ctrl.min()' });
     actions.push(this.action_panelstate);
   }
-
-  isloaded = false;
 
   messageIncoming(event, data) {
     console.group("grafana");
@@ -346,6 +345,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   }
 
   onRefresh() {
+    // if (this.isloaded) {
+    //   return;
+    // }
     this.render();
   }
 
