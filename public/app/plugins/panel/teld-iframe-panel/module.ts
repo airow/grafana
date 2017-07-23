@@ -30,7 +30,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     iframeHeight: '100%',
     src: '',
     datasource: 'default',
-    variables: []
+    variables: [],
+
+    kibanaConf: {}
   };
 
   /** @ngInject **/
