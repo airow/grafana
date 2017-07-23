@@ -213,17 +213,44 @@ define([
           //var queryString = templateSrv.replace(target.query || '*', options.scopedVars, 'lucene');
           var queryString = templateSrv.replaceWithEmpty(target.query || '*', options.scopedVars, 'lucene');
 
-          var whileCount = 0;
-          var exp = /.*:"(\@.*)"\s?(and|or)?/;
-          var m = queryString.match(exp);
-          while (m && whileCount < 100) {
-            var varName = m[1];
-            queryString = queryString.replace(new RegExp('.*:"\\' + varName + '"'), "");
+          // var whileCount = 0;
+          // var exp = /.*:"(\@.*)"\s?(and|or)?/;
+          // var m = queryString.match(exp);
+          // while (m && whileCount < 100) {
+          //   var varName = m[1];
+          //   queryString = queryString.replace(new RegExp('.*:"\\' + varName + '"'), "");
 
-            m = queryString.match(exp);
-            whileCount++;
+          //   m = queryString.match(exp);
+          //   whileCount++;
+          // }
+
+          //queryString = 'stacityName:"@pcityname" AND IfFastCharging:"快充" AND IfFastChargin2g:"快2充" AND stacityName:"@pcityname"';
+          var newArray = [];
+          var reg = /.*:"(\@.*)"\s?/;
+          var regO = /(and|or)/ig;
+          regO = /(and|or|\(|\))/ig;
+          var d = queryString.split(regO);
+          for (var ii = 0; ii < d.length; ii++) {
+            if (reg.test(d[ii])) {
+              if (ii + 1 < d.length) {
+                if (regO.test(d[ii + 1])) {
+                  ii++;
+                }
+              }
+            } else {
+              newArray.push(_.trim(d[ii]));
+            }
           }
-          queryString = queryString || "*";
+
+          if (newArray.length > 0) {
+            var l = newArray[newArray.length - 1];
+            //var t = regO.test(l);
+            if (l.match(regO)) {
+              newArray.length--;
+            }
+          }
+
+          queryString = newArray.length === 0 ? "*" : newArray.join(' ');
 
           //"所属城市:\"$citycode\" AND 所属3城市:\"$cit3ycode\"".replace(/.*:"\$citycode"/,"").replace(/(and|or)/i,'')
 
@@ -386,3 +413,4 @@ define([
       ElasticDatasource: ElasticDatasource
     };
   });
+
