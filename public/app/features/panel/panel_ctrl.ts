@@ -153,7 +153,16 @@ export class PanelCtrl {
   action_panelstate = { isMin: false, text: '最小化', click: 'ctrl.changePanelState()' };
 
   changePanelState($event) {
-    this.changePanelState_v2($event);
+    switch (this.panel.changePanelStateStrategy) {
+      default:
+      case "v2":
+        this.changePanelState_v2($event);
+        break;
+
+      case "v1":
+        this.changePanelState_v1($event);
+        break;
+    }
   }
 
   changePanelState_v1($event) {

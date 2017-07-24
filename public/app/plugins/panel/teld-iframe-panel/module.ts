@@ -21,6 +21,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   variables: any[];
   variableTypeDataSource: any[];
   isloaded: boolean;
+  changePanelStrategyOptions: any;
 
   // Set and populate defaults
   panelDefaults = {
@@ -72,6 +73,12 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       messageIncomingHandler();
       messageIncomingHandler = null;
     });
+
+    this.changePanelStrategyOptions = {
+      'V1': 'v1',
+      'V2': 'v2',
+      // 'Data field': 'field',
+    };
   }
 
   onInitPanelActions(actions) {

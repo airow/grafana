@@ -61,5 +61,10 @@
 		<h5 class="section-heading">面板隐藏</h5>
     <gf-form-switch class="gf-form" label="启用" label-class="width-5" checked="ctrl.panel.panelState" on-change="ctrl.render()"></gf-form-switch>
     <gf-form-switch class="gf-form" label="默认收起" label-class="width-7" checked="ctrl.panel.panelStateMin" on-change="ctrl.render()"></gf-form-switch>
+
+    <div class="gf-form">
+      <label class="gf-form-label width-7">折叠方式</label>
+      <select class="gf-form-input" ng-model="ctrl.panel.changePanelStateStrategy" ng-options="v as k for (k, v) in ctrl.changePanelStrategyOptions" ng-change="ctrl.render()"></select>
+    </div>
 	</div>
 </div>
