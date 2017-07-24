@@ -67,7 +67,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
-    private dashboardSrv, private uiSegmentSrv, private $http) {
+    private dashboardSrv, private uiSegmentSrv, private $http, $timeout) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -77,7 +77,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.isSelected = false;
     this.bmapCL = { bounds: null, center: {}, zoom: 12 };
 
-    this.timelineDataOpts = { "每小时": [], '城市': [] };
+    this.timelineDataOpts = { "每小时": [] };
     for (var index = 1; index <= 24; index++) {
       this.timelineDataOpts["每小时"].push(_.padStart(`${index}`, 2, '0'));
     }
@@ -111,10 +111,12 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
-    this.events.on('refresh', () => {
-      /**处理界面切换，弊端会影响播放等待时间 */
-      if (this.ecInstance) { this.ecInstance.resize(); }
-    });
+    this.events.on('refresh', this.onRefresh.bind(this));
+
+    //this.events.on('panel-change-view', this.panelChangeView2.bind(this));
+    this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResize.bind(this));
+    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResize.bind(this));
+
     // this.events.on('render', () => {
     //   if (this.ecInstance) this.ecInstance.resize();
     // });
@@ -124,6 +126,17 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
     //注册事件
     this.$scope.$on('heatmap', this.heatmapEventHandler.bind(this));
+  }
+
+  ecInstanceResize(evt, payload) {
+    if (payload.panelId === this.panel.id) {
+      if (this.ecInstance) {
+        this.ecInstance.resize();
+        // this.$timeout(() => {
+        //   this.ecInstance.resize();
+        // }, 10);
+      }
+    }
   }
 
   action_paly = { text: '播放', click: 'ctrl.paly()' };
@@ -159,6 +172,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   onRefresh() {
     this.render();
+    //if (this.ecInstance) { this.ecInstance.resize(); }
   }
 
   setLegendSelect(value) {
@@ -318,8 +332,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       }
     }
 
-    this.ecOption.baseOption.bmap.center = [this.bmapCL.center.lng, this.bmapCL.center.lat];
-    this.ecOption.baseOption.bmap.zoom = this.bmapCL.zoom;
+    //this.ecOption.baseOption.bmap.center = [this.bmapCL.center.lng, this.bmapCL.center.lat];
+    //this.ecOption.baseOption.bmap.zoom = this.bmapCL.zoom;
     console.groupEnd();
   }
 
@@ -411,6 +425,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     let timelineData = this.timelineDataOpts[this.panel.timelineOptData] || [];
 
     let timeline = {
+      //currentIndex: this.timelineIndex,
       symbol: symbol.timeline.symbol,
       symbolSize: 20,
       bottom: 20,
@@ -636,36 +651,19 @@ onRender() {
 
     if (this.isSelected) {
       this.initEcharts();
-      this.timelinechanged({ currentIndex: this.timelineIndex });
+      if (this.ecInstance) {
+        this.ecInstance.dispatchAction({
+          type: 'timelineChange',
+          // 时间点的 index
+          currentIndex: this.timelineIndex
+        });
+      } else {
+        this.timelinechanged({ currentIndex: this.timelineIndex });
+      }
     } else {
       this.isPlay = false;
       this.clearCache();
       this.initEcharts();
-    }
-  }
-
-  onRender2() {
-    this.isLoadAllData = false;
-    this.isPlay = this.panel.timeline.autoPlay;
-    this.timelineIndex = 0;
-    this.loadCount = 0;
-
-    if (this.isSelected) {
-      this.initEcharts();
-      this.timelinechanged({ currentIndex: this.timelineIndex });
-    } else {
-      this.isPlay = false;
-      if (this.ecInstance) {
-        // this.ecInstance.dispatchAction({
-        //   type: 'timelinePlayChange',
-        //   // 播放状态，true 为自动播放
-        //   playState: this.isPlay
-        // });
-        // this.clearCache();
-        this.initEcharts();
-      }else{
-        this.initEcharts();
-      }
     }
   }
 }
