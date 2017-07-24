@@ -152,10 +152,10 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   heatmapEventHandler(event, eventArgs) {
     this.isSelected = eventArgs.isSelected;
 
-    var varPID = _.find(eventArgs.rowVariables, variable => { return variable.name === 'PID'; });
-    if (varPID && _.isEmpty(varPID.current.value)) {
-      varPID.current = { text: '.', value: '.' };
-    }
+    // var varPID = _.find(eventArgs.rowVariables, variable => { return variable.name === 'PID'; });
+    // if (varPID && _.isEmpty(varPID.current.value)) {
+    //   varPID.current = { text: '.', value: '.' };
+    // }
 
     this.onRender();
   }
@@ -332,8 +332,10 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       }
     }
 
-    //this.ecOption.baseOption.bmap.center = [this.bmapCL.center.lng, this.bmapCL.center.lat];
-    //this.ecOption.baseOption.bmap.zoom = this.bmapCL.zoom;
+    if (_.get(params, 'syncbmapCL', true)) {
+      this.ecOption.baseOption.bmap.center = [this.bmapCL.center.lng, this.bmapCL.center.lat];
+      this.ecOption.baseOption.bmap.zoom = this.bmapCL.zoom;
+    }
     console.groupEnd();
   }
 
@@ -402,6 +404,17 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.bmapCL = location;
   }
 
+  bmapLocationMove(params) {
+    let { type, target } = params;
+    this.bmapCL.bounds = target.getBounds();
+    this.bmapCL.center = target.getCenter();
+  }
+
+  bmapLocationZoom(params) {
+    let { type, target } = params;
+    this.bmapCL.zoom = target.getZoom();
+  }
+
   initEcharts() {
     this.ecConfig = {
       //theme: 'default',
@@ -416,8 +429,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
         }
       }],
       bmap: { event: [{
-        'moveend': this.bmapLocation.bind(this),
-        'zoomend': this.bmapLocation.bind(this),
+        'moveend': this.bmapLocationMove.bind(this),
+        'zoomend': this.bmapLocationZoom.bind(this),
       }] },
       dataLoaded: true
     };
@@ -425,6 +438,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     let timelineData = this.timelineDataOpts[this.panel.timelineOptData] || [];
 
     let timeline = {
+      show: true,
       //currentIndex: this.timelineIndex,
       symbol: symbol.timeline.symbol,
       symbolSize: 20,
@@ -488,6 +502,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
 
     let legend = {
+      show: true,
       padding: 15,
       selectedMode: 'single',
       orient: 'vertical',//horizontal
@@ -506,6 +521,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     };
 
     let heatmapSerie = {
+      show: true,
       type: 'heatmap',
       coordinateSystem: 'bmap',
       geoIndex: 1,
@@ -640,7 +656,18 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   }
 
   clearCache() {
+    this.ecOption.baseOption.timeline.show = false;
+    this.ecOption.baseOption.legend.show = false;
+    //this.ecOption.baseOption.series.find(item => { return item.type === "heatmap"; }).show = false;
+
     this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => { return {}; });
+    this.ecOption.options[this.timelineIndex] = {
+      series: [
+        {
+          data: []
+        }
+      ]
+    };
   }
 
 onRender() {
@@ -652,18 +679,21 @@ onRender() {
     if (this.isSelected) {
       this.initEcharts();
       if (this.ecInstance) {
+
         this.ecInstance.dispatchAction({
           type: 'timelineChange',
           // 时间点的 index
-          currentIndex: this.timelineIndex
+          currentIndex: this.timelineIndex,
+          syncbmapCL: false,
         });
+
       } else {
         this.timelinechanged({ currentIndex: this.timelineIndex });
       }
     } else {
       this.isPlay = false;
       this.clearCache();
-      this.initEcharts();
+      //this.initEcharts();
     }
   }
 }
