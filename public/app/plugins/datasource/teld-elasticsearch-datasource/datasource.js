@@ -227,8 +227,8 @@ define([
           //queryString = 'stacityName:"@pcityname" AND IfFastCharging:"快充" AND IfFastChargin2g:"快2充" AND stacityName:"@pcityname"';
           var newArray = [];
           var reg = /.*:"(\@.*)"\s?/;
-          var regO = /(and|or)/ig;
-          regO = /(and|or|\(|\))/ig;
+          var regO = /(AND|OR)/;
+          regO = /(AND|OR|\(|\))/;
           var d = queryString.split(regO);
           for (var ii = 0; ii < d.length; ii++) {
             if (reg.test(d[ii])) {
