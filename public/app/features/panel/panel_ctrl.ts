@@ -163,6 +163,9 @@ export class PanelCtrl {
         this.changePanelState_v1($event);
         break;
     }
+    this.publishAppEvent('panel-teld-changePanelState', {
+      panel: this.panel, panelId: this.panel.id
+    });
   }
 
   changePanelState_v1($event) {

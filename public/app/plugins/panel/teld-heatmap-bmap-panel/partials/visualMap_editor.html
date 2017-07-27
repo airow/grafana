@@ -1,0 +1,22 @@
+<div class="editor-row">
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">VisualMap</h5>
+		<gf-form-switch class="gf-form" label="Show" label-class="width-7" checked="ctrl.panel.visualMap.show" on-change="ctrl.render()"></gf-form-switch>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">textStyle</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-5">color</label>
+      <span class="gf-form-label">
+        <spectrum-picker ng-model="ctrl.panel.visualMap.textStyle.color" ng-change="editor.render()"></spectrum-picker>
+      </span>
+    </div>
+    <div class="gf-form">
+				<label class="gf-form-label width-5">Unit</label>
+				<div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.visualMap.formatter" dropdown-typeahead2="ctrl.unitFormats" dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.visualMap, $subItem)"></div>
+			</div>
+  </div>
+
+</div>

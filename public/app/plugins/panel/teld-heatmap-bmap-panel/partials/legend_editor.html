@@ -1,11 +1,17 @@
 <div class="editor-row">
   <div class="section gf-form-group">
+    <gf-form-switch class="gf-form" label="Show" label-class="width-7" checked="ctrl.panel.legend.show" on-change="ctrl.render()"></gf-form-switch>
+  </div>
+</div>
+<div class="editor-row">
+  <div class="section gf-form-group">
     <h5 class="section-heading">Legend ${{ctrl.panel.varMetric}}</h5>
     <div class="gf-form">
       <a class="btn btn-mini" style="width:25px;">
         <i class="fa "></i>
       </a>
-      <span class="gf-form-label width-25">name</span>
+      <span class="gf-form-label width-25">display</span>
+      <span class="gf-form-label width-25">value</span>
       <span class="gf-form-label width-25">icon</span>
       <span class="gf-form-label width-6">selected</span>
     </div>
@@ -13,8 +19,8 @@
       <a ng-click="ctrl.remove(legend)" class="btn btn-danger btn-mini">
         <i class="fa fa-remove"></i>
       </a>
-      <input type="text" class="gf-form-input width-25" ng-model="legend.name" placeholder="name">
       <input type="text" class="gf-form-input width-25" ng-model="legend.display" placeholder="display">
+      <input type="text" class="gf-form-input width-25" ng-model="legend.name" placeholder="value">
       <input type="text" class="gf-form-input width-25" ng-model="legend.icon" placeholder="icon">
       <input type="checkbox" class="width-6" ng-model="legend.selected">
     </div>

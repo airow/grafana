@@ -21,6 +21,7 @@ export class TablePanelEditorCtrl {
   addColumnSegment: any;
   unitFormats: any;
   getColumnNames: any;
+  timeRangeUnits: any;
 
   /** @ngInject */
   constructor($scope, private $q, private uiSegmentSrv) {
@@ -41,6 +42,15 @@ export class TablePanelEditorCtrl {
       {text: 'Date', value: 'date'},
       {text: 'Hidden', value: 'hidden'},
       {text: 'link', value: 'link'},
+    ];
+    this.timeRangeUnits = [
+      {text: 'Second', value: 'seconds'},
+      {text: 'Minute', value: 'minutes'},
+      {text: 'Hour', value: 'hours'},
+      {text: 'Day', value: 'days'},
+      {text: 'Month', value: 'months'},
+      {text: 'Quarter', value: 'quarters'},
+      {text: 'Year', value: 'years'},
     ];
     this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
     this.dateFormats = [

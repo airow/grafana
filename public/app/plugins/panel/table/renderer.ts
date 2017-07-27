@@ -110,9 +110,28 @@ export class TableRenderer {
         if (style.calcDateRange) {
           let time = this.rowObj[style.timeField];
           let m = moment(time);
+
           if (moment.isMoment(m)) {
-            bindData[`${style.timeField}Start`] = m.subtract(5, 'm').toISOString();
-            bindData[`${style.timeField}End`] = m.add(5 * 2, 'm').toISOString();
+            let start = moment(time).subtract(5, 'm');
+            let end = moment(time).add(5, 'm');
+
+            if (style.timeRangeField) {
+              let timeRange = this.rowObj[style.timeRangeField];
+              if (_.isNumber(timeRange) && timeRange > 0) {
+                let timeRangeFieldUnit = style.timeRangeFieldUnit || 'm';
+
+                start = moment(time).subtract(timeRange, timeRangeFieldUnit);
+                end = moment(time).add(5, timeRangeFieldUnit);
+              }
+            }
+
+            bindData[`${style.timeField}Start`] = start.toISOString();
+            bindData[`${style.timeField}End`] = end.toISOString();
+
+            if (style.enableFormat) {
+              bindData[`${style.timeField}Start`] = start.format(style.dateFormat);
+              bindData[`${style.timeField}End`] = end.format(style.dateFormat);
+            }
           }
         }
 

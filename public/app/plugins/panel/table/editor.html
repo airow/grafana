@@ -158,7 +158,14 @@
           <gf-form-switch class="gf-form" label-class="width-5" label="Time" checked="style.calcDateRange" change="editor.render()"></gf-form-switch>
         </div>
         <div class="gf-form" ng-if="style.calcDateRange">
-          <input type="text" class="gf-form-input" ng-model="style.timeField" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()" data-min-length=0 data-items=100 ng-model-onblur>
+          <input type="text" class="gf-form-input width-9" ng-model="style.timeField" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()" data-min-length=0 data-items=100 ng-model-onblur>
+          <gf-form-switch class="gf-form" label-class="width-5" label="Format" checked="style.enableFormat" change="editor.render()"></gf-form-switch>
+          <metric-segment-model ng-if="style.enableFormat" property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()" custom="true"></metric-segment-model>
+          <label class="gf-form-label">timeRangeField</label>
+          <input type="text" class="gf-form-input width-9" ng-model="style.timeRangeField" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()" data-min-length=0 data-items=100 ng-model-onblur>
+          <div class="gf-form-select-wrapper" ng-show="style.timeRangeField">
+						<select class="gf-form-input" ng-model="style.timeRangeFieldUnit" ng-options="c.value as c.text for c in editor.timeRangeUnits" ng-change="editor.render()"></select>
+					</div>
           <span class="gf-form-label" ng-show="style.timeField">
             {{style.timeField}}Start - {{style.timeField}}End
           </span>

@@ -12,10 +12,13 @@ import echarts from 'echarts';
 import './eventHandler_srv';
 import ZoomControl from './zoomControl';
 import {legendEditorComponent} from './legend_editor';
+import {legendGroupEditorComponent} from './legendgroup_editor';
+import {visualMapEditorComponent} from './visualMap_editor';
 import bmapStyle from './theme/bmap/all';
 import symbol from './theme/symbol/all';
 import './theme/echarts/all';
 import config from 'app/core/config';
+import kbn from 'app/core/utils/kbn';
 
 export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -48,9 +51,12 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
   // Set and populate defaults
   panelDefaults = {
     varMetric: 'varMetric',
+    timelineOptData: '/',
     legend: {
+      show: true,
       data: [],
     },
+    legendGroup: [],
     heatmap: {
       pointSize: 10,
       blurSize: 10
@@ -61,6 +67,10 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       autoPlay: false,
       // currentIndex: 2,
       playInterval: 1000
+    },
+    visualMap: {
+      show: false,
+      type: 'continuous',
     },
     watchEvents: []
   };
@@ -77,19 +87,14 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.isSelected = false;
     this.bmapCL = { bounds: null, center: {}, zoom: 12 };
 
-    this.timelineDataOpts = { "每小时": [] };
+    this.timelineDataOpts = {
+      "/": [{}],
+      "每小时": [],
+      "城市": ['北京市', '青岛市', '天津市', '上海市', '重庆市', '杭州市', '武汉市', '深圳市', '广州市']
+    };
     for (var index = 1; index <= 24; index++) {
       this.timelineDataOpts["每小时"].push(_.padStart(`${index}`, 2, '0'));
     }
-    this.timelineDataOpts["城市"] = ['北京市',
-      '青岛市',
-      '天津市',
-      '上海市',
-      '重庆市',
-      '杭州市',
-      '武汉市',
-      '深圳市',
-      '广州市'];
 
     this.city = {
       "china": { g: [116.395645, 39.929986], zoom: 5 },
@@ -114,8 +119,9 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.events.on('refresh', this.onRefresh.bind(this));
 
     //this.events.on('panel-change-view', this.panelChangeView2.bind(this));
-    this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResize.bind(this));
-    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResize.bind(this));
+    this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
+    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
+    this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
 
     // this.events.on('render', () => {
     //   if (this.ecInstance) this.ecInstance.resize();
@@ -128,14 +134,18 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.$scope.$on('heatmap', this.heatmapEventHandler.bind(this));
   }
 
-  ecInstanceResize(evt, payload) {
+  ecInstanceResizeWithSeft(evt, payload) {
     if (payload.panelId === this.panel.id) {
-      if (this.ecInstance) {
+      this.ecInstanceResize(evt, payload);
+    }
+  }
+
+  ecInstanceResize(evt, payload) {
+    if (this.ecInstance) {
+      //this.ecInstance.resize();
+      this.$timeout(() => {
         this.ecInstance.resize();
-        // this.$timeout(() => {
-        //   this.ecInstance.resize();
-        // }, 10);
-      }
+      }, 1000);
     }
   }
 
@@ -166,7 +176,9 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   onInitEditMode() {
     this.addEditorTab('Timeline', 'public/app/plugins/panel/teld-heatmap-bmap-panel/partials/timeline.html');
+    this.addEditorTab('VisualMap', visualMapEditorComponent);
     this.addEditorTab('Legend', legendEditorComponent);
+    this.addEditorTab('Legend Group', legendGroupEditorComponent);
     this.editorTabIndex = 1;
   }
 
@@ -435,8 +447,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       dataLoaded: true
     };
 
-    let timelineData = this.timelineDataOpts[this.panel.timelineOptData] || [];
-
+    let timelineData = this.timelineDataOpts[this.panel.timelineOptData] || [{}];
     let timeline = {
       show: true,
       //currentIndex: this.timelineIndex,
@@ -464,6 +475,11 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       //   }
       // }
     };
+    timeline = _.defaults(_.cloneDeep(this.panel.timeline), timeline);
+    timeline.show = this.panel.timelineOptData !== "/";
+    // if (this.panel.timelineOptData === "/") {
+    //   timeline.controlStyle.show = false;
+    // }
 
     let varCityPosition = this.templateSrv.getVariable(`$CityPosition`, "custom");
     let coordinates = varCityPosition.current.value;
@@ -502,7 +518,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
 
     let legend = {
-      show: true,
+      show: this.panel.legend.show,
       padding: 15,
       selectedMode: 'single',
       orient: 'vertical',//horizontal
@@ -546,16 +562,38 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       roam: true
     };
 
+    let visualMap = {
+      show: false,
+      top: 'top',
+      seriesIndex: 0,
+      calculable: true,
+      inRange: {
+        color: ['blue', 'blue', 'green', 'yellow', 'red']
+      }
+    };
+
+    visualMap = _.defaults(_.cloneDeep(this.panel.visualMap), visualMap);
+    let visualMapFormatter = visualMap['formatter'];
+    if (visualMapFormatter) {
+      visualMap['formatter'] = function (value) {
+        let formaterFun = kbn.valueFormats[visualMapFormatter];
+        return formaterFun ? formaterFun(value) : value;
+      };
+    }
+
     let baseOption = {
       /**关键配置*/
       bmap,
-      legend,
+      //legend: [legend, { data: ['sin1', 'cos1'] }],
+      legend: legend,
+      timeline,
       series: [].concat(
         heatmapSerie,
-        mockLegendSeries
+        mockLegendSeries,
+        //['sin1', 'cos1'].map(item => { return { show: false, name: item, type: 'bar', data: [] }; }),
       ),
-      timeline: _.defaults(_.cloneDeep(this.panel.timeline), timeline),
       /***/
+      visualMap,
       xAxis: {
         show: false
       },
@@ -563,16 +601,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
         show: false
       },
       tooltip: { trigger: "item", show: true },
-      animation: true,
-      visualMap: {
-        show: false,
-        top: 'top',
-        seriesIndex: 0,
-        calculable: true,
-        inRange: {
-          color: ['blue', 'blue', 'green', 'yellow', 'red']
-        }
-      }
+      animation: true
     };
 
     /**
@@ -608,7 +637,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
     let option = this.ecOption.options[this.timelineIndex];
     if (dataList.length > 0) {
-      let max = 100;
+      let max = 0;
       let min = 9000000;
       let sum = 0;
       if (false === this.isLoadAllData) {
@@ -655,12 +684,13 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     this.ecOption.options[this.timelineIndex] = option;
   }
 
-  clearCache() {
+  clearEcharts() {
+    this.ecOption.baseOption.visualMap.show = false;
     this.ecOption.baseOption.timeline.show = false;
     this.ecOption.baseOption.legend.show = false;
     //this.ecOption.baseOption.series.find(item => { return item.type === "heatmap"; }).show = false;
 
-    this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => { return {}; });
+    this.clearCache();
     this.ecOption.options[this.timelineIndex] = {
       series: [
         {
@@ -670,7 +700,11 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     };
   }
 
-onRender() {
+  clearCache() {
+    this.ecOption.options = this.ecOption.baseOption.timeline.data.map(item => { return {}; });
+  }
+
+  onRender() {
     this.isLoadAllData = false;
     this.isPlay = this.panel.timeline.autoPlay;
     this.timelineIndex = 0;
@@ -692,7 +726,7 @@ onRender() {
       }
     } else {
       this.isPlay = false;
-      this.clearCache();
+      this.clearEcharts();
       //this.initEcharts();
     }
   }

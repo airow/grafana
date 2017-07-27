@@ -1,0 +1,39 @@
+<div class="editor-row" ng-repeat="legend in ctrl.panel.legendGroup">
+  <div class="section gf-form-group">
+    <div class="gf-form-inline">
+      <div class="gf-form max-width-15">
+        <label class="gf-form-label width-5">Name</label>
+        <input type="text" class="gf-form-input" placeholder="name" empty-to-null ng-model="legend.name" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form max-width-10">
+        <gf-form-switch class="gf-form" label="Show" label-class="width-5" checked="legend.show" on-change="ctrl.render()"></gf-form-switch>
+      </div>
+    </div>
+    <div class="gf-form">
+      <span class="gf-form-label width-10">display</span>
+      <span class="gf-form-label width-10">value</span>
+      <span class="gf-form-label width-30">icon</span>
+      <span class="gf-form-label width-6">selected</span>
+      <div>
+        <a type="button" class="btn gf-form-button btn-success" ng-click="ctrl.addData(legend)"><i class="fa fa-plus"></i>&nbsp;&nbsp;Legend</a>
+        <a type="button" class="btn gf-form-button btn-danger" ng-click="ctrl.removeLegend(legend)"><i class="fa fa-remove"></i>&nbsp;&nbsp;Group</a>
+      </div>
+    </div>
+    <div class="gf-form" ng-repeat="data in legend.data">
+      <input type="text" class="gf-form-input width-10" ng-model="data.display" placeholder="display">
+      <input type="text" class="gf-form-input width-10" ng-model="data.name" placeholder="value">
+      <input type="text" class="gf-form-input width-30" ng-model="data.icon" placeholder="icon">
+      <input type="checkbox" class="gf-form-input width-6" ng-model="data.selected">
+      <div>
+        <a type="button" class="btn gf-form-button btn-danger" ng-click="ctrl.removeData(legend, data)"><i class="fa fa-remove"></i>&nbsp;&nbsp;Legend</a>
+        <a type="button" ng-show="$index != 0" class="btn gf-form-button btn-primary" ng-click="ctrl.removeData(legend, data)"><i class="fa fa-arrow-up"></i></a>
+        <a type="button" ng-show="$index != legend.data.length-1" class="btn gf-form-button btn-primary" ng-click="ctrl.removeData(legend, data)"><i class="fa fa-arrow-down"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="gf-form">
+  <div class="gf-form-button-row">
+    <a type="button" class="btn gf-form-button btn-success" ng-click="ctrl.addLegend()"><i class="fa fa-plus"></i>&nbsp;&nbsp;New Group</a>
+  </div>
+</div>
