@@ -92,7 +92,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       "每小时": [],
       "城市": ['北京市', '青岛市', '天津市', '上海市', '重庆市', '杭州市', '武汉市', '深圳市', '广州市']
     };
-    for (var index = 1; index <= 24; index++) {
+    for (var index = 0; index < 24; index++) {
       this.timelineDataOpts["每小时"].push(_.padStart(`${index}`, 2, '0'));
     }
 

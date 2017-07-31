@@ -1,0 +1,15 @@
+{
+  "type": "panel",
+  "name": "Teld ChargingBill",
+  "id": "teld-chargingbill-panel",
+  "info": {
+    "author": {
+      "name": "Teld Inc.",
+      "url": "https://teld.cn"
+    },
+    "logos": {
+      "small": "img/icn-text-panel.svg",
+      "large": "img/icn-text-panel.svg"
+    }
+  }
+}

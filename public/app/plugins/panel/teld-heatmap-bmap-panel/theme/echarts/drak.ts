@@ -200,12 +200,12 @@ var drak = {
     "itemStyle": {
       "normal": {
         "areaColor": "#eeeeee",
-        "borderColor": "#444444",
-        "borderWidth": 0.5
+        "borderColor": "#ffffff",
+        "borderWidth": 1
       },
       "emphasis": {
         "areaColor": "rgba(255,215,0,0.8)",
-        "borderColor": "#444444",
+        "borderColor": "#ffffff",
         "borderWidth": 1
       }
     },
@@ -226,12 +226,12 @@ var drak = {
     "itemStyle": {
       "normal": {
         "areaColor": "#eeeeee",
-        "borderColor": "#444444",
-        "borderWidth": 0.5
+        "borderColor": "#ffffff",
+        "borderWidth": 1
       },
       "emphasis": {
         "areaColor": "rgba(255,215,0,0.8)",
-        "borderColor": "#444444",
+        "borderColor": "#ffffff",
         "borderWidth": 1
       }
     },
