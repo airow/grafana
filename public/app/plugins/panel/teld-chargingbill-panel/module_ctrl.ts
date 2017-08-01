@@ -355,7 +355,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         roam: true,
         itemStyle: {
           normal: {
-            areaColor: '#323c48',
+            //areaColor: '#323c48',
+            areaColor: '#065698',
             borderColor: '#ffffff'
           },
           emphasis: {
@@ -606,7 +607,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           period: 3,
           trailLength: 0,
           color: '#fff',
-          symbolSize: 3
+          symbolSize: 5
         },
         label: { normal: { show: false } },
         lineStyle: {
@@ -626,7 +627,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           delay: 3,
           trailLength: 0,
           color: '#fff',
-          symbolSize: 3
+          symbolSize: 5
         },
         label: { normal: { show: false }, emphasis: { show: false } },
         tooltip: {
