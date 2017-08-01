@@ -10,7 +10,7 @@ import config from 'app/core/config';
 import appEvents from 'app/core/app_events';
 import TimeSeries from 'app/core/time_series2';
 
-import { MetricsPanelCtrl } from 'app/plugins/sdk';
+import { MetricsPanelCtrl, loadPluginCss } from 'app/plugins/sdk';
 
 import echarts from 'echarts';
 import 'echarts.china';
@@ -20,6 +20,11 @@ import { geoCoordMap, transformGeoMap } from './BaiduMap_cityCenter';
 import { fromCitiesEditorComponent } from './fromcities_editor';
 import { panelEditorComponent } from './panel_editor';
 // import {visualMapEditorComponent} from './visualMap_editor';
+
+loadPluginCss({
+  dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
+  light: '/public/app/plugins/panel/teld-chargingbill-panel/css/light.built-in.css'
+});
 
 export class ModuleCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -44,6 +49,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   stepVal: any;
   dispalyValue: any;
   valStyle: any;
+
+  cityMinutePowerSorted: any[];
+  cityMinutPowerTopList: any[];
 
   lines: any;
   cityRange: any;
@@ -109,6 +117,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.cityCoord = transformGeoMap();
 
     this.panel.end.geoCoord = this.cityCoord[this.panel.end.cityName];
+    this.cityMinutPowerTopList = [];
+    this.cityMinutePowerSorted = [];
 
 
     let textStyle = this.panel.toCiytConf.style.label.normal.textStyle;
@@ -245,7 +255,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     }, 500);
   }
-
+  ppp = 0;
   setTeldData() {
     // this.teld.data = [{
     //   name: `[${kbn.valueFormats["thousandsSeparator"](this.currentVal, 2)}]`,
@@ -253,6 +263,43 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     // }];
 
     this.dispalyValue = kbn.valueFormats["thousandsSeparator"](this.currentVal, 2);
+
+    if (this.cityMinutePowerSorted && this.cityMinutePowerSorted.length > 0) {
+
+      if (this.ppp++ % 2 === 0) {
+
+        if (this.ppp === 10) {
+          this.ppp = 0;
+        }
+        // let topItem = this.cityMinutePowerSorted.shift();
+        // this.cityMinutePowerSorted.push(topItem);
+
+        this.cityMinutePowerSorted = _.concat(this.cityMinutePowerSorted, _.pullAt(this.cityMinutePowerSorted, 5));
+        let colors = _.slice(this.lineColor, 0, 5);
+        let topList = this.cityMinutePowerSorted.map(cityItemTop => {
+          let returnValue: any = {};
+          try {
+            if (cityItemTop) {
+              cityItemTop.currentVal = (cityItemTop.currentVal || 0) + cityItemTop.stepVal;
+              let value = kbn.valueFormats["thousandsSeparator"](cityItemTop.currentVal, 2);
+              let textColor = colors[cityItemTop.itemIndex - 1] || (cityItemTop.itemIndex % 2 ? '#46bee9' : 'rgb(40, 94, 120)');
+
+              returnValue = {
+                style: { "background-color": textColor },
+                itemIndex: cityItemTop.itemIndex,
+                name: cityItemTop.city.name,
+                value: value
+              };
+            }
+          } catch (error) {
+            console.log(error);
+          }
+          return returnValue;
+        });
+
+        this.cityMinutPowerTopList = topList;
+      }
+    }
   }
 
   onPanelInitialized() {
@@ -440,6 +487,70 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       this.lines[`code.${key}`] = value;
     });
 
+    let sumLines = [];
+    let crownCitySum = {
+      "11": { code: "11", value: 0 },/* 北京 */
+      "12": { code: "12", value: 0 },/* 天津 */
+      "31": { code: "31", value: 0 },/* 上海 */
+      "50": { code: "50", value: 0 },/* 重庆 */
+    };
+    let citySumMinutePower = _.filter(dataList, item => { return _.endsWith(item.target, '[:]城市今日累计'); });
+    citySumMinutePower = citySumMinutePower.map(item => {
+      let code = _.replace(item.target, "[:]城市今日累计", "");
+      return { code, value: item.datapoints[0][0] };
+    });
+
+    _.forEach(citySumMinutePower, item => {
+      let codeFirstTwo = item.code.substr(0, 2);
+      switch (codeFirstTwo) {
+        case "11":
+        case "12":
+        case "31":
+        case "50":
+          crownCitySum[codeFirstTwo].value += item.value;
+          break;
+        default:
+          sumLines.push(item);
+          break;
+      }
+    });
+
+    _.forEach(crownCitySum, (value, key) => {
+      //sumLines[`code.${key}`] = value;
+      sumLines.push(value);
+    });
+
+    let temp = _.sortBy(sumLines, ['value']);
+    temp = _.reverse(temp);
+
+    let itemIndex = 1;
+    for (let i = 0; i < temp.length; i++) {
+      let item = temp[i];
+      let city = _.find(this.cityRange, { code: item.code });
+
+      if (city) {
+        let minuteItem = this.lines[`code.${item.code}`];
+        let minuteVal = 0;
+        if (minuteItem) {
+          minuteVal = minuteItem.value;
+        }
+
+        let v = {
+          code: item.code,
+          itemIndex: itemIndex++,
+          city: city, initValue: item.value,
+          currentVal: item.value, stepVal: minuteVal / 120,
+          item: item
+        };
+        let t = _.find(this.cityMinutePowerSorted, { code: item.code });
+        if (t) {
+          t = v;
+        } else {
+          this.cityMinutePowerSorted.push(v);
+        }
+      }
+    }
+
     let minuteSorted = _.sortBy(minute.datapoints, function (item) { return item[1]; });
 
     let minuteLast = _.last(minuteSorted);
@@ -512,13 +623,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return returnValue;
   }
 
+  lineColor = [
+    '#c12e34', '#e6b600', '#0098d9', '#2b821d',
+    '#005eaa', '#339ca8', '#cda819', '#32a487',/**shine */
+    '#61a0a8', '#d48265',
+    '#91c7ae', '#749f83', '#ca8622', '#bda29a',
+    '#6e7074', '#546570', '#c4ccd3'];
+
   getSeries() {
-    let color = [
-      '#c12e34', '#e6b600', '#0098d9', '#2b821d',
-      '#005eaa', '#339ca8', '#cda819', '#32a487',/**shine */
-      '#61a0a8', '#d48265',
-      '#91c7ae', '#749f83', '#ca8622', '#bda29a',
-      '#6e7074', '#546570', '#c4ccd3'];
+    let color = this.lineColor;
 
     let dataSource = this.getLinesData();
 

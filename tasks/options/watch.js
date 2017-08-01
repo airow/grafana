@@ -40,6 +40,12 @@ module.exports = function(config, grunt) {
           grunt.file.copy(filepath, newPath);
         }
 
+        if (/(\.built-in\.css)$/.test(filepath)) {
+          newPath = filepath.replace(/^public/, 'public_gen');
+          grunt.log.writeln('Copying to ' + newPath);
+          grunt.file.copy(filepath, newPath);
+        }
+
         if (/(\.js)$/.test(filepath)) {
           newPath = filepath.replace(/^public/, 'public_gen');
           grunt.log.writeln('Copying to ' + newPath);
