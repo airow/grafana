@@ -1,6 +1,6 @@
 <div class="editor-row">
   <div class="section gf-form-group">
-    <h5 class="section-heading">To City</h5>
+    <h5 class="section-heading">Base</h5>
     <div class="gf-form-inline">
       <div class="gf-form">
         <label class="gf-form-label width-7">City Name</label>
@@ -10,6 +10,11 @@
         <label class="gf-form-label width-7">Geo Coord</label>
         <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.end.geoCoord.lat" placeholder="lat" />
         <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.end.geoCoord.lng" placeholder="lng" />
+      </div>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="延时轮播" label-class="width-7" checked="ctrl.panel.baseConf.isDelayRolling" on-change="ctrl.render()"></gf-form-switch>
       </div>
     </div>
   </div>

@@ -5,8 +5,10 @@
   overflow: hidden;
   width: 300px;
 
-  top: 40%;
+  top: 30%;
   left: 80%;
+  bottom: 0px;
+  overflow: hidden;
 
   /* border: 2px solid red;
   border-width: 2px 0 0 2px;
@@ -25,6 +27,7 @@
   text-align: left;
   padding:10px auto;
   list-style:none;
+  vertical-align: middle;
 }
 
 .chargingbill .ranking ol li .itemIndex{

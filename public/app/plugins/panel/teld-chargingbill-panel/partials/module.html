@@ -6,6 +6,9 @@
     </span>
   </div>
   <div class="ranking">
+    <div style="color:rgb(14, 223, 70); font-size:24px; font-weight:'bolder';">
+      城市总电量排行榜<i style="margin-left:10px;" ng-click="ctrl.play=!ctrl.play" class="fa" ng-class="{false: 'fa-play', true: 'fa-pause'}[ctrl.play]" aria-hidden="true"></i>
+    </div>
     <ol>
       <li>
         <span class="header"></span>
@@ -18,7 +21,21 @@
         <span class="cityVal">{{city.value}}</span>
       </li>
     </ol>
-    <!-- <div ng-repeat="city in ctrl.cityMinutPowerTopList"></div> -->
+  </div>
+  <div class="ranking" style="left:5%;">
+    <div style="color:rgb(14, 223, 70); font-size:24px; font-weight:'bolder';">总电量排行榜Top10</div>
+    <ol>
+      <li>
+        <span class="header"></span>
+        <span class="cityName">城市</span>
+        <span class="cityVal">电量</span>
+      </li>
+      <li ng-repeat="city in ctrl.cityMinutPowerTop10List | limitTo:10">
+        <span class="itemIndex i{{$index}}" ng-style="city.style">{{city.itemIndex}}</span>
+        <span class="cityName">{{city.name}}</span>
+        <span class="cityVal">{{city.value}}</span>
+      </li>
+    </ol>
   </div>
   <teld-echarts ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance" ec-bmap="ctrl.ecBmap">
   </teld-echarts>

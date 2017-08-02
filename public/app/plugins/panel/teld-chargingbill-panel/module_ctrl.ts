@@ -49,15 +49,20 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   stepVal: any;
   dispalyValue: any;
   valStyle: any;
+  play: boolean;
 
   cityMinutePowerSorted: any[];
   cityMinutPowerTopList: any[];
+  cityMinutPowerTop10List: any[];
 
   lines: any;
   cityRange: any;
 
   // Set and populate defaults
   panelDefaults = {
+    baseConf: {
+      isDelayRolling: true
+    },
     end: {
       cityName: "青岛",
     },
@@ -115,7 +120,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
 
     this.cityCoord = transformGeoMap();
-
+    this.play = true;
     this.panel.end.geoCoord = this.cityCoord[this.panel.end.cityName];
     this.cityMinutPowerTopList = [];
     this.cityMinutePowerSorted = [];
@@ -271,35 +276,86 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         if (this.ppp === 10) {
           this.ppp = 0;
         }
-        // let topItem = this.cityMinutePowerSorted.shift();
-        // this.cityMinutePowerSorted.push(topItem);
 
-        this.cityMinutePowerSorted = _.concat(this.cityMinutePowerSorted, _.pullAt(this.cityMinutePowerSorted, 5));
-        let colors = _.slice(this.lineColor, 0, 5);
-        let topList = this.cityMinutePowerSorted.map(cityItemTop => {
-          let returnValue: any = {};
-          try {
-            if (cityItemTop) {
-              cityItemTop.currentVal = (cityItemTop.currentVal || 0) + cityItemTop.stepVal;
-              let value = kbn.valueFormats["thousandsSeparator"](cityItemTop.currentVal, 2);
-              let textColor = colors[cityItemTop.itemIndex - 1] || (cityItemTop.itemIndex % 2 ? '#46bee9' : 'rgb(40, 94, 120)');
-
-              returnValue = {
-                style: { "background-color": textColor },
-                itemIndex: cityItemTop.itemIndex,
-                name: cityItemTop.city.name,
-                value: value
-              };
-            }
-          } catch (error) {
-            console.log(error);
+        if (this.play) {
+          if (this.panel.baseConf.isDelayRolling) {
+            this.cityMinutePowerSorted.push(this.cityMinutePowerSorted.shift());
+          } else {
+            //this.cityMinutePowerSorted.push(_.pullAt(this.cityMinutePowerSorted, 10));
+            this.cityMinutePowerSorted = _.concat(this.cityMinutePowerSorted, _.pullAt(this.cityMinutePowerSorted, 10));
           }
-          return returnValue;
-        });
+        }
+        let topList = this.cityMinutePowerSorted.map(this.mapDisplayItem.bind(this));
 
+        let top10List = _.remove(topList, item => { return item.itemIndex <= 10; });
+        if (top10List && top10List.length > 0 && top10List[0].itemIndex !== 1) {
+          top10List = _.sortBy(top10List, ['itemIndex']);
+        }
+
+        this.cityMinutPowerTop10List = top10List;
         this.cityMinutPowerTopList = topList;
       }
     }
+  }
+
+  setTeldData_auto() {
+    // this.teld.data = [{
+    //   name: `[${kbn.valueFormats["thousandsSeparator"](this.currentVal, 2)}]`,
+    //   value: [this.panel.end.geoCoord.lng, this.panel.end.geoCoord.lat, 100]
+    // }];
+
+    this.dispalyValue = kbn.valueFormats["thousandsSeparator"](this.currentVal, 2);
+
+    if (this.cityMinutePowerSorted && this.cityMinutePowerSorted.length > 0) {
+
+      if (this.ppp++ % 2 === 0) {
+
+        if (this.ppp === 10) {
+          this.ppp = 0;
+        }
+        // let topItem = this.cityMinutePowerSorted.shift();
+        // this.cityMinutePowerSorted.push(topItem);
+
+        this.cityMinutePowerSorted.push(_.pullAt(this.cityMinutePowerSorted, 10));
+
+        //this.cityMinutePowerSorted = _.concat(this.cityMinutePowerSorted, _.pullAt(this.cityMinutePowerSorted, 10));
+
+        // let colors = _.slice(this.lineColor, 0, 5);
+        // colors = this.lineColor;
+        let topList = this.cityMinutePowerSorted.map(this.mapDisplayItem.bind(this));
+
+        let top10List = _.remove(topList, item => { return item.itemIndex <= 10; });
+        // if (top10List && top10List.length > 0 && top10List[0].itemIndex !== 1) {
+        //   top10List = _.sortBy(top10List, ['itemIndex']);
+        // }
+
+        this.cityMinutPowerTop10List = top10List;
+        this.cityMinutPowerTopList = topList;
+        //this.cityMinutPowerTop10List = _.sortBy(topList.filter(item => { return item.itemIndex <= 10; }), ['itemIndex']);
+      }
+    }
+  }
+
+  mapDisplayItem(cityItemTop) {
+    let returnValue: any = {};
+    try {
+      if (cityItemTop) {
+        cityItemTop.currentVal = (cityItemTop.currentVal || 0) + cityItemTop.stepVal;
+        let value = kbn.valueFormats["thousandsSeparator"](cityItemTop.currentVal, 2);
+        let textColor = this.lineColor[cityItemTop.itemIndex - 1] || (cityItemTop.itemIndex % 10 === 0 ? 'white' : '#46bee9');
+
+        returnValue = {
+          style: { "background-color": textColor },
+          itemIndex: cityItemTop.itemIndex,
+          name: cityItemTop.city.name,
+          value: value
+        };
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(cityItemTop);
+    }
+    return returnValue;
   }
 
   onPanelInitialized() {
@@ -542,6 +598,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           currentVal: item.value, stepVal: minuteVal / 120,
           item: item
         };
+
         let t = _.find(this.cityMinutePowerSorted, { code: item.code });
         if (t) {
           t = v;
