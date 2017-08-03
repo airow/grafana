@@ -77,7 +77,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
-    private dashboardSrv, private uiSegmentSrv, private $http, $timeout) {
+    private dashboardSrv, private uiSegmentSrv, private $http, $timeout, private teldHelperSrv) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -166,6 +166,10 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     // if (varPID && _.isEmpty(varPID.current.value)) {
     //   varPID.current = { text: '.', value: '.' };
     // }
+
+    // this.teldHelperSrv.gotoDashboard('db/01_quan-guo-yun-ying-fen-xi'); //Error
+    // this.teldHelperSrv.gotoDashboard('dashboard://db/01_quan-guo-yun-ying-fen-xi'); //OK
+    // this.teldHelperSrv.gotoDashboard('20_充电趋势分析（按区域）33333');  //OK
 
     this.onRender();
   }
