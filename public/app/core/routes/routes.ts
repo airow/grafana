@@ -7,10 +7,10 @@ import coreModule from 'app/core/core_module';
 import {BundleLoader} from './bundle_loader';
 
 /** @ngInject **/
-function setupAngularRoutes($routeProvider, $locationProvider) {
+function setupAngularRoutes($routeProvider, $locationProvider, mePageLoadingProvider) {
   $locationProvider.html5Mode(true);
 
-  //mePageLoadingProvider.
+  mePageLoadingProvider.effect = "Wave";
 
   var loadOrgBundle = new BundleLoader('app/features/org/all');
   var loadPluginsBundle = new BundleLoader('app/features/plugins/all');
