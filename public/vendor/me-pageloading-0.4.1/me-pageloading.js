@@ -194,6 +194,7 @@ angular.module('me-pageloading', [])
             self.animateOpt = null; // prevent hide one animation multi times
             self.el.removeClass('pageloading-loading');
             self.animateSVG('out', animateOpt, function(){
+              self.el.removeClass('pageloading-loading');
                 self.el.removeClass('show');
                 self.isAnimating = false;
             });

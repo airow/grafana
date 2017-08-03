@@ -84,7 +84,9 @@ export class DashboardCtrl {
           dynamicDashboardSrv.init(dashboard);
           dynamicDashboardSrv.process();
 
-          unsavedChangesSrv.init(dashboard, $scope);
+          if (contextSrv.user.name !== "screen") {
+            unsavedChangesSrv.init(dashboard, $scope);
+          }
 
           $scope.dashboard = dashboard;
           $scope.dashboardMeta = dashboard.meta;

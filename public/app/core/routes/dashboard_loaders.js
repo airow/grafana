@@ -4,9 +4,12 @@ define([
 function (coreModule) {
   "use strict";
 
-  coreModule.default.controller('LoadDashboardCtrl', function($scope, $routeParams, dashboardLoaderSrv, backendSrv, $location) {
+  coreModule.default.controller('LoadDashboardCtrl', function ($scope, $routeParams, dashboardLoaderSrv
+    , backendSrv, $location, mePageLoading) {
     $scope.appEvent("dashboard-fetch-start");
 
+    //页面切换效果
+    mePageLoading.show();
     if (!$routeParams.slug) {
       backendSrv.get('/api/dashboards/home').then(function(homeDash) {
         if (homeDash.redirectUri) {
@@ -16,12 +19,16 @@ function (coreModule) {
           meta.canSave = meta.canShare = meta.canStar = false;
           $scope.initDashboard(homeDash, $scope);
         }
+      }).finally(function () {
+        mePageLoading.hide();
       });
       return;
     }
 
     dashboardLoaderSrv.loadDashboard($routeParams.type, $routeParams.slug).then(function(result) {
       $scope.initDashboard(result, $scope);
+    }).finally(function () {
+      mePageLoading.hide();
     });
 
   });

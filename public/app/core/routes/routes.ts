@@ -10,6 +10,8 @@ import {BundleLoader} from './bundle_loader';
 function setupAngularRoutes($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
 
+  //mePageLoadingProvider.
+
   var loadOrgBundle = new BundleLoader('app/features/org/all');
   var loadPluginsBundle = new BundleLoader('app/features/plugins/all');
   var loadAdminBundle = new BundleLoader('app/features/admin/admin');

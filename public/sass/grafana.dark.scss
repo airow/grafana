@@ -1,8 +1,4 @@
 @import "variables";
 @import "variables.dark";
 @import "grafana";
-
-.ecContainer .ec-extension-bmap
-{
-  background-color: $body-bg !important;
-}
+@import "../sass.teld/grafana.teld.dark";

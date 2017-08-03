@@ -12,6 +12,8 @@ import 'angular-ui';
 import 'angular-post-message';
 import 'angular-signalr-hub';
 import 'jquery.signalR';
+import 'Snap.svg';
+import 'me-pageloading';
 
 import $ from 'jquery';
 import angular from 'angular';
@@ -89,6 +91,7 @@ export class GrafanaApp {
       'ui.bootstrap.tpls',
       'ngPostMessage',
       'SignalR',
+      'me-pageloading',
     ];
 
     var module_types = ['controllers', 'directives', 'factories', 'services', 'filters', 'routes'];

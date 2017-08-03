@@ -7,7 +7,7 @@ function(angular, _) {
 
   var module = angular.module('grafana.services');
 
-  module.service('unsavedChangesSrv', function($rootScope, $q, $location, $timeout, contextSrv, $window) {
+  module.service('unsavedChangesSrv', function($rootScope, $q, $location, $timeout, contextSrv, $window, mePageLoading) {
 
     function Tracker(dashboard, scope, originalCopyDelay) {
       var self = this;
@@ -154,6 +154,7 @@ function(angular, _) {
         $rootScope.$emit('save-dashboard');
       };
 
+      mePageLoading.hide();
       $rootScope.appEvent('show-modal', {
         src: 'public/app/partials/unsaved-changes.html',
         modalClass: 'confirm-modal',
