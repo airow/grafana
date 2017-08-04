@@ -102,7 +102,22 @@ module.directive('grafanaPanel', function($rootScope) {
 
       ctrl.events.on('render', () => {
         if (lastHeight !== ctrl.containerHeight) {
-          panelContainer.css({minHeight: ctrl.containerHeight});
+
+          let hSize = {
+            h1: 72.7813,
+            h2: 65.7813,
+            h3: 58.7813,
+            h4: 43.7813,
+            h5: 39.7813,
+            h6: 37.7813,
+          };
+          // panelContainer.css({ minHeight: ctrl.containerHeight});
+          let h = _.sumBy(_.filter(ctrl.dashboard.rows, 'fullScreenShow'), o => {
+            let val = parseFloat(o.height);
+            let titleH = (o.showTitle || o.collapse) ? hSize[o.titleSize] : 0;
+            return val + titleH;
+          });
+          panelContainer.css({ minHeight: ctrl.containerHeight - h });
           lastHeight = ctrl.containerHeight;
         }
 

@@ -137,6 +137,7 @@ coreModule.directive('dashRow', function($rootScope) {
       });
 
       $rootScope.onAppEvent('panel-fullscreen-enter', function(evt, info) {
+        if (scope.ctrl.row.fullScreenShow) { return; }
         var hasPanel = _.find(scope.ctrl.row.panels, {id: info.panelId});
         if (!hasPanel) {
           element.hide();
@@ -164,6 +165,7 @@ coreModule.directive('panelWidth', function($rootScope) {
       fullscreen = true;
 
       if (scope.panel.id !== info.panelId) {
+        if (scope.ctrl.row.fullScreenShow) { return; }
         element.hide();
       } else {
         element[0].style.width = '100%';

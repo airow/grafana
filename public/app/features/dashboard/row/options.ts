@@ -18,6 +18,7 @@ export class RowOptionsCtrl {
     this.row = this.rowCtrl.row;
     this.dashboard = this.rowCtrl.dashboard;
     this.row.titleSize = this.row.titleSize || 'h6';
+    this.row.fullScreenShow = _.isBoolean(this.row.fullScreenShow) ? this.row.fullScreenShow : false;
   }
 }
 
