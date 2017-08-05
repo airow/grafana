@@ -37,7 +37,7 @@ export class DebugCtrl extends MetricsPanelCtrl {
     console.group('onDataReceived(dataList)');
     console.log(dataList);
     console.groupEnd();
-    this.dataListStringify = JSON.stringify(dataList, null, '\t')
+    this.dataListStringify = JSON.stringify(dataList, null, '\t');
   }
 
   onRefresh() {

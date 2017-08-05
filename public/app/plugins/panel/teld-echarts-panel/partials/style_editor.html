@@ -1,0 +1,19 @@
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Style</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <span class="gf-form-label width-8">Chart Type</span>
+        <div class="gf-form-select-wrapper max-width-8">
+          <select class="gf-form-input" ng-model="ctrl.panel.serieType" ng-options="serie for serie in ctrl.getSerieType()" ng-change="ctrl.refresh()"></select>
+        </div>
+      </div>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Theme Name</label>
+        <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" class="gf-form-input" placeholder="Theme name">
+      </div>
+    </div>
+  </div>
+</div>
