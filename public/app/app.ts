@@ -11,6 +11,8 @@ import 'angular-bindonce';
 import 'angular-ui';
 import 'angular-post-message';
 import 'angular-signalr-hub';
+import 'ace';
+import 'ui-ace';
 import 'jquery.signalR';
 import 'Snap.svg';
 import 'me-pageloading';
@@ -89,6 +91,7 @@ export class GrafanaApp {
       'pasvaz.bindonce',
       'ui.bootstrap',
       'ui.bootstrap.tpls',
+      'ui.ace',
       'ngPostMessage',
       'SignalR',
       'me-pageloading',

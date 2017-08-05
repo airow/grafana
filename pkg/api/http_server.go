@@ -138,6 +138,13 @@ func (hs *HttpServer) newMacaron() *macaron.Macaron {
 		hs.mapStatic(m, route.Directory, "", pluginRoute)
 	}
 
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/worker-javascript.js", "worker-javascript.js")
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/mode-javascript.js", "mode-javascript.js")
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/worker-json.js", "worker-json.js")
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/mode-json.js", "mode-json.js")
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/theme-twilight.js", "theme-twilight.js")
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/theme-monokai.js", "theme-monokai.js")
+	hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/theme-xcode.js", "theme-xcode.js")
 	hs.mapStatic(m, setting.StaticRootPath, "", "public")
 	hs.mapStatic(m, setting.StaticRootPath, "robots.txt", "robots.txt")
 

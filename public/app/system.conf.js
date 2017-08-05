@@ -22,6 +22,8 @@ System.config({
     "angular-bindonce":       "vendor/angular-bindonce/bindonce.js",
     "angular-post-message":   "vendor/angular-post-message/src/angular-post-message.js",
     "angular-signalr-hub":   "vendor/angular-signalr-hub/signalr-hub.js",
+    "ace":             "vendor/ace-builds-1.2.8/src-min-noconflict/ace.js",
+    "ui-ace":          "vendor/ui-ace-0.2.3/ui-ace.js",
     "Snap.svg":        "vendor/Snap.svg-0.5.1/dist/snap.svg.js",
     "me-pageloading":  "vendor/me-pageloading-0.4.1/me-pageloading.js",
     "jquery.signalR":   "vendor/jquery.signalR/jquery.signalR-2.2.2.js",
