@@ -1,0 +1,17 @@
+{
+  "type": "panel",
+  "name": "Teld Singlestat",
+  "id": "teld-singlestat-panel",
+
+  "info": {
+    "author": {
+      "name": "Teld Inc.",
+      "url": "https://teld.cn"
+    },
+    "logos": {
+      "small": "img/icn-singlestat-panel.svg",
+      "large": "img/icn-singlestat-panel.svg"
+    }
+  }
+}
+
