@@ -616,8 +616,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       let leftLegend = _.slice(legend.data, 0, splitIndex);
       let rightLegend = _.slice(legend.data, splitIndex);
 
-      let left = { name: 'leftLegend', formatter: legend.formatter, padding: 10, align: 'left', left: 'left', orient: 'vertical', data: leftLegend };
-      let right = { name: 'rightLegend', formatter: legend.formatter, padding: 10, align: 'left', left: 'right', orient: 'vertical', data: rightLegend };
+      let left = {
+        name: 'leftLegend', formatter: legend.formatter,
+        padding: 10, align: 'left', left: 'left',
+        orient: 'vertical', data: leftLegend
+      };
+      let right = {
+        name: 'rightLegend', formatter: legend.formatter,
+        padding: 10, align: 'left', left: 'right',
+        orient: 'vertical', data: rightLegend
+      };
       option.legend = [
         _.defaultsDeep(left, this.panel.echarts.legend),
         _.defaultsDeep(right, this.panel.echarts.legend)
