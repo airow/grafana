@@ -17,8 +17,8 @@ import echartsTheme, { echartsThemeName } from './theme/all';
 
 
 import { styleEditorComponent } from './style_editor';
-import { panelEditorComponent } from './panel_editor';
-
+import { tabStyleEditorComponent } from './tab_style_editor';
+import { seriesEditorComponent } from './series_editor';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
@@ -35,6 +35,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   seriesLabel = {};
 
+  valueFormats = kbn.valueFormats;
+
   ecConf = {
     axis: {
       category: {
@@ -47,20 +49,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
          * max: 'dataMax',
          */
         axisLabel: {
-          formatter: function (value, index) {
-            //return `@${value}`;
-            //return kbn.valueFormats["h"](value);
-            //return moment.utc().format();
-            return value;
-            //return kbn._.transform(object, iteratee, accumulator)
-          }
+          formatter: function (value) { return value; }
         }
       },
       value: {
         show: true,
         type: 'value',
         min: 'dataMin',
-        max: 'dataMax'
+        max: 'dataMax',
+        // axisLabel: {
+        //   formatter: this.panel.formatter.yAxis.axisLabel.formatter.bind(this)
+        // }
       }
     },
     series: {
@@ -75,17 +74,31 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
+    formatter: {
+      value: { format: 'teldString' },
+      category: { format: 'teldString' },
+      xAxis: { axisLabel: { format: 'teldString' } },
+      yAxis: { axisLabel: { format: 'teldString' } },
+    },
     serieType: 'line',
     style: {
       themeName: 'default',
     },
-    baseConf: {
-      isDelayRolling: true
+    legendExt: {
+      twoSides: false
     },
     echarts: {
-      title: {},
-      legend: {},
-      xAxis: [this.ecConf.axis.category]
+      title: { show: true },
+      legend: { show: false, orient: 'vertical', left: 'left' },
+      xAxis: {},
+      yAxis: {},
+      // axis: {
+      //   category: {},
+      //   value: {}
+      // },
+      series: {
+        bar: {},
+      },
     }
   };
 
@@ -94,10 +107,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     private dashboardSrv, private uiSegmentSrv, private $http, private $interval) {
     super($scope, $injector);
 
-    _.defaults(this.panel, this.panelDefaults);
+    _.defaultsDeep(this.panel, this.panelDefaults);
 
     this.echartsTheme = echartsTheme;
     this.echartsThemeName = echartsThemeName;
+
+    //this.ecConf.axis.category.axisLabel.formatter = this.formatter.bind(this);
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-initialized', this.onPanelInitialized.bind(this));
@@ -112,6 +127,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
   }
 
+  axisLableFormatter(axis, value, index) {
+    let formater = this.valueFormats[this.panel.formatter[axis].axisLabel.format];
+    return formater(value);
+  }
+
   onTearDown() {
 
   }
@@ -124,10 +144,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   ecInstanceResize(evt, payload) {
     if (this.ecInstance) {
-      //this.ecInstance.resize();
-      // this.$timeout(() => {
-      //   this.ecInstance.resize();
-      // }, 1000);
+      this.ecInstance.resize();
+      this.$timeout(() => {
+        this.ecInstance.resize();
+      }, 1000);
     }
   }
 
@@ -136,10 +156,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.addEditorTab('Style', styleEditorComponent);
-    this.addEditorTab('Line', panelEditorComponent);
-    this.addEditorTab('Bar', panelEditorComponent);
-    this.addEditorTab('Pie', panelEditorComponent);
+    //this.addEditorTab('Style1', styleEditorComponent);
+    this.addEditorTab('Style', tabStyleEditorComponent);
+    this.addEditorTab('Series', seriesEditorComponent);
     this.editorTabIndex = 1;
   }
 
@@ -173,15 +192,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     };
 
     var option: any = {
-      title: {
-        text: '1990 与 2015 年各国家人均寿命与 GDP'
-      },
-      legend: {
-        show: true,
-      },
-      tooltip: {
-        trigger: 'axis'
-      },
+      // title: {
+      //   text: '1990 与 2015 年各国家人均寿命与 GDP'
+      // },
+      // legend: {
+      //   show: true,
+      // },
+      // tooltip: {
+      //   trigger: 'axis'
+      // },
       // xAxis: this.panel.echarts.xAxis,
       // yAxis: [{
       //   boundaryGap: [0, '100%'],
@@ -196,6 +215,18 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       baseOption: option,
       options: []
     };
+  }
+
+  valueFormat(value) {
+    let formater = this.valueFormats[this.panel.formatter.value.format];
+    return formater(value);
+  }
+
+  categoryFormat(value) {
+    let formater = this.valueFormats[this.panel.formatter.category.format];
+    return formater(value);
+    //return moment(value).format("YYYY-MM-DD");
+    //return value;
   }
 
   onDataReceived(dataList) {
@@ -217,7 +248,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.ecSeries = series;
     console.groupEnd();
 
-    //this.render();
+    this.render();
   }
 
   dataList2Serie(dataList) {
@@ -241,29 +272,165 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
       let serieType = this.panel.serieType;
 
-      let data = _.map(item.datapoints, point => {
+      let data: any;
 
-        let { value, timestamp } = _.zipObject(['value', 'timestamp'], point);
-        let ecData = { value: [`${timestamp}`, value] };
+      data = _.map(item.datapoints, point => {
 
-        return ecData;
+        let pointArray = point;
+        let isArray = _.isArray(pointArray);
+        let zipObject = ['value', 'name'];
+
+        if (false === isArray) {
+          pointArray = _.values(pointArray);
+          zipObject = _.reverse(zipObject);
+        }
+
+        let { value, name } = _.zipObject(zipObject, pointArray);
+        name = this.categoryFormat(name);
+        value = this.valueFormat(value);
+        return { value: [`${name}`, value] };;
       });
 
-      let serie = {
+      // if (target === "docs") {
+      //   data = _.map(item.datapoints, point => {
+      //     let { value, name } = _.zipObject(['name', 'value'], _.values(point));
+      //     name = this.categoryFormat(name);
+      //     value = this.valueFormat(value);
+      //     return { value: [`${name}`, value] };;
+      //   });
+      // } else {
+      //   data = _.map(item.datapoints, point => {
+
+      //     let { value, name } = _.zipObject(['value', 'name'], point);
+
+      //     name = this.categoryFormat(name);
+      //     value = this.valueFormat(value);
+
+      //     let ecData = { value: [`${name}`, value] };
+
+      //     return ecData;
+      //   });
+      // }
+
+
+
+      let encode: any = {};
+      if (this.panel.exchangeAxis) {
+        encode.x = 1;
+        encode.y = 0;
+      };
+
+      let serie = this.getDefaultSerie();
+      _.defaultsDeep(serie, {
+        encode,
         name: target,
         type: serieType,
         data
-      };
+      });
       return serie;
     });
 
     return series;
   }
 
+  defaultSeries33(dataList) {
+    let series = _.map(dataList, item => {
+
+      let { target, metric, field } = item;
+
+      let serieType = this.panel.serieType;
+
+      let data: any;
+
+      if (target === "docs") {
+        data = _.map(item.datapoints, point => {
+          let { value, name } = _.zipObject(['name', 'value'], _.values(point));
+          name = this.categoryFormat(name);
+          value = this.valueFormat(value);
+          return { value: [`${name}`, value] };;
+        });
+      } else {
+        data = _.map(item.datapoints, point => {
+
+          let { value, name } = _.zipObject(['value', 'name'], point);
+
+          name = this.categoryFormat(name);
+          value = this.valueFormat(value);
+
+          let ecData = { value: [`${name}`, value] };
+
+          return ecData;
+        });
+      }
+
+
+
+      let encode: any = {};
+      if (this.panel.exchangeAxis) {
+        encode.x = 1;
+        encode.y = 0;
+      };
+
+      let serie = this.getDefaultSerie();
+      _.defaultsDeep(serie, {
+        encode,
+        name: target,
+        type: serieType,
+        data
+      });
+      return serie;
+    });
+
+    return series;
+  }
+
+  defaultSeries22(dataList) {
+    let series = _.map(dataList, item => {
+
+      let { target, metric, field } = item;
+
+      let serieType = this.panel.serieType;
+
+      let data = _.map(item.datapoints, point => {
+
+        let { value, timestamp } = _.zipObject(['value', 'timestamp'], point);
+
+        timestamp = this.categoryFormat(timestamp);
+        value = this.valueFormat(value);
+
+        let ecData = { value: [`${timestamp}`, value] };
+
+        return ecData;
+      });
+
+      let encode: any = {};
+      if (this.panel.exchangeAxis) {
+        encode.x = 1;
+        encode.y = 0;
+      };
+
+      let serie = this.getDefaultSerie();
+      _.defaultsDeep(serie, {
+        encode,
+        name: target,
+        type: serieType,
+        data
+      });
+      return serie;
+    });
+
+    return series;
+  }
+
+  getDefaultSerie() {
+    let serieType = this.panel.serieType;
+    let serie = this.panel.echarts.series[serieType] || this.ecConf.series[serieType];
+    return _.cloneDeep(serie);
+  }
+
   peiSeries(dataList) {
 
     let serieType = this.panel.serieType;
-
 
     let data = _.map(dataList, item => {
       let dataItem: any;
@@ -271,24 +438,26 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       if (target === "docs") {
         dataItem = _.map(item.datapoints, point => {
           let ecData = _.zipObject(['name', 'value'], _.values(point));
+          ecData.name = this.categoryFormat(ecData.name);
+          ecData.value = this.valueFormat(ecData.value);
           return ecData;
         });
       } else {
         let values = _.map(item.datapoints, point => {
           return point[0];
         });
-
-        dataItem = { name: target, value: _.sum(values) };
+        dataItem = { name: this.categoryFormat(target), value: this.valueFormat(_.sum(values)) };
       }
 
       return dataItem;
     });
 
-
+    data = _.flatten(data);
     data = _.sortBy(data, ['value']);
     data = _.reverse(data);
 
-    let series = [{
+    let serie = this.getDefaultSerie();
+    _.defaultsDeep(serie, {
       type: serieType,
       label: {
         normal: {
@@ -299,59 +468,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         }
       },
       data
-    }];
+    });
+
+    let series = [serie];
 
     return series;
-  }
-
-  fff(dataList) {
-    let series = _.map(dataList, item => {
-
-      let { target, metric, field } = item;
-
-      let serieType = this.panel.serieType;
-
-      let data: any;
-      switch (serieType) {
-        default:
-          data = _.map(item.datapoints, point => {
-
-            let { value, timestamp } = _.zipObject(['value', 'timestamp'], point);
-            let ecData = { value: [`${timestamp}`, value] };
-
-            return ecData;
-          });
-          break;
-        case this.ecConf.series.pie.type:
-
-          if (target === "docs") {
-            data = _.map(item.datapoints, point => {
-              let ecData = _.zipObject(['name', 'value'], _.values(point));
-              return ecData;
-            });
-          } else {
-            data = _.map(item.datapoints, point => {
-              let { value, timestamp } = _.zipObject(['value', 'timestamp'], point);
-              let ecData = { value, name: timestamp };
-              return ecData;
-            });
-
-            let ii = _.map(item.datapoints, point => {
-              return point[0];
-            });
-
-            data = { name: target, value: _.sumBy(data, item => { return item.value; }) };
-          }
-          break;
-      }
-
-      let serie = {
-        name: target,
-        type: serieType,
-        data
-      };
-      return serie;
-    });
   }
 
   //坐标轴构建
@@ -376,7 +497,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       return axisDataItem;
     });
 
-    return _.defaults({ data: axisData }, axis);
+    return _.defaultsDeep({ data: axisData }, axis);
   }
 
   axisAdapter(serie, axisType) {
@@ -405,7 +526,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
       case this.ecConf.series.bar.type:
-        axis = this.serie2cateAxis(serie, this.ecConf.axis.category);
+
+        axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
         break;
       case this.ecConf.series.pie.type:
         axis = undefined;
@@ -419,7 +541,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
       case this.ecConf.series.bar.type:
-        axis = this.ecConf.axis.value;
+        axis = _.defaultsDeep(this.ecConf.axis.value, this.panel.echarts.yAxis);
         break;
       case this.ecConf.series.pie.type:
         axis = undefined;
@@ -433,6 +555,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let legendData: any;
     if (this.panel.serieType === this.ecConf.series.pie.type) {
       legendData = series.map(serie => {
+        //return _.flatten(serie.data).map(item => { return { name: item.name, item }; });
         return serie.data.map(item => { return { name: item.name, item }; });
       });
       legendData = _.flatten(legendData);
@@ -446,8 +569,21 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   onRender() {
 
-    let categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
-    let valueAxis = this.valueAxisAdapter();
+    let xAxis, categoryAxis;
+    xAxis = categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
+
+    let yAxis, valueAxis;
+    yAxis = valueAxis = this.valueAxisAdapter();
+
+    if (categoryAxis) {
+      xAxis = _.cloneDeep(this.panel.echarts.xAxis);
+      _.defaultsDeep(xAxis, categoryAxis);
+    }
+
+    if (valueAxis) {
+      yAxis = _.cloneDeep(this.panel.echarts.yAxis);
+      _.defaultsDeep(yAxis, valueAxis);
+    }
 
     function formatter(n) {
       if (this.panel.serieType === this.ecConf.series.pie.type) {
@@ -458,26 +594,64 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       }
     }
 
+
+    let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(this.ecSeries) };
+    legend = _.defaultsDeep(legend, this.panel.echarts.legend);
+
     let option: any = {
-      title: { text: moment().valueOf() },
-      xAxis: categoryAxis,
-      yAxis: valueAxis,
+      title: _.cloneDeep(this.panel.echarts.title),
+      xAxis,
+      yAxis,
       series: this.ecSeries,
-      legend: { orient: 'vertical', left: 'right', formatter: formatter.bind(this), data: this.legend(this.ecSeries) }
+      legend: [legend]
     };
 
 
     /** 左右布局legend */
-    var evens = _.pullAt(option.legend.data, 1, 2, 3, 4);
-    option.legend = [
-      { formatter: formatter.bind(this), padding: 10, align: 'left', left: 'left', orient: 'vertical', data: option.legend.data },
-      { formatter: formatter.bind(this), padding: 10, align: 'left', left: 'right', orient: 'vertical', data: evens }
-    ];
+
+    if (this.panel.legendExt.twoSides) {
+
+      let splitIndex = _.round(legend.data.length / 2);
+
+      let leftLegend = _.slice(legend.data, 0, splitIndex);
+      let rightLegend = _.slice(legend.data, splitIndex);
+
+      let left = { name: 'leftLegend', formatter: legend.formatter, padding: 10, align: 'left', left: 'left', orient: 'vertical', data: leftLegend };
+      let right = { name: 'rightLegend', formatter: legend.formatter, padding: 10, align: 'left', left: 'right', orient: 'vertical', data: rightLegend };
+      option.legend = [
+        _.defaultsDeep(left, this.panel.echarts.legend),
+        _.defaultsDeep(right, this.panel.echarts.legend)
+      ];
+    }
     /** 左右布局legend */
 
+    switch (this.panel.serieType) {
+      case this.ecConf.series.line.type:
+      case this.ecConf.series.bar.type:
+        if (this.panel.exchangeAxis) {
+          option.yAxis = xAxis;
+          option.xAxis = yAxis;
+        }
+        break;
+    }
 
+    //option.legend = this.panel.echarts.legend.show ? option.legend : undefined;
     //this.ecOption.baseOption = _.defaultsDeep (option, this.ecOption.baseOption);
-     this.ecOption.baseOption = _.defaults(option, this.ecOption.baseOption);
+    let baseOption = _.defaultsDeep(option, this.ecOption.baseOption);
+    // if (false === this.panel.echarts.legend.show) {
+    //   baseOption.legend = undefined;
+    // }
+    this.ecOption.baseOption = baseOption;
+
+    // if (this.ecInstance) {
+    //   this.ecInstance.setOption({ legend: this.panel.echarts.legend.show ? option.legend : undefined });
+    // }
+
+    // if (false === this.panel.echarts.legend.show) {
+    //   this.ecOption.baseOption.legend = undefined;
+    // }
+
   }
 }
+
 

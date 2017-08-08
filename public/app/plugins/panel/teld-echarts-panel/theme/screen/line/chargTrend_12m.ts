@@ -130,13 +130,14 @@ var chargTrend_12m = {
     },
     "labelLine": {
       "normal": {
-        "show": false
+        "show": false,
+        "length": 3
       }
 
     },
     "label": {
       "normal": {
-        "formatter": "{b}<br/>{d}%",
+        "formatter": "{b}{d}%\n{c}",
         "textStyle": {
           "color": "#fff",
           "fontFamily": "Microsoft YaHei Light",
@@ -580,6 +581,7 @@ var chargTrend_12m = {
       }
     }
   }
+
 };
 
 export default chargTrend_12m;

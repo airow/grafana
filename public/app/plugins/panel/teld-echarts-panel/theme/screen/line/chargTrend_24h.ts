@@ -5,16 +5,15 @@ import echarts from 'echarts';
 
 var chargTrend_24h = {
   "color": [
-    "#d87c7c",
-    "#919e8b",
-    "#d7ab82",
-    "#6e7074",
+    "#36a1c1",
+    "#4971ac",
+    "#3ca58e",
+    "#2f4554",
     "#61a0a8",
-    "#efa18d",
-    "#787464",
-    "#cc7e63",
-    "#724e58",
-    "#4b565b"
+    "#8d4968",
+    "#2c7989",
+    "#78ccbf",
+    "#156c87"
   ],
   "backgroundColor": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
     offset: 0, color: '#190d02' // 0% 处的颜色
@@ -44,10 +43,28 @@ var chargTrend_24h = {
     "lineStyle": {
       "normal": {
         "width": "2",
-        "color": ["#2f9fcb"],
+        // "color":["#2f9fcb"],
+        "color": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+          offset: 0,
+          color: '#7867f5'
+        }, {
+          offset: 0.2,
+          color: '#2082c2'
+        },
+        {
+          offset: 0.4,
+          color: '#80d9fa'
+        }, {
+          offset: 0.6,
+          color: '#2082c2'
+        }, {
+          offset: 1,
+          color: '#2f9fcb'
+        }], false),
         // "color":["#7867f5","#2082c2","#80d9fa","#2082c2","#2f9fcb"],
-        // "shadowColor":"#66fdfc",
-        // "shadowOffsetY":5
+        "shadowColor": "#66fdfc",//"#66fdfc"
+        "shadowOffsetY": -2,
+        "shadowBlur": 10
       }
     },
     "symbolSize": "0",
@@ -56,7 +73,7 @@ var chargTrend_24h = {
     "areaStyle": {
       "normal": {
         // "color":["#8b7cfd","#2082c2","#55cefc","#2aa3bb","#4d8ab7","#5eb4ed"],RadialGradient
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
           offset: 0,
           color: '#8b7cfd'
         }, {
@@ -136,13 +153,14 @@ var chargTrend_24h = {
     },
     "labelLine": {
       "normal": {
-        "show": false
+        "show": false,
+        "length": 3
       }
 
     },
     "label": {
       "normal": {
-        // "formatter": "{b}<br/>{d}%",
+        "formatter": "{b}\n{d}%",
         "textStyle": {
           "color": "#fff",
           "fontFamily": "Microsoft YaHei Light",
@@ -584,6 +602,13 @@ var chargTrend_24h = {
         }
       }
     }
+  },
+  "grid": {
+    "top": "82",
+    "left": "14",
+    "right": "14",
+    "bottom": "18",
+    "containLabel": true
   }
 };
 

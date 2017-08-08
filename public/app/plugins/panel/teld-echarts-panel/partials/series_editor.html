@@ -1,0 +1,130 @@
+<div ng-switch="ctrl.panel.serieType">
+  <div class="editor-row" ng-switch-when="line">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Label</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">Style</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">position</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.position">
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">textStyle</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">color</label>
+          <span class="gf-form-label">
+          <spectrum-picker ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.color" ng-change="ctrl.render()"></spectrum-picker>
+          {{ctrl.panel.toCiytConf.style.label.normal.textStyle.color}}
+        </span>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontStyle</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontStyle">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontWeight</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontWeight">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontSize</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontSize">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-row" ng-switch-when="bar">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Bar</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label width-7">barWidth</label>
+          <input type="text" class="gf-form-input width-5" ng-model="ctrl.seriesConf.bar.barWidth">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">barMinHeight</label>
+          <input type="text" class="gf-form-input width-5" ng-model="ctrl.seriesConf.bar.barMinHeight">
+        </div>
+      </div>
+    </div>
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Label</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">Style</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">position</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.position">
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">textStyle</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">color</label>
+          <span class="gf-form-label">
+            <spectrum-picker ng-model="ctrl.seriesConf.bar.label.normal.textStyle.color" ng-change="ctrl.render()"></spectrum-picker>
+          </span>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontStyle</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontStyle">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontWeight</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontWeight">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontSize</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontSize">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-row" ng-switch-when="pei">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Label</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">Style</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">position</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.position">
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">textStyle</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">color</label>
+          <span class="gf-form-label">
+          <spectrum-picker ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.color" ng-change="ctrl.render()"></spectrum-picker>
+          {{ctrl.panel.toCiytConf.style.label.normal.textStyle.color}}
+        </span>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontStyle</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontStyle">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontWeight</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontWeight">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontSize</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontSize">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

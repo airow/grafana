@@ -15,5 +15,54 @@
         <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" class="gf-form-input" placeholder="Theme name">
       </div>
     </div>
+    <div class="gf-form-inline" ng-hide="ctrl.panel.serieType==='pie'">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="Exchange Axis" label-class="width-5" checked="ctrl.panel.exchangeAxis" on-change="ctrl.render()"></gf-form-switch>
+      </div>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">xAxis</h5>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="xAxis Show" label-class="width-5" checked="ctrl.panel.echarts.xAxis.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Position</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.position" class="gf-form-input" placeholder="Position">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Name Location</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.nameLocation" class="gf-form-input" placeholder="Name Location">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Name Rotate</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.nameRotate" class="gf-form-input" placeholder="Name Rotate">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Name Rotate</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.nameRotate" class="gf-form-input" placeholder="Name Rotate">
+      </div>
+    </div>
+    <h3 class="section-heading">Label</h3>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="Label Show" label-class="width-5" checked="ctrl.panel.echarts.xAxis.axisLabel.show"
+        on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.axisLabel.interval" class="gf-form-input" placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate" class="gf-form-input" placeholder="rotate">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">margin</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.axisLabel.margin" class="gf-form-input" placeholder="margin">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">margin</label>
+        <input type="text" ng-model="ctrl.panel.echarts.xAxis.axisLabel.margin" class="gf-form-input" placeholder="margin">
+      </div>
+    </div>
   </div>
 </div>

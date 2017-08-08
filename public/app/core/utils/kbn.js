@@ -1,9 +1,10 @@
 define([
   'jquery',
   'lodash',
-  'numeral'
+  'numeral',
+  'moment',
 ],
-function($, _, numeral) {
+function($, _, numeral, moment) {
   'use strict';
 
   var kbn = {};
@@ -719,6 +720,34 @@ function($, _, numeral) {
     return value;
   };
 
+  kbn.valueFormats.teldString = function (value) {
+    return value;
+  };
+
+  kbn.valueFormats.teldMoment = function (value, format) {
+    return moment(value).format(format);
+  };
+
+  kbn.valueFormats.teldYYYY_MM_DD = function (value) {
+    return kbn.valueFormats.teldMoment(value, "YYYY-MM-DD");
+  };
+
+  kbn.valueFormats.teldYYYY = function (value) {
+    return kbn.valueFormats.teldMoment(value, "YYYY");
+  };
+
+  kbn.valueFormats.teldMM = function (value) {
+    return kbn.valueFormats.teldMoment(value, "MM");
+  };
+
+  kbn.valueFormats.teldDD = function (value) {
+    return kbn.valueFormats.teldMoment(value, "DD");
+  };
+
+  kbn.valueFormats.teldHH = function (value) {
+    return kbn.valueFormats.teldMoment(value, "HH");
+  };
+
   ///// FORMAT MENU /////
 
   kbn.getUnitFormats = function() {
@@ -899,6 +928,17 @@ function($, _, numeral) {
           {text: '千分位',       value: 'thousandsSeparator'  },
           {text: '百分比',       value: 'teldPercent'  },
           {text: '整数',       value: 'teldInt'  },
+        ]
+      },
+      {
+        text: 'echart',
+        submenu: [
+          { text: '字符串', value: 'teldString' },
+          { text: '年-月-日', value: 'teldYYYY_MM_DD' },
+          { text: '年', value: 'teldYYYY' },
+          { text: '月', value: 'teldMM' },
+          { text: '日', value: 'teldDD' },
+          { text: '小时', value: 'teldHH' },
         ]
       }
     ];

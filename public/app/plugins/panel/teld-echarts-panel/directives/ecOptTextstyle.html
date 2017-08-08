@@ -1,0 +1,20 @@
+<div class="gf-form">
+  <label class="gf-form-label width-8">color</label>
+  <spectrum-picker ng-model="textStyle.color" ng-change="refresh()"></spectrum-picker>
+</div>
+<div class="gf-form">
+  <label class="gf-form-label width-8" ng-click="refresh()">fontStyle</label>
+  <input type="text" on-change="alert(3)" ng-blur="alert(3)" ng-model="textStyle.fontStyle" class="gf-form-input">
+</div>
+<div class="gf-form">
+  <label class="gf-form-label width-8" ng-click="ctrl.refresh()">fontWeight</label>
+  <input type="text" on-change="refresh()" ng-model="textStyle.fontWeight" class="gf-form-input">
+</div>
+<div class="gf-form">
+  <label class="gf-form-label width-8">fontFamily</label>
+  <input type="text" on-change="refresh()" ng-model="textStyle.fontFamily" class="gf-form-input">
+</div>
+<div class="gf-form">
+  <label class="gf-form-label width-8">fontSize</label>
+  <input type="text" on-change="refresh()" ng-model="textStyle.fontSize" class="gf-form-input">
+</div>

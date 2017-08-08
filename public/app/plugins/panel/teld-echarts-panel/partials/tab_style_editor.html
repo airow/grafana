@@ -1,0 +1,317 @@
+<div class="edit-tab-with-sidemenu">
+  <aside class="edit-sidemenu-aside">
+    <ul class="edit-sidemenu">
+      <li ng-class="{active: ctrl.subTab === 0}">
+        <a ng-click="ctrl.subTab = 0">Style options</a>
+      </li>
+      <li ng-class="{active: ctrl.subTab === 'title'}">
+        <a ng-click="ctrl.subTab = 'title'">title</a>
+      </li>
+      <li ng-class="{active: ctrl.subTab === 'legend'}">
+        <a ng-click="ctrl.subTab = 'legend'">legend</a>
+      </li>
+      <li ng-class="{active: ctrl.subTab === 'xAxis'}" ng-hide="ctrl.panel.serieType==='pie'">
+        <a ng-click="ctrl.subTab = 'xAxis'">xAxis</a>
+      </li>
+      <li ng-class="{active: ctrl.subTab === 'yAxis'}" ng-hide="ctrl.panel.serieType==='pie'">
+        <a ng-click="ctrl.subTab = 'yAxis'">yAxis</a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- title -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 'title'">
+    <div class="section gf-form-group">
+      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.title.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">text</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.text" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">link</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.link" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">target</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.target" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">textAlign</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.textAlign" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">textBaseline</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.textBaseline" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">textStyle</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">padding</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.padding" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">itemGap</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.itemGap" class="gf-form-input">
+      </div>
+      <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.title' />
+      <div class="gf-form">
+        <label class="gf-form-label width-8">backgroundColor</label>
+        <spectrum-picker ng-model="ctrl.panel.echarts.title.backgroundColor" ng-change="ctrl.refresh()"></spectrum-picker>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">borderColor</label>
+        <spectrum-picker ng-model="ctrl.panel.echarts.title.borderColor" ng-change="ctrl.refresh()"></spectrum-picker>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">borderWidth</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.borderWidth" class="gf-form-input">
+      </div>
+    </div>
+    <div class="section gf-form-group">
+      <h5 class="section-heading">textStyle</h5>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.title.textStyle' />
+    </div>
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Subtext</h5>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">subtext</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.subtext" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">sublink</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.sublink" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">subtarget</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.subtarget" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">subtextStyle</label>
+      </div>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.title.subtextStyle' />
+    </div>
+  </div>
+  <!-- end title -->
+
+  <!-- legend -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 'legend'">
+    <div class="section gf-form-group">
+      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.legend.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="2 Side" label-class="width-8" checked="ctrl.panel.legendExt.twoSides" on-change="ctrl.render()"></gf-form-switch>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.legend.textStyle' />
+      <div class="gf-form">
+        <label class="gf-form-label width-8">orient</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.legend.orient" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">align</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.legend.align" class="gf-form-input">
+      </div>
+      <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.legend' />
+    </div>
+  </div>
+  <!-- end legend -->
+
+  <!-- Style -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 0">
+    <div class="section gf-form-group">
+      <!-- <h5 class="section-heading">Base</h5> -->
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Chart Type</label>
+        <div class="gf-form-select-wrapper max-width-8">
+          <select class="gf-form-input" ng-model="ctrl.panel.serieType" ng-options="serie for serie in ctrl.getSerieType()" ng-change="ctrl.refresh()"></select>
+        </div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Theme Name</label>
+        <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" class="gf-form-input" placeholder="Theme name">
+      </div>
+      <div class="gf-form" ng-hide="ctrl.panel.serieType==='pie'">
+        <gf-form-switch class="gf-form" label="Exchange Axis" label-class="width-8" checked="ctrl.panel.exchangeAxis" on-change="ctrl.render()"></gf-form-switch>
+      </div>
+    </div>
+    <!-- formatter -->
+    <div class="section gf-form-group">
+      <h5 class="section-heading">formatter</h5>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Category</label>
+        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.category.format" dropdown-typeahead2="ctrl.unitFormats"
+          dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.category, $subItem)"></div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">Value</label>
+        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.value.format" dropdown-typeahead2="ctrl.unitFormats"
+          dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.value, $subItem)"></div>
+      </div>
+    </div>
+  </div>
+  <!-- end Style -->
+
+  <!-- xAxis -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 'xAxis'">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Base</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.show" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+    <!-- Label -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
+      <h5 class="section-heading">Label</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.interval" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">format</label>
+        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.xAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+          dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.xAxis.axisLabel, $subItem)"></div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">textStyle</label>
+      </div>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.xAxis.axisLabel.textStyle' />
+      <div class="gf-form">
+        <label class="gf-form-label width-8">align</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.align" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">baseline</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.baseline" class="gf-form-input">
+      </div>
+    </div>
+    <!-- Line -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
+      <h5 class="section-heading">Line</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.interval" class="gf-form-input"
+          placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.rotate" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.xAxis.axisLine.lineStyle' />
+    </div>
+    <!-- Tick -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
+      <h5 class="section-heading">Tick</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">alignWithLabel</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.alignWithLabel" class="gf-form-input"
+          placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.interval" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">inside</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.inside" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">length</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.length" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.xAxis.axisTick.lineStyle' />
+    </div>
+  </div>
+  <!-- end xAxis -->
+
+  <!-- yAxis -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 'yAxis'">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Base</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+    <!-- Label -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
+      <h5 class="section-heading">Label</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.interval" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.rotate" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">format</label>
+        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.yAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+          dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.yAxis.axisLabel, $subItem)"></div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">textStyle</label>
+      </div>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.yAxis.axisLabel.textStyle' />
+      <div class="gf-form">
+        <label class="gf-form-label width-8">align</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.align" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">baseline</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.baseline" class="gf-form-input">
+      </div>
+    </div>
+    <!-- Line -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
+      <h5 class="section-heading">Line</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.interval" class="gf-form-input"
+          placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.rotate" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.yAxis.axisLine.lineStyle' />
+    </div>
+    <!-- Tick -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
+      <h5 class="section-heading">Tick</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">alignWithLabel</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.alignWithLabel" class="gf-form-input"
+          placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.interval" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">inside</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.inside" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">length</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.length" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.yAxis.axisTick.lineStyle.color' />
+    </div>
+  </div>
+  <!-- end yAxis -->
+
+</div>
