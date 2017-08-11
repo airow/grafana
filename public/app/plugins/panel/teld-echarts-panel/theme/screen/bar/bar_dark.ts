@@ -15,10 +15,12 @@ var option = {
     "#724e58",
     "#4b565b"
   ],
-  "backgroundColor": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-    offset: 0, color: '#032433' // 0% 处的颜色
+  "backgroundColor": new echarts.graphic.LinearGradient(1,3, 0,0, [{
+    offset: 0, color:'#28657C',//'rgba(40,101,124,0.1)',// '#204063'//'#190d02' // 0% 处的颜色
+  },{
+    offset: 0.7, color: "#173F52",//'rgba(23,63,82,0.5)',//'#190d02'//'#204063' // 100% 处的颜色
   }, {
-    offset: 1, color: '#374889' // 100% 处的颜色
+    offset: 1, color: "#081e2e",//'rgba(8,30,46,1)',//"'#190d02'//'#204063' // 100% 处的颜色
   }], false),
   "textStyle": {},
   "title": {
