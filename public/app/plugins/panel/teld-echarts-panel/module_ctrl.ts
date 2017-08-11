@@ -83,7 +83,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     serieType: 'line',
     style: {
       themeName: 'default',
-      pieRing: false,
+      innerRing: { show: false, color: '', width: 1 }
     },
     legendExt: {
       twoSides: false
@@ -99,7 +99,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       //   value: {}
       // },
       series: {
-        bar: {},
+        line: {
+          label: { normal: { show: false } }
+        },
+        bar: {
+          label: { normal: { show: false } }
+        },
+        pie: {
+          label: { normal: { show: false } },
+          center: ['50%', '50%'],
+          radius: [0, '67%']
+        }
       },
     }
   };
@@ -479,10 +489,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     let series = [serie];
 
-    if (this.panel.style.pieRing) {
+    if (this.panel.style.innerRing.show) {
+
+      let innerR = parseInt(serie.radius[0]);
+      let outerR = innerR + parseInt(this.panel.style.innerRing.width);
       series.push({
         type: 'pie',
-        radius: ['27', '28'],
+        radius: [innerR, outerR],
         silent: true,
         label: {
           normal: {
@@ -494,7 +507,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           itemStyle: {
             normal: {
               width: 2,
-              color: '#6c9ff1'
+              color: this.panel.style.innerRing.color
             }
           }
         }]
