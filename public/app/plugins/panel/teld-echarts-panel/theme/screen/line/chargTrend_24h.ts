@@ -15,10 +15,12 @@ var chargTrend_24h = {
     "#78ccbf",
     "#156c87"
   ],
-  "backgroundColor": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-    offset: 0, color: '#190d02' // 0% 处的颜色
+  "backgroundColor": new echarts.graphic.LinearGradient(1, 3, 0, 0, [{
+    offset: 0, color: '#204165',// '#204063'//'#190d02' // 0% 处的颜色
   }, {
-    offset: 1, color: '#204063' // 100% 处的颜色
+    offset: 0.8, color: "#103250",//'#190d02'//'#204063' // 100% 处的颜色
+  }, {
+    offset: 1, color: "#190d02",//'#190d02'//'#204063' // 100% 处的颜色
   }], false),
   "textStyle": {},
   "title": {
@@ -63,13 +65,14 @@ var chargTrend_24h = {
         }], false),
         // "color":["#7867f5","#2082c2","#80d9fa","#2082c2","#2f9fcb"],
         "shadowColor": "#66fdfc",//"#66fdfc"
-        "shadowOffsetY": -2,
-        "shadowBlur": 10
+        // "shadowOffsetY": -2,
+        // "shadowBlur": 10
       }
     },
     "symbolSize": "0",
     "symbol": "circle",
-    "smooth": false,
+    "smooth": true,
+    "smoothMonotone": "x",
     "areaStyle": {
       "normal": {
         // "color":["#8b7cfd","#2082c2","#55cefc","#2aa3bb","#4d8ab7","#5eb4ed"],RadialGradient
@@ -404,7 +407,7 @@ var chargTrend_24h = {
     },
     "axisLabel": {
       "show": true,
-      "margin": 10,
+      "margin": 20,
       "textStyle": {
         "color": "#89b6dc",
         "fontFamily": "Microsoft YaHei Light",

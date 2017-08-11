@@ -8,29 +8,29 @@
         <div class="gf-form-select-wrapper width-7">
           <select class="gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ctrl.valueNameOptions" ng-change="ctrl.render()"></select>
         </div>
-        <!-- <label class="gf-form-label width-6">Font size</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.valueFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
-        </div> -->
+        <label class="gf-form-label width-6">top</label>
+        <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.valueTop" ng-change="ctrl.render()" ng-model-onblur>
       </div>
     </div>
 
     <div class="gf-form-inline">
       <div class="gf-form">
-        <label class="gf-form-label width-6">Left</label>
+        <label class="gf-form-label width-6">Title</label>
         <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.prefix" ng-change="ctrl.render()" ng-model-onblur>
-        <!-- <label class="gf-form-label width-6">Font size</label>
-        <div class="gf-form-select-wrapper">
+        <label class="gf-form-label width-6">Font size</label>
+        <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.prefixFontSize" ng-change="ctrl.render()" ng-model-onblur>
+        <!-- <div class="gf-form-select-wrapper">
           <select class="gf-form-input" ng-model="ctrl.panel.prefixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
         </div> -->
       </div>
     </div>
 
     <div class="gf-form">
-      <label class="gf-form-label width-6">Right</label>
+      <label class="gf-form-label width-6">Unit</label>
       <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.postfix" ng-change="ctrl.render()" ng-model-onblur>
-      <!-- <label class="gf-form-label width-6">Font size</label>
-      <div class="gf-form-select-wrapper">
+      <label class="gf-form-label width-6">Font size</label>
+      <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.postfixFontSize" ng-change="ctrl.render()" ng-model-onblur>
+      <!-- <div class="gf-form-select-wrapper">
         <select class="input-small gf-form-input" ng-model="ctrl.panel.postfixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
       </div> -->
     </div>
@@ -42,50 +42,6 @@
 			<label class="gf-form-label width-6">Decimals</label>
 			<input type="number" class="gf-form-input width-18" placeholder="auto" data-placement="right" bs-tooltip="'Override automatic decimal precision for legend and tooltips'" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()" ng-model-onblur>
 		</div>
-  </div>
-
-  <div class="section gf-form-group">
-    <h5 class="section-heading">Layout</h5>
-    <div class="gf-form">
-      <label class="gf-form-label width-6">layout</label>
-      <div class="gf-form-select-wrapper">
-        <select class="gf-form-input" ng-model="ctrl.panel.layout" ng-options="f for f in ctrl.getLayout()" ng-change="ctrl.render()"></select>
-      </div>
-    </div>
-    <div class="gf-form-inline" ng-if="ctrl.panel.layout==='LR'">
-      <div class="gf-form">
-        <label class="gf-form-label width-6">Position</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.valuePosition" ng-options="f for f in ctrl.position" ng-change="ctrl.render()"></select>
-        </div>
-      </div>
-    </div>
-    <div class="gf-form-inline">
-      <div class="gf-form">
-        <label class="gf-form-label width-6">borderClass</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.borderClass" ng-options="f.value as f.name for f in ctrl.getBorderClass()" ng-change="ctrl.render()"></select>
-        </div>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-6">bgClass</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.bgClass" ng-options="f.value as f.name for f in ctrl.getBgClass()" ng-change="ctrl.render()"></select>
-        </div>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-6">iconClass</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.iconClass" ng-options="f.value as f.name for f in ctrl.getIconClass()" ng-change="ctrl.render()"></select>
-        </div>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-6">heightClass</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.heightClass" ng-options="f.value as f.name for f in ctrl.getHeightClass()" ng-change="ctrl.render()"></select>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="section gf-form-group" ng-if='false'>

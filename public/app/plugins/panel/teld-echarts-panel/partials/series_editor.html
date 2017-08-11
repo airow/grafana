@@ -1,40 +1,82 @@
 <div ng-switch="ctrl.panel.serieType">
   <div class="editor-row" ng-switch-when="line">
     <div class="section gf-form-group">
+      <h5 class="section-heading">Base</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.show" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+    <!-- Label -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
       <h5 class="section-heading">Label</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-7">Style</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">position</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.position">
-        </div>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.interval" class="gf-form-input">
       </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-7">textStyle</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">color</label>
-          <span class="gf-form-label">
-          <spectrum-picker ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.color" ng-change="ctrl.render()"></spectrum-picker>
-          {{ctrl.panel.toCiytConf.style.label.normal.textStyle.color}}
-        </span>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">fontStyle</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontStyle">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">fontWeight</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontWeight">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">fontSize</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.toCiytConf.style.label.normal.textStyle.fontSize">
-        </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate" class="gf-form-input">
       </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">format</label>
+        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.xAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+          dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.xAxis.axisLabel, $subItem)"></div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">textStyle</label>
+      </div>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.xAxis.axisLabel.textStyle' />
+      <div class="gf-form">
+        <label class="gf-form-label width-8">align</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.align" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">baseline</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.baseline" class="gf-form-input">
+      </div>
+    </div>
+    <!-- Line -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
+      <h5 class="section-heading">Line</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.interval" class="gf-form-input"
+          placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">rotate</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.rotate" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.xAxis.axisLine.lineStyle' />
+    </div>
+    <!-- Tick -->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
+      <h5 class="section-heading">Tick</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">alignWithLabel</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.alignWithLabel" class="gf-form-input"
+          placeholder="interval">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">interval</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.interval" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">inside</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.inside" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">length</label>
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.length" class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.xAxis.axisTick.lineStyle' />
     </div>
   </div>
 

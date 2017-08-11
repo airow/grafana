@@ -9,7 +9,13 @@ import 'jquery.flot.gauge';
 import kbn from 'app/core/utils/kbn';
 import config from 'app/core/config';
 import TimeSeries from 'app/core/time_series2';
-import {MetricsPanelCtrl} from 'app/plugins/sdk';
+import {MetricsPanelCtrl, loadPluginCssPath} from 'app/plugins/sdk';
+
+loadPluginCssPath({
+  //cssPath: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.css',
+  dark: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css',
+  light: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css'
+});
 
 class SingleStatCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
@@ -17,6 +23,69 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   series: any[];
   data: any;
   fontSizes: any[];
+  position: any[] = ['left', 'right'];
+  layouts: any = {
+    LR: {
+      name: '左右',
+      tmpl: [
+        '<div class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        ' <div class="titleRight"><span ng-bind="postfix"></span>&nbsp;<span ng-bind="rightValue"></span></div>',
+        ' <div class="titleLeft">',
+        '   <div class="iconTitle"></div>',
+        '   <div class="titleValue"><span ng-bind="leftValue"></span>&nbsp;<span ng-bind="prefix"></span></div>',
+        ' </div>',
+        '</div>'
+      ].join('')
+    },
+    UD: {
+      name: '上下', tmpl: [
+        '<div class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        ' <div class="titleRight">',
+        '   <div class="iconTitle"></div>',
+        '   <div class="subValue"><span ng-bind="value"></span>&nbsp;</div>',
+        ' </div>',
+        ' <div class="titleLeft">',
+        '   <div class="titleName"><span ng-bind="prefix"></span>&nbsp;</div>',
+        '   <div class="titleValue"><span ng-bind="postfix"></span>&nbsp;</div>',
+        ' </div>',
+        '</div>'
+      ].join('')
+    }
+  };
+  styleClass: any = {
+    borderClass: {
+      LR: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'chargeBorder' }],
+      UD: [{ name: 'default', value: 'panelSubBor' }]
+    },
+    bgClass: {
+      LR: [
+        { name: '渐变-蓝', value: 'chargeBg1' },
+        { name: '渐变-紫', value: 'chargeBg2' },
+        { name: '渐变-黄', value: 'chargeBg3' },
+        { name: '纯色-蓝', value: 'penelBg' }
+      ],
+      UD: [
+        { name: '纯色-蓝', value: 'panelSubBg' }
+      ]
+    },
+    iconClass: [
+      { name: '无', value: 'iconTip0' },
+      { name: 'charg', value: 'iconTip0' },
+      { name: 'rise-o', value: 'iconTip1' },
+      { name: 'rise-r', value: 'iconTip2' },
+      { name: 'rise-b', value: 'iconTip3' },
+      { name: 'fall-o', value: 'iconTip4' },
+      { name: 'fall-r', value: 'iconTip5' },
+      { name: 'fall-b', value: 'iconTip6' }
+    ],
+    heightClass: {
+      LR: [
+        { name: '76px', value: 'penelHeight' },
+        { name: '90px', value: 'penelHeight2' },
+      ],
+      UD: [{ name: '95px', value: 'panelSubHeight' },]
+    }
+  };
   unitFormats: any[];
   invalidGaugeRange: boolean;
   panel: any;
@@ -25,6 +94,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
+    layout: 'LR',
+    borderClass: '',
+    bgClass: '',
+    iconClass: '',
     links: [],
     datasource: null,
     maxDataPoints: 100,
@@ -50,6 +123,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     valueName: 'avg',
     prefixFontSize: '50%',
     valueFontSize: '80%',
+    valuePosition: 'left',
     postfixFontSize: '50%',
     thresholds: '',
     colorBackground: false,
@@ -70,8 +144,28 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     }
   };
 
+  getLayout() {
+    return _.keys(this.layouts);
+  }
+
+  getBorderClass() {
+    return this.styleClass.borderClass[this.panel.layout];
+  }
+
+  getBgClass() {
+    return this.styleClass.bgClass[this.panel.layout];
+  }
+
+  getIconClass() {
+    return this.styleClass.iconClass;
+  }
+
+  getHeightClass() {
+    return this.styleClass.heightClass[this.panel.layout];
+  }
+
   /** @ngInject */
-  constructor($scope, $injector, private $location, private linkSrv) {
+  constructor($scope, $injector, private $location, private linkSrv, private $compile) {
     super($scope, $injector);
     _.defaults(this.panel, this.panelDefaults);
 
@@ -84,7 +178,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.fontSizes = ['20%', '30%','50%','70%','80%','100%', '110%', '120%', '150%', '170%', '200%'];
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-singlestat-panel/editor.html', 2);
-    this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-singlestat-panel/mappings.html', 3);
+    //this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-singlestat-panel/mappings.html', 3);
     this.unitFormats = kbn.getUnitFormats();
   }
 
@@ -285,8 +379,11 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     var $timeout = this.$timeout;
     var panel = ctrl.panel;
     var templateSrv = this.templateSrv;
+    var compile = this.$compile;
     var data, linkInfo;
     var $panelContainer = elem.find('.panel-container');
+    var layouts = this.layouts;
+    var layout = this.layouts[this.panel.layout];
     elem = elem.find('.teld-singlestat-panel');
 
     function setElementHeight() {
@@ -312,7 +409,58 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         value + '</span>';
     }
 
+
+    /**
+      <div class="titlePenel filter20 chargeBg1">
+          <div class="titleRight">今日充电量(Kw)</div>
+          <div class="titleLeft">
+              <div class="iconTitle"></div>
+              <div class="titleValue">439168.14</div>
+          </div>
+      </div>
+     */
     function getBigValueHtml() {
+
+
+      var html = [
+        '<div class="titlePenel chargeBorder chargeBg2 iconTip0">',
+        ' <div class="titleRight">今日充电量(Kw)</div>',
+        ' <div class="titleLeft">',
+        '    <div class="iconTitle"></div>',
+        '   <div class="titleValue">439168.14</div>',
+        ' </div>',
+        '</div>'
+      ];
+
+      var value = applyColoringThresholds(data.value, data.valueFormated);
+
+      var s = scope.$new();
+
+      s.layout = panel.layout;
+      s.borderClass = panel.borderClass;
+      s.bgClass = panel.bgClass;
+      s.iconClass = panel.iconClass;
+      s.heightClass = panel.heightClass;
+
+      s.prefixFontSize = panel.prefixFontSize;
+      s.prefix = panel.prefix;
+      s.postfixFontSize = panel.postfixFontSize;
+      s.postfix = panel.postfix;
+      s.valueFontSize = panel.valueFontSize;
+      s.value = value;
+
+      if (panel.layout === 'LR') {
+        s[`${panel.valuePosition}Value`] = value;
+        if (panel.valuePosition === 'left') { s.prefix = ''; }
+        if (panel.valuePosition === 'right') { s.postfix = ''; }
+      }
+
+      var jqHtml = compile(layout.tmpl)(s);
+      //var jqHtml = compile(html.join(''))(s);
+      elem.empty().append(jqHtml);
+    }
+
+    function getBigValueHtml_grafana() {
       var body = '<div class="teld-singlestat-panel-value-container">';
 
       if (panel.prefix) { body += getSpan('teld-singlestat-panel-prefix', panel.prefixFontSize, panel.prefix); }
@@ -510,7 +658,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         elem.css('background-color', '');
       }
 
-      elem.html(body);
+      //elem.html(body);
 
       if (panel.sparkline.show) {
         addSparkline();

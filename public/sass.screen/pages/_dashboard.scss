@@ -50,7 +50,8 @@ div.flot-text {
 }
 
 .panel-content {
-  padding: 0px 10px 5px 10px;
+  // padding: 0px 10px 5px 10px;
+  padding: 0px;
 }
 
 .panel-title-container {
@@ -234,7 +235,7 @@ div.flot-text {
   right: 0;
   width: 15px;
   height: 15px;
-  display: block;
+  display: none;
   color: $text-color-faint;
 
   &:before {
@@ -244,7 +245,9 @@ div.flot-text {
     position: absolute;
   }
 }
-
+.panel-hover-highlight .resize-panel-handle{
+  display: block;
+}
 .dashboard-header {
   font-family: $headings-font-family;
   font-size: $font-size-h3;

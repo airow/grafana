@@ -26,6 +26,7 @@ System.config({
     "ui-ace":          "vendor/ui-ace-0.2.3/ui-ace.js",
     "Snap.svg":        "vendor/Snap.svg-0.5.1/dist/snap.svg.js",
     "me-pageloading":  "vendor/me-pageloading-0.4.1/me-pageloading.js",
+    "flipcountdown":  "vendor/flipcountdown-3.0.5/jquery.flipcountdown.js",
     "jquery.signalR":   "vendor/jquery.signalR/jquery.signalR-2.2.2.js",
     "spectrum": "vendor/spectrum.js",
     "bootstrap-tagsinput": "vendor/tagsinput/bootstrap-tagsinput.js",

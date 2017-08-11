@@ -92,6 +92,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       legend: { show: false, orient: 'vertical', left: 'left' },
       xAxis: {},
       yAxis: {},
+      grid: { show: false },
       // axis: {
       //   category: {},
       //   value: {}
@@ -108,6 +109,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
+    this.panel.title = '';
+    this.panel.hideTimeOverride = true;
 
     this.echartsTheme = echartsTheme;
     this.echartsThemeName = echartsThemeName;
@@ -598,10 +601,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(this.ecSeries) };
     legend = _.defaultsDeep(legend, this.panel.echarts.legend);
 
+    let grid = _.defaultsDeep({}, this.panel.echarts.grid);
+
     let option: any = {
+      backgroundColor: this.panel.echarts.backgroundColor,
       title: _.cloneDeep(this.panel.echarts.title),
       xAxis,
       yAxis,
+      grid,
       series: this.ecSeries,
       legend: [legend]
     };
@@ -649,6 +656,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     // if (false === this.panel.echarts.legend.show) {
     //   baseOption.legend = undefined;
     // }
+    //this.ecConfig.theme = this.panel.style.themeName;
     this.ecOption.baseOption = baseOption;
 
     // if (this.ecInstance) {
@@ -660,6 +668,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     // }
 
   }
+
+  // link(scope, elem, attrs, ctrl) {
+  //   var $panelContainer = elem.find('.panel-container');
+
+  //   elem = elem.find('.panel-content');
+  //   elem.css('height', ctrl.height + 'px');
+
+  //   function setElementHeight() {
+  //     elem.css('height', ctrl.height + 'px');
+  //   }
+  // }
 }
 
 

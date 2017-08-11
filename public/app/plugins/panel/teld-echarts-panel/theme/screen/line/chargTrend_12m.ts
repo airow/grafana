@@ -35,15 +35,24 @@ var chargTrend_12m = {
   },
 
   "line": {
+    "label": {
+      "normal": {
+        "show": true,
+        "textStyle": {
+          "color": "#5fb0b0",
+          "fontFamily": "Microsoft YaHei Light",
+          "fontSize": 12
+        },
+        "position": "top",
+        "formatter": function (p) {
+          return p.value > 0 ? (p.value) : '';
+        }
+      }
+
+    },
     "itemStyle": {
       "normal": {
-        "label": {
-          "show": true,
-          "textStyle": {
-            "color": "#fff"
-          }
-        },
-        "color": "#fff",
+        "color": "rgba(255,144,128,1)",
         "borderColor": "#6cfffe",
         "borderWidth": "3"
       }
@@ -580,6 +589,13 @@ var chargTrend_12m = {
         }
       }
     }
+  },
+  "grid": {
+    "top": "82",
+    "left": "14",
+    "right": "14",
+    "bottom": "50",
+    "containLabel": true
   }
 
 };

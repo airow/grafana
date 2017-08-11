@@ -16,6 +16,9 @@
       <li ng-class="{active: ctrl.subTab === 'yAxis'}" ng-hide="ctrl.panel.serieType==='pie'">
         <a ng-click="ctrl.subTab = 'yAxis'">yAxis</a>
       </li>
+      <li ng-class="{active: ctrl.subTab === 'grid'}" ng-hide="ctrl.panel.serieType==='pie'">
+        <a ng-click="ctrl.subTab = 'grid'">grid</a>
+      </li>
     </ul>
   </aside>
 
@@ -130,6 +133,11 @@
       <div class="gf-form" ng-hide="ctrl.panel.serieType==='pie'">
         <gf-form-switch class="gf-form" label="Exchange Axis" label-class="width-8" checked="ctrl.panel.exchangeAxis" on-change="ctrl.render()"></gf-form-switch>
       </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">backgroundColor</label>
+        <spectrum-picker ng-model="ctrl.panel.echarts.backgroundColor" ng-change="refresh()"></spectrum-picker>
+      </div>
+
     </div>
     <!-- formatter -->
     <div class="section gf-form-group">
@@ -236,6 +244,10 @@
     <div class="section gf-form-group">
       <h5 class="section-heading">Base</h5>
       <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">min</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" class="gf-form-input">
+      </div>
     </div>
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
@@ -309,9 +321,23 @@
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>
       </div>
-      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.yAxis.axisTick.lineStyle.color' />
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.yAxis.axisTick.lineStyle' />
     </div>
   </div>
   <!-- end yAxis -->
+
+  <!-- grid -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 'grid'">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Base</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.grid.show" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+    <!-- Label -->
+    <div class="section gf-form-group">
+      <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.grid' />
+      <gf-form-switch class="gf-form" label="containLabel" label-class="width-8" checked="ctrl.panel.echarts.grid.containLabel" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+  </div>
+  <!-- end grid -->
 
 </div>
