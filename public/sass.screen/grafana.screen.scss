@@ -7,3 +7,8 @@
 {
   background-color: $body-bg-gradient !important;
 }
+//移除panel的margin-bottom值
+//应该在最外层和dash-row此类并列加上remove_mb此类名才有效
+.remove_mb .panel-margin{
+  margin:0 0.4rem !important;
+}
