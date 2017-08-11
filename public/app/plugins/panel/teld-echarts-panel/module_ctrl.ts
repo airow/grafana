@@ -83,6 +83,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     serieType: 'line',
     style: {
       themeName: 'default',
+      pieRing: false,
     },
     legendExt: {
       twoSides: false
@@ -187,8 +188,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   //step.2
   initEcharts() {
+
+    let theme = `${this.panel.serieType}Theme-${this.panel.style.themeName}`;
+
     this.ecConfig = {
-      theme: this.panel.style.themeName,
+      theme: theme,
       //theme: config.bootData.user.lightTheme ? 'light' : 'drak',
       //theme: 'teld',
       dataLoaded: true
@@ -474,6 +478,28 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     });
 
     let series = [serie];
+
+    if (this.panel.style.pieRing) {
+      series.push({
+        type: 'pie',
+        radius: ['27', '28'],
+        silent: true,
+        label: {
+          normal: {
+            show: false,
+          }
+        },
+        data: [{
+          value: 1,
+          itemStyle: {
+            normal: {
+              width: 2,
+              color: '#6c9ff1'
+            }
+          }
+        }]
+      });
+    }
 
     return series;
   }

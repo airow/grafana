@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import echarts from 'echarts';
 import lineTheme from './screen/line/all';
+import barTheme from './screen/bar/all';
 import pieTheme from './screen/pie/all';
 
-let echartsTheme = { lineTheme, pieTheme };
+let echartsTheme = { lineTheme, barTheme, pieTheme };
 
 let echartsThemeName = {};
 

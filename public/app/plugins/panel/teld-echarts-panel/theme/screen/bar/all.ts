@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import echarts from 'echarts';
+import dark from './bar_dark';
+import light from './bar_light';
 
-import broken from './chargTrend_12m';
-import curves from './chargTrend_24h';
-
-let theme = { broken, curves };
+let theme = { dark, light };
 
 // _.forEach(theme, function (value, key) {
 //   echarts.registerTheme(key, value);

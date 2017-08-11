@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import echarts from 'echarts';
-import battery1 from './battery1';
-import battery2 from './battery2';
-import terminalPie1 from './terminalPie1';
-import terminalPie2 from './terminalPie2';
+import ring1 from './terminalPie2';
+import ring2 from './battery2';
+import pie1 from './terminalPie1';
+import pie2 from './battery1';
 
-let theme = { battery1, battery2, terminalPie1, terminalPie2 };
+let theme = { ring1, ring2, pie1, pie2 };
 
 // _.forEach(theme, function (value, key) {
 //   echarts.registerTheme(key, value);

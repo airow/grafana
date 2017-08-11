@@ -62,6 +62,12 @@
     </div>
     <div class="gf-form-inline">
       <div class="gf-form">
+        <label class="gf-form-label width-6">heightClass</label>
+        <div class="gf-form-select-wrapper">
+          <select class="gf-form-input" ng-model="ctrl.panel.heightClass" ng-options="f.value as f.name for f in ctrl.getHeightClass()" ng-change="ctrl.render()"></select>
+        </div>
+      </div>
+      <div class="gf-form">
         <label class="gf-form-label width-6">borderClass</label>
         <div class="gf-form-select-wrapper">
           <select class="gf-form-input" ng-model="ctrl.panel.borderClass" ng-options="f.value as f.name for f in ctrl.getBorderClass()" ng-change="ctrl.render()"></select>
@@ -77,12 +83,6 @@
         <label class="gf-form-label width-6">iconClass</label>
         <div class="gf-form-select-wrapper">
           <select class="gf-form-input" ng-model="ctrl.panel.iconClass" ng-options="f.value as f.name for f in ctrl.getIconClass()" ng-change="ctrl.render()"></select>
-        </div>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-6">heightClass</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.heightClass" ng-options="f.value as f.name for f in ctrl.getHeightClass()" ng-change="ctrl.render()"></select>
         </div>
       </div>
     </div>
