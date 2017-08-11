@@ -54,11 +54,11 @@
 }
 /*渐变透明20%*/
 .chargeBorder{
-    filter:alpha(opacity=80);
-    -moz-opacity:0.8;
-    -webkit-opacity: 0.8;
-    -o-opacity: 0.8;
-    opacity: 0.8;
+    /*filter:alpha(opacity=80);*/
+    /*-moz-opacity:0.8;*/
+    /*-webkit-opacity: 0.8;*/
+    /*-o-opacity: 0.8;*/
+    /*opacity: 0.8;*/
 }
 /*.chargeBorder .iconTitle,.chargeBg1 .iconTitle,.chargeBg2 .iconTitle,.chargeBg3 .iconTitle,.iconTip0 .iconTitle{*/
     /*!*background: url("../img/charg.png") center 5px;*!*/
@@ -92,12 +92,12 @@
 /*最外层的类控制不同的显示方式 背景切换*/
 .chargeBg1{
     /* Firefox 3.6+ #09374F, #252f4a*/
-    background: -moz-linear-gradient(left,rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+    background: -moz-linear-gradient(left,rgba(54,200,210,0.2), rgba(37,47,74,0.4));
     /* Safari 5.1+, Chrome 10+ */
-    background: -webkit-linear-gradient(left, rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+    background: -webkit-linear-gradient(left, rgba(54,200,210,0.2), rgba(37,47,74,0.4));
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left,rgba(9,55,79,0.5), rgba(37,47,74,0.5));
-    background: linear-gradient(left, rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+    background: -o-linear-gradient(left,rgba(54,200,210,0.2), rgba(37,47,74,0.4));
+    background: linear-gradient(left, rgba(54,200,210,0.2), rgba(37,47,74,0.4));
 }
 .chargeBg1 .titleLeft:before{
     border-bottom:2px solid #297a8a;
@@ -108,24 +108,24 @@
 
 .chargeBg2{
     /* Firefox 3.6+ #ff8d6e, #2b2f49*/
-    background: -moz-linear-gradient(left, rgba(255,141,110,0.5), rgba(43,47,73,0.5));
+    background: -moz-linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4));
     /* Safari 5.1+, Chrome 10+ */
-    background: -webkit-linear-gradient(left, rgba(255,141,110,0.5), rgba(43,47,73,0.5));
+    background: -webkit-linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4));
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left, rgba(255,141,110,0.5),rgba(43,47,73,0.5));
-    background: linear-gradient(left, rgba(255,141,110,0.5), rgba(43,47,73,0.5));
+    background: -o-linear-gradient(left, rgba(255,141,110,0.2),rgba(43,47,73,0.4));
+    background: linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4));
 }
 .chargeBg2 .titleLeft:before{
     border-bottom: 2px solid #805f63;
 }
 .chargeBg3{
     /* Firefox 3.6+ #caa82c, #292f48*/
-    background: -moz-linear-gradient(left, rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+    background: -moz-linear-gradient(left, rgba(202,168,44,0.2), rgba(41,47,72,0.4));
     /* Safari 5.1+, Chrome 10+ */
-    background: -webkit-linear-gradient(left,rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+    background: -webkit-linear-gradient(left,rgba(202,168,44,0.2), rgba(41,47,72,0.4));
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left, rgba(202,168,44,0.5), rgba(41,47,72,0.5));
-    background: linear-gradient(left,rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+    background: -o-linear-gradient(left, rgba(202,168,44,0.2), rgba(41,47,72,0.4));
+    background: linear-gradient(left,rgba(202,168,44,0.2), rgba(41,47,72,0.4));
 }
 .chargeBg3 .titleLeft:before{
     border-bottom: 2px solid #787131;
