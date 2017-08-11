@@ -1,0 +1,266 @@
+
+/* 避免因子元素浮动而导致的父元素高度缺失能问题 */
+.clearFix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; } .clearFix { zoom: 1; }
+/*公共样式*/
+.LR{
+/*color: rgba(255,255,255,0.8);*/
+    color: #fff;
+    box-sizing: border-box;
+}
+.LR .titleLeft{
+  margin-right: 230px;
+    /*padding: 16px 0;*/
+    position: relative;
+    font-size: 40px;
+}
+.LR .titleLeft .iconTitle{
+    display: none;
+    /*float: left;*/
+    margin-left: 16px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.LR .titleLeft .titleValue{
+    display: inline-block;
+    margin-left: 16px;
+    font-family: "Microsoft YaHei Regular";
+}
+.LR .titleRight{
+   float: right;
+    /*padding: 16px 0;*/
+    margin-right: 16px;
+    font-size: 28px;
+    font-family: "Microsoft YaHei Regular";
+    /*margin-top: 5px;*/
+}
+/*高度的类*/
+.penelHeight{
+    height: 76px;
+    line-height: 76px;
+}
+.penelHeight .iconTitle{
+    float: left;
+    width: 36px;
+    height: 76px !important;
+}
+.penelHeight2{
+    height: 90px;
+    line-height: 90px;
+}
+.penelHeight2 .iconTitle{
+    float: left;
+    width: 36px;
+    height: 90px !important;
+}
+/*渐变透明20%*/
+.chargeBorder{
+    filter:alpha(opacity=80);
+    -moz-opacity:0.8;
+    -webkit-opacity: 0.8;
+    -o-opacity: 0.8;
+    opacity: 0.8;
+}
+/*.chargeBorder .iconTitle,.chargeBg1 .iconTitle,.chargeBg2 .iconTitle,.chargeBg3 .iconTitle,.iconTip0 .iconTitle{*/
+    /*!*background: url("../img/charg.png") center 5px;*!*/
+    /*width: 36px;*/
+    /*height: 50px;*/
+/*}*/
+/*下面横线*/
+.chargeBorder .titleLeft:before{
+    content: "";
+    width: 400px;
+    height: 2px;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    display: inline-block;
+}
+/*小圆点*/
+.chargeBorder .titleLeft:after{
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 100%;
+    background-color: #fff;
+    display: inline-block;
+    position: absolute;
+    bottom: -2px;
+    left: 400px;
+    box-shadow: 0 0 3px 3px rgba(36,107,123,0.8);
+}
+
+/*最外层的类控制不同的显示方式 背景切换*/
+.chargeBg1{
+    /* Firefox 3.6+ #09374F, #252f4a*/
+    background: -moz-linear-gradient(left,rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-linear-gradient(left, rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left,rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+    background: linear-gradient(left, rgba(9,55,79,0.5), rgba(37,47,74,0.5));
+}
+.chargeBg1 .titleLeft:before{
+    border-bottom:2px solid #297a8a;
+}
+.chargeBg1 .titleLeft:after{
+    box-shadow: 0 0 3px 3px rgba(36,107,123,0.8);
+}
+
+.chargeBg2{
+    /* Firefox 3.6+ #ff8d6e, #2b2f49*/
+    background: -moz-linear-gradient(left, rgba(255,141,110,0.5), rgba(43,47,73,0.5));
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-linear-gradient(left, rgba(255,141,110,0.5), rgba(43,47,73,0.5));
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, rgba(255,141,110,0.5),rgba(43,47,73,0.5));
+    background: linear-gradient(left, rgba(255,141,110,0.5), rgba(43,47,73,0.5));
+}
+.chargeBg2 .titleLeft:before{
+    border-bottom: 2px solid #805f63;
+}
+.chargeBg3{
+    /* Firefox 3.6+ #caa82c, #292f48*/
+    background: -moz-linear-gradient(left, rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+    /* Safari 5.1+, Chrome 10+ */
+    background: -webkit-linear-gradient(left,rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+    background: linear-gradient(left,rgba(202,168,44,0.5), rgba(41,47,72,0.5));
+}
+.chargeBg3 .titleLeft:before{
+    border-bottom: 2px solid #787131;
+}
+/*最外层的类控制不同的显示方式 border切换*/
+.penelBorder{
+    border-top:2px solid #3a7080;
+}
+.penelBg{
+ background-color:#134562 ;
+font-family: "Microsoft YaHei Regular";
+    color:#fff;
+}
+.penelBg .titleRight{
+    font-size: 36px !important;
+    margin-top: 0;
+    /*padding: 16px 0 !important;*/
+}
+.penelBg .titleLeft{
+    /*padding: 20px 0 !important;*/
+    font-size: 30px !important;
+}
+/*.penelBg .iconTitle,.penelBorder .iconTitle,.iconTip5 .iconTitle,.iconTip4 .iconTitle,.iconTip3 .iconTitle.iconTip2 .iconTitle,.iconTip1 .iconTitle{*/
+    /*!*background: url("../img/rise-b.png") center;*!*/
+    /*width: 36px;*/
+    /*height: 40px;*/
+/*}*/
+.iconTip0 .iconTitle{
+    display: inline-block !important;
+    background: url("../img/charg.png") center;
+}
+.iconTip1 .iconTitle{
+    display: inline-block !important;
+    background: url("../img/rise-o.png") center;
+}
+.iconTip2 .iconTitle{
+    display: inline-block !important ;
+    background: url("../img/rise-r.png") center;
+}
+.iconTip3 .iconTitle{
+    display: inline-block !important;
+    background: url("../img/rise-b.png") center;
+}
+.iconTip4 .iconTitle{
+    display: inline-block !important;
+    background: url("../img/fall-o.png") center;
+}
+.iconTip5 .iconTitle{
+    display: inline-block !important;
+    background: url("../img/fall-r.png") center;
+}
+.iconTip6 .iconTitle{
+    display: inline-block !important;
+    background: url("../img/fall-b.png") center;
+}
+/*上下两行的标题栏*/
+.panelSubHeight{
+    /*height: 95px;*/
+    /*padding 10默认高度是95，之后可经过计算大体获得高度*/
+    padding: 10px 0;
+}
+.UD{
+    font-family: "Microsoft YaHei Regular";
+    box-sizing: border-box;
+}
+.UD .titleRight{
+    float: right;
+    margin-right: 24px;
+    text-align: right;
+    font-size: 36px;
+}
+.UD .titleLeft{
+    margin-left: 24px;
+    text-align: left;
+    font-size: 26px;
+    /*padding-top: 5px;*/
+}
+.UD .titleLeft .titleName{
+    font-size: 30px;
+}
+.UD .iconTitle{
+   width: 32px;
+    height: 32px;
+}
+.UD .subValue{
+  margin-top: -15px;
+}
+.panelSubBg{
+    background-color:#134562 ;
+    color:#fff;
+}
+.panelSubBor{
+    border: none;
+}
+
+
+/*轮播样式list*/
+.listMain{
+   width: 110px;
+    color: #fff;
+}
+.listMain .listTip{
+    position: relative;
+    margin: auto;
+    width: 70px;
+    height: 100px;
+    background: url("../img/pile.png") center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+.listTip .listInfo{
+    width: 15px;
+    margin: 0 auto;
+    line-height: 30px;
+    font-size: 26px;
+    font-family:"Microsoft YaHei Light";
+    position: absolute;
+    left: 20px;
+    bottom: 10px;
+}
+.listTip .chargeIcon{
+    display: none;
+}
+.listMain .listVaule{
+    margin-top: 10px;
+    text-align: center;
+    font-size: 36px;
+    font-family:"Microsoft YaHei Light";
+}
+.listTip2 .chargeIcon{
+    display: block;
+    position: absolute;
+    left: 25px;
+    top: 5px;
+}
+.chargeIcon img{
+    width:18px
+}
