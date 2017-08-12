@@ -15,9 +15,9 @@ var chargTrend_12m = {
     "#724e58",
     "#4b565b"
   ],
-  "backgroundColor": new echarts.graphic.LinearGradient(1,3, 0,0, [{
-    offset: 0, color:'#374889',// '#204063'//'#190d02' // 0% 处的颜色
-  },{
+  "backgroundColor": new echarts.graphic.LinearGradient(1, 3, 0, 0, [{
+    offset: 0, color: '#374889',// '#204063'//'#190d02' // 0% 处的颜色
+  }, {
     offset: 0.8, color: "#132A4B",//'#190d02'//'#204063' // 100% 处的颜色
   }, {
     offset: 1, color: "#032433",//'#190d02'//'#204063' // 100% 处的颜色

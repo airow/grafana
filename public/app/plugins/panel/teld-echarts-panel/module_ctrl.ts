@@ -496,6 +496,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       series.push({
         type: 'pie',
         radius: [innerR, outerR],
+        center: serie.center,
         silent: true,
         label: {
           normal: {

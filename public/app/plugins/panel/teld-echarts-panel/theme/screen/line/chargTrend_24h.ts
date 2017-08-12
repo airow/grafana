@@ -78,23 +78,23 @@ var chargTrend_24h = {
         // "color":["#8b7cfd","#2082c2","#55cefc","#2aa3bb","#4d8ab7","#5eb4ed"],RadialGradient
         color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
           offset: 0,
-          color: '#8b7cfd'
+          color: 'rgba(139,124,253,0.4)'//'#8b7cfd'
         }, {
           offset: 0.2,
-          color: '#2082c2'
+          color: 'rgba(32,130,194,0.4)'//'#2082c2'
         },
         {
           offset: 0.4,
-          color: '#55cefc'
+          color: 'rgba(85,206,252,0.4)'//'#55cefc'
         }, {
           offset: 0.6,
-          color: '#2aa3bb'
+          color: 'rgba(42,163,187,0.4)'//'#2aa3bb'
         }, {
           offset: 0.8,
-          color: '#4d8ab7'
+          color: 'rgba(77,138,183,0.4)'//'#4d8ab7'
         }, {
           offset: 1,
-          color: '#5eb4ed'
+          color: 'rgba(94,180,237,0.4)'//'#5eb4ed'
         }], false),
         shadowColor: 'rgba(0, 0, 0, 0.1)',
         shadowBlur: 10,

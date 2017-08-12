@@ -83,6 +83,25 @@
       </div>
     </div>
     <div class="section gf-form-group">
+      <h5 class="section-heading">labelLine</h5>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.pie.labelLine.normal.show" on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-8">length</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.labelLine.normal.length">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-8">length2</label>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.labelLine.normal.length2">
+        </div>
+        <gf-form-switch class="gf-form" label="smooth" label-class="width-8" checked="ctrl.panel.echarts.series.pie.labelLine.normal.smooth" on-change="ctrl.render()"></gf-form-switch>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">lineStyle</label>
+      </div>
+      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.series.pie.labelLine.normal.lineStyle' />
+    </div>
+    <div class="section gf-form-group">
       <div class="gf-form-inline">
          <div class="gf-form">
           <label class="gf-form-label query-keyword width-7">center</label>
