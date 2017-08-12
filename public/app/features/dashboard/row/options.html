@@ -31,6 +31,15 @@
 				<span class="gf-form-label width-7">Repeat for</span>
 				<dash-repeat-option model="ctrl.row"></dash-repeat-option>
 			</div>
+    </div>
+    <div class="section">
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="bgcolor" checked="ctrl.row.bgcolor.enabled"></gf-form-switch>
+        <div class="gf-form" ng-show="ctrl.row.bgcolor.enabled">
+          <spectrum-picker ng-model="ctrl.row.bgcolor.color" ng-change="refresh()"></spectrum-picker>
+          <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.bgcolor.color'></input>
+        </div>
+      </div>
 		</div>
 	</div>
 </div>

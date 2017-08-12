@@ -10,7 +10,9 @@
 
 		<div class="clearfix"></div>
 
-    <dash-row class="dash-row" ng-repeat="row in dashboard.rows" row="row" dashboard="dashboard">
+    <dash-row class="dash-row" ng-repeat="row in dashboard.rows" row="row" dashboard="dashboard"
+      ng-class="{'remove_mb': row.bgcolor.enabled}"
+      ng-style="{'background-color': row.bgcolor.enabled ? row.bgcolor.color : 'initial'}">
     </dash-row>
 
     <div ng-show='dashboardMeta.canEdit' class="add-row-panel-hint">
