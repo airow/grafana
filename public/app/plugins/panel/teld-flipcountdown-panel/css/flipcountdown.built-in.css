@@ -90,3 +90,25 @@
 	width:5px;
 	background-position:-5px -1584px;
 }
+
+
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit{
+	width:36px;
+	height:51px;
+	background-image:url(./img/teld.png);
+}
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_empty{
+  background-position:0px -3432px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_space,
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_separator,
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_dot{
+	width:10px;
+	background-position:-13px -3432px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_dot{
+	background-position:-27px -3432px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_space{
+	background-position:-37px -3432px;
+}

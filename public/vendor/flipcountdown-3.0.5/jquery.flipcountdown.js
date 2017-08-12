@@ -29,12 +29,13 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
 
 		digitsCount = 66,
 
-		sizes = {
-			lg:77,
-			md:52,
-			sm:35,
-			xs:24
-		},
+    sizes = {
+      lg: 77,
+      md: 52,
+      sm: 35,
+      xs: 24,
+      teld: 52,
+    },
 
 		createFlipCountDown = function( $box ){
 			var $flipcountdown 	= $('<div class="xdsoft_flipcountdown"></div>'),

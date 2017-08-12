@@ -322,7 +322,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     var $panelContainer = elem.find('.panel-container');
     elem = elem.find('.teld-flipcountdown-panel');
 
-    elem.find('.flipcountdown').flipcountdown({ tick: this.tick.bind(this) });
+    elem.find('.flipcountdown').flipcountdown({ size: 'teld', tick: this.tick.bind(this) });
 
     function setElementHeight() {
       elem.css('height', ctrl.height + 'px');
