@@ -699,9 +699,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //this.ecConfig.theme = this.panel.style.themeName;
     this.ecOption.baseOption = baseOption;
 
-    // if (this.ecInstance) {
-    //   this.ecInstance.setOption({ legend: this.panel.echarts.legend.show ? option.legend : undefined });
-    // }
+    if (this.ecInstance) {
+      //this.ecInstance.setOption({ legend: this.panel.echarts.legend.show ? option.legend : undefined });
+      this.ecInstance.resize();
+    }
 
     // if (false === this.panel.echarts.legend.show) {
     //   this.ecOption.baseOption.legend = undefined;
