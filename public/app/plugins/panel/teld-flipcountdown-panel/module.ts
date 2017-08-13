@@ -69,7 +69,8 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
       interval: 1000,
       incrementModel: 'totalStep',
       varName: `currentVal`
-    }
+    },
+    size: 'teld'
   };
 
   /** @ngInject */
@@ -77,10 +78,18 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     _.defaults(this.panel, this.panelDefaults);
 
+    this.events.on('panel-teardown', this.onTearDown.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+  }
+
+  onTearDown() {
+    if (angular.isDefined(this.flipcountdown)) {
+      let intervalHandle = this.flipcountdown.data('intervalHandle');
+      clearInterval(intervalHandle);
+    }
   }
 
   onInitEditMode() {
@@ -318,6 +327,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     this.flipcountdownData.valueFormated = val;
     console.log(this.flipcountdownData.valueFormated);
     return val;
+    //return "1023456789.0"
   }
 
   flipcountdownData = {
@@ -327,6 +337,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     step: 0,
   };
 
+  flipcountdown: any;
   link(scope, elem, attrs, ctrl) {
     var $location = this.$location;
     var linkSrv = this.linkSrv;
@@ -337,7 +348,14 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     var $panelContainer = elem.find('.panel-container');
     elem = elem.find('.teld-flipcountdown-panel');
 
-    elem.find('.flipcountdown').flipcountdown({ period: this.panel.stepValSubscriber.interval, size: 'teld', tick: this.tick.bind(this) });
+
+    this.flipcountdown = elem.find('.flipcountdown');
+    this.flipcountdown.flipcountdown(
+      {
+        period: this.panel.stepValSubscriber.interval,
+        size: this.panel.size,
+        tick: this.tick.bind(this)
+      });
 
     function setElementHeight() {
       elem.css('height', ctrl.height + 'px');

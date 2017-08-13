@@ -37,7 +37,13 @@
 		<div class="gf-form">
 			<label class="gf-form-label width-6">Decimals</label>
 			<input type="number" class="gf-form-input width-18" placeholder="auto" data-placement="right" bs-tooltip="'Override automatic decimal precision for legend and tooltips'" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()" ng-model-onblur>
-		</div>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-6">size</label>
+      <div class="gf-form-select-wrapper width-7">
+        <select class="gf-form-input" ng-model="ctrl.panel.size" ng-options='f.val as f.name for f in [{"val":"teldlg", "name":"70px"},{"val":"teld", "name":"50px"}]' ng-change="ctrl.render()"></select>
+      </div>
+    </div>
   </div>
 </div>
 

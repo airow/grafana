@@ -35,6 +35,7 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
       sm: 35,
       xs: 24,
       teld: 52,
+      teldlg: 71,
     },
 
 		createFlipCountDown = function( $box ){
@@ -177,7 +178,8 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
 				.on('xdinit.xdsoft',function(){
 					clearInterval(timer);
 					if( options.autoUpdate )
-						timer = setInterval( _calcMoment,options.period );
+            timer = setInterval( _calcMoment,options.period );
+            $box.data('intervalHandle', timer);
 					_calcMoment();
 				});
 
@@ -212,7 +214,7 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
 					.addClass('xdsoft_size_'+options.size)
 					.trigger('xdinit.xdsoft');
 			});
-			$box.append($flipcountdown);
+      $box.append($flipcountdown);
 		};
 	return this.each(function(){
 		var $box = $(this);

@@ -91,7 +91,7 @@
 	background-position:-5px -1584px;
 }
 
-
+/*******************************************************************************/
 .xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit{
 	width:36px;
 	height:51px;
@@ -111,4 +111,22 @@
 }
 .xdsoft_flipcountdown.xdsoft_size_teld >.xdsoft_digit.xdsoft_space{
 	background-position:-37px -3432px;
+}
+
+.xdsoft_flipcountdown.xdsoft_size_teldlg >.xdsoft_digit{
+	width:48px;
+	height:71px;
+	background-image:url(./img/teld-lg.png);
+}
+.xdsoft_flipcountdown.xdsoft_size_teldlg >.xdsoft_digit.xdsoft_space,
+.xdsoft_flipcountdown.xdsoft_size_teldlg >.xdsoft_digit.xdsoft_separator,
+.xdsoft_flipcountdown.xdsoft_size_teldlg >.xdsoft_digit.xdsoft_dot{
+	width:14px;
+	background-position:-19px -4766px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldlg >.xdsoft_digit.xdsoft_dot{
+	background-position:-37px -4768px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldlg >.xdsoft_digit.xdsoft_space{
+	background-position:-100px -4766px;
 }
