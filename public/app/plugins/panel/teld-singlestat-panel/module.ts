@@ -368,9 +368,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         data.flotpairs = this.series[0].flotpairs;
 
         var decimalInfo = this.getDecimalsForValue(data.value);
-        var formatFunc = kbn.valueFormats[this.panel.format];
-        data.valueFormated = formatFunc(data.value, decimalInfo.decimals, decimalInfo.scaledDecimals);
-        data.valueRounded = kbn.roundValue(data.value, decimalInfo.decimals);
+        // var formatFunc = kbn.valueFormats[this.panel.format];
+        // data.valueFormated = formatFunc(data.value, decimalInfo.decimals, decimalInfo.scaledDecimals);
+        // data.valueRounded = kbn.roundValue(data.value, decimalInfo.decimals);
+        data.valueRounded = data.valueFormated = data.value;
       }
 
       // Add $__name variable for using in prefix or postfix
