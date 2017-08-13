@@ -93,6 +93,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       legend: { show: false, orient: 'vertical', left: 'left' },
       xAxis: {},
       yAxis: {},
+      tooltip: { show: false, trigger: 'none' },
       grid: { show: false },
       // axis: {
       //   category: {},
@@ -305,7 +306,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         let { value, name } = _.zipObject(zipObject, pointArray);
         name = this.categoryFormat(name);
         value = this.valueFormat(value);
-        return { value: [`${name}`, value] };;
+        return { value: [`${name}`, value] };
+        //return { value: value };
       });
 
       // if (target === "docs") {
@@ -610,6 +612,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return legendData;
   }
 
+  getSeries() {
+    let series = this.ecSeries;
+    switch (this.panel.serieType) {
+      case this.ecConf.series.line.type:
+      case this.ecConf.series.bar.type:
+        series = _.cloneDeep(this.ecSeries).map(item => { item.data.map(d => { d.value = d.value[1]; return d; }); return item; });
+        break;
+    }
+    return series;
+  }
+
   onRender() {
 
     let xAxis, categoryAxis;
@@ -646,10 +659,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let option: any = {
       backgroundColor: this.panel.echarts.backgroundColor,
       title: _.cloneDeep(this.panel.echarts.title),
+      tooltip: _.cloneDeep(this.panel.echarts.tooltip),
       xAxis,
       yAxis,
       grid,
-      series: this.ecSeries,
+      //series: this.ecSeries,
+      series: this.getSeries(),
       legend: [legend]
     };
 
