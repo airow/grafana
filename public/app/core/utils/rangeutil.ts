@@ -20,7 +20,9 @@ var rangeOptions = [
   { from: 'now/w',    to: 'now/w',    en_display: 'This week',           display: '本周',             section: 2 },
   { from: 'now/w',    to: 'now',      en_display: 'This week so far',    display: '本周此刻',         section: 2 },
   { from: 'now/M',    to: 'now/M',    en_display: 'This month',          display: '本月',             section: 2 },
+  { from: 'now/M',    to: 'now',      en_display: 'This month so far',   display: '本月此刻',         section: 2 },
   { from: 'now/y',    to: 'now/y',    en_display: 'This year',           display: '今年',             section: 2 },
+  { from: 'now/y',    to: 'now',      en_display: 'This year so far',    display: '今年此刻',         section: 2 },
 
   { from: 'now-1d/d', to: 'now-1d/d', en_display: 'Yesterday',           display: '昨天',             section: 1 },
   { from: 'now-2d/d', to: 'now-2d/d', en_display: 'Day before yesterday',display: '前天',             section: 1 },
