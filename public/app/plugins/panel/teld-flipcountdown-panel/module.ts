@@ -64,18 +64,11 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     colorBackground: false,
     colorValue: false,
     colors: ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-    sparkline: {
-      show: false,
-      full: false,
-      lineColor: 'rgb(31, 120, 193)',
-      fillColor: 'rgba(31, 118, 189, 0.18)',
-    },
-    gauge: {
-      show: false,
-      minValue: 0,
-      maxValue: 100,
-      thresholdMarkers: true,
-      thresholdLabels: false
+    stepValSubscriber: {
+      enabled: false,
+      interval: 1000,
+      incrementModel: 'totalStep',
+      varName: `currentVal`
     }
   };
 
@@ -302,7 +295,29 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
 
   tick() {
     //return (this.flipcountdownData.value += this.flipcountdownData.step);
-    return (this.flipcountdownData.valueFormated);
+
+    let step = 0;
+    let val = +this.flipcountdownData.valueFormated;
+    if (this.panel.stepValSubscriber.enabled) {
+      let { varName, incrementModel } = this.panel.stepValSubscriber;
+      varName = `teld.${varName}`;
+      let stepVal = _.get(this.$scope.$root, varName, {});
+      step = _.get(stepVal, incrementModel, 0);
+
+      if (this.panel.stepValSubscriber.incrementModel === 'totalStep') {
+        val = +this.flipcountdownData.initValue + step;
+      } else {
+        val += step;
+      }
+    }
+
+    var decimalInfo = this.getDecimalsForValue(val);
+    var formatFunc = kbn.valueFormats[this.panel.format];
+    val = kbn.roundValue(val, decimalInfo.decimals);
+    val = kbn.toFixed(val, decimalInfo.decimals);
+    this.flipcountdownData.valueFormated = val;
+    console.log(this.flipcountdownData.valueFormated);
+    return val;
   }
 
   flipcountdownData = {
@@ -322,46 +337,10 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     var $panelContainer = elem.find('.panel-container');
     elem = elem.find('.teld-flipcountdown-panel');
 
-    elem.find('.flipcountdown').flipcountdown({ size: 'teld', tick: this.tick.bind(this) });
+    elem.find('.flipcountdown').flipcountdown({ period: this.panel.stepValSubscriber.interval, size: 'teld', tick: this.tick.bind(this) });
 
     function setElementHeight() {
       elem.css('height', ctrl.height + 'px');
-    }
-
-    function applyColoringThresholds(value, valueString) {
-      if (!panel.colorValue) {
-        return valueString;
-      }
-      return valueString;
-    }
-
-    function getSpan(className, fontSize, value)  {
-      value = templateSrv.replace(value, data.scopedVars);
-      return '<span class="' + className + '" style="font-size:' + fontSize + '">' +
-        value + '</span>';
-    }
-
-    function getBigValueHtml() {
-      var body = '<div class="singlestat-panel-value-container">';
-
-      if (panel.prefix) { body += getSpan('singlestat-panel-prefix', panel.prefixFontSize, panel.prefix); }
-
-      var value = applyColoringThresholds(data.value, data.valueFormated);
-      body += getSpan('singlestat-panel-value', panel.valueFontSize, value);
-
-      if (panel.postfix) { body += getSpan('singlestat-panel-postfix', panel.postfixFontSize, panel.postfix); }
-
-      body += '</div>';
-
-      return body;
-    }
-
-    function getValueText() {
-      var result = panel.prefix ? panel.prefix : '';
-      result += data.valueFormated;
-      result += panel.postfix ? panel.postfix : '';
-
-      return result;
     }
 
     function render() {
@@ -369,8 +348,6 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
       data = ctrl.data;
 
       setElementHeight();
-
-      var body = getBigValueHtml();
 
       //elem.html(body);
     }

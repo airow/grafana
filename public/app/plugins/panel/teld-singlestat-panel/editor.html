@@ -35,10 +35,6 @@
       </div> -->
     </div>
 		<div class="gf-form">
-			<label class="gf-form-label width-6">Unit</label>
-			<div class="gf-form-dropdown-typeahead width-18" ng-model="ctrl.panel.format" dropdown-typeahead2="ctrl.unitFormats" dropdown-typeahead-on-select="ctrl.setUnitFormat($subItem)"></div>
-		</div>
-		<div class="gf-form">
 			<label class="gf-form-label width-6">Decimals</label>
 			<input type="number" class="gf-form-input width-18" placeholder="auto" data-placement="right" bs-tooltip="'Override automatic decimal precision for legend and tooltips'" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()" ng-model-onblur>
 		</div>
@@ -159,6 +155,62 @@
       </div>
       <gf-form-switch class="gf-form" label-class="width-10" switch-class="max-width-6" label="Threshold labels" checked="ctrl.panel.gauge.thresholdLabels" on-change="ctrl.render()"></gf-form-switch>
       <gf-form-switch class="gf-form" label-class="width-10" switch-class="max-width-6" label="Threshold markers" checked="ctrl.panel.gauge.thresholdMarkers" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+  </div>
+</div>
+
+<!-- stepVal -->
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <h5 class="section-heading">stepVal</h5>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="step val" label-class="width-6" checked="ctrl.panel.stepVal.enabled" switch-class="max-width-6" on-change="ctrl.refresh()">
+      </gf-form-switch>
+      <div class="gf-form" ng-show="ctrl.panel.stepVal.enabled">
+        <label class="gf-form-label width-6">cardinal</label>
+        <input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.stepVal.cardinal" ng-blur="ctrl.render()" placeholder="setVal"></input>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.stepVal.enabled">
+        <label class="gf-form-label width-6">increment</label>
+        <input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.stepVal.increment" ng-blur="ctrl.render()" placeholder="setVal"></input>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.stepVal.enabled">
+        <label class="gf-form-label width-6">interval</label>
+        <input type="number" class="gf-form-input width-6" ng-model="ctrl.panel.stepVal.interval" ng-blur="ctrl.render()" placeholder="setVal"></input>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-show="ctrl.panel.stepVal.enabled">
+      <gf-form-switch class="gf-form" label="publish" label-class="width-6" checked="ctrl.panel.stepVal.publish" switch-class="max-width-6" on-change="ctrl.refresh()">
+      </gf-form-switch>
+      <div class="gf-form" ng-show="ctrl.panel.stepVal.publish">
+        <label class="gf-form-label width-6">var name</label>
+        <input type="text" class="gf-form-input" ng-model="ctrl.panel.stepVal.varName" ng-blur="ctrl.render()" placeholder="setVal"></input>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- stepValSubscriber -->
+<div class="editor-row" ng-hide="ctrl.panel.stepVal.enabled">
+  <div class="section gf-form-group">
+    <h5 class="section-heading">stepValSubscriber</h5>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="step val" label-class="width-6" checked="ctrl.panel.stepValSubscriber.enabled" switch-class="max-width-6" on-change="ctrl.refresh()">
+      </gf-form-switch>
+      <div class="gf-form" ng-show="ctrl.panel.stepValSubscriber.enabled">
+        <label class="gf-form-label width-6">incrementModel</label>
+        <div class="gf-form-select-wrapper width-7">
+          <select class="gf-form-input" ng-model="ctrl.panel.stepValSubscriber.incrementModel" ng-options="f for f in ['step','totalStep']" ng-change="ctrl.render()"></select>
+        </div>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.stepValSubscriber.enabled">
+        <label class="gf-form-label width-6">interval</label>
+        <input type="number" class="gf-form-input width-6" ng-model="ctrl.panel.stepValSubscriber.interval" ng-blur="ctrl.render()" placeholder="setVal"></input>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.stepValSubscriber.enabled">
+        <label class="gf-form-label width-6">var name</label>
+        <input type="text" class="gf-form-input" ng-model="ctrl.panel.stepValSubscriber.varName" ng-blur="ctrl.render()" placeholder="setVal"></input>
+      </div>
     </div>
   </div>
 </div>

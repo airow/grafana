@@ -23,6 +23,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   series: any[];
   data: any;
   fontSizes: any[];
+  //subScope: any;
   position: any[] = ['left', 'right'];
   layouts: any = {
     LR: {
@@ -141,6 +142,20 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       maxValue: 100,
       thresholdMarkers: true,
       thresholdLabels: false
+    },
+    stepVal: {
+      enabled: false,
+      cardinal: '基数',
+      increment: '增量',
+      interval: 1000,
+      publish: false,
+      varName: `currentVal${this.panel.id}`
+    },
+    stepValSubscriber: {
+      enabled: false,
+      interval: 1000,
+      incrementModel: 'totalStep',
+      varName: `currentVal`
     }
   };
 
@@ -165,14 +180,28 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
   /** @ngInject */
-  constructor($scope, $injector, private $location, private linkSrv, private $compile) {
+  constructor($scope, $injector, private $location, private linkSrv, private $compile, private $interval) {
     super($scope, $injector);
     _.defaults(this.panel, this.panelDefaults);
 
+    this.events.on('panel-teardown', this.onTearDown.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+  }
+
+  intervalHandle: any;
+  stepValSubscriberIntervalHandle: any;
+  onTearDown() {
+    if (angular.isDefined(this.intervalHandle)) {
+      this.$interval.cancel(this.intervalHandle);
+      this.intervalHandle = undefined;
+    }
+    if (angular.isDefined(this.stepValSubscriberIntervalHandle)) {
+      this.$interval.cancel(this.stepValSubscriberIntervalHandle);
+      this.stepValSubscriberIntervalHandle = undefined;
+    }
   }
 
   onInitEditMode() {
@@ -191,13 +220,56 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     this.onDataReceived([]);
   }
 
-  onDataReceived(dataList) {
-    this.series = dataList.map(this.seriesHandler.bind(this));
+  currentVal = { initVal: 0, val: 0, step: 0, totalStep: 0 };
 
+  stepValModel(mapSeries) {
+    let { cardinal, increment } = this.panel.stepVal;
+    let cardinalSeries = _.filter(mapSeries, ['alias', cardinal]);
+    let incrementSeries = _.filter(mapSeries, ['alias', increment]);
+
+
+    this.series = incrementSeries;
+    var incrementData: any = {};
+    this.setValues(incrementData);
+
+    this.currentVal.step = _.round(incrementData.value / 60, 2);
+
+    this.series = cardinalSeries;
     var data: any = {};
     this.setValues(data);
 
+    this.currentVal.initVal = this.currentVal.val = data.value;
+
     this.data = data;
+
+    return this.data;
+  }
+
+  normalModel(mapSeries) {
+
+    this.series = mapSeries;
+    var data: any = {};
+    this.setValues(data);
+
+    this.currentVal.initVal = this.currentVal.val = data.value;
+
+    this.data = data;
+
+    return this.data;
+  }
+
+  onDataReceived(dataList) {
+
+    let mapSeries = dataList.map(this.seriesHandler.bind(this));
+
+    console.log(mapSeries);
+
+    if (this.panel.stepVal.enabled) {
+      this.stepValModel(mapSeries);
+    } else {
+      this.normalModel(mapSeries);
+    }
+
     this.render();
   }
 
@@ -374,6 +446,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
   link(scope, elem, attrs, ctrl) {
+    var that = this;
     var $location = this.$location;
     var linkSrv = this.linkSrv;
     var $timeout = this.$timeout;
@@ -385,6 +458,51 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     var layouts = this.layouts;
     var layout = this.layouts[this.panel.layout];
     elem = elem.find('.teld-singlestat-panel');
+
+    var subScope = scope.$new();
+
+    if (this.panel.stepVal.enabled) {
+      this.intervalHandle = this.$interval(() => {
+        this.currentVal.totalStep += this.currentVal.step;
+        updateSubScope(parseInt(subScope.value) + this.currentVal.step);
+
+        if (this.panel.stepVal.publish) {
+          let setValName = _.get(this.panel.stepVal, 'varName', 'currentVal');
+          _.set(this.$scope.$root, `teld.${setValName}`, this.currentVal);
+
+          console.log(_.get(this.$scope.$root, `teld.${setValName}`));
+        }
+      }, this.panel.stepVal.interval);
+    } else {
+      if (this.panel.stepValSubscriber.enabled) {
+
+        this.stepValSubscriberIntervalHandle = this.$interval(() => {
+
+          let val = +subScope.value;
+          let { varName, incrementModel } = this.panel.stepValSubscriber;
+          varName = `teld.${varName}`;
+          let stepVal = _.get(this.$scope.$root, varName, {});
+          let step = _.get(stepVal, incrementModel, 0);
+
+          if (this.panel.stepValSubscriber.incrementModel === 'totalStep') {
+            val = +this.currentVal.initVal + step;
+          } else {
+            val += step;
+          }
+
+          updateSubScope(val);
+
+        }, this.panel.stepValSubscriber.interval);
+      }
+    }
+
+
+
+
+    // this.$interval(() => {
+    //   this.refresh();
+    // }, 5 * 1000);
+
 
     function setElementHeight() {
       elem.css('height', ctrl.height + 'px');
@@ -409,55 +527,46 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         value + '</span>';
     }
 
-
-    /**
-      <div class="titlePenel filter20 chargeBg1">
-          <div class="titleRight">今日充电量(Kw)</div>
-          <div class="titleLeft">
-              <div class="iconTitle"></div>
-              <div class="titleValue">439168.14</div>
-          </div>
-      </div>
-     */
     function getBigValueHtml() {
-
-
-      var html = [
-        '<div class="titlePenel chargeBorder chargeBg2 iconTip0">',
-        ' <div class="titleRight">今日充电量(Kw)</div>',
-        ' <div class="titleLeft">',
-        '    <div class="iconTitle"></div>',
-        '   <div class="titleValue">439168.14</div>',
-        ' </div>',
-        '</div>'
-      ];
 
       var value = applyColoringThresholds(data.value, data.valueFormated);
 
-      var s = scope.$new();
+      subScope.layout = panel.layout;
+      subScope.borderClass = panel.borderClass;
+      subScope.bgClass = panel.bgClass;
+      subScope.iconClass = panel.iconClass;
+      subScope.heightClass = panel.heightClass;
 
-      s.layout = panel.layout;
-      s.borderClass = panel.borderClass;
-      s.bgClass = panel.bgClass;
-      s.iconClass = panel.iconClass;
-      s.heightClass = panel.heightClass;
+      subScope.prefixFontSize = panel.prefixFontSize;
+      subScope.prefix = panel.prefix;
+      subScope.postfixFontSize = panel.postfixFontSize;
+      subScope.postfix = panel.postfix;
+      subScope.valueFontSize = panel.valueFontSize;
 
-      s.prefixFontSize = panel.prefixFontSize;
-      s.prefix = panel.prefix;
-      s.postfixFontSize = panel.postfixFontSize;
-      s.postfix = panel.postfix;
-      s.valueFontSize = panel.valueFontSize;
-      s.value = value;
+      updateSubScope(value);
+      // if (panel.layout === 'LR') {
+      //   subScope[`${panel.valuePosition}Value`] = subScope.value;
+      //   if (panel.valuePosition === 'left') { subScope.prefix = ''; }
+      //   if (panel.valuePosition === 'right') { subScope.postfix = ''; }
+      // }
 
-      if (panel.layout === 'LR') {
-        s[`${panel.valuePosition}Value`] = value;
-        if (panel.valuePosition === 'left') { s.prefix = ''; }
-        if (panel.valuePosition === 'right') { s.postfix = ''; }
-      }
-
-      var jqHtml = compile(layout.tmpl)(s);
+      var jqHtml = compile(layout.tmpl)(subScope);
+      //var jqHtml = compile(layout.tmpl)(subScope);
       //var jqHtml = compile(html.join(''))(s);
       elem.empty().append(jqHtml);
+    }
+
+    function updateSubScope(value) {
+      var decimalInfo = that.getDecimalsForValue(value);
+      value = kbn.roundValue(value, decimalInfo.decimals);
+      value = kbn.toFixed(value, decimalInfo.decimals);
+
+      subScope.value = value;
+      if (panel.layout === 'LR') {
+        subScope[`${panel.valuePosition}Value`] = subScope.value;
+        if (panel.valuePosition === 'left') { subScope.prefix = ''; }
+        if (panel.valuePosition === 'right') { subScope.postfix = ''; }
+      }
     }
 
     function getBigValueHtml_grafana() {
@@ -483,152 +592,6 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       return result;
     }
 
-    function addGauge() {
-      var width = elem.width();
-      var height = elem.height();
-
-      ctrl.invalidGaugeRange = false;
-      if (panel.gauge.minValue > panel.gauge.maxValue) {
-        ctrl.invalidGaugeRange = true;
-        return;
-      }
-
-      var plotCanvas = $('<div></div>');
-      var plotCss = {
-        top: '10px',
-        margin: 'auto',
-        position: 'relative',
-        height: (height * 0.9) + 'px',
-        width:  width + 'px'
-      };
-
-      plotCanvas.css(plotCss);
-
-      var thresholds = [];
-      for (var i = 0; i < data.thresholds.length; i++) {
-        thresholds.push({
-          value: data.thresholds[i],
-          color: data.colorMap[i]
-        });
-      }
-      thresholds.push({
-        value: panel.gauge.maxValue,
-        color: data.colorMap[data.colorMap.length  - 1]
-      });
-
-      var bgColor = config.bootData.user.lightTheme
-        ? 'rgb(230,230,230)'
-        : 'rgb(38,38,38)';
-
-      var fontScale = parseInt(panel.valueFontSize) / 100;
-      var dimension = Math.min(width, height);
-      var fontSize = Math.min(dimension/5, 100) * fontScale;
-      var gaugeWidth = Math.min(dimension/6, 60);
-      var thresholdMarkersWidth = gaugeWidth/5;
-
-      var options = {
-        series: {
-          gauges: {
-            gauge: {
-              min: panel.gauge.minValue,
-              max: panel.gauge.maxValue,
-              background: { color: bgColor },
-              border: { color: null },
-              shadow: { show: false },
-              width: gaugeWidth,
-            },
-            frame: { show: false },
-            label: { show: false },
-            layout: { margin: 0, thresholdWidth: 0 },
-            cell: { border: { width: 0 } },
-            threshold: {
-              values: thresholds,
-              label: {
-                show: panel.gauge.thresholdLabels,
-                margin: 8,
-                font: { size: 18 }
-              },
-              show: panel.gauge.thresholdMarkers,
-              width: thresholdMarkersWidth,
-            },
-            value: {
-              color: panel.colorValue ? getColorForValue(data, data.valueRounded) : null,
-              formatter: function() { return getValueText(); },
-              font: { size: fontSize, family: '"Helvetica Neue", Helvetica, Arial, sans-serif' }
-            },
-            show: true
-          }
-        }
-      };
-
-      elem.append(plotCanvas);
-
-      var plotSeries = {
-        data: [[0, data.valueRounded]]
-      };
-
-      $.plot(plotCanvas, [plotSeries], options);
-    }
-
-    function addSparkline() {
-      var width = elem.width() + 20;
-      if (width < 30) {
-        // element has not gotten it's width yet
-        // delay sparkline render
-        setTimeout(addSparkline, 30);
-        return;
-      }
-
-      var height = ctrl.height;
-      var plotCanvas = $('<div></div>');
-      var plotCss: any = {};
-      plotCss.position = 'absolute';
-
-      if (panel.sparkline.full) {
-        plotCss.bottom = '5px';
-        plotCss.left = '-5px';
-        plotCss.width = (width - 10) + 'px';
-        var dynamicHeightMargin = height <= 100 ? 5 : (Math.round((height/100)) * 15) + 5;
-        plotCss.height = (height - dynamicHeightMargin) + 'px';
-      } else {
-        plotCss.bottom = "0px";
-        plotCss.left = "-5px";
-        plotCss.width = (width - 10) + 'px';
-        plotCss.height = Math.floor(height * 0.25) + "px";
-      }
-
-      plotCanvas.css(plotCss);
-
-      var options = {
-        legend: { show: false },
-        series: {
-          lines:  {
-            show: true,
-            fill: 1,
-            lineWidth: 1,
-            fillColor: panel.sparkline.fillColor,
-          },
-        },
-        yaxes: { show: false },
-        xaxis: {
-          show: false,
-          mode: "time",
-          min: ctrl.range.from.valueOf(),
-          max: ctrl.range.to.valueOf(),
-        },
-        grid: { hoverable: false, show: false },
-      };
-
-      elem.append(plotCanvas);
-
-      var plotSeries = {
-        data: data.flotpairs,
-        color: panel.sparkline.lineColor
-      };
-
-      $.plot(plotCanvas, [plotSeries], options);
-    }
-
     function render() {
       if (!ctrl.data) { return; }
       data = ctrl.data;
@@ -641,40 +604,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
       setElementHeight();
 
-      var body = panel.gauge.show ? '' : getBigValueHtml();
-
-      if (panel.colorBackground && !isNaN(data.valueRounded)) {
-        var color = getColorForValue(data, data.valueRounded);
-        if (color) {
-          $panelContainer.css('background-color', color);
-          if (scope.fullscreen) {
-            elem.css('background-color', color);
-          } else {
-            elem.css('background-color', '');
-          }
-        }
-      } else {
-        $panelContainer.css('background-color', '');
-        elem.css('background-color', '');
-      }
-
-      //elem.html(body);
-
-      if (panel.sparkline.show) {
-        addSparkline();
-      }
-
-      if (panel.gauge.show) {
-        addGauge();
-      }
-
-      elem.toggleClass('pointer', panel.links.length > 0);
-
-      if (panel.links.length > 0) {
-        linkInfo = linkSrv.getPanelLinkAnchorInfo(panel.links[0], data.scopedVars);
-      } else {
-        linkInfo = null;
-      }
+      getBigValueHtml();
     }
 
     function hookupDrilldownLinkTooltip() {

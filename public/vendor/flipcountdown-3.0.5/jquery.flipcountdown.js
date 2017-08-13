@@ -96,7 +96,9 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
 							if( !_typeCompare(blocks[i].data('value'),chars[i]) ){
 								blocks[i]
 									.removeClass('xdsoft_separator')
-									.removeClass('xdsoft_dot');
+                  .removeClass('xdsoft_dot');
+                blocks[i]
+                  .removeAttr("style");
 								switch( chars[i] ){
 									case ':':blocks[i].addClass('xdsoft_separator');break;
 									case '.':blocks[i].addClass('xdsoft_dot');break;
