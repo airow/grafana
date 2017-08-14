@@ -1,4 +1,41 @@
-<div style='position: absolute; margin: 10px 0px 0px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
-  <teld-echarts ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
+<div class="teld_panel teld_panel_popup" >
+  <div class="teld_close"><a><i class="closeIcon"></i></a></div>
+  <div class="teld_head">
+    <div class="head_right">
+      <a class="chart"><i></i>图表</a>
+      <a class="list"><i></i>列表</a>
+    </div>
+    <div class="head_name">本月充电量列表</div>
+  </div>
+  <teld-echarts class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
   </teld-echarts>
+  <div class="teld_box">
+    <table class="teld_table">
+      <thead>
+        <tr>
+          <th>日期</th>
+          <th>充电量</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2017-05-12</td>
+          <td>9998888.12</td>
+        </tr>
+        <tr>
+          <td>2017-05-12</td>
+          <td>9998888.12</td>
+        </tr>
+        <tr>
+          <td>2017-05-12</td>
+          <td>9998888.12</td>
+        </tr>
+        <tr>
+          <td>2017-05-12</td>
+          <td>9998888.12</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bottom_img"><img src="public/img/ddd/tiao.png"></div>
 </div>
