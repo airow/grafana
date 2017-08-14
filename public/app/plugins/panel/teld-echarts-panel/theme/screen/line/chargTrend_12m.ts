@@ -258,12 +258,17 @@ var chargTrend_12m = {
       "color": "#333333"
     }
   },
-  "tooltip": {
-    "trigger": 'axis',
-    "axisPointer": {
-      "type": 'cross',
-      "label": {
-        "backgroundColor": '#6a7985'
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'line',
+      lineStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+          offset: 0, color: 'rgba(4,238,241,0.8)'// 0% 处的颜色
+        }, {
+          offset: 1, color: 'rgba(25,92,160,0.2)' // 100% 处的颜色
+        }], false),
+        width: 3,
       }
     }
   },
