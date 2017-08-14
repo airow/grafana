@@ -34,6 +34,9 @@ class MetricsPanelCtrl extends PanelCtrl {
   dataSubscription: any;
   rangeStringPanel: string;
 
+  $panelInterval: any;
+  panelIntervalHandle: any;
+  thiskbn = kbn;
   constructor($scope, $injector) {
     super($scope, $injector);
 
@@ -48,9 +51,36 @@ class MetricsPanelCtrl extends PanelCtrl {
       this.panel.targets = [{}];
     }
 
-    this.events.on('refresh', this.onMetricsPanelRefresh.bind(this));
+    let panelRefresh = _.get(this.panel, 'panelRefresh', {});
+    if (panelRefresh.enable) {
+      if (panelRefresh.intervalEnable) {
+
+        let refreshInterval = this.thiskbn.interval_to_ms(panelRefresh.value || '1m');
+
+        this.$panelInterval = $injector.get('$interval');
+        this.panelIntervalHandle = this.$panelInterval(() => {
+          this.onMetricsPanelRefresh();
+        }, refreshInterval);
+      }
+      this.onMetricsPanelRefresh();
+    } else {
+      this.events.on('refresh', this.onMetricsPanelRefresh.bind(this));
+    }
+
+    // $scope.$watch(this.panel.panelRefresh, function (newValue) {
+    //   alert(newValue);
+    //   //elem.toggleClass('playlist-active', _.isObject(newValue));
+    // });
+
     this.events.on('init-edit-mode', this.onInitMetricsPanelEditMode.bind(this));
     this.events.on('panel-teardown', this.onPanelTearDown.bind(this));
+  }
+
+  onTearDownCancelPanelInterval() {
+    if (angular.isDefined(this.panelIntervalHandle)) {
+      this.$panelInterval.cancel(this.panelIntervalHandle);
+      this.panelIntervalHandle = undefined;
+    }
   }
 
   private onPanelTearDown() {
@@ -58,6 +88,8 @@ class MetricsPanelCtrl extends PanelCtrl {
       this.dataSubscription.unsubscribe();
       this.dataSubscription = null;
     }
+
+    this.onTearDownCancelPanelInterval();
   }
 
   private onInitMetricsPanelEditMode() {
@@ -66,6 +98,7 @@ class MetricsPanelCtrl extends PanelCtrl {
   }
 
   onMetricsPanelRefresh() {
+    console.log(1);
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
 
