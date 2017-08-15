@@ -29,7 +29,7 @@ export class DashboardCtrl {
     $location,
     wsAcrossScreen,
     ) {
-    $scope.wsAcrossScreen = wsAcrossScreen;
+    //$scope.wsAcrossScreen = wsAcrossScreen;
       //dashSignalRSvr.editEmployee();
       //grafanaScreenSignalrHub.send('grafana@dashboard_ctrl',new Date().valueOf());
 
