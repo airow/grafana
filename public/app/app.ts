@@ -11,6 +11,7 @@ import 'angular-bindonce';
 import 'angular-ui';
 import 'angular-post-message';
 import 'angular-signalr-hub';
+import 'angular-websocket';
 import 'ace';
 import 'ui-ace';
 import 'jquery.signalR';
@@ -95,6 +96,7 @@ export class GrafanaApp {
       'ngPostMessage',
       'SignalR',
       'me-pageloading',
+      'ngWebSocket',
     ];
 
     var module_types = ['controllers', 'directives', 'factories', 'services', 'filters', 'routes'];

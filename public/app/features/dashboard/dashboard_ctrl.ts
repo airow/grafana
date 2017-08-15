@@ -25,10 +25,11 @@ export class DashboardCtrl {
     alertSrv,
     $timeout,
     // dashSignalRSvr
-    grafanaScreenSignalrHub,
-    $location
+    //grafanaScreenSignalrHub,
+    $location,
+    wsAcrossScreen,
     ) {
-
+    //$scope.wsAcrossScreen = wsAcrossScreen;
       //dashSignalRSvr.editEmployee();
       //grafanaScreenSignalrHub.send('grafana@dashboard_ctrl',new Date().valueOf());
 
