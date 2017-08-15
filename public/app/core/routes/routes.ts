@@ -5,6 +5,7 @@ import './dashboard_loaders';
 import angular from 'angular';
 import coreModule from 'app/core/core_module';
 import {BundleLoader} from './bundle_loader';
+import config from 'app/core/config';
 
 /** @ngInject **/
 function setupAngularRoutes($routeProvider, $locationProvider, mePageLoadingProvider) {
@@ -27,7 +28,8 @@ function setupAngularRoutes($routeProvider, $locationProvider, mePageLoadingProv
   .when('/dashboard/:type/:slug', {
     templateUrl: 'public/app/partials/dashboard.html',
     controller : 'LoadDashboardCtrl',
-    reloadOnSearch: false,
+    //reloadOnSearch: true, /** 修改此处为了配合ws_across_screen进行跨屏跳转 */
+    reloadOnSearch: config.bootData.user.orgRole === "Viewer",
     pageClass: 'page-dashboard',
   })
   .when('/dashboard-solo/:type/:slug', {
