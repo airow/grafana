@@ -24,9 +24,49 @@ define([
       };
 
       var SCREEN_CONF = {
-        lefttop: goto,
-        leftbottom: goto,
-        righttop: goto,
+        /** 运营面板 */
+        lefttop: {
+          gotoprovince: {
+            /** 运营面板_U（全国） */
+            dashboard: 'dashboard://db/yun-ying-mian-ban-_u-quan-guo'
+          },
+          gotocity: {
+            /** 运营面板_U（城市）*/
+            dashboard: 'dashboard://db/gotocity'
+          },
+          gotostat: {
+            /** 运营面板_U（电站） */
+            dashboard: 'dashboard://db/gotostat'
+          }
+        },
+        leftbottom: {
+          gotoprovince: {
+            /** 运营面板_D（全国） */
+            dashboard: 'dashboard://db/yun-ying-mian-ban-_d-quan-guo'
+          },
+          gotocity: {
+            /** 运营面板_D（城市） */
+            dashboard: 'dashboard://db/gotocity' /** 运维面板_U（全国）*/
+          },
+          gotostat: {
+            /** 运营面板_D（电站） */
+            dashboard: 'dashboard://db/gotostat' /** 运营面板_D（全国） */
+          }
+        },
+
+        /** 运维面板 */
+        righttop: {
+          gotoprovince: {
+            /** 运维面板_U（全国） */
+            dashboard: 'dashboard://db/yun-wei-mian-ban-_u-quan-guo'
+          },
+          gotocity: {
+            dashboard: 'dashboard://db/gotocity'
+          },
+          gotostat: {
+            dashboard: 'dashboard://db/gotostat'
+          }
+        },
         rightbottom: goto
       };
 
@@ -127,11 +167,11 @@ define([
     });
   });
 
-  /**
-   *
-    // wsAcrossScreen.send({ sender: 'user9', message: { p1: 1, p2: "string" } });
-    // wsAcrossScreen.sendTo('map', { sender: 'user9', message: { p1: 1, p2: "map" } });
-    // wsAcrossScreen.sendTo('user0', { sender: 'user9', message: { p1: 1, p2: "user0" } });
-    // wsAcrossScreen.sendTo('map', 'hello map');
-    // wsAcrossScreen.sendTo('user0', 'hello user0');
-   */
+/**
+ *
+  // wsAcrossScreen.send({ sender: 'user9', message: { p1: 1, p2: "string" } });
+  // wsAcrossScreen.sendTo('map', { sender: 'user9', message: { p1: 1, p2: "map" } });
+  // wsAcrossScreen.sendTo('user0', { sender: 'user9', message: { p1: 1, p2: "user0" } });
+  // wsAcrossScreen.sendTo('map', 'hello map');
+  // wsAcrossScreen.sendTo('user0', 'hello user0');
+  */
