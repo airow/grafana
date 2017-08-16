@@ -6,7 +6,7 @@ define([
   function (angular, _, wsAcrossScreenConf) {
     'use strict';
     var module = angular.module('grafana.services');
-    module.factory('wsAcrossScreen', function ($websocket, contextSrv, alertSrv, teldHelperSrv) {
+    module.factory('wsAcrossScreen', function ($websocket, contextSrv, alertSrv, dashboardSrv, teldHelperSrv) {
 
       var username = contextSrv.user.name;
 
@@ -95,6 +95,14 @@ define([
       });
 
       return {
+        conf: function (dash) {
+          if (currentScreen) {
+            dash = dash || dashboardSrv.getCurrent();
+            if (dash) {
+              dash.hideDashNavbar = true;
+            }
+          }
+        },
         status: function () {
           return ws.readyState;
         },

@@ -89,6 +89,8 @@ export class DashboardCtrl {
             unsavedChangesSrv.init(dashboard, $scope);
           }
 
+          wsAcrossScreen.conf(dashboard);
+
           $scope.dashboard = dashboard;
           $scope.dashboardMeta = dashboard.meta;
           $scope.dashboardViewState = dashboardViewStateSrv.create($scope);
