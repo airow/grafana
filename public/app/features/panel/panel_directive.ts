@@ -115,6 +115,7 @@ module.directive('grafanaPanel', function($rootScope) {
           }
 
           panelContainer.css({ minHeight: fillHeight });
+          //panelContainer.animate({ minHeight: fillHeight });
           /** 填充屏幕 */
           //panelContainer.css({minHeight: ctrl.containerHeight});
           lastHeight = ctrl.containerHeight;
