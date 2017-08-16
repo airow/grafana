@@ -1,6 +1,5 @@
 <!--teld_panel_popup弹窗框的样式加上此类-->
-{{ctrl.panelView}}
-<div class="teld_panel" ng-class="{'teld_panel_popup':ctrl.panelView}">
+<div class="teld_panel" ng-class="{'teld_panel_popup':ctrl.isfullscreen()}">
   <div class="teld_close" ng-click="ctrl.exitFullscreen()"><a><i class="closeIcon"></i></a></div>
   <div class="teld_head">
     <div class="head_right">

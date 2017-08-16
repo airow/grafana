@@ -13,7 +13,7 @@ $font-size36: 36px;
   }
 }
 .teld_panel_popup{
-  bottom: -130px;
+  /*bottom: -130px; * 程序控制高度不需要单独设置 */
   box-sizing:border-box;
   background-color:#1A3F61;// $blue-6;
   border: 2px solid $blue-7;

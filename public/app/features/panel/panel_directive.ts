@@ -102,22 +102,19 @@ module.directive('grafanaPanel', function($rootScope) {
 
       ctrl.events.on('render', () => {
         if (lastHeight !== ctrl.containerHeight) {
+          /** 填充屏幕 */
+          // panel_ctrl.calculatePanelHeight() @ public\app\features\panel\panel_ctrl.ts
+          let fillHeight = ctrl.containerHeight;
+          if (ctrl.fullscreen) {
+            fillHeight /= (ctrl.editMode ? 0.4 : 0.8);
 
-          let hSize = {
-            h1: 72.7813,
-            h2: 65.7813,
-            h3: 58.7813,
-            h4: 43.7813,
-            h5: 39.7813,
-            h6: 37.7813,
-          };
-          // panelContainer.css({ minHeight: ctrl.containerHeight});
-          let h = _.sumBy(_.filter(ctrl.dashboard.rows, 'fullScreenShow'), o => {
-            let val = parseFloat(o.height);
-            let titleH = (o.showTitle || o.collapse) ? hSize[o.titleSize] : 0;
-            return val + titleH;
-          });
-          panelContainer.css({ minHeight: ctrl.containerHeight - h });
+            let offset = panelContainer.offset();
+            fillHeight -= offset.top;
+          }
+
+          panelContainer.css({ minHeight: fillHeight });
+          /** 填充屏幕 */
+          //panelContainer.css({minHeight: ctrl.containerHeight});
           lastHeight = ctrl.containerHeight;
         }
 
@@ -153,7 +150,6 @@ module.directive('grafanaPanel', function($rootScope) {
       $rootScope.onAppEvent('panel-change-view', function(evt, payload) {
         if (lastFullscreen !== ctrl.fullscreen) {
           elem.toggleClass('panel-fullscreen', ctrl.fullscreen ? true : false);
-          // elem.toggleClass('teld_panel_popup', ctrl.fullscreen ? true : false && ctrl.edit ? false : true);
           lastFullscreen = ctrl.fullscreen;
         }
       }, scope);
