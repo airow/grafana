@@ -137,8 +137,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.events.on('panel-teardown', this.onTearDown.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
 
-    this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
-    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
+    // this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
+    // this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
   }
 
@@ -231,7 +231,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       //     show: false
       //   }
       // }],
-      //series: [{ type: 'line', data: [1, 2, 3, 4, 5] }]
+      series: []
     };
 
     this.ecOption = {
@@ -629,6 +629,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
+
+    if (this.enablePanelRefresh && (!this.ecSeries || this.ecSeries.length === 0)) {
+      /**处理面板自刷新，取不到数无法显示的问题 */
+      this.onMetricsPanelRefresh();
+      return;
+    }
 
     let xAxis, categoryAxis;
     xAxis = categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
