@@ -7,12 +7,13 @@ $font-size36: 36px;
   top: 0px;
   left: 0px;
   right: 0px;
-  bottom: -130px;
+  bottom: 0px;
   .teld_close,.teld_head,.teld_box,.bottom_img{
     display: none;
   }
 }
 .teld_panel_popup{
+  bottom: -130px;
   box-sizing:border-box;
   background-color:#1A3F61;// $blue-6;
   border: 2px solid $blue-7;
