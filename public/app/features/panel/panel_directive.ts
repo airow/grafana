@@ -153,6 +153,7 @@ module.directive('grafanaPanel', function($rootScope) {
       $rootScope.onAppEvent('panel-change-view', function(evt, payload) {
         if (lastFullscreen !== ctrl.fullscreen) {
           elem.toggleClass('panel-fullscreen', ctrl.fullscreen ? true : false);
+          // elem.toggleClass('teld_panel_popup', ctrl.fullscreen ? true : false && ctrl.edit ? false : true);
           lastFullscreen = ctrl.fullscreen;
         }
       }, scope);
