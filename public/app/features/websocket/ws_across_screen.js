@@ -1,76 +1,26 @@
 define([
   'angular',
-  'lodash'
+  'lodash',
+  'app/conf/wsAcrossScreenConf'
 ],
-  function (angular, _) {
+  function (angular, _, wsAcrossScreenConf) {
     'use strict';
     var module = angular.module('grafana.services');
     module.factory('wsAcrossScreen', function ($websocket, contextSrv, alertSrv, teldHelperSrv) {
 
       var username = contextSrv.user.name;
 
-      var ws = $websocket('ws://rp1.teld.cn/api/WebSocket?user=' + username);
+      var compiled = _.template(wsAcrossScreenConf.wsServerUrl);
+      var wsServerUrl = compiled(contextSrv.user);
 
-      var goto = {
-        gotoprovince: {
-          dashboard: 'dashboard://db/gotoprovince'
-        },
-        gotocity: {
-          dashboard: 'dashboard://db/gotocity'
-        },
-        gotostat: {
-          dashboard: 'dashboard://db/gotostat'
-        }
-      };
+      var ws = $websocket(wsServerUrl);
 
-      var SCREEN_CONF = {
-        /** 运营面板 */
-        lefttop: {
-          gotoprovince: {
-            /** 运营面板_U（全国） */
-            dashboard: 'dashboard://db/yun-ying-mian-ban-_u-quan-guo'
-          },
-          gotocity: {
-            /** 运营面板_U（城市）*/
-            dashboard: 'dashboard://db/gotocity'
-          },
-          gotostat: {
-            /** 运营面板_U（电站） */
-            dashboard: 'dashboard://db/gotostat'
-          }
-        },
-        leftbottom: {
-          gotoprovince: {
-            /** 运营面板_D（全国） */
-            dashboard: 'dashboard://db/yun-ying-mian-ban-_d-quan-guo'
-          },
-          gotocity: {
-            /** 运营面板_D（城市） */
-            dashboard: 'dashboard://db/gotocity' /** 运维面板_U（全国）*/
-          },
-          gotostat: {
-            /** 运营面板_D（电站） */
-            dashboard: 'dashboard://db/gotostat' /** 运营面板_D（全国） */
-          }
-        },
+      //var goto = wsAcrossScreenConf.goto;
 
-        /** 运维面板 */
-        righttop: {
-          gotoprovince: {
-            /** 运维面板_U（全国） */
-            dashboard: 'dashboard://db/yun-wei-mian-ban-_u-quan-guo'
-          },
-          gotocity: {
-            dashboard: 'dashboard://db/gotocity'
-          },
-          gotostat: {
-            dashboard: 'dashboard://db/gotostat'
-          }
-        },
-        rightbottom: goto
-      };
+      var SCREEN_CONF = wsAcrossScreenConf.SCREEN_CONF;
 
-      var currentScreen = SCREEN_CONF[_.toLower(username)] || goto;
+      //var currentScreen = SCREEN_CONF[_.toLower(username)] || goto;
+      var currentScreen = SCREEN_CONF[_.toLower(username)];
       console.log(contextSrv.user);
 
       var changeDashboard = function (wsMessage) {
@@ -79,12 +29,14 @@ define([
         var type = message.type;
         var params = message.params;
 
-        var nextScene = currentScreen[type];
+        if (currentScreen) {
+          var nextScene = currentScreen[type];
 
-        _.defaultsDeep(params, nextScene);
+          _.defaultsDeep(params, nextScene);
 
-        if (params.dashboard) {
-          teldHelperSrv.gotoDashboard(params.dashboard, params);
+          if (params.dashboard) {
+            teldHelperSrv.gotoDashboard(params.dashboard, params);
+          }
         }
       };
 
