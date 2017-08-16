@@ -93,6 +93,8 @@ export class DashboardCtrl {
           $scope.dashboardMeta = dashboard.meta;
           $scope.dashboardViewState = dashboardViewStateSrv.create($scope);
 
+          $rootScope.g_DashboardViewState = $scope.dashboardViewState.state;
+
           keybindingSrv.setupDashboardBindings($scope, dashboard);
 
           $scope.dashboard.updateSubmenuVisibility();
