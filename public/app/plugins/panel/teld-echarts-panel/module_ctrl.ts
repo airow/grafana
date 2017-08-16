@@ -137,8 +137,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.events.on('panel-teardown', this.onTearDown.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
 
-    this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
-    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
+    this.$rootScope.onAppEvent('panel-change-view', this.onPanelChangeView.bind(this));
+    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.onPanelFullscreenExit.bind(this));
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
   }
 
@@ -151,6 +151,27 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   }
 
+  panelView = false;
+
+  // exitFullscreen() {
+
+  // }
+
+  onPanelChangeView(evt, payload) {
+    if (payload.panelId === this.panel.id) {
+      this.panelView = true;
+    }
+    this.ecInstanceResizeWithSeft(evt, payload);
+  }
+
+  onPanelFullscreenExit(evt, payload) {
+    if (payload.panelId === this.panel.id) {
+      this.panelView = false;
+    }
+
+    this.ecInstanceResizeWithSeft(evt, payload);
+  }
+
   ecInstanceResizeWithSeft(evt, payload) {
     if (payload.panelId === this.panel.id) {
       this.ecInstanceResize(evt, payload);
@@ -159,7 +180,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   ecInstanceResize(evt, payload) {
     if (this.ecInstance) {
-      this.ecInstance.resize();
       this.$timeout(() => {
         this.ecInstance.resize();
       }, 1000);
