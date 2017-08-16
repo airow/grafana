@@ -143,7 +143,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   isfullscreen() {
-    return this.$rootScope.g_DashboardViewState.fullscreen && this.$rootScope.g_DashboardViewState.edit === null;
+    let viewState = this.$rootScope.g_DashboardViewState;
+    let editMode = viewState.edit === null || viewState.edit === false;
+    return viewState.fullscreen && editMode;
   }
 
   axisLableFormatter(axis, value, index) {
