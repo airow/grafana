@@ -106,7 +106,9 @@ module.directive('grafanaPanel', function($rootScope) {
           // panel_ctrl.calculatePanelHeight() @ public\app\features\panel\panel_ctrl.ts
           let fillHeight = ctrl.containerHeight;
           if (ctrl.fullscreen) {
-            fillHeight /= (ctrl.editMode ? 0.4 : 0.8);
+            let p = (ctrl.editMode ? 0.4 : 0.8);
+            fillHeight /= p;
+            fillHeight *= (p + 0.18);
 
             let offset = panelContainer.offset();
             fillHeight -= offset.top;
