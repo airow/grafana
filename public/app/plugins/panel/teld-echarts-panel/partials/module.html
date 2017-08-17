@@ -2,41 +2,32 @@
 <div class="teld_panel" ng-class="{'teld_panel_popup':ctrl.isfullscreen()}">
   <div class="teld_close" ng-click="ctrl.exitFullscreen()"><a><i class="closeIcon"></i></a></div>
   <div class="teld_head">
-    <div class="head_right" ng-show="false">
-      <a class="chart"><i></i>图表</a>
-      <a class="list"><i></i>列表</a>
+    <div class="head_right">
+      <a ng-hide="ctrl.currentMode==='chart'" ng-click="ctrl.currentMode='chart'" class="chart"><i></i>图表</a>
+      <a ng-hide="ctrl.currentMode==='list'" ng-click="ctrl.currentMode='list'" class="list"><i></i>列表</a>
     </div>
     <div class="head_name">本月充电量列表</div>
   </div>
-    <teld-echarts class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
+    <teld-echarts ng-show="ctrl.currentMode==='chart'" class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
     </teld-echarts>
-    <div class="teld_box">
+    <div ng-show="ctrl.currentMode==='list'" class="teld_box">
       <table class="teld_table">
         <thead>
           <tr>
-            <th>日期</th>
-            <th>充电量</th>
+            <th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
+              <div class="pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
+                {{col.alias||col.text}}
+                <span class="table-panel-table-header-controls" ng-if="col.sort">
+                    <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                    <i class="fa fa-caret-up" ng-hide="col.desc"></i>
+                  </span>
+              </div>
+            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>2017-05-12</td>
-            <td>9998888.12</td>
-          </tr>
-          <tr>
-            <td>2017-05-12</td>
-            <td>9998888.12</td>
-          </tr>
-          <tr>
-            <td>2017-05-12</td>
-            <td>9998888.12</td>
-          </tr>
-          <tr>
-            <td>2017-05-12</td>
-            <td>9998888.12</td>
-          </tr>
+        <tbody ng-bind-html="ctrl.tbodyHtml">
         </tbody>
       </table>
     </div>
-  <div class="bottom_img"><img src="public/img/ddd/tiao.png"></div>
+  <div class="bottom_img"><img ng-show="ctrl.currentMode==='chart'" src="public/img/ddd/tiao.png"></div>
 </div>
