@@ -4,7 +4,7 @@
   <div class="teld_head">
     <div class="head_right">
       <a ng-hide="ctrl.currentMode==='chart'" ng-click="ctrl.currentMode='chart'" class="chart"><i></i>图表</a>
-      <a ng-hide="ctrl.currentMode==='list'" ng-click="ctrl.currentMode='list'" class="list"><i></i>列表</a>
+      <a ng-if="ctrl.panel.showTable" ng-hide="ctrl.currentMode==='list'" ng-click="ctrl.currentMode='list'" class="list"><i></i>列表</a>
     </div>
     <div class="head_name">本月充电量列表</div>
   </div>

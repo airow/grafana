@@ -123,6 +123,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       },
     },
 
+    showTable: false,/** 是否显示表格 */
     /** 表格展示配置信息，参考table面板 */
     transform: 'timeseries_to_columns',
     pageSize: null,
@@ -317,6 +318,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   renderTable(dataList) {
+
+    if (false === this.panel.showTable) { return; }
+
     this.dataRaw = dataList;
 
     if (this.dataRaw && this.dataRaw.length) {
