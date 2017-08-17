@@ -23,4 +23,5 @@ define([
   './repeat_option/repeat_option',
   '../signalr/dash_signalr_svr',
   '../signalr/grafana_screen_signalr_hub',
+  '../websocket/ws_across_screen',
 ], function () {});

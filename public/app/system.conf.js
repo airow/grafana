@@ -21,7 +21,9 @@ System.config({
     "angular-dragdrop":       "vendor/angular-native-dragdrop/draganddrop.js",
     "angular-bindonce":       "vendor/angular-bindonce/bindonce.js",
     "angular-post-message":   "vendor/angular-post-message/src/angular-post-message.js",
-    "angular-signalr-hub":   "vendor/angular-signalr-hub/signalr-hub.js",
+    "angular-signalr-hub":    "vendor/angular-signalr-hub/signalr-hub.js",
+    "ws":                     "vendor/require-undefined.js", /*mock angular-websocket require('ws') */
+    "angular-websocket":      "vendor/angular-websocket-2.0.0/dist/angular-websocket.js",
     "ace":             "vendor/ace-builds-1.2.8/src-min-noconflict/ace.js",
     "ui-ace":          "vendor/ui-ace-0.2.3/ui-ace.js",
     "Snap.svg":        "vendor/Snap.svg-0.5.1/dist/snap.svg.js",

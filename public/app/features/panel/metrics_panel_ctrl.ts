@@ -36,6 +36,8 @@ class MetricsPanelCtrl extends PanelCtrl {
 
   $panelInterval: any;
   panelIntervalHandle: any;
+
+  enablePanelRefresh: boolean;
   thiskbn = kbn;
   constructor($scope, $injector) {
     super($scope, $injector);
@@ -54,7 +56,7 @@ class MetricsPanelCtrl extends PanelCtrl {
     let panelRefresh = _.get(this.panel, 'panelRefresh', {});
     if (panelRefresh.enable) {
       if (panelRefresh.intervalEnable) {
-
+        this.enablePanelRefresh = true;
         let refreshInterval = this.thiskbn.interval_to_ms(panelRefresh.value || '1m');
 
         this.$panelInterval = $injector.get('$interval');

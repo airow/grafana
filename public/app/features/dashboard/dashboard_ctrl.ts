@@ -25,10 +25,11 @@ export class DashboardCtrl {
     alertSrv,
     $timeout,
     // dashSignalRSvr
-    grafanaScreenSignalrHub,
-    $location
+    //grafanaScreenSignalrHub,
+    $location,
+    wsAcrossScreen,
     ) {
-
+    $scope.wsAcrossScreen = wsAcrossScreen;
       //dashSignalRSvr.editEmployee();
       //grafanaScreenSignalrHub.send('grafana@dashboard_ctrl',new Date().valueOf());
 
@@ -87,6 +88,8 @@ export class DashboardCtrl {
           if (contextSrv.user.name !== "screen") {
             unsavedChangesSrv.init(dashboard, $scope);
           }
+
+          wsAcrossScreen.conf(dashboard);
 
           $scope.dashboard = dashboard;
           $scope.dashboardMeta = dashboard.meta;

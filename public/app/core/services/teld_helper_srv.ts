@@ -7,10 +7,24 @@ import coreModule from '../core_module';
 
 class TeldHelperSrv {
 
-  /** @ngInject */
-  constructor(private $location, private backendSrv) { }
+  varMappingConf: any[];
 
-  gotoDashboard(target) {
+  /** @ngInject */
+  constructor(private $location, private backendSrv) {
+
+    this.varMappingConf = [
+      { qsKey: 'qs', varPrefix: '' },
+      { qsKey: 'var', varPrefix: 'var-' },
+      { qsKey: '_$', varPrefix: '_$' }
+    ];
+  }
+  /**
+   *
+   * @param target
+   * @param search
+   * search:{qs:{},var:{},_$:{}}
+   */
+  gotoDashboard(target, search?) {
     if (_.startsWith(target, "dashboard://")) {
       let uri = _.replace(target, 'dashboard://', '');
       this.$location.path(`dashboard/${uri}`);
@@ -24,6 +38,16 @@ class TeldHelperSrv {
         }
       });
     }
+
+    let qs = {};
+
+    this.varMappingConf.forEach(element => {
+      qs = _.transform(_.get(search, element.qsKey, {}), function (result, value, key) {
+        result[`${element.varPrefix}${key}`] = value;
+      }, qs);
+    });
+
+    this.$location.search(qs);
   }
 }
 

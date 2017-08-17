@@ -732,6 +732,10 @@ function($, _, numeral, moment) {
     return kbn.valueFormats.teldMoment(value, "YYYY-MM-DD");
   };
 
+  kbn.valueFormats.teldYYYY_MM = function (value) {
+    return kbn.valueFormats.teldMoment(value, "YYYY-MM");
+  };
+
   kbn.valueFormats.teldYYYY = function (value) {
     return kbn.valueFormats.teldMoment(value, "YYYY");
   };
@@ -935,6 +939,7 @@ function($, _, numeral, moment) {
         submenu: [
           { text: '字符串', value: 'teldString' },
           { text: '年-月-日', value: 'teldYYYY_MM_DD' },
+          { text: '年-月', value: 'teldYYYY_MM' },
           { text: '年', value: 'teldYYYY' },
           { text: '月', value: 'teldMM' },
           { text: '日', value: 'teldDD' },

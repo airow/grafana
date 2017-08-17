@@ -1,0 +1,149 @@
+﻿html, body
+{
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    font-size: 14px;
+    font-family: Arial,'Microsoft YaHei';
+}
+
+.content-panel
+{
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 20px;
+}
+
+.block-left
+{
+    float: left;
+}
+
+.bolck-operate
+{
+    border: 1px solid #dedede;
+    width: 60%;
+}
+
+.bolck-operate-user
+{
+    border: 1px solid #dedede;
+    width: 90%;
+}
+
+.bolck-userlist
+{
+    border: 1px solid #dedede;
+    width: 35%;
+    margin-left: 1%;
+}
+
+.block-title
+{
+    background-color: #2b97ff;
+    color: white;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #dedede;
+}
+
+#divMessage
+{
+    border: none;
+    width: 100%;
+    height: 700px;
+    overflow-y: auto;
+    line-height: 30px;
+}
+
+#divOperate
+{
+    border-top: 1px solid #dedede;
+    height: 40px;
+}
+
+#divUser
+{
+    float: left;
+    width: 10%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+
+#txtMessage
+{
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    background-color: #eeeeee;
+    width: 60%;
+    margin-top: 4px;
+    display: inherit;
+    float: left;
+}
+
+#btnSend
+{
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #adadad;
+    background-color: #2b97ff;
+    cursor: pointer;
+    color: white;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+    #btnSend:hover
+    {
+        background-color: #ff6a00;
+    }
+
+.user-item
+{
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-bottom: 1px solid #dedede;
+    cursor: pointer;
+}
+
+    .user-item:hover
+    {
+        color: red;
+    }
+
+.user-select
+{
+    background-color: #ff6a00;
+    color: white;
+}
+
+.check-all
+{
+    float: right;
+    height: 40px;
+    width: 50px;
+    line-height: 40px;
+    text-align: center;
+    color: white;
+    border: none;
+}
+
+#cbAll
+{
+    height: 15px;
+    width: 15px;
+    margin: auto 0px;
+    cursor: pointer;
+}
+
+#divMessage .message-item:nth-child(odd)
+{
+    background: #eaf8f9 !important;
+}

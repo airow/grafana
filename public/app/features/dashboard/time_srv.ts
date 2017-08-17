@@ -17,7 +17,7 @@ class TimeSrv {
   timeAtLoad: any;
 
   /** @ngInject **/
-  constructor(private $rootScope, private $timeout, private $location, private timer, private contextSrv, private grafanaScreenSignalrHub) {
+  constructor(private $rootScope, private $timeout, private $location, private timer, private contextSrv) {
     // default time
     this.time = {from: '6h', to: 'now'};
 
