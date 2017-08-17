@@ -297,7 +297,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
   }
 
   getVal(value) {
-    if (this.data.scopedVars) {
+    if (this.data && this.data.scopedVars) {
       value = this.templateSrv.replace(value, this.data.scopedVars);
     }
     return value;

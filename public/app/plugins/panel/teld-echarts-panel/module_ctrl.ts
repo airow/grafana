@@ -15,6 +15,10 @@ import { MetricsPanelCtrl, loadPluginCss } from 'app/plugins/sdk';
 import echarts from 'echarts';
 import echartsTheme, { echartsThemeName } from './theme/all';
 
+import * as FileExport from 'app/core/utils/file_export';
+import {transformDataToTable} from '../table/transformers';
+import {tablePanelEditor} from '../table/editor';
+import {TableRenderer} from '../table/renderer';
 
 import { styleEditorComponent } from './style_editor';
 import { tabStyleEditorComponent } from './tab_style_editor';
@@ -72,6 +76,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   echartsTheme: any;
   echartsThemeName: any;
 
+  currentMode = 'chart';
+  dataRaw: any;
+  table: any;
+  tbodyHtml: any;
+
   // Set and populate defaults
   panelDefaults = {
     formatter: {
@@ -112,12 +121,39 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           radius: [0, '67%']
         }
       },
-    }
+    },
+
+    showTable: false,/** 是否显示表格 */
+    /** 表格展示配置信息，参考table面板 */
+    transform: 'timeseries_to_columns',
+    pageSize: null,
+    showHeader: true,
+    styles: [
+      {
+        type: 'date',
+        pattern: 'Time',
+        dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      },
+      {
+        unit: 'short',
+        type: 'number',
+        decimals: 2,
+        colors: ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
+        colorMode: null,
+        pattern: '/.*/',
+        thresholds: [],
+      }
+    ],
+    columns: [],
+    scroll: true,
+    fontSize: '100%',
+    sort: {col: 0, desc: true},
+    filterNull: false,
   };
 
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
-    private dashboardSrv, private uiSegmentSrv, private $http, private $interval) {
+    private dashboardSrv, private uiSegmentSrv, private $http, private $interval, private $sanitize) {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
@@ -137,9 +173,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.events.on('panel-teardown', this.onTearDown.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
 
+    this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+
     // this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
     // this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
+    this.$rootScope.onAppEvent('panel-fullscreen-exit', () => { this.currentMode = 'chart'; });
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
+  }
+
+  onInitPanelActions(actions) {
+    actions.push({ text: 'Export CSV', click: 'ctrl.exportCsv()' });
   }
 
   isfullscreen() {
@@ -176,9 +219,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    //this.addEditorTab('Style1', styleEditorComponent);
     this.addEditorTab('Style', tabStyleEditorComponent);
     this.addEditorTab('Series', seriesEditorComponent);
+    this.addEditorTab('Options', tablePanelEditor);
     this.editorTabIndex = 1;
   }
 
@@ -248,17 +291,65 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   categoryFormat(value) {
     let formater = this.valueFormats[this.panel.formatter.category.format];
     return formater(value);
-    //return moment(value).format("YYYY-MM-DD");
-    //return value;
+  }
+
+  exportCsv() {
+    var renderer = new TableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    FileExport.exportTableDataToCsv(renderer.render_values());
+  }
+
+  toggleColumnSort(col, colIndex) {
+    // remove sort flag from current column
+    if (this.table.columns[this.panel.sort.col]) {
+      this.table.columns[this.panel.sort.col].sort = false;
+    }
+
+    if (this.panel.sort.col === colIndex) {
+      if (this.panel.sort.desc) {
+        this.panel.sort.desc = false;
+      } else {
+        this.panel.sort.col = null;
+      }
+    } else {
+      this.panel.sort.col = colIndex;
+      this.panel.sort.desc = true;
+    }
+    this.renderTableRows();
+  }
+
+  renderTable(dataList) {
+
+    if (false === this.panel.showTable) { return; }
+
+    this.dataRaw = dataList;
+
+    if (this.dataRaw && this.dataRaw.length) {
+      if (this.dataRaw[0].type === 'table') {
+        this.panel.transform = 'table';
+      } else {
+        if (this.dataRaw[0].type === 'docs') {
+          this.panel.transform = 'json';
+        } else {
+          if (this.panel.transform === 'table' || this.panel.transform === 'json') {
+            this.panel.transform = 'timeseries_to_rows';
+          }
+        }
+      }
+    }
+
+    this.table = transformDataToTable(this.dataRaw, this.panel);
+    this.renderTableRows();
+  }
+
+  renderTableRows() {
+    this.table.sort(this.panel.sort);
+    var renderer = new TableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    this.tbodyHtml = this.$sce.trustAsHtml(renderer.render(0));
   }
 
   onDataReceived(dataList) {
 
-    console.group('onDataReceived(dataList)');
-    console.log(dataList);
-    console.groupEnd();
-
-    console.group('转换数据');
+    this.renderTable(dataList);
 
     /**
      * {datapoints: Array(5), metric: "sum", field: "总电量", props: {…}, target: "SUM_总电量"}
@@ -269,7 +360,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let series = this.dataList2Serie(dataList);
 
     this.ecSeries = series;
-    console.groupEnd();
 
     this.render();
   }
@@ -357,6 +447,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return series;
   }
 
+  /*
   defaultSeries33(dataList) {
     let series = _.map(dataList, item => {
 
@@ -445,6 +536,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     return series;
   }
+  */
 
   getDefaultSerie() {
     let serieType = this.panel.serieType;
@@ -735,17 +827,4 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     // }
 
   }
-
-  // link(scope, elem, attrs, ctrl) {
-  //   var $panelContainer = elem.find('.panel-container');
-
-  //   elem = elem.find('.panel-content');
-  //   elem.css('height', ctrl.height + 'px');
-
-  //   function setElementHeight() {
-  //     elem.css('height', ctrl.height + 'px');
-  //   }
-  // }
 }
-
-
