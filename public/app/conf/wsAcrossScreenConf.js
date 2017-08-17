@@ -14,6 +14,7 @@ define([], function() {
   };
 
   var SCREEN_CONF = {
+    goto: goto,
     /** 运营面板 */
     lefttop: {
       gotoprovince: {
@@ -22,11 +23,11 @@ define([], function() {
       },
       gotocity: {
         /** 运营面板_U（城市）*/
-        dashboard: 'dashboard://db/gotocity'
+        dashboard: 'dashboard://db/yun-ying-mian-ban-_u-cheng-shi'
       },
       gotostat: {
         /** 运营面板_U（电站） */
-        dashboard: 'dashboard://db/gotostat'
+        dashboard: 'dashboard://db/yun-ying-mian-ban-_u-dian-zhan'
       }
     },
     leftbottom: {
@@ -36,11 +37,11 @@ define([], function() {
       },
       gotocity: {
         /** 运营面板_D（城市） */
-        dashboard: 'dashboard://db/gotocity' /** 运维面板_U（全国）*/
+        dashboard: 'dashboard://db/yun-ying-mian-ban-_d-cheng-shi'
       },
       gotostat: {
         /** 运营面板_D（电站） */
-        dashboard: 'dashboard://db/gotostat' /** 运营面板_D（全国） */
+        dashboard: 'dashboard://db/yun-ying-mian-ban-_d-dian-zhan'
       }
     },
 
@@ -51,13 +52,28 @@ define([], function() {
         dashboard: 'dashboard://db/yun-wei-mian-ban-_u-quan-guo'
       },
       gotocity: {
-        dashboard: 'dashboard://db/gotocity'
+        /** 运维面板_U（城市） */
+        dashboard: 'dashboard://db/yun-wei-mian-ban-_u-cheng-shi'
       },
       gotostat: {
-        dashboard: 'dashboard://db/gotostat'
+        /** 运维面板_U（电站） */
+        dashboard: 'dashboard://db/yun-wei-mian-ban-_u-dian-zhan'
       }
     },
-    rightbottom: goto
+    rightbottom: {
+      gotoprovince: {
+        /** 运维面板_D（全国） */
+        dashboard: 'dashboard://db/yun-wei-mian-ban-_d-quan-guo'
+      },
+      gotocity: {
+        /** 运维面板_D（城市） */
+        dashboard: 'dashboard://db/yun-wei-mian-ban-_d-cheng-shi'
+      },
+      gotostat: {
+        /** 运维面板_U（电站） */
+        dashboard: 'dashboard://db/yun-wei-mian-ban-_d-dian-zhan'
+      }
+    }
   };
 
   var conf = {
