@@ -21,6 +21,12 @@ function ecOptTextstyleDirective($compile, datasourceSrv, $rootScope, $q, $http,
         if (this.ctrl) { this.ctrl.refresh(); }
         //this.$root.$broadcast('refresh');
       };
+      scope.getFontWeight = () => {
+        return ['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'];
+      };
+      scope.getFontFamily = () => {
+        return ['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC'];
+      };
     }
   };
 }

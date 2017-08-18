@@ -4,15 +4,17 @@
 </div>
 <div class="gf-form">
   <label class="gf-form-label width-8" ng-click="refresh()">fontStyle</label>
-  <input type="text" on-change="alert(3)" ng-blur="alert(3)" ng-model="textStyle.fontStyle" class="gf-form-input">
+  <input type="text" ng-model="textStyle.fontStyle" bs-typeahead="['normal','italic','oblique']" class="gf-form-input">
+  <!--on-change="alert(3)" ng-blur="alert(3)"-->
+  <!--<select class="gf-form-input" ng-model="textStyle.fontStyle" ng-options="serie for serie in ['normal','italic','oblique']" ng-change="ctrl.refresh()"></select>-->
 </div>
 <div class="gf-form">
-  <label class="gf-form-label width-8" ng-click="ctrl.refresh()">fontWeight</label>
-  <input type="text" on-change="refresh()" ng-model="textStyle.fontWeight" class="gf-form-input">
+  <label class="gf-form-label width-8" ng-click="ctrl.refresh()">fontWeight <tip>'normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'</tip></label>
+  <input type="text" on-change="refresh()" ng-model="textStyle.fontWeight" bs-typeahead="getFontWeight()" class="gf-form-input">
 </div>
 <div class="gf-form">
-  <label class="gf-form-label width-8">fontFamily</label>
-  <input type="text" on-change="refresh()" ng-model="textStyle.fontFamily" class="gf-form-input">
+  <label class="gf-form-label width-8">fontFamily <tip>'sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC'</tip></label>
+  <input type="text" on-change="refresh()" ng-model="textStyle.fontFamily"  bs-typeahead="getFontFamily()" class="gf-form-input">
 </div>
 <div class="gf-form">
   <label class="gf-form-label width-8">fontSize</label>
