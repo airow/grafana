@@ -1,0 +1,63 @@
+{{ctrl.panel.type}}
+<div ng-switch="ctrl.panel.type">
+  <div class="editor-row" ng-switch-when="teld-singlestat-panel">
+    <div class="section gf-form-group">
+      <h5 class="section-heading" ng-bind="ctrl.panel.type"></h5>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="Enable" label-class="width-8" checked="ctrl.panel.echartsPanel.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">title</label>
+        <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echartsPanel.args.title">
+      </div>
+    </div>
+  </div>
+  <div class="editor-row" ng-switch-when="teld-flipcountdown-panel">
+    <div class="section gf-form-group">
+      <h5 class="section-heading" ng-bind="ctrl.panel.type"></h5>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="Enable" label-class="width-8" checked="ctrl.panel.echartsPanel.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">title</label>
+        <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echartsPanel.args.title">
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-row" ng-switch-when="teld-echarts-panel">
+    <div class="section gf-form-group">
+      <h5 class="section-heading" ng-bind="ctrl.panel.type"></h5>
+      <gf-form-switch class="gf-form" label="Enable" label-class="width-8" checked="ctrl.panel.eventSubscribe.enable" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-9">
+              panel id / event title
+            </label>
+          </div>
+
+          <div class="gf-form" ng-repeat="vp in ctrl.panel.eventSubscribe.eventPanels track by $index">
+            <input type="text" class="gf-form-input width-5" ng-model="vp.keyword">
+            <label class="gf-form-label">
+              <a ng-click="ctrl.removeEventPanel($index)">
+                <i class="fa fa-remove"></i>
+              </a>
+            </label>
+          </div>
+
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword">
+              <a ng-click="ctrl.addEventPanel()"><i class="fa fa-plus"></i></a>
+            </label>
+          </div>
+
+          <div class="gf-form gf-form--grow">
+            <div class="gf-form-label gf-form-label--grow"></div>
+          </div>
+        </div>
+
+    </div>
+  </div>
+</div>

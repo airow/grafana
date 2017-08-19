@@ -13,6 +13,7 @@ import config from 'app/core/config';
 import TimeSeries from 'app/core/time_series2';
 import {MetricsPanelCtrl, loadPluginCssPath} from 'app/plugins/sdk';
 
+import { flipcountdownEchartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
 
 loadPluginCssPath({
   //cssPath: '/public/app/plugins/panel/teld-flipcountdown-panel/css/singlestat.css',
@@ -70,7 +71,13 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
       incrementModel: 'totalStep',
       varName: `currentVal`
     },
-    size: 'teld'
+    size: 'teld',
+    echartsPanel: {
+      enabled: false,
+      args: {
+        title: ''
+      }
+    }
   };
 
   /** @ngInject */
@@ -92,9 +99,12 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     }
   }
 
+
+
   onInitEditMode() {
     this.fontSizes = ['20%', '30%','50%','70%','80%','100%', '110%', '120%', '150%', '170%', '200%'];
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-flipcountdown-panel/editor.html', 2);
+    this.addEditorTab('Echarts Events', flipcountdownEchartsEventEditorComponent);
     // this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-flipcountdown-panel/mappings.html', 3);
     this.unitFormats = kbn.getUnitFormats();
   }

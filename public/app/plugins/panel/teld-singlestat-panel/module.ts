@@ -11,6 +11,8 @@ import config from 'app/core/config';
 import TimeSeries from 'app/core/time_series2';
 import {MetricsPanelCtrl, loadPluginCssPath} from 'app/plugins/sdk';
 
+import { finglestatEchartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
+
 loadPluginCssPath({
   //cssPath: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.css',
   dark: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css',
@@ -29,7 +31,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     LR: {
       name: '左右',
       tmpl: [
-        '<div class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        '<div ng-dblclick="click()" class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
         ' <div class="titleRight"><span ng-bind="postfix"></span>&nbsp;<span ng-bind="rightValue"></span></div>',
         ' <div class="titleLeft">',
         '   <div class="iconTitle"></div>',
@@ -40,7 +42,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     },
     UD: {
       name: '上下', tmpl: [
-        '<div class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        '<div ng-dblclick="click()" class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
         ' <div class="titleRight">',
         '   <div class="iconTitle"></div>',
         '   <div class="subValue"><span ng-bind="value"></span>&nbsp;</div>',
@@ -156,6 +158,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       interval: 1000,
       incrementModel: 'totalStep',
       varName: `currentVal`
+    },
+
+    echartsPanel: {
+      enabled: false,
+      args: {
+        title: ''
+      }
     }
   };
 
@@ -207,6 +216,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.fontSizes = ['20%', '30%','50%','70%','80%','100%', '110%', '120%', '150%', '170%', '200%'];
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-singlestat-panel/editor.html', 2);
+    this.addEditorTab('Echarts Events', finglestatEchartsEventEditorComponent);
     //this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-singlestat-panel/mappings.html', 3);
     this.unitFormats = kbn.getUnitFormats();
   }
@@ -446,6 +456,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     this.panel.rangeMaps.push({from: '', to: '', text: ''});
   }
 
+
+
   link(scope, elem, attrs, ctrl) {
     var that = this;
     var $location = this.$location;
@@ -459,6 +471,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     var layouts = this.layouts;
     var layout = this.layouts[this.panel.layout];
     elem = elem.find('.teld-singlestat-panel');
+
+    scope.click = this.echartsEventPublish.bind(this);
 
     var subScope = scope.$new();
 
@@ -551,10 +565,18 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       //   if (panel.valuePosition === 'right') { subScope.postfix = ''; }
       // }
 
+      //subScope.alert = window.alert;
+      subScope.alert = function () { alert(12); };
+
       var jqHtml = compile(layout.tmpl)(subScope);
       //var jqHtml = compile(layout.tmpl)(subScope);
       //var jqHtml = compile(html.join(''))(s);
       elem.empty().append(jqHtml);
+
+      // var html = '<button ng-click="alert(1);">button3</button>';
+      // html = '<button ng-click=\'alert(1)\'>I\'m button</button>';
+      // elem.append(html);
+      // compile(elem.contents())(subScope);
     }
 
     function updateSubScope(value) {

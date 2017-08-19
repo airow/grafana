@@ -101,6 +101,18 @@ export class PanelCtrl {
     this.changeView(false, false);
   }
 
+  panelClick() {
+    this.dashboard.events.emit(`${this.panel.type}-click`, {
+      panel: this.panel, panelId: this.panel.id
+    });
+  }
+
+  echartsEventPublish() {
+    if (this.panel.echartsPanel.enable) {
+      this.panelClick();
+    }
+  }
+
   initEditMode() {
     this.editorTabs = [];
     this.addEditorTab('General', 'public/app/partials/panelgeneral.html');
