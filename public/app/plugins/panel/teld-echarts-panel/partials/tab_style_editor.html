@@ -200,6 +200,7 @@
         <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.value.format" dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.value, $subItem)"></div>
       </div>
+      <gf-form-switch class="gf-form" label="Show Table" label-class="width-8" checked="ctrl.panel.showTable" on-change="ctrl.render()"></gf-form-switch>
     </div>
   </div>
   <!-- end Style -->

@@ -21,11 +21,15 @@ function ecOptTextstyleDirective($compile, datasourceSrv, $rootScope, $q, $http,
         if (this.ctrl) { this.ctrl.refresh(); }
         //this.$root.$broadcast('refresh');
       };
+
+      var fontWeight = ['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'];
       scope.getFontWeight = () => {
-        return ['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'];
+        return fontWeight;
       };
+
+      var fontFamily = ['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC'];
       scope.getFontFamily = () => {
-        return ['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC'];
+        return fontFamily;
       };
     }
   };
