@@ -16,11 +16,33 @@ function ecOptTextstyleDirective($compile, datasourceSrv, $rootScope, $q, $http,
       textStyle: '=',
     },
     templateUrl: 'public/app/plugins/panel/teld-echarts-panel/directives/ecOptTextstyle.html',
-    link: function(scope, elem, attrs) {
-      scope.refresh = function () {
-        if (this.ctrl) { this.ctrl.refresh(); }
-        //this.$root.$broadcast('refresh');
-      };
+    link: {
+      //https://docs.angularjs.org/api/ng/service/$compile
+      pre: function preLink(scope, elem, attrs) {
+
+
+        //public\vendor\angular-other\angular-strap.js @ 143
+        var fontWeight = ['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'];
+        /* scope.sw = fontWeight; 这样不行*/
+        scope.getFontWeight = () => {
+          /**
+           * return ['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'];
+           * 不可以 * https://docs.angularjs.org/error/$rootScope/infdig
+           */
+          return fontWeight;
+        };
+
+        var fontFamily = ['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC'];
+        scope.getFontFamily = () => {
+          return fontFamily;
+        };
+      },
+      post: function postLink(scope, elem, attrs) {
+        scope.refresh = function () {
+          if (this.ctrl) { this.ctrl.refresh(); }
+          //this.$root.$broadcast('refresh');
+        };
+      }
     }
   };
 }
