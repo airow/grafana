@@ -125,7 +125,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       },
     },
 
-
+    eventSubscribe: {
+      enable: false,
+      eventPanels: []
+    },
 
     showTable: false,/** 是否显示表格 */
     /** 表格展示配置信息，参考table面板 */
@@ -184,15 +187,28 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.$rootScope.onAppEvent('panel-fullscreen-exit', () => { this.currentMode = 'chart'; });
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
 
-    this.dashboard.events.on('teld-singlestat-panel-click', this.onTeldSinglestatClick.bind(this));
-    this.dashboard.events.on('teld-flipcountdown-panel-click', this.onTeldSinglestatClick.bind(this));
+    if (this.panel.eventSubscribe.enable) {
+      this.dashboard.events.on('teld-singlestat-panel-click', this.onTeldSinglestatClick.bind(this));
+      this.dashboard.events.on('teld-flipcountdown-panel-click', this.onTeldSinglestatClick.bind(this));
+    }
   }
 
-
+  echartsPanelArgs: any;
   onTeldSinglestatClick(payload) {
-    if (this.panel.showTable) {
-      this.viewPanel();
-      this.$timeout(() => { this.currentMode = 'list'; }, 1);
+    let payloadEchartsPanel = payload.panel.echartsPanel;
+    if (this.panel.eventSubscribe.enable && this.panel.showTable && payloadEchartsPanel && payloadEchartsPanel.enable) {
+
+      //let findIndex = _.findIndex(this.panel.eventSubscribe.eventPanels, ['id', payload.panelId]);
+      let findIndex = _.findIndex(this.panel.eventSubscribe.eventPanels, ['keyword', payload.panelId]);
+      if (findIndex === -1) {
+        findIndex = _.findIndex(this.panel.eventSubscribe.eventPanels, ['keyword', payloadEchartsPanel.args.title]);
+      }
+
+      if (findIndex !== -1) {
+        this.echartsPanelArgs = payloadEchartsPanel.args;
+        this.viewPanel();
+        this.$timeout(() => { this.currentMode = 'list'; }, 1);
+      }
     }
   }
 

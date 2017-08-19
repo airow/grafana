@@ -36,3 +36,13 @@ export function echartsEventEditorComponent() {
     controller: EchartsEventHandlerEditorCtrl,
   };
 }
+
+export function finglestatEchartsEventEditorComponent() {
+  'use strict';
+  return echartsEventEditorComponent();
+}
+
+export function flipcountdownEchartsEventEditorComponent() {
+  'use strict';
+  return echartsEventEditorComponent();
+}

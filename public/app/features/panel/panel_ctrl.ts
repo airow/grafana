@@ -107,6 +107,12 @@ export class PanelCtrl {
     });
   }
 
+  echartsEventPublish() {
+    if (this.panel.echartsPanel.enable) {
+      this.panelClick();
+    }
+  }
+
   initEditMode() {
     this.editorTabs = [];
     this.addEditorTab('General', 'public/app/partials/panelgeneral.html');

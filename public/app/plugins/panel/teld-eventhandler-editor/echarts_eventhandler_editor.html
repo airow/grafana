@@ -4,16 +4,12 @@
     <div class="section gf-form-group">
       <h5 class="section-heading" ng-bind="ctrl.panel.type"></h5>
       <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.line.label.normal.show"
+        <gf-form-switch class="gf-form" label="Enable" label-class="width-8" checked="ctrl.panel.echartsPanel.enable"
           on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">textStyle</label>
-      </div>
-      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.label.normal.textStyle' />
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">position</label>
-        <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.line.label.normal.position">
+        <label class="gf-form-label query-keyword width-8">title</label>
+        <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echartsPanel.args.title">
       </div>
     </div>
   </div>
@@ -21,16 +17,12 @@
     <div class="section gf-form-group">
       <h5 class="section-heading" ng-bind="ctrl.panel.type"></h5>
       <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.line.label.normal.show"
+        <gf-form-switch class="gf-form" label="Enable" label-class="width-8" checked="ctrl.panel.echartsPanel.enable"
           on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">textStyle</label>
-      </div>
-      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.label.normal.textStyle' />
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">position</label>
-        <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.line.label.normal.position">
+        <label class="gf-form-label query-keyword width-8">title</label>
+        <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echartsPanel.args.title">
       </div>
     </div>
   </div>
@@ -38,17 +30,16 @@
   <div class="editor-row" ng-switch-when="teld-echarts-panel">
     <div class="section gf-form-group">
       <h5 class="section-heading" ng-bind="ctrl.panel.type"></h5>
-      {{ctrl.panel.eventSubscribe}}
       <gf-form-switch class="gf-form" label="Enable" label-class="width-8" checked="ctrl.panel.eventSubscribe.enable" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form-inline">
           <div class="gf-form">
             <label class="gf-form-label query-keyword width-9">
-              panel id
+              panel id / event title
             </label>
           </div>
 
           <div class="gf-form" ng-repeat="vp in ctrl.panel.eventSubscribe.eventPanels track by $index">
-            <input type="text" class="gf-form-input width-5" ng-model="vp.id">
+            <input type="text" class="gf-form-input width-5" ng-model="vp.keyword">
             <label class="gf-form-label">
               <a ng-click="ctrl.removeEventPanel($index)">
                 <i class="fa fa-remove"></i>
