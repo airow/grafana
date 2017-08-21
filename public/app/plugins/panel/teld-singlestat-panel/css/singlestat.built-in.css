@@ -224,43 +224,82 @@ font-family: "Microsoft YaHei Regular";
 
 /*轮播样式list*/
 .listMain{
-   width: 110px;
-    color: #fff;
+  /* width: 110px; */
+  color: #fff;
 }
 .listMain .listTip{
-    position: relative;
-    margin: auto;
-    width: 70px;
-    height: 100px;
-    background: url("../img/pile.png") center;
-    background-repeat: no-repeat;
-    background-size: 100%;
+   position: relative;
+   margin: auto;
+   width: 70px;
+   height: 100px;
+   background: url("../img/pile.png") no-repeat center 0px;
+   background-repeat: no-repeat;
+   background-size: 100%;
 }
+
+.listMain .listTip.pile{
+  background: url("../img/pile.png") no-repeat center 0px;
+}
+
+.listMain .listTip.pile-b{
+  background: url("../img/pile-b.png") no-repeat  center 0px;
+}
+
+.listMain .listTip.pile-g{
+  background: url("../img/pile-g.png") no-repeat center 0px;
+}
+
+.listMain .listTip.pile-r{
+  background: url("../img/pile-r.png") no-repeat center 0px;
+}
+
+.listMain .listTip.pile-y{
+  background: url("../img/pile-y.png") no-repeat center 0px;
+}
+
+.listTip .listInfo3{
+   width: 15px;
+   margin: 0 auto;
+   line-height: 30px;
+   font-size: 26px;
+   font-family:"Microsoft YaHei Light";
+   position: absolute;
+   left: 20px;
+   bottom: 10px;
+}
+
 .listTip .listInfo{
-    width: 15px;
+    width: 20px;
     margin: 0 auto;
-    line-height: 30px;
-    font-size: 26px;
-    font-family:"Microsoft YaHei Light";
-    position: absolute;
-    left: 20px;
+    line-height: 20px;
+    font-size: 20px;
+    font-family: "Microsoft YaHei Light";
+    position: relative;
+    /* left: 2px; */
+    top: 35px;
+    /* margin: auto; */
     bottom: 10px;
 }
+
 .listTip .chargeIcon{
-    display: none;
+   display: none;
 }
 .listMain .listVaule{
-    margin-top: 10px;
-    text-align: center;
-    font-size: 36px;
-    font-family:"Microsoft YaHei Light";
+   margin-top: 10px;
+   text-align: center;
+   font-size: 36px;
+   font-family:"Microsoft YaHei Light";
 }
-.listTip2 .chargeIcon{
-    display: block;
-    position: absolute;
-    left: 25px;
-    top: 5px;
+.iconCharg .chargeIcon{
+   display: block;
+   position: absolute;
+   left: 25px;
+   top: 8px;
+   width: 20px;
+   height: 20px;
+   background: url('../img/charg.png') no-repeat center 0px;
+   background-size: 18px 18px;
 }
 .chargeIcon img{
-    width:18px
+   width:18px
 }

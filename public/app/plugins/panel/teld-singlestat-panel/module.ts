@@ -53,6 +53,17 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         ' </div>',
         '</div>'
       ].join('')
+    },
+    listlunbo: {
+      name: '电站状态', tmpl: [
+        '<div class="listMain">',
+        ' <div class="listTip {{bgClass}} {{iconClass}}">',
+        '   <span class="chargeIcon"><img src="../img/charg.png"></span>',
+        '   <div class="listInfo"><span ng-bind="prefix"></span>&nbsp;</div>',
+        ' </div>',
+        ' <div class="listVaule"><span ng-bind="value"></span>&nbsp;</div>',
+        '</div>'
+      ].join('')
     }
   };
   styleClass: any = {
@@ -69,6 +80,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       ],
       UD: [
         { name: '纯色-蓝', value: 'panelSubBg' }
+      ],
+      listlunbo: [
+        { name: 'pile', value: 'pile' },
+        { name: '蓝', value: 'pile-b' },
+        { name: '灰', value: 'pile-g' },
+        { name: '红', value: 'pile-r' },
+        { name: '黄', value: 'pile-y' },
       ]
     },
     iconClass: [
@@ -79,7 +97,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { name: 'rise-b', value: 'iconTip3' },
       { name: 'fall-o', value: 'iconTip4' },
       { name: 'fall-r', value: 'iconTip5' },
-      { name: 'fall-b', value: 'iconTip6' }
+      { name: 'fall-b', value: 'iconTip6' },
+      { name: '充电', value: 'iconCharg' },
     ],
     heightClass: {
       LR: [

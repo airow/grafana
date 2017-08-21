@@ -15,7 +15,18 @@
       </div>
     </div>
 
-    <div class="gf-form-inline">
+    <div class="gf-form-inline" ng-show="ctrl.panel.layout==='listlunbo'">
+        <div class="gf-form">
+          <label class="gf-form-label width-6">Title</label>
+          <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.prefix" ng-change="ctrl.render()" ng-model-onblur>
+          <!-- <label class="gf-form-label width-6">Font size</label>
+          <div class="gf-form-select-wrapper">
+            <select class="gf-form-input" ng-model="ctrl.panel.prefixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
+          </div> -->
+        </div>
+      </div>
+
+    <div class="gf-form-inline" ng-hide="ctrl.panel.layout==='listlunbo'">
       <div class="gf-form">
         <label class="gf-form-label width-6">Left</label>
         <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.prefix" ng-change="ctrl.render()" ng-model-onblur>
@@ -26,7 +37,7 @@
       </div>
     </div>
 
-    <div class="gf-form">
+    <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo'">
       <label class="gf-form-label width-6">Right</label>
       <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.postfix" ng-change="ctrl.render()" ng-model-onblur>
       <!-- <label class="gf-form-label width-6">Font size</label>
@@ -57,13 +68,13 @@
       </div>
     </div>
     <div class="gf-form-inline">
-      <div class="gf-form">
+      <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo'">
         <label class="gf-form-label width-6">heightClass</label>
         <div class="gf-form-select-wrapper">
           <select class="gf-form-input" ng-model="ctrl.panel.heightClass" ng-options="f.value as f.name for f in ctrl.getHeightClass()" ng-change="ctrl.render()"></select>
         </div>
       </div>
-      <div class="gf-form">
+      <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo'">
         <label class="gf-form-label width-6">borderClass</label>
         <div class="gf-form-select-wrapper">
           <select class="gf-form-input" ng-model="ctrl.panel.borderClass" ng-options="f.value as f.name for f in ctrl.getBorderClass()" ng-change="ctrl.render()"></select>
