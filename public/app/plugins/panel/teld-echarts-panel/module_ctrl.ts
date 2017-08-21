@@ -193,6 +193,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
   }
 
+  changeCurrentMode(){
+    this.currentMode = (this.currentMode === 'list' ? 'chart' : 'list');
+    this.onMetricsPanelRefresh();
+  }
+
   echartsPanelArgs: any;
   onTeldSinglestatClick(payload) {
     let payloadEchartsPanel = payload.panel.echartsPanel;
