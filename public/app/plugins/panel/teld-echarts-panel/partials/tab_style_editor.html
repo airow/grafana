@@ -173,7 +173,7 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Theme Name</label>
-        <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" class="gf-form-input" placeholder="Theme name">
+        <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" min-length="0" class="gf-form-input" placeholder="Theme name">
       </div>
       <div class="gf-form" ng-hide="ctrl.panel.serieType==='pie'">
         <gf-form-switch class="gf-form" label="Exchange Axis" label-class="width-8" checked="ctrl.panel.exchangeAxis" on-change="ctrl.render()"></gf-form-switch>
