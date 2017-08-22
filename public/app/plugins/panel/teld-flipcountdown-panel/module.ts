@@ -117,7 +117,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
   onDataError(err) {
     this.onDataReceived([]);
   }
-
+  initflipcountdown = false;
   onDataReceived(dataList) {
     this.series = dataList.map(this.seriesHandler.bind(this));
 
@@ -131,6 +131,17 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
 
     this.data = data;
     this.render();
+
+    if (this.initflipcountdown === false) {
+      this.flipcountdown.flipcountdown(
+        {
+          period: this.panel.stepValSubscriber.interval,
+          size: this.panel.size,
+          tick: this.tick.bind(this)
+        });
+
+      this.initflipcountdown = true;
+    }
   }
 
   seriesHandler(seriesData) {
@@ -359,14 +370,9 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     var $panelContainer = elem.find('.panel-container');
     elem = elem.find('.teld-flipcountdown-panel');
 
+    //this.onMetricsPanelRefresh();
 
     this.flipcountdown = elem.find('.flipcountdown');
-    this.flipcountdown.flipcountdown(
-      {
-        period: this.panel.stepValSubscriber.interval,
-        size: this.panel.size,
-        tick: this.tick.bind(this)
-      });
 
     function setElementHeight() {
       elem.css('height', ctrl.height + 'px');

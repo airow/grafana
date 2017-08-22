@@ -57,7 +57,7 @@ var panelTemplate = `
   </div>
 `;
 
-module.directive('grafanaPanel', function($rootScope) {
+module.directive('grafanaPanel', function($rootScope, $document) {
   return {
     restrict: 'E',
     template: panelTemplate,
@@ -107,11 +107,20 @@ module.directive('grafanaPanel', function($rootScope) {
           let fillHeight = ctrl.containerHeight;
           if (ctrl.fullscreen) {
             let p = (ctrl.editMode ? 0.4 : 0.8);
-            fillHeight /= p;
-            fillHeight *= (p + 0.18);
+             fillHeight /= p;
+             fillHeight *= (p + 0.18);
 
-            let offset = panelContainer.offset();
-            fillHeight -= offset.top;
+             let fullScreenShowHeight = _.sumBy(_.filter(ctrl.dashboard.rows, { fullScreenShow: true }), 'height') || 0;
+             fillHeight -= (+fullScreenShowHeight);
+
+
+            // let offset = panelContainer.offset();
+            // fillHeight -= offset.top;
+
+            // let docHeight = $document.height();
+            // if (docHeight > fillHeight) {
+            //   fillHeight -= (docHeight - fillHeight);
+            // }
           }
 
           panelContainer.css({ minHeight: fillHeight });
