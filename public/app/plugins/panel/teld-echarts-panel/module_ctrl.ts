@@ -160,7 +160,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
-    private dashboardSrv, private uiSegmentSrv, private $http, private $interval, private $sanitize) {
+    private dashboardSrv, private uiSegmentSrv, private $http, private $location, private $interval, private $sanitize, private $window) {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
@@ -191,10 +191,19 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       this.dashboard.events.on('teld-singlestat-panel-click', this.onTeldSinglestatClick.bind(this));
       this.dashboard.events.on('teld-flipcountdown-panel-click', this.onTeldSinglestatClick.bind(this));
     }
+
+    //this.currentMode = 'chart';
+    let t = this.$window.sessionStorage["echartsPanelArgs"];
+    if (t) {
+      this.$window.sessionStorage.removeItem("echartsPanelArgs");
+      this.echartsPanelArgs = JSON.parse(t);
+      this.currentMode = 'list';
+    }
   }
 
-  changeCurrentMode(){
+  changeCurrentMode() {
     this.currentMode = (this.currentMode === 'list' ? 'chart' : 'list');
+    //this.refreshDashboard();
     this.onMetricsPanelRefresh();
   }
 
@@ -210,9 +219,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       }
 
       if (findIndex !== -1) {
-        this.echartsPanelArgs = payloadEchartsPanel.args;
+        this.echartsPanelArgs = _.cloneDeep(payloadEchartsPanel.args);
+        this.$window.sessionStorage["echartsPanelArgs"] = JSON.stringify(this.echartsPanelArgs);
         this.viewPanel();
-        this.$timeout(() => { this.currentMode = 'list'; }, 1);
       }
     }
   }
@@ -627,11 +636,25 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     if (this.panel.style.innerRing.show) {
 
-      let innerR = parseInt(serie.radius[0]);
-      let outerR = innerR + parseInt(this.panel.style.innerRing.width);
+      let innerR = serie.radius[0];
+      let w = parseInt(this.panel.style.innerRing.width);
+      let ispercent = _.endsWith(innerR, '%');
+      if (ispercent) {
+        innerR = innerR.replace("%", "");
+        //w = 0.1;
+      }
+
+      innerR = parseInt(innerR);
+      let outerR = innerR + w;
+      let radius = [innerR, outerR];
+
+      if (ispercent) {
+        radius = radius.map(r => { return `${r}%`; });
+      }
+
       series.push({
         type: 'pie',
-        radius: [innerR, outerR],
+        radius: radius,
         center: serie.center,
         silent: true,
         label: {

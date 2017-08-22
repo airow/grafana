@@ -325,7 +325,7 @@ export class PanelCtrl {
   }
 
   otherPanelInFullscreenMode() {
-    return this.dashboard.meta.fullscreen && !this.fullscreen;
+    return this.dashboard.meta.fullscreen && !this.fullscreen && this.row.fullScreenShow !== true;
   }
 
   calculatePanelHeight() {
