@@ -1,6 +1,6 @@
 <div class="teld-flipcountdown-panel" ng-dblclick="ctrl.echartsEventPublish()">
   <div class="teld-flipcountdown-panel-value-container">
-    <span style="float:left;">
+    <span style="float:left;" ng-style="{'padding-top':ctrl.panel.leftTop}">
       <span ng-show="ctrl.panel.prefix" ng-bind="ctrl.getVal(ctrl.panel.prefix)" ng-style="{ 'font-size': ctrl.panel.prefixFontSize }"></span>
     <span ng-show="ctrl.panel.postfix" ng-bind="ctrl.getVal(ctrl.panel.postfix)" ng-style="{ 'font-size': ctrl.panel.postfixFontSize }"></span>
     </span>

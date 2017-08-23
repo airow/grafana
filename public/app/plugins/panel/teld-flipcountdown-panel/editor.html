@@ -8,8 +8,10 @@
         <div class="gf-form-select-wrapper width-7">
           <select class="gf-form-input" ng-model="ctrl.panel.valueName" ng-options="f for f in ctrl.valueNameOptions" ng-change="ctrl.render()"></select>
         </div>
-        <label class="gf-form-label width-6">top</label>
+        <label class="gf-form-label width-6">value top</label>
         <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.valueTop" ng-change="ctrl.render()" ng-model-onblur>
+        <label class="gf-form-label width-6">left top</label>
+        <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.leftTop" ng-change="ctrl.render()" ng-model-onblur>
       </div>
     </div>
 
@@ -41,7 +43,7 @@
     <div class="gf-form">
       <label class="gf-form-label width-6">size</label>
       <div class="gf-form-select-wrapper width-7">
-        <select class="gf-form-input" ng-model="ctrl.panel.size" ng-options='f.val as f.name for f in [{"val":"teldlg", "name":"70px"},{"val":"teld", "name":"50px"}]' ng-change="ctrl.render()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.size" ng-options='f.val as f.name for f in [{"val":"teldscreen", "name":"screen"},{"val":"teldlg", "name":"70px"},{"val":"teld", "name":"50px"},]' ng-change="ctrl.render()"></select>
       </div>
     </div>
   </div>

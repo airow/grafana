@@ -36,6 +36,7 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
       xs: 24,
       teld: 52,
       teldlg: 71,
+      teldscreen: 71,
     },
 
 		createFlipCountDown = function( $box ){
