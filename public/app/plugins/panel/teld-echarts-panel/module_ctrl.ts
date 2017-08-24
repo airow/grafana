@@ -807,6 +807,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     function formatter(n) {
       if (this.panel.serieType === this.ecConf.series.pie.type) {
         let { name, percent } = this.seriesLabel[n];
+        name = _.head(_.split(name, "[:]"));
         return `${name}: ${percent}%`;
       } else {
         return n;
