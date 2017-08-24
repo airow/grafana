@@ -195,9 +195,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //this.currentMode = 'chart';
     let t = this.$window.sessionStorage["echartsPanelArgs"];
     if (t) {
-      this.$window.sessionStorage.removeItem("echartsPanelArgs");
       this.echartsPanelArgs = JSON.parse(t);
-      this.currentMode = 'list';
+      if (this.panel.id === this.echartsPanelArgs.panelId) {
+        this.$window.sessionStorage.removeItem("echartsPanelArgs");
+        this.currentMode = 'list';
+      }
     }
   }
 
@@ -219,7 +221,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       }
 
       if (findIndex !== -1) {
-        this.echartsPanelArgs = _.cloneDeep(payloadEchartsPanel.args);
+        this.echartsPanelArgs = { args: _.cloneDeep(payloadEchartsPanel.args), triggerId: payload.panelId, panelId: this.panel.id };
         this.$window.sessionStorage["echartsPanelArgs"] = JSON.stringify(this.echartsPanelArgs);
         this.viewPanel();
       }
