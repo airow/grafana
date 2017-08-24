@@ -346,12 +346,10 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     var decimalInfo = this.getDecimalsForValue(val);
     var formatFunc = kbn.valueFormats[this.panel.format];
     val = kbn.roundValue(val, decimalInfo.decimals);
-    console.log(this.panel.divisor);
     val = kbn.toFixed(val, decimalInfo.decimals);
     this.flipcountdownData.valueFormated = val;
     val = val / (this.panel.divisor);
     val = kbn.toFixed(val, decimalInfo.decimals);
-    console.log(this.flipcountdownData.valueFormated);
     return val;
     //return "1023456789.0"
   }

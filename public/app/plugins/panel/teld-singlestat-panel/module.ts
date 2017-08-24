@@ -91,14 +91,6 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     },
     iconClass: [
       { name: '无', value: 'iconTip0' },
-      { name: 'charg', value: 'iconTip0' },
-      { name: 'rise-o', value: 'iconTip1' },
-      { name: 'rise-r', value: 'iconTip2' },
-      { name: 'rise-b', value: 'iconTip3' },
-      { name: 'fall-o', value: 'iconTip4' },
-      { name: 'fall-r', value: 'iconTip5' },
-      { name: 'fall-b', value: 'iconTip6' },
-      { name: '充电', value: 'iconCharg' },
       { name: '充电量及充电次数', value: 'charg_capacity' },
       { name: '充电人数', value: 'charg_num' },
       { name: '工单数', value: 'orders_num' },
@@ -112,14 +104,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { name: '失败订单_r', value: 'fail_order2' },
       { name: '失败订单_w', value: 'fail_order3' },
       { name: '客户数', value: 'customer' },
-      { name: '客户数_w', value: 'customer2' },
-      { name: '客户数_w', value: 'customer3' },
-      { name: '客户数_w', value: 'customer3' },
-      { name: '客户数_w', value: 'customer3' },
+      { name: '客户数_r', value: 'customer2' },
       { name: '客户数_w', value: 'customer3' },
       { name: '开发平台伙伴', value: 'platform' },
-      { name: '开发平台伙伴_w', value: 'platform2' },
-      { name: '开发平台伙伴_w', value: 'platform3' },
+      { name: '开发平台伙伴_r', value: 'platform2' },
       { name: '开发平台伙伴_w', value: 'platform3' },
       { name: '异常订单', value: 'abnormal' },
       { name: '异常订单_r', value: 'abnormal2' },
@@ -134,7 +122,14 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { name: '运营商_r', value: 'operator2' },
       { name: '运营商_w', value: 'operator3' },
 
-
+      { name: 'charg', value: 'iconTip0' },
+      { name: 'rise-o', value: 'iconTip1' },
+      { name: 'rise-r', value: 'iconTip2' },
+      { name: 'rise-b', value: 'iconTip3' },
+      { name: 'fall-o', value: 'iconTip4' },
+      { name: 'fall-r', value: 'iconTip5' },
+      { name: 'fall-b', value: 'iconTip6' },
+      { name: '充电', value: 'iconCharg' },
     ],
     heightClass: {
       LR: [
@@ -539,8 +534,6 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         if (this.panel.stepVal.publish) {
           let setValName = _.get(this.panel.stepVal, 'varName', 'currentVal');
           _.set(this.$scope.$root, `teld.${setValName}`, this.currentVal);
-
-          console.log(_.get(this.$scope.$root, `teld.${setValName}`));
         }
       }, this.panel.stepVal.interval);
     } else {

@@ -37,7 +37,7 @@ export class GrafanaCtrl {
       var unbind = $rootScope.$on(name, callback);
       var callerScope = this;
       if (callerScope.$id === 1 && !localScope) {
-        console.log('warning rootScope onAppEvent called without localscope');
+        console.log('warning rootScope onAppEvent called without localscope' + name);
       }
       if (localScope) {
         callerScope = localScope;
