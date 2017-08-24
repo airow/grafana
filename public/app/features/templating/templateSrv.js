@@ -138,8 +138,8 @@ function (angular, _, kbn) {
     this.variableDefined = function (expression, variableType) {
       var name = this.getVariableName(expression);
 
-      let teldCustomModel = { type: variableType, name: name };
-      let indexOf = _.findIndex(this.variables, teldCustomModel);
+      var teldCustomModel = { type: variableType, name: name };
+      var indexOf = _.findIndex(this.variables, teldCustomModel);
 
       return indexOf >= 0;
     };
@@ -147,8 +147,8 @@ function (angular, _, kbn) {
     this.removeVariable = function (expression, variableType) {
       var name = this.getVariableName(expression);
 
-      let teldCustomModel = { type: variableType, name: name };
-      let indexOf = _.findIndex(this.variables, teldCustomModel);
+      var teldCustomModel = { type: variableType, name: name };
+      var indexOf = _.findIndex(this.variables, teldCustomModel);
 
       if(indexOf !== -1){
         this.variables.splice(indexOf,1);
@@ -158,8 +158,8 @@ function (angular, _, kbn) {
     this.getVariable = function (expression, variableType) {
       var name = this.getVariableName(expression);
 
-      let teldCustomModel = { type: variableType, name: name };
-      let indexOf = _.findIndex(this.variables, teldCustomModel);
+      var teldCustomModel = { type: variableType, name: name };
+      var indexOf = _.findIndex(this.variables, teldCustomModel);
 
       return indexOf === -1 ? null : this.variables[indexOf];
     };
