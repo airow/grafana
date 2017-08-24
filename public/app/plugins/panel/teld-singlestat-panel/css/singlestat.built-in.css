@@ -181,6 +181,127 @@ font-family: "Microsoft YaHei Regular";
     display: inline-block !important;
     background: url("../img/fall-b.png") center;
 }
+.charg_capacity .iconTitle{
+  display: inline-block !important;
+  background: url("../img/title/充电量及充电次数通用.png") center;
+}
+.charg_num .iconTitle{
+  display: inline-block !important;
+  background: url("../img/title/充电人数.png") center;
+}
+.orders_num .iconTitle{
+  display: inline-block !important;
+  background: url("../img/title/工单数.png") center;
+}
+.register_num .iconTitle{
+  display: inline-block !important;
+  background: url("../img/title/注册人数.png") center;
+}
+.work_num .iconTitle{
+  display: inline-block !important;
+  background: url("../img/title/订单数.png") center;
+}
+.warning_num .iconTitle{
+  display: inline-block !important;
+  background: url("../img/title/预警数.png") center;
+}
+.company .iconTitle{
+  display: inline-block !important;
+  background: url("../img/公司.png") center;
+}
+.company2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/公司2.png") center;
+}
+.company3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/公司3.png") center;
+}
+.fail_order .iconTitle{
+  display: inline-block !important;
+  background: url("../img/失败订单.png") center;
+}
+.fail_order2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/失败订单2.png") center;
+}
+.fail_order3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/失败订单3.png") center;
+}
+.customer .iconTitle{
+  display: inline-block !important;
+  background: url("../img/客户数.png") center;
+}
+.customer2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/客户数2.png") center;
+}
+.customer3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/客户数3.png") center;
+}
+.platform .iconTitle{
+  display: inline-block !important;
+  background: url("../img/开发平台伙伴.png") center;
+}
+.platform2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/开发平台伙伴2.png") center;
+}
+.platform3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/开发平台伙伴3.png") center;
+}
+.abnormal .iconTitle{
+  display: inline-block !important;
+  background: url("../img/异常订单.png") center;
+}
+.abnormal2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/异常订单2.png") center;
+}
+.abnormal3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/异常订单3.png") center;
+}
+.loserate .iconTitle{
+  display: inline-block !important;
+  background: url("../img/离网率.png") center;
+}
+.loserate2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/离网率2.png") center;
+}
+.loserate3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/离网率3.png") center;
+}
+.coveredCity .iconTitle{
+  display: inline-block !important;
+  background: url("../img/覆盖城市.png") center;
+}
+.coveredCity2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/覆盖城市2.png") center;
+}
+.coveredCity3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/覆盖城市3.png") center;
+}
+.operator .iconTitle{
+  display: inline-block !important;
+  background: url("../img/运营商.png") center;
+}
+.operator2 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/运营商2.png") center;
+}
+.operator3 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/运营商3.png") center;
+}
+
 /*上下两行的标题栏*/
 .panelSubHeight{
     /*height: 95px;*/
