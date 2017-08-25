@@ -15,6 +15,12 @@
         <label class="gf-form-label width-6">缩小</label>
         <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.divisor" ng-change="ctrl.render()" ng-model-onblur>
       </div>
+
+      <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.publishVal.enable" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form" ng-show="ctrl.panel.publishVal.enable">
+        <label class="gf-form-label width-6">varName</label>
+        <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.publishVal.varName" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
     </div>
 
     <div class="gf-form-inline">
@@ -49,6 +55,44 @@
       </div>
     </div>
   </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Calc Expression</h5>
+    <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.calcExpression.enable" on-change="ctrl.render()"></gf-form-switch>
+    <div class="gf-form-inline" ng-show="ctrl.panel.calcExpression.enable">
+      <div class="gf-form">
+        <label class="gf-form-label width-9">
+            args
+          </label>
+      </div>
+      <div class="gf-form" ng-repeat="argument in ctrl.panel.calcExpression.args track by $index">
+        <input type="text" class="gf-form-input width-13" ng-model="argument.name">
+        <label class="query-keyword width-2"> = </label>
+        <input type="number" class="gf-form-input width-3" ng-model="argument.defVal">
+        <label class="gf-form-label">
+            <a ng-click="ctrl.removeExpressionArgument($index)">
+              <i class="fa fa-remove"></i>
+            </a>
+          </label>
+      </div>
+
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword">
+          <a ng-click="ctrl.addExpressionArgument()"><i class="fa fa-plus"></i></a>
+        </label>
+      </div>
+
+      <div class="gf-form gf-form--grow">
+        <div class="gf-form-label gf-form-label--grow"></div>
+      </div>
+    </div>
+    <div class="gf-form" ng-show="ctrl.panel.calcExpression.enable">
+      <label class="gf-form-label width-6">expression</label>
+      <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.calcExpression.expression" ng-change="ctrl.render()" ng-model-onblur>
+      <label class="query-keyword width-13"> = {{ctrl.calcExpressionDebug()}} </label>
+    </div>
+  </div>
+
 </div>
 
 <!-- stepValSubscriber -->

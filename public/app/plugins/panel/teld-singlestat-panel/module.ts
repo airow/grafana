@@ -216,6 +216,16 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       args: {
         title: ''
       }
+    },
+    divisor: 1,
+    calcExpression: {
+      enable: false,
+      expression: "val",
+      args: []
+    },
+    publishVal: {
+      enable: false,
+      varName: '',
     }
   };
 
@@ -240,7 +250,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
   /** @ngInject */
-  constructor($scope, $injector, private $location, private linkSrv, private $compile, private $interval) {
+  constructor($scope, $injector, private $location, private linkSrv, private $compile, private $interval,
+    private variableSrv, private $parse) {
     super($scope, $injector);
     _.defaults(this.panel, this.panelDefaults);
 
@@ -508,6 +519,53 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
 
+  genCalcExpressionContext(context) {
+
+    let variableSrv = this.variableSrv;
+    let calcExpression = this.panel.calcExpression;
+
+    context = _.transform(calcExpression.args, function (result, argument) {
+      result[argument.name] = argument.defVal;
+
+      let variable = _.find(variableSrv.variables, { name: argument.name });
+      if (variable) {
+        result[argument.name] = +variable.current.value;
+      }
+
+    }, context);
+
+    return context;
+  }
+
+  addExpressionArgument() {
+    let calcExpression = this.panel.calcExpression;
+    calcExpression.args.push({});
+  }
+
+  removeExpressionArgument(index) {
+    this.panel.calcExpression.args.splice(index, 1);
+  }
+
+  calcExpressionDebug() {
+    let calcExpression = this.panel.calcExpression;
+    let context = _.transform(calcExpression.args, function (result, argument) {
+      result[argument.name] = argument.defVal;
+    }, {});
+    return this.calcExpression(context);
+  }
+
+  calcExpression(context) {
+    let calcExpression = this.panel.calcExpression;
+
+    if (false === _.isObject(context)) {
+      return 0;
+    }
+
+    var parseFunc = this.$parse(calcExpression.expression);
+    var returnVal = parseFunc(context);
+    return returnVal;
+  }
+
 
   link(scope, elem, attrs, ctrl) {
     var that = this;
@@ -633,6 +691,47 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       value = kbn.roundValue(value, decimalInfo.decimals);
       value = kbn.toFixed(value, decimalInfo.decimals);
 
+      value = value / (that.panel.divisor);
+      value = kbn.toFixed(value, decimalInfo.decimals);
+
+      var returnVal = value;
+      if (that.panel.calcExpression.enable) {
+        var context = that.genCalcExpressionContext({ val: value });
+        value = returnVal = that.calcExpression(context);
+      }
+
+      let varName = that.panel.publishVal.varName;
+      if (that.panel.publishVal.enable && varName !== "") {
+        let variableMode = {
+          "allValue": null,
+          "canSaved": false,
+          "current": {
+            "text": returnVal,
+            "value": returnVal
+          },
+          "hide": 0,
+          "includeAll": false,
+          "label": varName,
+          "name": varName,
+          "multi": false,
+          "options": [
+            {
+              "selected": true,
+              "text": returnVal,
+              "value": returnVal
+            }
+          ],
+          "query": returnVal,
+          "type": "custom"
+        };
+        var variable = that.variableSrv.createVariableFromModel(variableMode);
+        _.remove(that.variableSrv.variables, item => {
+          return item.name === variable.name;
+        });
+        that.variableSrv.variables.push(variable);
+        that.variableSrv.templateSrv.variableInitialized(variable);
+      }
+
       subScope.value = value;
       if (panel.layout === 'LR') {
         subScope[`${panel.valuePosition}Value`] = subScope.value;
@@ -640,6 +739,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         if (panel.valuePosition === 'right') { subScope.postfix = ''; }
       }
     }
+
 
     function getBigValueHtml_grafana() {
       var body = '<div class="teld-singlestat-panel-value-container">';
@@ -720,7 +820,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       });
     }
 
-    hookupDrilldownLinkTooltip();
+    //hookupDrilldownLinkTooltip();
 
     this.events.on('render', function() {
       render();

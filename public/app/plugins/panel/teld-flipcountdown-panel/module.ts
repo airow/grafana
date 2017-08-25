@@ -78,11 +78,20 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
         title: ''
       }
     },
-    divisor: 1
+    divisor: 1,
+    calcExpression: {
+      enable: false,
+      expression: "val",
+      args: []
+    },
+    publishVal: {
+      enable: false,
+      varName: '',
+    }
   };
 
   /** @ngInject */
-  constructor($scope, $injector, private $location, private linkSrv) {
+  constructor($scope, $injector, private $location, private $parse, private linkSrv, private variableSrv) {
     super($scope, $injector);
     _.defaults(this.panel, this.panelDefaults);
 
@@ -350,8 +359,96 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     this.flipcountdownData.valueFormated = val;
     val = val / (this.panel.divisor);
     val = kbn.toFixed(val, decimalInfo.decimals);
-    return val;
+    //return val;
+
+    var returnVal = val;
+    if (this.panel.calcExpression.enable) {
+      var context = this.genCalcExpressionContext({ val: val });
+      returnVal = this.calcExpression(context);
+    }
+
+    let varName = this.panel.publishVal.varName;
+    if (this.panel.publishVal.enable && varName !== "") {
+      let variableMode = {
+        "allValue": null,
+        "canSaved": false,
+        "current": {
+          "text": returnVal,
+          "value": returnVal
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": varName,
+        "name": varName,
+        "multi": false,
+        "options": [
+          {
+            "selected": true,
+            "text": returnVal,
+            "value": returnVal
+          }
+        ],
+        "query": returnVal,
+        "type": "custom"
+      };
+      var variable = this.variableSrv.createVariableFromModel(variableMode);
+      _.remove(this.variableSrv.variables, item => {
+        return item.name === variable.name;
+      });
+      this.variableSrv.variables.push(variable);
+      this.variableSrv.templateSrv.variableInitialized(variable);
+    }
+
+    return returnVal;
+
     //return "1023456789.0"
+  }
+
+  genCalcExpressionContext(context) {
+
+    let variableSrv = this.variableSrv;
+    let calcExpression = this.panel.calcExpression;
+
+    context = _.transform(calcExpression.args, function (result, argument) {
+      result[argument.name] = argument.defVal;
+
+      let variable = _.find(variableSrv.variables, { name: argument.name });
+      if (variable) {
+        result[argument.name] = +variable.current.value;
+      }
+
+    }, context);
+
+    return context;
+  }
+
+  addExpressionArgument() {
+    let calcExpression = this.panel.calcExpression;
+    calcExpression.args.push({});
+  }
+
+  removeExpressionArgument(index) {
+    this.panel.calcExpression.args.splice(index, 1);
+  }
+
+  calcExpressionDebug() {
+    let calcExpression = this.panel.calcExpression;
+    let context = _.transform(calcExpression.args, function (result, argument) {
+      result[argument.name] = argument.defVal;
+    }, {});
+    return this.calcExpression(context);
+  }
+
+  calcExpression(context) {
+    let calcExpression = this.panel.calcExpression;
+
+    if (false === _.isObject(context)) {
+      return 0;
+    }
+
+    var parseFunc = this.$parse(calcExpression.expression);
+    var returnVal = parseFunc(context);
+    return returnVal;
   }
 
   flipcountdownData = {
