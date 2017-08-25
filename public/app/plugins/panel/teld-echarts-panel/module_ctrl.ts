@@ -228,6 +228,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
   }
 
+  dblclick() {
+    if (this.isfullscreen()) {
+      this.exitFullscreen();
+    } else {
+      if (this.echartsPanelArgs) { this.echartsPanelArgs.title = ''; }
+      this.viewPanel();
+    }
+  }
+
   onInitPanelActions(actions) {
     actions.push({ text: 'Export CSV', click: 'ctrl.exportCsv()' });
   }
@@ -306,22 +315,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     };
 
     var option: any = {
-      // title: {
-      //   text: '1990 与 2015 年各国家人均寿命与 GDP'
-      // },
-      // legend: {
-      //   show: true,
-      // },
-      // tooltip: {
-      //   trigger: 'axis'
-      // },
-      // xAxis: this.panel.echarts.xAxis,
-      // yAxis: [{
-      //   boundaryGap: [0, '100%'],
-      //   splitLine: {
-      //     show: false
-      //   }
-      // }],
       series: []
     };
 
@@ -453,29 +446,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         //return { value: value };
       });
 
-      // if (target === "docs") {
-      //   data = _.map(item.datapoints, point => {
-      //     let { value, name } = _.zipObject(['name', 'value'], _.values(point));
-      //     name = this.categoryFormat(name);
-      //     value = this.valueFormat(value);
-      //     return { value: [`${name}`, value] };;
-      //   });
-      // } else {
-      //   data = _.map(item.datapoints, point => {
-
-      //     let { value, name } = _.zipObject(['value', 'name'], point);
-
-      //     name = this.categoryFormat(name);
-      //     value = this.valueFormat(value);
-
-      //     let ecData = { value: [`${name}`, value] };
-
-      //     return ecData;
-      //   });
-      // }
-
-
-
       let encode: any = {};
       if (this.panel.exchangeAxis) {
         encode.x = 1;
@@ -494,97 +464,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     return series;
   }
-
-  /*
-  defaultSeries33(dataList) {
-    let series = _.map(dataList, item => {
-
-      let { target, metric, field } = item;
-
-      let serieType = this.panel.serieType;
-
-      let data: any;
-
-      if (target === "docs") {
-        data = _.map(item.datapoints, point => {
-          let { value, name } = _.zipObject(['name', 'value'], _.values(point));
-          name = this.categoryFormat(name);
-          value = this.valueFormat(value);
-          return { value: [`${name}`, value] };;
-        });
-      } else {
-        data = _.map(item.datapoints, point => {
-
-          let { value, name } = _.zipObject(['value', 'name'], point);
-
-          name = this.categoryFormat(name);
-          value = this.valueFormat(value);
-
-          let ecData = { value: [`${name}`, value] };
-
-          return ecData;
-        });
-      }
-
-
-
-      let encode: any = {};
-      if (this.panel.exchangeAxis) {
-        encode.x = 1;
-        encode.y = 0;
-      };
-
-      let serie = this.getDefaultSerie();
-      _.defaultsDeep(serie, {
-        encode,
-        name: target,
-        type: serieType,
-        data
-      });
-      return serie;
-    });
-
-    return series;
-  }
-
-  defaultSeries22(dataList) {
-    let series = _.map(dataList, item => {
-
-      let { target, metric, field } = item;
-
-      let serieType = this.panel.serieType;
-
-      let data = _.map(item.datapoints, point => {
-
-        let { value, timestamp } = _.zipObject(['value', 'timestamp'], point);
-
-        timestamp = this.categoryFormat(timestamp);
-        value = this.valueFormat(value);
-
-        let ecData = { value: [`${timestamp}`, value] };
-
-        return ecData;
-      });
-
-      let encode: any = {};
-      if (this.panel.exchangeAxis) {
-        encode.x = 1;
-        encode.y = 0;
-      };
-
-      let serie = this.getDefaultSerie();
-      _.defaultsDeep(serie, {
-        encode,
-        name: target,
-        type: serieType,
-        data
-      });
-      return serie;
-    });
-
-    return series;
-  }
-  */
 
   getDefaultSerie() {
     let serieType = this.panel.serieType;
@@ -851,7 +730,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       };
       let right = {
         name: 'rightLegend', formatter: legend.formatter,
-        padding: 10, align: 'left', left: 'right',
+        padding: 10, align: 'right', left: 'right',
         orient: 'vertical', data: rightLegend
       };
       option.legend = [

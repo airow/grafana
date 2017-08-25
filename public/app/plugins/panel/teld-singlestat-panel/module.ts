@@ -698,6 +698,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       if (that.panel.calcExpression.enable) {
         var context = that.genCalcExpressionContext({ val: value });
         value = returnVal = that.calcExpression(context);
+        if (value === "NaN") { value = 0; }
+        value = kbn.toFixed(value, decimalInfo.decimals);
       }
 
       let varName = that.panel.publishVal.varName;

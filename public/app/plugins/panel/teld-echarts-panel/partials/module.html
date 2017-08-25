@@ -1,5 +1,5 @@
 <!--teld_panel_popup弹窗框的样式加上此类-->
-<div class="teld_panel" ng-class="{'teld_panel_popup':ctrl.isfullscreen()}">
+<div class="teld_panel" ng-dblclick="ctrl.dblclick();" ng-class="{'teld_panel_popup':ctrl.isfullscreen()}">
   <div class="teld_close" ng-click="ctrl.exitFullscreen()"><a><i class="closeIcon"></i></a></div>
     <div class="teld_head">
       <div class="head_right">
@@ -8,7 +8,7 @@
       </div>
       <div class="head_name">{{ctrl.echartsPanelArgs.title}}&nbsp;</div>
     </div>
-    <teld-echarts ng-dblclick="ctrl.echartsPanelArgs.title='&nbsp;';ctrl.viewPanel();" ng-show="ctrl.currentMode==='chart'" class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
+    <teld-echarts ng-show="ctrl.currentMode==='chart'" class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
     </teld-echarts>
     <div ng-show="ctrl.currentMode==='list'" class="teld_box">
       <table class="teld_table">
