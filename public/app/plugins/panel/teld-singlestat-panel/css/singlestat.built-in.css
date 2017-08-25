@@ -301,6 +301,10 @@ font-family: "Microsoft YaHei Regular";
   display: inline-block !important;
   background: url("../img/运营商3.png") center;
 }
+.dianzh .iconTitle{
+  display: inline-block !important;
+  background: url("../img/电站.png") center;
+}
 
 /*上下两行的标题栏*/
 .panelSubHeight{

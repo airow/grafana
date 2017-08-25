@@ -121,6 +121,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { name: '运营商', value: 'operator' },
       { name: '运营商_r', value: 'operator2' },
       { name: '运营商_w', value: 'operator3' },
+      { name: '电站', value: 'dianzh' },
 
       { name: 'charg', value: 'iconTip0' },
       { name: 'rise-o', value: 'iconTip1' },
