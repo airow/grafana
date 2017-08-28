@@ -30,6 +30,13 @@
       "angular-bindonce":       "vendor/angular-bindonce/bindonce.js",
       "angular-post-message":   "vendor/angular-post-message/src/angular-post-message.js",
       "angular-signalr-hub":   "vendor/angular-signalr-hub/signalr-hub.js",
+      "ws":                     "vendor/require-undefined.js", /*mock angular-websocket require('ws') */
+      "angular-websocket":      "vendor/angular-websocket-2.0.0/dist/angular-websocket.js",
+      "ace":             "vendor/ace-builds-1.2.8/src-min-noconflict/ace.js",
+      "ui-ace":          "vendor/ui-ace-0.2.3/ui-ace.js",
+      "Snap.svg":        "vendor/Snap.svg-0.5.1/dist/snap.svg.js",
+      "me-pageloading":  "vendor/me-pageloading-0.4.1/me-pageloading.js",
+      "flipcountdown":  "vendor/flipcountdown-3.0.5/jquery.flipcountdown.js",
       "jquery.signalR":   "vendor/jquery.signalR/jquery.signalR-2.2.2.js",
       "spectrum": "vendor/spectrum.js",
       "bootstrap-tagsinput": "vendor/tagsinput/bootstrap-tagsinput.js",
@@ -43,7 +50,10 @@
       "jquery.flot.fillbelow": "vendor/flot/jquery.flot.fillbelow",
       "jquery.flot.gauge": "vendor/flot/jquery.flot.gauge",
       "jquery.flot.categories": "vendor/flot/jquery.flot.categories",
-      "numeral": "vendor/numeral/numeral.js"
+      "numeral": "vendor/numeral/numeral.js",
+      'echarts': 'vendor/npm/echarts/dist/echarts.min.js',
+      'echarts.china': 'vendor/npm/echarts/map/js/china.js',
+      'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js'
     },
 
     packages: {

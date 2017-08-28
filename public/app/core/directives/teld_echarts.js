@@ -34,9 +34,9 @@ define([
             }
 
             if (chart) {
-              let option = chart.getOption();
+              var option = chart.getOption();
 
-              let hasBmap = _.has(option, ['bmap']);
+              var hasBmap = _.has(option, ['bmap']);
               if (hasBmap) {
                 scope.bmap = chart.getModel().getComponent('bmap').getBMap();
               }
@@ -54,7 +54,7 @@ define([
             }
 
             if (scope.config && scope.config.bmap) {
-              let bmapConf = scope.config.bmap;
+              var bmapConf = scope.config.bmap;
               if (bmapConf.event) {
                 if (angular.isArray(bmapConf.event)) {
                   angular.forEach(bmapConf.event, function (value) {

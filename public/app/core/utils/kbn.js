@@ -709,14 +709,14 @@ function($, _, numeral, moment) {
 
   kbn.valueFormats.teldPercent = function (size, decimals) {
     if (size === null) { return ""; }
-    let value = kbn.toFixed(100 * size, decimals);
+    var value = kbn.toFixed(100 * size, decimals);
     value = value > 100 ? 100 : value;
     return value + '%';
   };
 
   kbn.valueFormats.teldInt = function (size) {
     if (size === null) { return ""; }
-    let value = kbn.toFixed(size, 0);
+    var value = kbn.toFixed(size, 0);
     return value;
   };
 

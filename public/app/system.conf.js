@@ -43,9 +43,9 @@ System.config({
     "jquery.flot.gauge": "vendor/flot/jquery.flot.gauge",
     "jquery.flot.categories": "vendor/flot/jquery.flot.categories",
     "numeral": "vendor/numeral/numeral.js",
-    'echarts': 'vendor/npm/echarts/dist/echarts.js',
+    'echarts': 'vendor/npm/echarts/dist/echarts.min.js',
     'echarts.china': 'vendor/npm/echarts/map/js/china.js',
-    'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.js'
+    'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js'
   },
 
   packages: {

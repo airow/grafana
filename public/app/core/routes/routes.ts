@@ -18,6 +18,11 @@ function setupAngularRoutes($routeProvider, $locationProvider, mePageLoadingProv
   var loadAdminBundle = new BundleLoader('app/features/admin/admin');
   var loadAlertingBundle = new BundleLoader('app/features/alerting/all');
 
+  var reloadOnSearch = false;
+  if (config && config.bootData && config.bootData.user && config.bootData.user.orgRole) {
+    reloadOnSearch = config.bootData.user.orgRole === "Viewer";
+  }
+
   $routeProvider
   .when('/', {
     templateUrl: 'public/app/partials/dashboard.html',
@@ -29,7 +34,7 @@ function setupAngularRoutes($routeProvider, $locationProvider, mePageLoadingProv
     templateUrl: 'public/app/partials/dashboard.html',
     controller : 'LoadDashboardCtrl',
     //reloadOnSearch: true, /** 修改此处为了配合ws_across_screen进行跨屏跳转 */
-    reloadOnSearch: config.bootData.user.orgRole === "Viewer",
+    reloadOnSearch: reloadOnSearch,
     pageClass: 'page-dashboard',
   })
   .when('/dashboard-solo/:type/:slug', {
