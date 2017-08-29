@@ -572,7 +572,7 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       seriesIndex: 0,
       calculable: true,
       inRange: {
-        color: ['blue', 'blue', 'green', 'yellow', 'red']
+        color: ['#28FF28', '#93FF93', 'yellow', '#A23400']
       }
     };
 
