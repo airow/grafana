@@ -428,9 +428,29 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
 
   bmapLocationZoom(params) {
     let { type, target } = params;
+    let zoom = this.bmapCL.zoom;
     this.bmapCL.zoom = target.getZoom();
+
+    if (zoom !== this.bmapCL.zoom) {
+
+      // if (this.bmapCL.zoom >= 10) {
+      //   let options = this.ecOption.options;//_.cloneDeep(this.ecOption.options);
+      //   let option = options[this.timelineIndex];
+      //   option.visualMap.show = false;
+      //   option.visualMap.max = 1000;
+      //   //this.ecOption.options = options;
+      // }
+      // let options = _.cloneDeep(this.ecOption.options);
+      // let option = options[this.timelineIndex];
+      // this.ecOption.baseOption.visualMap.min = 50;
+      // this.ecOption.baseOption.visualMap.max = 1000;
+      // option.visualMap = _.cloneDeep(this.ecOption.baseOption.visualMap);
+      // this.ecOption.options = options;
+      //delete this.ecOption.options;
+    }
   }
 
+  isCity = false;
   initEcharts() {
     this.ecConfig = {
       //theme: 'default',
@@ -489,9 +509,11 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
     let coordinates = varCityPosition.current.value;
     //"china": { g: [116.395645, 39.929986], zoom: 5 },
     let position = { g: [116.395645, 39.929986], zoom: 5 };
+    this.isCity = false;
     if (false === _.isEmpty(coordinates)) {
+      this.isCity = true;
       position.g = _.reverse(_.split(coordinates, ',', 2));
-      position.zoom = 9;
+      position.zoom = 11;
     }
 
     // let [lng, lat] = position.g;
@@ -563,7 +585,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       zoom: this.bmapCL.zoom,
       //mapStyle: { styleJson: config.bootData.user.lightTheme ?  bmapStyle.light : bmapStyle.drak },
       mapStyle: { styleJson: bmapStyle.default },
-      roam: true
+      roam: 'move'
+      //roam: true
     };
 
     let visualMap = {
@@ -572,7 +595,8 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
       seriesIndex: 0,
       calculable: true,
       inRange: {
-        color: ['#28FF28', '#93FF93', 'yellow', '#A23400']
+        //color: ['#28FF28', '#93FF93', 'yellow', '#A23400']
+        color: ['blue', 'blue', 'green', 'yellow', 'red']
       }
     };
 
@@ -670,9 +694,12 @@ export class TeldHeatmapBmapPanelCtrl extends MetricsPanelCtrl {
             }
           ]
         };
-        this.ecOption.baseOption.visualMap.min = min;
-        //this.ecOption.baseOption.visualMap.max = sum / dataList[0].datapoints.length * 2;
+         this.ecOption.baseOption.visualMap.min = min;
+        // //this.ecOption.baseOption.visualMap.max = sum / dataList[0].datapoints.length * 2;
         this.ecOption.baseOption.visualMap.max = max;
+        if (this.isCity) {
+          this.ecOption.baseOption.visualMap.max = max * 0.2;
+        }
         option.visualMap = _.cloneDeep(this.ecOption.baseOption.visualMap);
 
       }
