@@ -61,7 +61,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   // Set and populate defaults
   panelDefaults = {
     baseConf: {
-      isDelayRolling: true
+      isDelayRolling: true,
+      line10Total: false
     },
     end: {
       cityName: "青岛",
@@ -176,36 +177,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         return res;
       })()
     };
-
-    this.cityRange = [
-      { name: '武汉', code: 4201 },
-      { name: '商丘', code: 4114 },
-      { name: '北京', code: 11 },
-      { name: '青岛', code: 3702 },
-      { name: '临沂', code: 3713 },
-      { name: '南京', code: 3201 },
-      { name: '上海', code: 31 },
-      { name: '厦门', code: 3502 },
-      { name: '成都', code: 5101 },
-      { name: '福州', code: 3501 },
-      { name: '惠州', code: 4413 },
-      { name: '扬州', code: 3210 },
-      { name: '重庆', code: 50 },
-      { name: '杭州', code: 3301 },
-      { name: '常德', code: 4307 },
-
-      { name: '成都', code: 50 },
-      { name: '常州', code: 40 },
-      { name: '北海', code: 20 },
-      { name: '海口', code: 10 },
-      { name: '广州', code: 90 },
-      { name: '大连', code: 80 },
-      { name: '南宁', code: 70 },
-      { name: '南昌', code: 60 },
-      { name: '拉萨', code: 50 },
-      { name: '长春', code: 40 },
-      { name: '包头', code: 30 },
-    ];
 
     this.cityRange = this.panel.fromCityConf.cities;
   }
@@ -571,9 +542,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       }
     });
 
-    _.forEach(crownCitySum, (value, key) => {
+    _.forEach(crownCitySum, (item, key) => {
       //sumLines[`code.${key}`] = value;
-      sumLines.push(value);
+      if (item.value > 0) {
+        sumLines.push(item);
+      }
     });
 
     let temp = _.sortBy(sumLines, ['value']);
@@ -687,6 +660,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     '#91c7ae', '#749f83', '#ca8622', '#bda29a',
     '#6e7074', '#546570', '#c4ccd3'];
 
+  getCityIndex(item) {
+    let top10City = this.cityMinutPowerTop10List;
+
+    let cityIndex = item.index;
+    if (this.panel.baseConf.line10Total && cityIndex < 10) {
+      let city = _.find(top10City, o => { return o.name === item.fromName; });
+      cityIndex = city ? city.itemIndex - 1 : 11;
+    }
+    return cityIndex;
+  }
+
   getSeries() {
     let color = this.lineColor;
 
@@ -694,17 +678,19 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     let scatterData = dataSource.map(item => {
 
+      let cityIndex = this.getCityIndex(item);
+
       let label = {
         normal: {
-          show: item.index < 10 && false,
+          show: cityIndex < 10 && false,
           textStyle: {
-            fontSize: 20 - item.index,
-            color: color[item.index]
+            fontSize: 20 - cityIndex,
+            color: color[cityIndex]
           }
         }
       };
 
-      let itemStyle = { normal: { color: color[item.index] || (item.line ? '#7fdeb6' : '#cbebdd') } };
+      let itemStyle = { normal: { color: color[cityIndex] || (item.line ? '#7fdeb6' : '#cbebdd') } };
 
       return {
         name: item.fromName,
@@ -722,7 +708,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       // if (returnValue) {
       //   item.value = this.lines[item.fromCode].value;
       // };
-      return item.line;
+      return item.line && item.line.value > 0;
     });
     function randomValue() {
       return Math.round(Math.random() * 1000);
@@ -733,40 +719,40 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         geoIndex: 0,
         tooltip: { show: false },
         data: [
-          { name: '北京', value: randomValue() },
-          { name: '天津', value: randomValue() },
-          { name: '上海', value: randomValue() },
-          { name: '重庆', value: randomValue() },
-          { name: '河北', value: randomValue() },
-          { name: '河南', value: randomValue() },
-          { name: '云南', value: randomValue() },
-          { name: '辽宁', value: randomValue() },
-          { name: '黑龙江', value: randomValue() },
-          { name: '湖南', value: randomValue() },
-          { name: '安徽', value: randomValue() },
-          { name: '山东', value: randomValue() },
-          { name: '新疆', value: randomValue() },
-          { name: '江苏', value: randomValue() },
-          { name: '浙江', value: randomValue() },
-          { name: '江西', value: randomValue() },
-          { name: '湖北', value: randomValue() },
-          { name: '广西', value: randomValue() },
-          { name: '甘肃', value: randomValue() },
-          { name: '山西', value: randomValue() },
-          { name: '内蒙古', value: randomValue() },
-          { name: '陕西', value: randomValue() },
-          { name: '吉林', value: randomValue() },
-          { name: '福建', value: randomValue() },
-          { name: '贵州', value: randomValue() },
-          { name: '广东', value: randomValue() },
-          { name: '青海', value: randomValue() },
-          { name: '西藏', value: randomValue() },
-          { name: '四川', value: randomValue() },
-          { name: '宁夏', value: randomValue() },
-          { name: '海南', value: randomValue() },
-          { name: '台湾', value: randomValue() },
-          { name: '香港', value: randomValue() },
-          { name: '澳门', value: randomValue() }
+          // { name: '北京', value: randomValue() },
+          // { name: '天津', value: randomValue() },
+          // { name: '上海', value: randomValue() },
+          // { name: '重庆', value: randomValue() },
+          // { name: '河北', value: randomValue() },
+          // { name: '河南', value: randomValue() },
+          // { name: '云南', value: randomValue() },
+          // { name: '辽宁', value: randomValue() },
+          // { name: '黑龙江', value: randomValue() },
+          // { name: '湖南', value: randomValue() },
+          // { name: '安徽', value: randomValue() },
+          // { name: '山东', value: randomValue() },
+          // { name: '新疆', value: randomValue() },
+          // { name: '江苏', value: randomValue() },
+          // { name: '浙江', value: randomValue() },
+          // { name: '江西', value: randomValue() },
+          // { name: '湖北', value: randomValue() },
+          // { name: '广西', value: randomValue() },
+          // { name: '甘肃', value: randomValue() },
+          // { name: '山西', value: randomValue() },
+          // { name: '内蒙古', value: randomValue() },
+          // { name: '陕西', value: randomValue() },
+          // { name: '吉林', value: randomValue() },
+          // { name: '福建', value: randomValue() },
+          // { name: '贵州', value: randomValue() },
+          // { name: '广东', value: randomValue() },
+          // { name: '青海', value: randomValue() },
+          // { name: '西藏', value: randomValue() },
+          // { name: '四川', value: randomValue() },
+          // { name: '宁夏', value: randomValue() },
+          // { name: '海南', value: randomValue() },
+          // { name: '台湾', value: randomValue() },
+          // { name: '香港', value: randomValue() },
+          // { name: '澳门', value: randomValue() }
         ]
       },
       {
@@ -814,11 +800,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         },
         data: linesData.map(item => {
           let conf: any = {};
-          //console.log(item.value);
+
+          let cityIndex = this.getCityIndex(item);
+
           conf.lineStyle = {
             normal: {
-              width: item.index < 10 ? item.value / 10 : 1,
-              color: color[item.index] || undefined
+              width: cityIndex < 10 ? 10 - cityIndex : 1,
+              color: color[cityIndex] || undefined
             }
           };
           return _.defaults(item, conf);
@@ -849,7 +837,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
         }
       },
-      {
+      {/** Teld Logo */
         z: 100,
         type: 'scatter',
         coordinateSystem: 'geo',
