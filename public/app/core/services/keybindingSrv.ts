@@ -101,6 +101,11 @@ export class KeybindingSrv {
       dashboard.hideDashNavbar = !dashboard.hideDashNavbar;
     });
 
+    dashboard.switchHideRow = true;
+    this.bind('mod+k', () => {
+      dashboard.switchHideRow = !dashboard.switchHideRow;
+    });
+
     this.bind('mod+s', e => {
       scope.appEvent('save-dashboard');
     });

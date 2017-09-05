@@ -39,6 +39,7 @@
           <spectrum-picker ng-model="ctrl.row.bgcolor.color" ng-change="refresh()"></spectrum-picker>
           <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.bgcolor.color'></input>
         </div>
+        <gf-form-switch class="gf-form" label="hide" checked="ctrl.row.hideRow"></gf-form-switch>
         <gf-form-switch class="gf-form" label="center" checked="ctrl.row.align.enabled"></gf-form-switch>
         <div class="gf-form" ng-if="false">
           <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.title'></input>
