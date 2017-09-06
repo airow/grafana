@@ -225,7 +225,8 @@ $side-menu-width:  14rem;
 
 // dashboard
 $panel-margin: 0.4rem;
-$dashboard-padding: ($panel-margin * 2) $panel-margin $panel-margin $panel-margin;
+//$dashboard-padding: ($panel-margin * 2) $panel-margin $panel-margin $panel-margin;
+$dashboard-padding: 0 0 0 0;
 
 // tabs
 $tabs-padding-top: 0.6rem;
