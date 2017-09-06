@@ -6,6 +6,7 @@ import moment from 'moment';
 import { PanelCtrl } from 'app/plugins/sdk';
 import { kibanaEditor } from './editor/kibana';
 import appEvents from 'app/core/app_events';
+import config from 'app/core/config';
 
 export class TeldIframePanelCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
@@ -367,7 +368,13 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   }
 
   onRender() {
-    this.src = this.$sce.trustAsResourceUrl(this.panel.src);
+
+    let src = this.panel.src;
+
+    let compiled = _.template(src);
+    src = compiled(config.bootData.user);
+
+    this.src = this.$sce.trustAsResourceUrl(src);
     this.style = {
       "border": 'none',
       "width": this.panel.iframeWidth,
