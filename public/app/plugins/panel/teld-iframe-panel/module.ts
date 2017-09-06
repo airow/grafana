@@ -33,8 +33,12 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     src: '',
     datasource: 'default',
     variables: [],
-
-    kibanaConf: {}
+    isIframe: false,
+    kibanaConf: {},
+    containerStyle: {
+      'margin-top': '30px',
+      'margin-bottom': '20px',
+    }
   };
 
   /** @ngInject **/
@@ -45,6 +49,10 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.variableTypeDataSource = ["custom", "teldCustom"];
 
     _.defaults(this.panel, this.panelDefaults);
+
+    if (this.panel.isIframe) {
+      this.isloaded = true;
+    }
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));

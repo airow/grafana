@@ -9,6 +9,8 @@
 	</div>
 
 	<div class="section gf-form-group">
+    <gf-form-switch class="gf-form" label="不同iframe" checked="ctrl.panel.isIframe">
+    </gf-form-switch>
 		<h5 class="section-heading">Size</h5>
 		<div class="gf-form">
 			<span class="gf-form-label width-7">Width</span>
@@ -17,7 +19,12 @@
 		<div class="gf-form">
 			<span class="gf-form-label width-7">Height</span>
 			<input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.iframeHeight" placeholder="100%" ng-change="ctrl.render()">
-		</div>
+    </div>
+    <div class="gf-form">
+      <span class="gf-form-label width-7">margin</span>
+      <input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.containerStyle['margin-top']" placeholder="margin-top" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="ctrl.panel.containerStyle['margin-bottom']" placeholder="margin-bottom" ng-change="ctrl.render()">
+    </div>
 	</div>
 
   <div class="section gf-form-group">
