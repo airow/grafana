@@ -365,6 +365,12 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     if (this.panel.calcExpression.enable) {
       var context = this.genCalcExpressionContext({ val: val });
       returnVal = this.calcExpression(context);
+
+      // if (isNaN(returnVal)) {
+      //   this.$timeout(() => {
+      //     this.tick();
+      //   }, 300);
+      // }
     }
 
     let varName = this.panel.publishVal.varName;

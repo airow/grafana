@@ -251,7 +251,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
   /** @ngInject */
   constructor($scope, $injector, private $location, private linkSrv, private $compile, private $interval,
-    private variableSrv, private $parse) {
+    private variableSrv, private $parse, $timeout) {
     super($scope, $injector);
     _.defaults(this.panel, this.panelDefaults);
 
@@ -563,6 +563,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
     var parseFunc = this.$parse(calcExpression.expression);
     var returnVal = parseFunc(context);
+
     return returnVal;
   }
 
@@ -687,6 +688,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     }
 
     function updateSubScope(value) {
+      var orgiValue = value;
       var decimalInfo = that.getDecimalsForValue(value);
       value = kbn.roundValue(value, decimalInfo.decimals);
       value = kbn.toFixed(value, decimalInfo.decimals);
@@ -698,8 +700,16 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       if (that.panel.calcExpression.enable) {
         var context = that.genCalcExpressionContext({ val: value });
         value = returnVal = that.calcExpression(context);
-        if (value === "NaN") { value = 0; }
-        value = kbn.toFixed(value, decimalInfo.decimals);
+
+        if (isNaN(returnVal)) {
+          that.$timeout(() => {
+            updateSubScope(orgiValue);
+            console.log('补偿计算-updateSubScope');
+          }, 300);
+          value = "";
+        } else {
+          value = kbn.toFixed(value, decimalInfo.decimals);
+        }
       }
 
       let varName = that.panel.publishVal.varName;
