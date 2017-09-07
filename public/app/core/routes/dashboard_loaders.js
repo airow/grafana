@@ -5,11 +5,14 @@ function (coreModule) {
   "use strict";
 
   coreModule.default.controller('LoadDashboardCtrl', function ($scope, $routeParams, dashboardLoaderSrv
-    , backendSrv, $location, mePageLoading) {
+    , backendSrv, $location, mePageLoading, wsAcrossScreen) {
     $scope.appEvent("dashboard-fetch-start");
 
     //页面切换效果
     mePageLoading.show();
+
+    wsAcrossScreen.singleUserConnect($location.path());
+
     if (!$routeParams.slug) {
       backendSrv.get('/api/dashboards/home').then(function(homeDash) {
         if (homeDash.redirectUri) {

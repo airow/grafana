@@ -10,18 +10,14 @@ define([
 
       var username = contextSrv.user.name;
 
-      var compiled = _.template(wsAcrossScreenConf.wsServerUrl);
-      var wsServerUrl = compiled(contextSrv.user);
-
-      var ws = $websocket(wsServerUrl);
-
       //var goto = wsAcrossScreenConf.goto;
 
-      var SCREEN_CONF = wsAcrossScreenConf.SCREEN_CONF;
+      //var SCREEN_CONF = wsAcrossScreenConf.SCREEN_CONF;
+      var SCREEN_CONF = wsAcrossScreenConf.loadConf(contextSrv.user);
 
       //var currentScreen = SCREEN_CONF[_.toLower(username)] || goto;
       var currentScreen = SCREEN_CONF[_.toLower(username)];
-      console.log(contextSrv.user);
+      console.log(currentScreen);
 
       var changeDashboard = function (wsMessage) {
         var message = wsMessage.message;
@@ -60,39 +56,49 @@ define([
         }
       };
 
-      ws.onMessage(function (event) {
-        var res;
-        try {
-          res = JSON.parse(event.data);
-        } catch (e) {
-          res = { 'sender': 'anonymous', 'message': event.data };
-        }
+      var ws;
+      function connectWs(contextUser) {
+        var compiled = _.template(wsAcrossScreenConf.wsServerUrl);
+        var wsServerUrl = compiled(contextUser);
 
-        var wsMessage = {
-          sender: res.sender,
-          message: res.message,
-          timeStamp: event.timeStamp
-        };
+        ws = $websocket(wsServerUrl);
 
-        var type = _.get(wsMessage, "message.type");
-        messageRouter[type](wsMessage);
-      });
+        ws.onMessage(function (event) {
+          var res;
+          try {
+            res = JSON.parse(event.data);
+          } catch (e) {
+            res = { 'sender': 'anonymous', 'message': event.data };
+          }
 
-      ws.onError(function (event) {
-        console.log('connection Error', event);
-        alertSrv.set("websocket error", event, "error", 4000);
-      });
+          var wsMessage = {
+            sender: res.sender,
+            message: res.message,
+            timeStamp: event.timeStamp
+          };
 
-      ws.onClose(function (event) {
-        console.log('connection closed', event);
-        alertSrv.set("websocket closed", event, "warning", 4000);
-      });
+          var type = _.get(wsMessage, "message.type");
+          messageRouter[type](wsMessage);
+        });
 
-      ws.onOpen(function (event) {
-        console.log('connection open');
-        //_this.$rootScope.appEvent('alert-success', ['Dashboard Imported', dash.title]);
-        alertSrv.set("websocket open", event, "success", 4000);
-      });
+        ws.onError(function (event) {
+          console.log('connection Error', event);
+          alertSrv.set("websocket error", event, "error", 4000);
+        });
+
+        ws.onClose(function (event) {
+          console.log('connection closed', event);
+          alertSrv.set("websocket closed", event, "warning", 4000);
+        });
+
+        ws.onOpen(function (event) {
+          console.log('connection open');
+          //_this.$rootScope.appEvent('alert-success', ['Dashboard Imported', dash.title]);
+          alertSrv.set("websocket open", event, "success", 4000);
+        });
+      }
+
+      connectWs(contextSrv.user);
 
       return {
         conf: function (dash) {
@@ -101,6 +107,29 @@ define([
             if (dash) {
               dash.hideDashNavbar = true;
             }
+          }
+        },
+        singleUserConnect: function (db) {
+          if (wsAcrossScreenConf.singleUser !== true) {
+            return;
+          }
+          var reConnectName;
+          _.each(SCREEN_CONF, function (uValue, wsConnectName) {
+            _.each(uValue, function (cValue) {
+              var dashboard = db.replace('/dashboard/', '');
+              if (_.endsWith(cValue.dashboard, dashboard)) {
+                reConnectName = wsConnectName;
+                return;
+              }
+            });
+            if (reConnectName) {
+              return;
+            }
+          });
+
+          if (reConnectName) {
+            currentScreen = SCREEN_CONF[_.toLower(reConnectName)];
+            ws = connectWs({ name: reConnectName });
           }
         },
         status: function () {
