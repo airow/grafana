@@ -8,8 +8,7 @@ define([], function () {
      * ${orgId}:grafana用户orgId;
      * */
     wsServerUrl: 'ws://rp1.teld.cn/api/WebSocket?user=${name}',
-    remoteConfUrl: "http://signalr.wyqcd.com/SCREEN_CONF.json",
-
+    //remoteConfUrl: "http://signalr.wyqcd.com/SCREEN_CONF.json",
   };
 
   return conf;

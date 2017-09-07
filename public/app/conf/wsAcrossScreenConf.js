@@ -87,8 +87,8 @@ define([
        * ${login}:grafana用户login;
        * ${orgId}:grafana用户orgId;
        * */
-      wsServerUrl: wsUrlConf.wsServerUrl || 'ws://rp1.teld.cn/api/WebSocket?user=${name}',
-      remoteConfUrl: wsUrlConf.remoteConfUrl || "http://signalr.wyqcd.com/SCREEN_CONF.json",
+      wsServerUrl: wsUrlConf.wsServerUrl,
+      remoteConfUrl: wsUrlConf.remoteConfUrl,
       SCREEN_CONF: SCREEN_CONF,
       singleUser: false,
       loadConf: function (contextUser) {

@@ -64,6 +64,7 @@ define([
         ws = $websocket(wsServerUrl);
 
         ws.onMessage(function (event) {
+          console.log(event);
           var res;
           try {
             res = JSON.parse(event.data);
