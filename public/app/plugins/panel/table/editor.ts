@@ -96,6 +96,9 @@ export class TablePanelEditorCtrl {
   }
 
   transformChanged() {
+    if (this.panel.transform !== "json") {
+      this.panel.jsonr2c = false;
+    }
     this.panel.columns = [];
     this.render();
   }

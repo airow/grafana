@@ -25,6 +25,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     drill_timePlotclick: false,
     targets: [{}],
     transform: 'timeseries_to_columns',
+    jsonr2c: false,
     pageSize: null,
     showHeader: true,
     styles: [
@@ -154,7 +155,9 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
   render() {
     this.table = transformDataToTable(this.dataRaw, this.panel);
-    this.table.sort(this.panel.sort);
+    if (this.panel.jsonr2c !== true) {
+      this.table.sort(this.panel.sort);
+    }
     return super.render(this.table);
   }
 

@@ -54,7 +54,8 @@
 							ng-options="f for f in editor.fontSizes"
 							ng-change="editor.render()"></select>
 				</div>
-			</div>
+      </div>
+      <gf-form-switch ng-show="editor.panel.transform==='json'" class="gf-form" label-class="width-6" label="Row 2 Col" checked="editor.panel.jsonr2c" on-change="editor.render()"></gf-form-switch>
 		</div>
 	</div>
 </div>

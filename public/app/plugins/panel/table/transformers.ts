@@ -453,9 +453,26 @@ transformers['json'] = {
         model.rows.push(values);
       }
     }
+    if (panel.jsonr2c) {
+      this.transformRow2Col(panel, model);
+    }
+  },
+  transformRow2Col: function (panel, model) {
+    setColumnAlias(panel, model);
+    let columns = _.transform(model.columns, function (result, col) {
+      result.push(col.alias || col.text);
+    }, []);
+
+    let rows = _.transform(model.rows, function (result, row) {
+      _.each(_.zip(columns, row), item => {
+        result.push(item);
+      });
+    }, []);
+
+    model.columns = [{ text: "field", value: "field", alias: "字段" }, { text: "value", value: "value", alias: "值" }];
+    model.rows = rows;
   }
 };
-
 
 function setColumnAlias(panel, model) {
 
