@@ -107,6 +107,7 @@ define([
             dash = dash || dashboardSrv.getCurrent();
             if (dash) {
               dash.hideDashNavbar = true;
+              dash.hideControls = true;
             }
           }
         },
