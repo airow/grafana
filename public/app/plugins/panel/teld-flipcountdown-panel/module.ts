@@ -343,10 +343,14 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
       let { varName, incrementModel } = this.panel.stepValSubscriber;
       varName = `teld.${varName}`;
       let stepVal = _.get(this.$scope.$root, varName, {});
-      step = _.get(stepVal, incrementModel, 0);
-
+      step = _.get(stepVal, 'step', 0);
+      let totalStep = _.get(stepVal, 'totalStep', 0);
+      let stepValInitVal = _.get(stepVal, 'initVal', 0);
+      //console.log(step);
       if (this.panel.stepValSubscriber.incrementModel === 'totalStep') {
-        val = +this.flipcountdownData.initValue + step;
+        val = +this.flipcountdownData.initValue + totalStep;
+      } else if (this.panel.stepValSubscriber.incrementModel === 'totalStepAndInit') {
+        val = +this.flipcountdownData.initValue + stepValInitVal + totalStep;
       } else {
         val += step;
       }

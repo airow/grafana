@@ -15,6 +15,118 @@
         <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
       </div>
     </div>
+    <div class="section gf-form-group">
+      <h5 class="section-heading">markPoint</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-9">
+            data
+          </label>
+        </div>
+        <div class="gf-form" ng-repeat="vp in ctrl.panel.echarts.series.line.markPoint.data track by $index">
+          <select class="gf-form-input" ng-model="vp.type" ng-options="serie for serie in ['min','max','average']" ></select>
+          <input type="text" class="gf-form-input width-14" ng-model="vp.name">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeMarkPointData($index)">
+              <i class="fa fa-remove"></i>
+            </a>
+          </label>
+        </div>
+
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword">
+            <a ng-click="ctrl.addMarkPointData()"><i class="fa fa-plus"></i></a>
+          </label>
+        </div>
+
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">symbol
+          <tip>'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'</tip>
+        </label>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbol" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">symbolSize</label>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolSize" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">symbolRotate</label>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolRotate" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="Show" label-class="width-9" checked="ctrl.panel.echarts.series.line.markPoint.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
+      </div>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.markPoint.label.normal.textStyle' />
+      <gf-form-switch class="gf-form" label-class="width-9" label="formatter Expression" checked="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable"
+        on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form-inline" ng-show="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable">
+        <div class="gf-form">
+          <label class="gf-form-label width-9">
+              args
+            </label>
+        </div>
+        <div class="gf-form" ng-repeat="argument in ctrl.panel.echarts.series.line.markPoint.formatterExpression.args track by $index">
+          <input type="text" class="gf-form-input width-13" ng-model="argument.name">
+          <label class="query-keyword width-2"> = </label>
+          <input type="number" class="gf-form-input width-3" ng-model="argument.defVal">
+          <label class="gf-form-label">
+              <a ng-click="ctrl.removeExpressionArgument($index)">
+                <i class="fa fa-remove"></i>
+              </a>
+            </label>
+        </div>
+
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword">
+            <a ng-click="ctrl.addExpressionArgument()"><i class="fa fa-plus"></i></a>
+          </label>
+        </div>
+
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+      <div class="gf-form" ng-show="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable">
+        <label class="gf-form-label width-9">expression
+          <tip>AngularJS 语法</tip>
+        </label>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.formatterExpression.expression"
+          ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <pre>
+          <a href="http://echarts.baidu.com/option.html#series-line.markPoint.label.normal.formatter">~markPoint.label.normal.formatter</a>
+          params={
+              componentType: 'series',
+              // 系列类型
+              seriesType: string,
+              // 系列在传入的 option.series 中的 index
+              seriesIndex: number,
+              // 系列名称
+              seriesName: string,
+              // 数据名，类目名
+              name: string,
+              // 数据在传入的 data 数组中的 index
+              dataIndex: number,
+              // 传入的原始数据项
+              data: Object,
+              // 传入的数据值
+              value: number|Array,
+              // 数据图形的颜色
+              color: string,
+
+          }
+      </pre>
+      </div>
+    </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">position</label>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.markPoint.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
+      </div>
+    </div>
   </div>
 
   <div class="editor-row" ng-switch-when="bar">

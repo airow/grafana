@@ -16,6 +16,30 @@ export class SeriesEditorCtrl {
     this.seriesConf = this.panel.echarts.series;
   }
 
+  addExpressionArgument() {
+    let calcExpression = this.seriesConf[this.panel.serieType].markPoint.formatterExpression;
+    calcExpression.args = calcExpression.args || [];
+    calcExpression.args.push({});
+  }
+
+  removeExpressionArgument(index) {
+    this.seriesConf[this.panel.serieType].markPoint.formatterExpression.args.splice(index, 1);
+  }
+
+  addMarkPointData() {
+
+    let serie = _.get(this.seriesConf, this.panel.serieType, { markPoint: { data: [] } });
+    this.seriesConf[this.panel.serieType] = serie;
+
+    let markPoint = _.get(serie, "markPoint", { data: [] });
+    serie["markPoint"] = markPoint;
+    markPoint.data.push({});
+  }
+
+  removeMarkPointData(index) {
+    this.seriesConf[this.panel.serieType].markPoint.data.splice(index, 1);
+  }
+
   render() {
     this.panelCtrl.render();
   }

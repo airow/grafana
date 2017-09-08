@@ -465,9 +465,50 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return series;
   }
 
+  genCalcExpressionContext(calcExpression, context) {
+
+    let variableSrv = this.variableSrv;
+
+    context = _.transform(calcExpression.args, function (result, argument) {
+      result[argument.name] = argument.defVal;
+
+      let variable = _.find(variableSrv.variables, { name: argument.name });
+      if (variable) {
+        result[argument.name] = +variable.current.value;
+      }
+
+    }, context);
+
+    return context;
+  }
+
+  calcExpression(calcExpression, context) {
+
+    if (false === _.isObject(context)) {
+      return 0;
+    }
+    let $parse = this.$injector.get('$parse');
+    var parseFunc = $parse(calcExpression.expression);
+    var returnVal = parseFunc(context);
+
+    return returnVal;
+  }
+
   getDefaultSerie() {
     let serieType = this.panel.serieType;
     let serie = this.panel.echarts.series[serieType] || this.ecConf.series[serieType];
+
+    if (serie.markPoint && serie.markPoint.label && serie.markPoint.label.normal) {
+      let formatterExpression = serie.markPoint.formatterExpression;
+      if (formatterExpression && formatterExpression.enable) {
+        serie.markPoint.label.normal.formatter = (params) => {
+          let context = this.genCalcExpressionContext(formatterExpression, { params: params });
+          let returnVal = this.calcExpression(formatterExpression, context);
+          return returnVal;
+        };
+      }
+    }
+
     return _.cloneDeep(serie);
   }
 
