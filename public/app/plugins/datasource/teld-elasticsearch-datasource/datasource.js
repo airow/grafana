@@ -1,6 +1,8 @@
 define([
   'angular',
   'lodash',
+  'app/core/utils/rangeutil',
+  'app/core/utils/datemath',
   'moment',
   'app/core/utils/kbn',
   './query_builder',
@@ -8,7 +10,7 @@ define([
   './elastic_response',
   './query_ctrl',
 ],
-  function (angular, _, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
+  function (angular, _, rangeUtil, dateMath, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
     'use strict';
 
     /** @ngInject */
@@ -283,6 +285,27 @@ define([
         payload = payload.replace(/\$timeFrom/g, options.range.from.valueOf());
         payload = payload.replace(/\$timeTo/g, options.range.to.valueOf());
         payload = templateSrv.replace(payload, options.scopedVars);
+
+        // if (target.timeRange && target.timeRange.enable) {
+        //   if (target.timeRange.timeFrom) {
+        //     var timeFromInterpolated = target.timeRange.timeFrom;
+        //     var timeFromInfo = rangeUtil.describeTextRange(timeFromInterpolated);
+        //     if (true !== timeFromInfo.invalid) {
+        //       override.from = dateMath.parse(timeFromInfo.from);
+        //       override.to = dateMath.parse(timeFromInfo.to);
+        //     }
+        //   }
+
+        //   if (target.timeRange.timeShift) {
+        //     var timeShiftInterpolated = target.timeRange.timeShift;
+        //     var timeShiftInfo = rangeUtil.describeTextRange(timeShiftInterpolated);
+        //     if (true !== timeShiftInfo.invalid) {
+        //       var timeShift = '-' + timeShiftInterpolated;
+        //       override.from = dateMath.parseDateMath(timeShift, override.from, false);
+        //       override.to = dateMath.parseDateMath(timeShift, override.to, true);
+        //     }
+        //   }
+        // }
 
         return this._post('_msearch', payload).then(function (res) {
           return new ElasticResponse(sentTargets, res).getTimeSeries();

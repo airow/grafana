@@ -301,6 +301,10 @@
         <label class="gf-form-label width-8">min</label>
         <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" class="gf-form-input">
       </div>
+      <div class="gf-form">
+          <label class="gf-form-label width-8">max</label>
+          <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" class="gf-form-input">
+        </div>
     </div>
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">

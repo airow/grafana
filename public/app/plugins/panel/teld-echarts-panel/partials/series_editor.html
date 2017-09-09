@@ -1,259 +1,263 @@
 <div ng-switch="ctrl.panel.serieType">
-  <div class="editor-row" ng-switch-when="line">
-    <div class="section gf-form-group">
-      <h5 class="section-heading">Label</h5>
-      <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.line.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">textStyle</label>
-      </div>
-      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.label.normal.textStyle' />
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">position</label>
-        <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.line.label.normal.position">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
-      </div>
-    </div>
-    <div class="section gf-form-group">
-      <h5 class="section-heading">markPoint</h5>
-      <div class="gf-form-inline">
+    <div class="editor-row" ng-switch-when="line">
+      <div class="section gf-form-group">
+        <h5 class="section-heading">Label</h5>
+        <div class="gf-form-inline">
+          <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.line.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
+        </div>
         <div class="gf-form">
-          <label class="gf-form-label query-keyword width-9">
-            data
-          </label>
+          <label class="gf-form-label query-keyword width-8">textStyle</label>
         </div>
-        <div class="gf-form" ng-repeat="vp in ctrl.panel.echarts.series.line.markPoint.data track by $index">
-          <select class="gf-form-input" ng-model="vp.type" ng-options="serie for serie in ['min','max','average']" ></select>
-          <input type="text" class="gf-form-input width-14" ng-model="vp.name">
-          <label class="gf-form-label">
-            <a ng-click="ctrl.removeMarkPointData($index)">
-              <i class="fa fa-remove"></i>
-            </a>
-          </label>
-        </div>
-
+        <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.label.normal.textStyle' />
         <div class="gf-form">
-          <label class="gf-form-label query-keyword">
-            <a ng-click="ctrl.addMarkPointData()"><i class="fa fa-plus"></i></a>
-          </label>
+          <label class="gf-form-label query-keyword width-8">position</label>
+          <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.line.label.normal.position">-->
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
         </div>
-
-        <div class="gf-form gf-form--grow">
-          <div class="gf-form-label gf-form-label--grow"></div>
+        <h5 class="section-heading">合并计算比例</h5>
+        <div class="gf-form-inline">
+          <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.merge.enable" on-change="ctrl.render()"></gf-form-switch>
         </div>
       </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-9">symbol
-          <tip>'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'</tip>
-        </label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbol" ng-change="ctrl.render()" ng-model-onblur>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-9">symbolSize</label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolSize" ng-change="ctrl.render()" ng-model-onblur>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-9">symbolRotate</label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolRotate" ng-change="ctrl.render()" ng-model-onblur>
-      </div>
-      <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="Show" label-class="width-9" checked="ctrl.panel.echarts.series.line.markPoint.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
-      </div>
-      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.markPoint.label.normal.textStyle' />
-      <gf-form-switch class="gf-form" label-class="width-9" label="formatter Expression" checked="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable"
-        on-change="ctrl.render()"></gf-form-switch>
-      <div class="gf-form-inline" ng-show="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable">
-        <div class="gf-form">
-          <label class="gf-form-label width-9">
-              args
+      <div class="section gf-form-group">
+        <h5 class="section-heading">markPoint</h5>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-9">
+              data
             </label>
-        </div>
-        <div class="gf-form" ng-repeat="argument in ctrl.panel.echarts.series.line.markPoint.formatterExpression.args track by $index">
-          <input type="text" class="gf-form-input width-13" ng-model="argument.name">
-          <label class="query-keyword width-2"> = </label>
-          <input type="number" class="gf-form-input width-3" ng-model="argument.defVal">
-          <label class="gf-form-label">
-              <a ng-click="ctrl.removeExpressionArgument($index)">
+          </div>
+          <div class="gf-form" ng-repeat="vp in ctrl.panel.echarts.series.line.markPoint.data track by $index">
+            <select class="gf-form-input" ng-model="vp.type" ng-options="serie for serie in ['min','max','average']" ></select>
+            <input type="text" class="gf-form-input width-14" ng-model="vp.name">
+            <label class="gf-form-label">
+              <a ng-click="ctrl.removeMarkPointData($index)">
                 <i class="fa fa-remove"></i>
               </a>
             </label>
-        </div>
+          </div>
 
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword">
+              <a ng-click="ctrl.addMarkPointData()"><i class="fa fa-plus"></i></a>
+            </label>
+          </div>
+
+          <div class="gf-form gf-form--grow">
+            <div class="gf-form-label gf-form-label--grow"></div>
+          </div>
+        </div>
         <div class="gf-form">
-          <label class="gf-form-label query-keyword">
-            <a ng-click="ctrl.addExpressionArgument()"><i class="fa fa-plus"></i></a>
+          <label class="gf-form-label width-9">symbol
+            <tip>'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'</tip>
           </label>
+          <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbol" ng-change="ctrl.render()" ng-model-onblur>
         </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-9">symbolSize</label>
+          <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolSize" ng-change="ctrl.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-9">symbolRotate</label>
+          <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolRotate" ng-change="ctrl.render()" ng-model-onblur>
+        </div>
+        <gf-form-switch class="gf-form" label="Show" label-class="width-9" checked="ctrl.panel.echarts.series.line.markPoint.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
+        <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.line.markPoint.label.normal.textStyle' />
+        <gf-form-switch class="gf-form" label-class="width-9" label="formatter Expression" checked="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form-inline" ng-show="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable">
+          <div class="gf-form">
+            <label class="gf-form-label width-9">
+                args
+              </label>
+          </div>
+          <div class="gf-form" ng-repeat="argument in ctrl.panel.echarts.series.line.markPoint.formatterExpression.args track by $index">
+            <input type="text" class="gf-form-input width-13" ng-model="argument.name">
+            <label class="query-keyword width-2"> = </label>
+            <input type="number" class="gf-form-input width-3" ng-model="argument.defVal">
+            <label class="gf-form-label">
+                <a ng-click="ctrl.removeExpressionArgument($index)">
+                  <i class="fa fa-remove"></i>
+                </a>
+              </label>
+          </div>
 
-        <div class="gf-form gf-form--grow">
-          <div class="gf-form-label gf-form-label--grow"></div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword">
+              <a ng-click="ctrl.addExpressionArgument()"><i class="fa fa-plus"></i></a>
+            </label>
+          </div>
+
+          <div class="gf-form gf-form--grow">
+            <div class="gf-form-label gf-form-label--grow"></div>
+          </div>
+        </div>
+        <div class="gf-form" ng-show="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable">
+          <label class="gf-form-label width-9">expression
+            <tip>AngularJS 语法</tip>
+          </label>
+
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.line.markPoint.formatterExpression.prefixes"
+          ng-change="ctrl.render()" placeholder="prefixes"  ng-model-onblur>
+          <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.formatterExpression.expression"
+            ng-change="ctrl.render()" ng-model-onblur>
+          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.line.markPoint.formatterExpression.suffix"
+            ng-change="ctrl.render()" placeholder="suffix" ng-model-onblur>
+        </div>
+        <pre>
+            params={
+                componentType: 'series',
+                // 系列类型
+                seriesType: string,
+                // 系列在传入的 option.series 中的 index
+                seriesIndex: number,
+                // 系列名称
+                seriesName: string,
+                // 数据名，类目名
+                name: string,
+                // 数据在传入的 data 数组中的 index
+                dataIndex: number,
+                // 传入的原始数据项
+                data: Object,
+                // 传入的数据值
+                value: number|Array,
+                // 数据图形的颜色
+                color: string,
+
+            }
+        </pre>
+      </div>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-8">position</label>
+      <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.markPoint.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
+    </div>
+    </div>
+
+    <div class="editor-row" ng-switch-when="bar">
+      <div class="section gf-form-group">
+        <h5 class="section-heading">Bar</h5>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label width-7">barWidth</label>
+            <input type="text" class="gf-form-input width-5" ng-model="ctrl.seriesConf.bar.barWidth">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">barMinHeight</label>
+            <input type="text" class="gf-form-input width-5" ng-model="ctrl.seriesConf.bar.barMinHeight">
+          </div>
         </div>
       </div>
-      <div class="gf-form" ng-show="ctrl.panel.echarts.series.line.markPoint.formatterExpression.enable">
-        <label class="gf-form-label width-9">expression
-          <tip>AngularJS 语法</tip>
-        </label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.formatterExpression.expression"
-          ng-change="ctrl.render()" ng-model-onblur>
-      </div>
-      <pre>
-          <a href="http://echarts.baidu.com/option.html#series-line.markPoint.label.normal.formatter">~markPoint.label.normal.formatter</a>
-          params={
-              componentType: 'series',
-              // 系列类型
-              seriesType: string,
-              // 系列在传入的 option.series 中的 index
-              seriesIndex: number,
-              // 系列名称
-              seriesName: string,
-              // 数据名，类目名
-              name: string,
-              // 数据在传入的 data 数组中的 index
-              dataIndex: number,
-              // 传入的原始数据项
-              data: Object,
-              // 传入的数据值
-              value: number|Array,
-              // 数据图形的颜色
-              color: string,
-
-          }
-      </pre>
+      <div class="section gf-form-group">
+        <h5 class="section-heading">Label</h5>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">Style</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">position</label>
+            <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.position">-->
+            <select class="gf-form-input" ng-model="ctrl.seriesConf.bar.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
+          </div>
+        </div>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">textStyle</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">color</label>
+            <span class="gf-form-label">
+              <spectrum-picker ng-model="ctrl.seriesConf.bar.label.normal.textStyle.color" ng-change="ctrl.render()"></spectrum-picker>
+            </span>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">fontStyle</label>
+            <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontStyle">-->
+            <select class="gf-form-input" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontStyle" ng-options="serie for serie in ['normal','italic','oblique']" ng-change="ctrl.refresh()"></select>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-8">fontWeight <tip>'normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'</tip></label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontWeight">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">fontSize</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontSize">
+          </div>
+        </div>
       </div>
     </div>
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">position</label>
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.markPoint.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
+
+    <div class="editor-row" ng-switch-when="pie">
+      <div class="section gf-form-group">
+        <h5 class="section-heading">Label</h5>
+        <div class="gf-form-inline">
+          <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.pie.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-8">textStyle</label>
+        </div>
+        <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.pie.label.normal.textStyle' />
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-8">position</label>
+          <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.label.normal.position">-->
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.pie.label.normal.position" ng-options="serie for serie in ['outside','inside','center']" ng-change="ctrl.refresh()"></select>
+        </div>
+      </div>
+      <div class="section gf-form-group">
+        <h5 class="section-heading">labelLine</h5>
+        <div class="gf-form-inline">
+          <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.pie.labelLine.normal.show" on-change="ctrl.render()"></gf-form-switch>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-8">length</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.labelLine.normal.length">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-8">length2</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.labelLine.normal.length2">
+          </div>
+          <gf-form-switch class="gf-form" label="smooth" label-class="width-8" checked="ctrl.panel.echarts.series.pie.labelLine.normal.smooth" on-change="ctrl.render()"></gf-form-switch>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-8">lineStyle</label>
+        </div>
+        <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.series.pie.labelLine.normal.lineStyle' />
+      </div>
+      <div class="section gf-form-group">
+        <div class="gf-form-inline">
+           <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">center</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-5">x</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.center[0]">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-5">y</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.center[1]">
+          </div>
+        </div>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">radius</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-5">inner</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.radius[0]">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-5">outer</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.radius[1]">
+          </div>
+          <gf-form-switch class="gf-form" label="Pie Ring" label-class="width-8" checked="ctrl.panel.style.innerRing.show" on-change="ctrl.render()"></gf-form-switch>
+          <div class="gf-form" ng-show="ctrl.panel.style.innerRing.show">
+            <label class="gf-form-label width-7">width</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.style.innerRing.width">
+          </div>
+          <div class="gf-form" ng-show="ctrl.panel.style.innerRing.show">
+            <label class="gf-form-label width-7">color</label>
+            <spectrum-picker ng-model="ctrl.panel.style.innerRing.color" ng-change="refresh()"></spectrum-picker>
+            <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.style.innerRing.color">
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="editor-row" ng-switch-when="bar">
-    <div class="section gf-form-group">
-      <h5 class="section-heading">Bar</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-7">barWidth</label>
-          <input type="text" class="gf-form-input width-5" ng-model="ctrl.seriesConf.bar.barWidth">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">barMinHeight</label>
-          <input type="text" class="gf-form-input width-5" ng-model="ctrl.seriesConf.bar.barMinHeight">
-        </div>
-      </div>
-    </div>
-    <div class="section gf-form-group">
-      <h5 class="section-heading">Label</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-7">Style</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">position</label>
-          <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.position">-->
-          <select class="gf-form-input" ng-model="ctrl.seriesConf.bar.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']" ></select>
-        </div>
-      </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-7">textStyle</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">color</label>
-          <span class="gf-form-label">
-            <spectrum-picker ng-model="ctrl.seriesConf.bar.label.normal.textStyle.color" ng-change="ctrl.render()"></spectrum-picker>
-          </span>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">fontStyle</label>
-          <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontStyle">-->
-          <select class="gf-form-input" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontStyle" ng-options="serie for serie in ['normal','italic','oblique']" ng-change="ctrl.refresh()"></select>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-8">fontWeight <tip>'normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'</tip></label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontWeight">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">fontSize</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.textStyle.fontSize">
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="editor-row" ng-switch-when="pie">
-    <div class="section gf-form-group">
-      <h5 class="section-heading">Label</h5>
-      <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.pie.label.normal.show" on-change="ctrl.render()"></gf-form-switch>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">textStyle</label>
-      </div>
-      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.series.pie.label.normal.textStyle' />
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">position</label>
-        <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.label.normal.position">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.pie.label.normal.position" ng-options="serie for serie in ['outside','inside','center']" ng-change="ctrl.refresh()"></select>
-      </div>
-    </div>
-    <div class="section gf-form-group">
-      <h5 class="section-heading">labelLine</h5>
-      <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.series.pie.labelLine.normal.show" on-change="ctrl.render()"></gf-form-switch>
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-8">length</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.labelLine.normal.length">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-8">length2</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.labelLine.normal.length2">
-        </div>
-        <gf-form-switch class="gf-form" label="smooth" label-class="width-8" checked="ctrl.panel.echarts.series.pie.labelLine.normal.smooth" on-change="ctrl.render()"></gf-form-switch>
-      </div>
-      <div class="gf-form">
-        <label class="gf-form-label query-keyword width-8">lineStyle</label>
-      </div>
-      <ec-opt-linestyle ctrl='ctrl' line-style='ctrl.panel.echarts.series.pie.labelLine.normal.lineStyle' />
-    </div>
-    <div class="section gf-form-group">
-      <div class="gf-form-inline">
-         <div class="gf-form">
-          <label class="gf-form-label query-keyword width-7">center</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-5">x</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.center[0]">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-5">y</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.center[1]">
-        </div>
-      </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-7">radius</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-5">inner</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.radius[0]">
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-5">outer</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.radius[1]">
-        </div>
-        <gf-form-switch class="gf-form" label="Pie Ring" label-class="width-8" checked="ctrl.panel.style.innerRing.show" on-change="ctrl.render()"></gf-form-switch>
-        <div class="gf-form" ng-show="ctrl.panel.style.innerRing.show">
-          <label class="gf-form-label width-7">width</label>
-          <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.style.innerRing.width">
-        </div>
-        <div class="gf-form" ng-show="ctrl.panel.style.innerRing.show">
-          <label class="gf-form-label width-7">color</label>
-          <spectrum-picker ng-model="ctrl.panel.style.innerRing.color" ng-change="refresh()"></spectrum-picker>
-          <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.style.innerRing.color">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>

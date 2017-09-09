@@ -10,10 +10,6 @@
         </div>
         <label class="gf-form-label width-6">缩小</label>
         <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.divisor" ng-change="ctrl.render()" ng-model-onblur>
-        <!-- <label class="gf-form-label width-6">Font size</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.valueFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
-        </div> -->
       </div>
 
       <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.publishVal.enable" on-change="ctrl.render()"></gf-form-switch>
@@ -27,10 +23,6 @@
         <div class="gf-form">
           <label class="gf-form-label width-6">Title</label>
           <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.prefix" ng-change="ctrl.render()" ng-model-onblur>
-          <!-- <label class="gf-form-label width-6">Font size</label>
-          <div class="gf-form-select-wrapper">
-            <select class="gf-form-input" ng-model="ctrl.panel.prefixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
-          </div> -->
         </div>
       </div>
 
@@ -38,25 +30,42 @@
       <div class="gf-form">
         <label class="gf-form-label width-6">Left</label>
         <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.prefix" ng-change="ctrl.render()" ng-model-onblur>
-        <!-- <label class="gf-form-label width-6">Font size</label>
-        <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.prefixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
-        </div> -->
       </div>
     </div>
 
     <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo'">
       <label class="gf-form-label width-6">Right</label>
       <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.postfix" ng-change="ctrl.render()" ng-model-onblur>
-      <!-- <label class="gf-form-label width-6">Font size</label>
-      <div class="gf-form-select-wrapper">
-        <select class="input-small gf-form-input" ng-model="ctrl.panel.postfixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
-      </div> -->
     </div>
 		<div class="gf-form">
 			<label class="gf-form-label width-6">Decimals</label>
 			<input type="number" class="gf-form-input width-18" placeholder="auto" data-placement="right" bs-tooltip="'Override automatic decimal precision for legend and tooltips'" ng-model="ctrl.panel.decimals" ng-change="ctrl.refresh()" ng-model-onblur>
 		</div>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">font-size</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-6">value</label>
+      <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.valueFontSize2" ng-change="ctrl.render()" ng-model-onblur>
+      <!-- <div class="gf-form-select-wrapper">
+        <select class="gf-form-input" ng-model="ctrl.panel.valueFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
+      </div> -->
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-6">left</label>
+      <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.prefixFontSize2" ng-change="ctrl.render()" ng-model-onblur>
+      <!-- <div class="gf-form-select-wrapper">
+        <select class="gf-form-input" ng-model="ctrl.panel.prefixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
+      </div> -->
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-6">right</label>
+      <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.postfixFontSize2" ng-change="ctrl.render()" ng-model-onblur>
+      <!-- <div class="gf-form-select-wrapper">
+        <select class="input-small gf-form-input" ng-model="ctrl.panel.postfixFontSize" ng-options="f for f in ctrl.fontSizes" ng-change="ctrl.render()"></select>
+      </div> -->
+    </div>
   </div>
 
   <div class="section gf-form-group">

@@ -752,6 +752,14 @@ function($, _, numeral, moment) {
     return kbn.valueFormats.teldMoment(value, "HH");
   };
 
+  kbn.valueFormats.teldmm = function (value) {
+    return kbn.valueFormats.teldMoment(value, "mm");
+  };
+
+  kbn.valueFormats.teldHHmm = function (value) {
+    return kbn.valueFormats.teldMoment(value, "HH:mm");
+  };
+
   ///// FORMAT MENU /////
 
   kbn.getUnitFormats = function() {
@@ -944,6 +952,8 @@ function($, _, numeral, moment) {
           { text: '月', value: 'teldMM' },
           { text: '日', value: 'teldDD' },
           { text: '小时', value: 'teldHH' },
+          { text: '分钟', value: 'teldmm' },
+          { text: '时:分', value: 'teldHHmm' },
         ]
       }
     ];

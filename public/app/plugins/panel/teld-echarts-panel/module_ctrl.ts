@@ -158,6 +158,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     filterNull: false,
   };
 
+  $parse: any;
+  cache: any;
+
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
     private dashboardSrv, private uiSegmentSrv, private $http, private $location, private $interval, private $sanitize, private $window) {
@@ -169,6 +172,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     this.echartsTheme = echartsTheme;
     this.echartsThemeName = echartsThemeName;
+
+    this.$parse = this.$injector.get('$parse');
 
     //this.ecConf.axis.category.axisLabel.formatter = this.formatter.bind(this);
 
@@ -487,8 +492,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     if (false === _.isObject(context)) {
       return 0;
     }
-    let $parse = this.$injector.get('$parse');
-    var parseFunc = $parse(calcExpression.expression);
+
+    var parseFunc = this.$parse(calcExpression.expression);
     var returnVal = parseFunc(context);
 
     return returnVal;
@@ -504,7 +509,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         serie.markPoint.label.normal.formatter = (params) => {
           let context = this.genCalcExpressionContext(formatterExpression, { params: params });
           let returnVal = this.calcExpression(formatterExpression, context);
-          return returnVal;
+
+          if (returnVal && returnVal !== "") {
+            window["gcache"] = returnVal;
+          }
+          return (formatterExpression.prefixes || "") + (returnVal || window["gcache"]) + (formatterExpression.suffix || "");
+          //return returnVal;
         };
       }
     }
@@ -754,6 +764,37 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       legend: [legend]
     };
 
+    let merge = this.panel.merge;
+    if (merge && merge.enable && option.series.length > 1) {
+      let var1 = option.series[0].data;
+      let var2 = option.series[1].data;
+
+      let news = _.map(var1, (item, index) => {
+        let value = item.value;
+        let c = var2[index].value;
+        return { c1: value, c2: c };
+      });
+
+      let that = this;
+      var parseFunc = that.$parse("n.c1 / n.c2 * 100");
+      news = _.transform(news, (result, n) => {
+        // var parseFunc = that.$parse("n.c1 / n.c2 * 100");
+        // var returnVal = parseFunc(n);
+        // result.push({ value: returnVal });
+
+        var returnVal = n.c1 / n.c2 * 100;
+        // if (returnVal > 6) {
+        //   returnVal = _.random(3, 5);
+        // }
+        result.push({ value: returnVal.toFixed(2) });
+      }, []);
+
+      option.series[0].data = news;
+      option.series.length = 1;
+      // let lll = _.cloneDeep(option.series[0]);
+      // lll.data = news;
+      // option.series.push(lll);
+    }
 
     /** 左右布局legend */
 

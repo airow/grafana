@@ -32,10 +32,14 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       name: '左右',
       tmpl: [
         '<div ng-dblclick="click()" class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
-        ' <div class="titleRight"><span ng-bind="postfix"></span>&nbsp;<span ng-bind="rightValue"></span></div>',
+        ' <div class="titleRight">',
+        '   <span ng-style="postfixStyle" ng-bind="postfix"></span>&nbsp;<span ng-style="valueStyle" ng-bind="rightValue"></span>',
+        ' </div>',
         ' <div class="titleLeft">',
         '   <div class="iconTitle"></div>',
-        '   <div class="titleValue"><span ng-bind="leftValue"></span>&nbsp;<span ng-bind="prefix"></span></div>',
+        '   <div class="titleValue">',
+        '     <span ng-style="valueStyle" ng-bind="leftValue"></span>&nbsp;<span ng-style="prefixStyle" ng-bind="prefix"></span>',
+        '   </div>',
         ' </div>',
         '</div>'
       ].join('')
@@ -123,6 +127,22 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { name: '运营商_w', value: 'operator3' },
       { name: '电站', value: 'dianzh' },
 
+      { name: '服务器', value: '服务器' },
+      { name: '工单', value: '工单' },
+      { name: '互联互通', value: '互联互通' },
+      { name: '机器', value: '机器' },
+      { name: '集群', value: '集群' },
+      { name: '节点', value: '节点' },
+      { name: '进程', value: '进程' },
+      { name: '平台', value: '平台' },
+      { name: '容器服务', value: '容器服务' },
+      { name: '时间', value: '时间' },
+      { name: '新增', value: '新增' },
+      { name: '修复', value: '修复' },
+      { name: '遗留', value: '遗留' },
+      { name: '预警', value: '预警' },
+      { name: '站点', value: '站点' },
+
       { name: 'charg', value: 'iconTip0' },
       { name: 'rise-o', value: 'iconTip1' },
       { name: 'rise-r', value: 'iconTip2' },
@@ -175,10 +195,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     mappingType: 1,
     nullPointMode: 'connected',
     valueName: 'avg',
-    prefixFontSize: '50%',
-    valueFontSize: '80%',
+    // prefixFontSize: '100%',
+    // valueFontSize: '100%',
+    // postfixFontSize: '100%',
     valuePosition: 'left',
-    postfixFontSize: '50%',
     thresholds: '',
     colorBackground: false,
     colorValue: false,
@@ -660,11 +680,23 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       subScope.iconClass = panel.iconClass;
       subScope.heightClass = panel.heightClass;
 
-      subScope.prefixFontSize = panel.prefixFontSize;
       subScope.prefix = panel.prefix;
-      subScope.postfixFontSize = panel.postfixFontSize;
       subScope.postfix = panel.postfix;
-      subScope.valueFontSize = panel.valueFontSize;
+
+      subScope.prefixStyle = {};
+      if (panel.prefixFontSize2 !== "") {
+        subScope.prefixStyle["font-size"] = panel.prefixFontSize2;
+      }
+
+      subScope.postfixStyle = {};
+      if (panel.postfixFontSize2 !== "") {
+        subScope.postfixStyle["font-size"] = panel.postfixFontSize2;
+      }
+
+      subScope.valueStyle = {};
+      if (panel.valueFontSize2 !== "") {
+        subScope.valueStyle["font-size"] = panel.valueFontSize2;
+      }
 
       updateSubScope(value);
       // if (panel.layout === 'LR') {

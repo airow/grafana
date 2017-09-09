@@ -536,7 +536,7 @@ var chargTrend_24h = {
         width: 3,
       }
     },
-    formatter: ["<div style='left:-50px;top:-40px;border:0px solid #000;",
+    formatter: ["<div style='left:-50px;top:-80px;border:0px solid #000;",
       "position:relative;width:74px;height:24px;line-height:24px;",
       "background:#086c89;;border-radius:4px;text-align:center;'>",
       "	<div style='position:absolute;color:#086c89;width: 0px;height:0px;height:0px;",
