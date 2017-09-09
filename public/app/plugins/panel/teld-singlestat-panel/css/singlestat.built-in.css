@@ -306,6 +306,81 @@ font-family: "Microsoft YaHei Regular";
   background: url("../img/电站.png") center;
 }
 
+.服务器 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/服务器.png") center;
+}
+
+.工单 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/工单.png") center;
+}
+
+.互联互通 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/互联互通.png") center;
+}
+
+.机器 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/机器.png") center;
+}
+
+.集群 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/集群.png") center;
+}
+
+.节点 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/节点.png") center;
+}
+
+.进程 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/进程.png") center;
+}
+
+.平台 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/平台.png") center;
+}
+
+.容器服务 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/容器服务.png") center;
+}
+
+.时间 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/时间.png") center;
+}
+
+.新增 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/新增.png") center;
+}
+
+.修复 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/修复.png") center;
+}
+
+.遗留 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/遗留.png") center;
+}
+
+.预警 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/预警.png") center;
+}
+
+.站点 .iconTitle{
+  display: inline-block !important;
+  background: url("../img/v2/站点.png") center;
+}
+
 /*上下两行的标题栏*/
 .panelSubHeight{
     /*height: 95px;*/
