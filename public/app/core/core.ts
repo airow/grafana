@@ -17,6 +17,7 @@ import "./directives/plugin_component";
 import "./directives/rebuild_on_change";
 import "./directives/give_focus";
 import "./directives/teld_echarts";
+import "./directives/track_iframe_dbclick";
 import './jquery_extended';
 import './partials';
 import './components/jsontree/jsontree';

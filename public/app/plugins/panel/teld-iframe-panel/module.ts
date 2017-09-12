@@ -367,6 +367,22 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.render();
   }
 
+  dblclick() {
+    if (this.panel.dblfullscreen) {
+      if (this.isfullscreen()) {
+        this.exitFullscreen();
+      } else {
+        this.viewPanel();
+      }
+    }
+  }
+
+  isfullscreen() {
+    let viewState = this.$rootScope.g_DashboardViewState;
+    let editMode = viewState.edit === null || viewState.edit === false;
+    return viewState.fullscreen && editMode;
+  }
+
   onRender() {
 
     let src = this.panel.src;
