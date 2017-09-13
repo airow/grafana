@@ -260,4 +260,38 @@
         </div>
       </div>
     </div>
+    <div class="editor-row" ng-switch-when="pie">
+
+      <div class="section gf-form-group">
+        <h5 class="section-heading">other data</h5>
+        <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.pieExt.dataExt.enable" on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form-inline" ng-if="ctrl.panel.pieExt.dataExt.enable">
+          <div class="gf-form">
+            <label class="gf-form-label width-9">
+                args
+              </label>
+          </div>
+          <div class="gf-form" ng-repeat="argument in ctrl.panel.pieExt.dataExt.items track by $index">
+            <input type="text" class="gf-form-input width-13" placeholder="varname" ng-model="argument.varname">
+            <input type="text" class="gf-form-input width-13" placeholder="title" ng-model="argument.title">
+            <!-- <gf-form-switch class="gf-form" label-class="width-8" label="配置" checked="argument.isKeyvalue"></gf-form-switch>
+            <input type="text" class="gf-form-input width-13" ng-if="argument.isKeyvalue" placeholder="propKey" ng-model="argument.propKey">
+            <input type="text" class="gf-form-input width-13" ng-if="argument.isKeyvalue" placeholder="propValue" ng-model="argument.propValue"> -->
+            <label class="gf-form-label">
+                <a ng-click="ctrl.removeArgument(ctrl.panel.pieExt.dataExt.items,$index)">
+                  <i class="fa fa-remove"></i>
+                </a>
+              </label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword">
+              <a ng-click="ctrl.addArgument(ctrl.panel.pieExt.dataExt.items)"><i class="fa fa-plus"></i></a>
+            </label>
+          </div>
+          <div class="gf-form gf-form--grow">
+            <div class="gf-form-label gf-form-label--grow"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>

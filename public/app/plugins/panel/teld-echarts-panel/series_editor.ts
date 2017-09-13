@@ -40,6 +40,14 @@ export class SeriesEditorCtrl {
     this.seriesConf[this.panel.serieType].markPoint.data.splice(index, 1);
   }
 
+  addArgument(args) {
+    args.push({});
+  }
+
+  removeArgument(args,index) {
+    args.splice(index, 1);
+  }
+
   render() {
     this.panelCtrl.render();
   }

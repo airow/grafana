@@ -110,7 +110,7 @@ module.directive('grafanaPanel', function($rootScope, $document) {
              fillHeight /= p;
              fillHeight *= (p + 0.18);
 
-             let fullScreenShowHeight = _.sumBy(_.filter(ctrl.dashboard.rows, { fullScreenShow: true }), 'height') || 0;
+             let fullScreenShowHeight = _.sumBy(_.filter(ctrl.dashboard.rows, { fullScreenShow: true, hideRow: false }), 'height') || 0;
              fillHeight -= (+fullScreenShowHeight);
 
 
