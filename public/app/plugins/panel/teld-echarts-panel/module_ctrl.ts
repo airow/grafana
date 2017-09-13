@@ -125,6 +125,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       },
     },
 
+    pieExt: {
+      dataExt: {
+        enable: false,
+        items: [{}]
+      }
+    },
+
     eventSubscribe: {
       enable: false,
       eventPanels: []
@@ -393,7 +400,75 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.tbodyHtml = this.$sce.trustAsHtml(renderer.render(0));
   }
 
+  pieMerge(dataList) {
+
+    if (this.panel.pieExt.dataExt.enable !== true) {
+      return;
+    }
+
+    let mergeItem = _.transform(this.panel.pieExt.dataExt.items, (result, argument) => {
+      let variable = _.find(this.variableSrv.variables, { name: argument.varname });
+      if (variable) {
+        let temp = { target: argument.title, val: variable.current.value, argument: argument };
+        result.push(temp);
+      }
+
+    }, []);
+
+    if (dataList.length > 0) {
+      let first = dataList[0];
+      if (first.type === "docs" && first.datapoints && first.datapoints.length > 0) {
+        let objKeys = _.keys(first.datapoints[0]);
+        _.each(mergeItem, eachItme => {
+
+          _.remove(first.datapoints, (n) => {
+            return n[objKeys[0]] === eachItme.target;
+          });
+
+          let temp = _.zipObject(objKeys, [eachItme.target, eachItme.val]);
+          // temp[eachItme.argument.propKey || propKey] = eachItme.target;
+          // temp[eachItme.argument.propValue || propValue] = eachItme.val;
+          first.datapoints.push(temp);
+        });
+      } else {
+        let timeseries = first.datapoints[0][1];
+        _.each(mergeItem, eachItme => {
+          let dataItem: any = { target: eachItme.target };
+          dataItem = _.find(dataList, dataItem) || dataItem;
+          if (dataItem.datapoints) {
+            dataItem.datapoints[0][0] = eachItme.val;
+          } else {
+            dataItem.datapoints = [[eachItme.val, timeseries]];
+            dataList.push(dataItem);
+          }
+        });
+      }
+    }
+
+    // if (dataList.length > 1) {
+    //   let timeseries = dataList[0].data[0][1];
+    //   _.each(mergeItem, eachItme => {
+    //     dataList.push({ target: eachItme.target, data: [[eachItme.val, timeseries]] });
+    //   });
+    // } else {
+    //   if (dataList.length === 1) {
+    //     let data = dataList[0];
+    //     if (data.type === "docs" && data.datapoints && data.datapoints.length > 0) {
+
+    //       _.each(mergeItem, eachItme => {
+    //         let temp = {};
+    //         temp["OperType.keyword"] = eachItme.target;
+    //         temp["Count"] = eachItme.val;
+    //         data.datapoints.push(temp);
+    //       });
+    //     }
+    //   }
+    // }
+  }
+
   onDataReceived(dataList) {
+
+    this.pieMerge(dataList);
 
     this.renderTable(dataList);
 

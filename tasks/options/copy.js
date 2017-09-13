@@ -15,6 +15,13 @@ module.exports = function(config) {
       dest: '<%= genDir %>'
     },
 
+    public_gen_to_releas: {
+      cwd: '<%= genDir %>',
+      expand: true,
+      src: ['**/*', '!**/*.less'],
+      dest: '<%= baseDir %>/public_release'
+    },
+
     node_modules: {
       cwd: './node_modules',
       expand: true,
