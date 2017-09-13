@@ -6,14 +6,15 @@ define([
   function (angular, _, wsAcrossScreenConf) {
     'use strict';
     var module = angular.module('grafana.services');
-    module.factory('wsAcrossScreen', function ($websocket, contextSrv, alertSrv, dashboardSrv, teldHelperSrv) {
+    module.factory('wsAcrossScreen', function ($interval, $websocket, contextSrv, alertSrv, dashboardSrv, teldHelperSrv) {
 
-      var username = contextSrv.user.name;
+      var wsConnectUser = _.defaults({}, contextSrv.user);
+      var username = wsConnectUser.name;
 
       //var goto = wsAcrossScreenConf.goto;
 
       //var SCREEN_CONF = wsAcrossScreenConf.SCREEN_CONF;
-      var SCREEN_CONF = wsAcrossScreenConf.loadConf(contextSrv.user);
+      var SCREEN_CONF = wsAcrossScreenConf.loadConf(wsConnectUser);
 
       //var currentScreen = SCREEN_CONF[_.toLower(username)] || goto;
       var currentScreen = SCREEN_CONF[_.toLower(username)];
@@ -56,12 +57,11 @@ define([
         }
       };
 
-      var ws;
       function connectWs(contextUser) {
         var compiled = _.template(wsAcrossScreenConf.wsServerUrl);
         var wsServerUrl = compiled(contextUser);
 
-        ws = $websocket(wsServerUrl);
+        var ws = $websocket(wsServerUrl);
 
         ws.onMessage(function (event) {
           console.log(event);
@@ -90,6 +90,8 @@ define([
         ws.onClose(function (event) {
           console.log('connection closed', event);
           alertSrv.set("websocket closed", event, "warning", 4000);
+          //断开重连
+          this.ws = connectWs(wsConnectUser);
         });
 
         ws.onOpen(function (event) {
@@ -97,11 +99,25 @@ define([
           //_this.$rootScope.appEvent('alert-success', ['Dashboard Imported', dash.title]);
           alertSrv.set("websocket open", event, "success", 4000);
         });
+
+        return ws;
       }
 
-      connectWs(contextSrv.user);
+      // $interval(function () {
+      //   if (ws) {
+      //     console.log(ws.readyState);
+      //     if (ws.readyState !== 1) {
+      //       connectWs(wsConnectUser);
+      //     }
+      //   } else {
+      //     connectWs(wsConnectUser);
+      //   }
+      // }.bind(this), 1000);
+
+      this.ws = connectWs(wsConnectUser);
 
       return {
+        ws: this.ws,
         conf: function (dash) {
           if (currentScreen) {
             dash = dash || dashboardSrv.getCurrent();
@@ -129,20 +145,26 @@ define([
             }
           });
 
-          if (reConnectName) {
+          if (reConnectName !== username) {
             currentScreen = SCREEN_CONF[_.toLower(reConnectName)];
-            ws = connectWs({ name: reConnectName });
+            wsConnectUser.name = reConnectName;
+            username = reConnectName;
+            if (this.ws) {
+              this.ws.close(true);
+            } else {
+              this.ws = connectWs({ name: reConnectName });
+            }
           }
         },
         status: function () {
-          return ws.readyState;
+          return this.ws.readyState;
         },
         send: function (message) {
           if (angular.isString(message)) {
-            ws.send(message);
+            this.ws.send(message);
           }
           else if (angular.isObject(message)) {
-            ws.send(JSON.stringify(message));
+            this.ws.send(JSON.stringify(message));
           }
         },
         sendTo: function (to, message) {
@@ -152,7 +174,7 @@ define([
           }
 
           var sendMessage = to + "|'" + message + "'";
-          ws.send(sendMessage);
+          this.ws.send(sendMessage);
         }
       };
     });

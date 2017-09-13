@@ -20,6 +20,48 @@ define([
     var SCREEN_CONF = {
       goto: goto,
       centermap: {},
+      lt: {
+        gotoprovince: {
+          /** 运营面板_U（全国） */
+          dashboard: 'dashboard://db/lefttop-gotoprovince'
+        },
+        gotocity: {
+          /** 运营面板_U（城市）*/
+          dashboard: 'dashboard://db/lefttop-gotocity'
+        },
+        gotostat: {
+          /** 运营面板_U（电站） */
+          dashboard: 'dashboard://db/lefttop-gotostat'
+        }
+      },
+      rt: {
+        gotoprovince: {
+          /** 运营面板_U（全国） */
+          dashboard: 'dashboard://db/righttop-gotoprovince'
+        },
+        gotocity: {
+          /** 运营面板_U（城市）*/
+          dashboard: 'dashboard://db/righttop-gotocity'
+        },
+        gotostat: {
+          /** 运营面板_U（电站） */
+          dashboard: 'dashboard://db/righttop-gotostat'
+        }
+      },
+      screen: {
+        gotoprovince: {
+          /** 运营面板_U（全国） */
+          dashboard: 'dashboard://db/yun-ying-mian-ban-_u-quan-guo'
+        },
+        gotocity: {
+          /** 运营面板_U（城市）*/
+          dashboard: 'dashboard://db/yun-ying-mian-ban-_u-cheng-shi'
+        },
+        gotostat: {
+          /** 运营面板_U（电站） */
+          dashboard: 'dashboard://db/yun-ying-mian-ban-_u-dian-zhan'
+        }
+      },
       /** 运营面板 */
       lefttop: {
         gotoprovince: {
@@ -90,7 +132,7 @@ define([
       wsServerUrl: wsUrlConf.wsServerUrl,
       remoteConfUrl: wsUrlConf.remoteConfUrl,
       SCREEN_CONF: SCREEN_CONF,
-      singleUser: false,
+      singleUser: true,
       loadConf: function (contextUser) {
         var returnValue = this.SCREEN_CONF;
         if (this.remoteConfUrl) {
