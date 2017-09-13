@@ -19,6 +19,21 @@ module.exports = function(config) {
           dest: '<%= pkg.name %>-<%= pkg.version %>/',
         }
       ]
+    },
+
+    /*只打包public文件夹*/
+    public:{
+      options: {
+        archive: '<%= destDir %>/'+require('moment')().format("YYYY-MM-DD HHmm")+' public_release.zip'
+      },
+      files : [
+        {
+          expand: true,
+          cwd: '<%= baseDir %>/public_release',
+          src: ['**/*'],
+          dest: '',
+        }
+      ]
     }
   };
 

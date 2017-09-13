@@ -71,6 +71,7 @@
     "grunt-sync": "^0.6.2",
     "karma-sinon": "^1.0.5",
     "lodash": "^4.17.2",
+    "moment": "^2.18.1",
     "mousetrap": "^1.6.0",
     "remarkable": "^1.7.1",
     "sinon": "1.17.6",

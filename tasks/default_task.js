@@ -26,6 +26,15 @@ module.exports = function(grunt) {
     'exec:tscompile'
   ]);
 
+  //生产环境便宜
+  grunt.registerTask('teld:release', [
+    'default',
+    'clean:teldrelease',
+    'copy:public_gen_to_releas',
+    'clean:teldconf',
+    'compress:public',
+  ]);
+
   grunt.registerTask('test', ['default', 'karma:test', 'no-only-tests']);
 
   grunt.registerTask('no-only-tests', function() {
