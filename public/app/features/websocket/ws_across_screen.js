@@ -3,10 +3,13 @@ define([
   'lodash',
   'app/conf/wsAcrossScreenConf'
 ],
-  function (angular, _, wsAcrossScreenConf) {
+  function (angular, _) {
     'use strict';
     var module = angular.module('grafana.services');
-    module.factory('wsAcrossScreen', function ($interval, $websocket, contextSrv, alertSrv, dashboardSrv, teldHelperSrv) {
+    module.factory('wsAcrossScreen', function ($interval, $websocket, contextSrv, alertSrv, dashboardSrv,
+      teldHelperSrv, wsAcrossScreenConfSrv) {
+
+      var wsAcrossScreenConf = wsAcrossScreenConfSrv;
 
       var wsConnectUser = _.defaults({}, contextSrv.user);
       var username = wsConnectUser.login;

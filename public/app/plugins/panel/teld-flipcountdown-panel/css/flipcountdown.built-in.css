@@ -148,3 +148,39 @@
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_space{
 	background-position:-100px -4766px;
 }
+
+.xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit{
+	width:44px;
+	height:71px;
+	background-image:url(./img/teld-orange-gold.png);
+}
+.xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit.xdsoft_space,
+.xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit.xdsoft_separator,
+.xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit.xdsoft_dot{
+	width:14px;
+	background-position:-19px -4766px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit.xdsoft_dot{
+	background-position:-37px -4766px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit.xdsoft_space{
+	background-position:-100px -4766px;
+}
+
+.xdsoft_flipcountdown.xdsoft_size_teldorangeyellow >.xdsoft_digit{
+	width:44px;
+	height:71px;
+	background-image:url(./img/teld-orange-yellow.png);
+}
+.xdsoft_flipcountdown.xdsoft_size_teldorangeyellow >.xdsoft_digit.xdsoft_space,
+.xdsoft_flipcountdown.xdsoft_size_teldorangeyellow >.xdsoft_digit.xdsoft_separator,
+.xdsoft_flipcountdown.xdsoft_size_teldorangeyellow >.xdsoft_digit.xdsoft_dot{
+	width:14px;
+	background-position:-19px -4766px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldorangeyellow >.xdsoft_digit.xdsoft_dot{
+	background-position:-37px -4766px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldorangeyellow >.xdsoft_digit.xdsoft_space{
+	background-position:-100px -4766px;
+}
