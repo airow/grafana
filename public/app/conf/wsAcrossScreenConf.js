@@ -132,7 +132,7 @@ define([
       wsServerUrl: wsUrlConf.wsServerUrl,
       remoteConfUrl: wsUrlConf.remoteConfUrl,
       SCREEN_CONF: SCREEN_CONF,
-      singleUser: false,
+      singleUser: true,
       loadConf: function (contextUser) {
         var returnValue = this.SCREEN_CONF;
         if (this.remoteConfUrl) {

@@ -14,9 +14,11 @@ define([
       //var goto = wsAcrossScreenConf.goto;
 
       //var SCREEN_CONF = wsAcrossScreenConf.SCREEN_CONF;
-      var SCREEN_CONF = wsAcrossScreenConf.loadConf(wsConnectUser);
 
-      //var currentScreen = SCREEN_CONF[_.toLower(username)] || goto;
+      var SCREEN_CONF = {};
+      if (contextSrv.user.orgRole === "Viewer") {
+        SCREEN_CONF = wsAcrossScreenConf.loadConf(wsConnectUser);
+      }
       var currentScreen = SCREEN_CONF[_.toLower(username)];
       console.log(currentScreen);
 
@@ -63,7 +65,7 @@ define([
 
         console.log(wsServerUrl);
 
-        var ws = $websocket(wsServerUrl);
+        ws = $websocket(wsServerUrl);
 
         ws.onMessage(function (event) {
           console.log(event);
@@ -93,7 +95,7 @@ define([
           console.log('connection closed', event);
           alertSrv.set("websocket connection", event.type, "warning", 4000);
           //断开重连
-          wsConnect = connectWs(wsConnectUser);
+          ws = connectWs(wsConnectUser);
         });
 
         ws.onOpen(function (event) {
@@ -105,10 +107,13 @@ define([
         return ws;
       }
 
-      var wsConnect = connectWs(wsConnectUser);
+      var ws;
+      if (contextSrv.user.orgRole === "Viewer") {
+        ws = connectWs(wsConnectUser);
+      }
 
       return {
-        //wsConnect: this.wsConnect,
+        //ws: this.ws,
         conf: function (dash) {
           if (currentScreen) {
             dash = dash || dashboardSrv.getCurrent();
@@ -141,22 +146,22 @@ define([
             wsConnectUser.login = reConnectName;
             username = reConnectName;
 
-            if (wsConnect) {
-              wsConnect.close(true);
+            if (ws) {
+              ws.close(true);
             } else {
-              wsConnect = connectWs(wsConnectUser);
+              ws = connectWs(wsConnectUser);
             }
           }
         },
         status: function () {
-          return wsConnect.readyState;
+          return ws.readyState;
         },
         send: function (message) {
           if (angular.isString(message)) {
-            wsConnect.send(message);
+            ws.send(message);
           }
           else if (angular.isObject(message)) {
-            wsConnect.send(JSON.stringify(message));
+            ws.send(JSON.stringify(message));
           }
         },
         sendTo: function (to, message) {
@@ -166,7 +171,7 @@ define([
           }
 
           var sendMessage = to + "|'" + message + "'";
-          wsConnect.send(sendMessage);
+          ws.send(sendMessage);
         }
       };
     });
