@@ -1,6 +1,6 @@
 define([
   'jquery',
-  './wsUrlConf'
+  './wsUrlConf',
 ],
   function ($, wsUrlConf) {
     'use strict';
@@ -62,65 +62,65 @@ define([
           dashboard: 'dashboard://db/yun-ying-mian-ban-_u-dian-zhan'
         }
       },
-      /** 运营面板 */
-      lefttop: {
-        gotoprovince: {
-          /** 运营面板_U（全国） */
-          dashboard: 'dashboard://db/yun-ying-mian-ban-_u-quan-guo'
-        },
-        gotocity: {
-          /** 运营面板_U（城市）*/
-          dashboard: 'dashboard://db/yun-ying-mian-ban-_u-cheng-shi'
-        },
-        gotostat: {
-          /** 运营面板_U（电站） */
-          dashboard: 'dashboard://db/yun-ying-mian-ban-_u-dian-zhan'
-        }
-      },
-      leftbottom: {
-        gotoprovince: {
-          /** 运营面板_D（全国） */
-          dashboard: 'dashboard://db/yun-ying-mian-ban-_d-quan-guo'
-        },
-        gotocity: {
-          /** 运营面板_D（城市） */
-          dashboard: 'dashboard://db/yun-ying-mian-ban-_d-cheng-shi'
-        },
-        gotostat: {
-          /** 运营面板_D（电站） */
-          dashboard: 'dashboard://db/yun-ying-mian-ban-_d-dian-zhan'
-        }
-      },
+      // /** 运营面板 */
+      // lefttop: {
+      //   gotoprovince: {
+      //     /** 运营面板_U（全国） */
+      //     dashboard: 'dashboard://db/yun-ying-mian-ban-_u-quan-guo'
+      //   },
+      //   gotocity: {
+      //     /** 运营面板_U（城市）*/
+      //     dashboard: 'dashboard://db/yun-ying-mian-ban-_u-cheng-shi'
+      //   },
+      //   gotostat: {
+      //     /** 运营面板_U（电站） */
+      //     dashboard: 'dashboard://db/yun-ying-mian-ban-_u-dian-zhan'
+      //   }
+      // },
+      // leftbottom: {
+      //   gotoprovince: {
+      //     /** 运营面板_D（全国） */
+      //     dashboard: 'dashboard://db/yun-ying-mian-ban-_d-quan-guo'
+      //   },
+      //   gotocity: {
+      //     /** 运营面板_D（城市） */
+      //     dashboard: 'dashboard://db/yun-ying-mian-ban-_d-cheng-shi'
+      //   },
+      //   gotostat: {
+      //     /** 运营面板_D（电站） */
+      //     dashboard: 'dashboard://db/yun-ying-mian-ban-_d-dian-zhan'
+      //   }
+      // },
 
-      /** 运维面板 */
-      righttop: {
-        gotoprovince: {
-          /** 运维面板_U（全国） */
-          dashboard: 'dashboard://db/yun-wei-mian-ban-_u-quan-guo'
-        },
-        gotocity: {
-          /** 运维面板_U（城市） */
-          dashboard: 'dashboard://db/yun-wei-mian-ban-_u-cheng-shi'
-        },
-        gotostat: {
-          /** 运维面板_U（电站） */
-          dashboard: 'dashboard://db/yun-wei-mian-ban-_u-dian-zhan'
-        }
-      },
-      rightbottom: {
-        gotoprovince: {
-          /** 运维面板_D（全国） */
-          dashboard: 'dashboard://db/yun-wei-mian-ban-_d-quan-guo'
-        },
-        gotocity: {
-          /** 运维面板_D（城市） */
-          dashboard: 'dashboard://db/yun-wei-mian-ban-_d-cheng-shi'
-        },
-        gotostat: {
-          /** 运维面板_U（电站） */
-          dashboard: 'dashboard://db/yun-wei-mian-ban-_d-dian-zhan'
-        }
-      }
+      // /** 运维面板 */
+      // righttop: {
+      //   gotoprovince: {
+      //     /** 运维面板_U（全国） */
+      //     dashboard: 'dashboard://db/yun-wei-mian-ban-_u-quan-guo'
+      //   },
+      //   gotocity: {
+      //     /** 运维面板_U（城市） */
+      //     dashboard: 'dashboard://db/yun-wei-mian-ban-_u-cheng-shi'
+      //   },
+      //   gotostat: {
+      //     /** 运维面板_U（电站） */
+      //     dashboard: 'dashboard://db/yun-wei-mian-ban-_u-dian-zhan'
+      //   }
+      // },
+      // rightbottom: {
+      //   gotoprovince: {
+      //     /** 运维面板_D（全国） */
+      //     dashboard: 'dashboard://db/yun-wei-mian-ban-_d-quan-guo'
+      //   },
+      //   gotocity: {
+      //     /** 运维面板_D（城市） */
+      //     dashboard: 'dashboard://db/yun-wei-mian-ban-_d-cheng-shi'
+      //   },
+      //   gotostat: {
+      //     /** 运维面板_U（电站） */
+      //     dashboard: 'dashboard://db/yun-wei-mian-ban-_d-dian-zhan'
+      //   }
+      // }
     };
 
     var conf = {
@@ -132,7 +132,7 @@ define([
       wsServerUrl: wsUrlConf.wsServerUrl,
       remoteConfUrl: wsUrlConf.remoteConfUrl,
       SCREEN_CONF: SCREEN_CONF,
-      singleUser: true,
+      singleUser: false,
       loadConf: function (contextUser) {
         var returnValue = this.SCREEN_CONF;
         if (this.remoteConfUrl) {
@@ -141,7 +141,7 @@ define([
             type: "get",
             async: false,
             url: this.remoteConfUrl,
-            data: { orgId: contextUser.orgId, login: contextUser.login },
+            data: { userCode: contextUser.login },
             //contentType: "application/json; charset=utf-8",
             dataType: "json",
             cache: false,
@@ -155,9 +155,10 @@ define([
               returnValue = window[evalFunName]("(" + err.responseText + ")");
               console.log("loadConf fail, but eval");
             } else {
+              alert('载入配置信息异常');
+              //alertSrv.AlertSrv.set("载入配置信息异常", err, "warning", 4000);
               console.error("loadConf err", err);
             }
-
           }).always(function () {
             console.log("loadConf complete");
           });

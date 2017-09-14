@@ -9,7 +9,7 @@ define([
     module.factory('wsAcrossScreen', function ($interval, $websocket, contextSrv, alertSrv, dashboardSrv, teldHelperSrv) {
 
       var wsConnectUser = _.defaults({}, contextSrv.user);
-      var username = wsConnectUser.name;
+      var username = wsConnectUser.login;
 
       //var goto = wsAcrossScreenConf.goto;
 
@@ -61,6 +61,8 @@ define([
         var compiled = _.template(wsAcrossScreenConf.wsServerUrl);
         var wsServerUrl = compiled(contextUser);
 
+        console.log(wsServerUrl);
+
         var ws = $websocket(wsServerUrl);
 
         ws.onMessage(function (event) {
@@ -84,40 +86,29 @@ define([
 
         ws.onError(function (event) {
           console.log('connection Error', event);
-          alertSrv.set("websocket error", event, "error", 4000);
+          alertSrv.set("websocket connection", event.type, "error", 4000);
         });
 
         ws.onClose(function (event) {
           console.log('connection closed', event);
-          alertSrv.set("websocket closed", event, "warning", 4000);
+          alertSrv.set("websocket connection", event.type, "warning", 4000);
           //断开重连
-          this.ws = connectWs(wsConnectUser);
+          wsConnect = connectWs(wsConnectUser);
         });
 
         ws.onOpen(function (event) {
           console.log('connection open');
           //_this.$rootScope.appEvent('alert-success', ['Dashboard Imported', dash.title]);
-          alertSrv.set("websocket open", event, "success", 4000);
+          alertSrv.set("websocket connection", event.type, "success", 4000);
         });
 
         return ws;
       }
 
-      // $interval(function () {
-      //   if (ws) {
-      //     console.log(ws.readyState);
-      //     if (ws.readyState !== 1) {
-      //       connectWs(wsConnectUser);
-      //     }
-      //   } else {
-      //     connectWs(wsConnectUser);
-      //   }
-      // }.bind(this), 1000);
-
-      this.ws = connectWs(wsConnectUser);
+      var wsConnect = connectWs(wsConnectUser);
 
       return {
-        ws: this.ws,
+        //wsConnect: this.wsConnect,
         conf: function (dash) {
           if (currentScreen) {
             dash = dash || dashboardSrv.getCurrent();
@@ -137,34 +128,35 @@ define([
               var dashboard = db.replace('/dashboard/', '');
               if (_.endsWith(cValue.dashboard, dashboard)) {
                 reConnectName = wsConnectName;
-                return;
+                return false;
               }
             });
             if (reConnectName) {
-              return;
+              return false;
             }
           });
 
           if (reConnectName !== username) {
             currentScreen = SCREEN_CONF[_.toLower(reConnectName)];
-            wsConnectUser.name = reConnectName;
+            wsConnectUser.login = reConnectName;
             username = reConnectName;
-            if (this.ws) {
-              this.ws.close(true);
+
+            if (wsConnect) {
+              wsConnect.close(true);
             } else {
-              this.ws = connectWs({ name: reConnectName });
+              wsConnect = connectWs(wsConnectUser);
             }
           }
         },
         status: function () {
-          return this.ws.readyState;
+          return wsConnect.readyState;
         },
         send: function (message) {
           if (angular.isString(message)) {
-            this.ws.send(message);
+            wsConnect.send(message);
           }
           else if (angular.isObject(message)) {
-            this.ws.send(JSON.stringify(message));
+            wsConnect.send(JSON.stringify(message));
           }
         },
         sendTo: function (to, message) {
@@ -174,7 +166,7 @@ define([
           }
 
           var sendMessage = to + "|'" + message + "'";
-          this.ws.send(sendMessage);
+          wsConnect.send(sendMessage);
         }
       };
     });
