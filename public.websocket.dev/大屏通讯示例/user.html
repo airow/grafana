@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="css/common.css" rel="stylesheet" />
+    <style>
+    </style>
+    <script src="lib/jquery-3.2.1.js"></script>
+    <script src="lib/socket.js"></script>
+    <script>
+
+        /**
+        * @description 获取地址栏参数
+        * @author 张建利
+        * @version 1.0
+        * @return {json}
+        */
+        function getRequest()
+        {
+            var url = location.search;
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1)
+            {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++)
+                {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+
+        $( function ()
+        {
+            var urlpara = getRequest();
+            //消息推送服务地址
+            var url = "139.219.10.100:8080?user=" + ( !!urlpara.user ? urlpara.user : "user" + parseInt( Math.random() * 100000 ) );
+
+            //消息推送对象
+            var _sk = new socket();
+            _sk.init( url, function ( mes )
+            {
+                dealMessage( mes );
+            } );
+
+            //接收到消息后的处理
+            function dealMessage( mes )
+            {
+                var jsonMes = JSON.parse( mes );//转换为json对象
+
+                var html = "";
+                html += '<div class="message-item">';
+                html += jsonMes.sender + '<br/>';
+                try
+                {
+                    html += JSON.stringify( jsonMes.message );
+                }
+                catch ( e )
+                { }
+                html += '</div>';
+
+                $( "#divMessage" ).append( $( html ) );
+            }
+
+
+            //点击发送
+            $( "#btnSend" ).unbind( "click" ).bind( "click", function ()
+            {
+                if ( $( "#txtMessage" ).val() == "" )
+                {
+                    alert( "请输入要发送的内容！" );
+                    return;
+                }
+
+                //如果内容为json字符串不用加单引号
+                _sk.send( $( "#divUser" ).html() + "|" + $( "#txtMessage" ).val()  );
+                $( "#txtMessage" ).val("");
+            } );
+
+            $( "body" ).keydown( function ( e )
+            {
+                if ( e.keyCode == 13 )
+                {
+                    $( "#btnSend" ).click();
+                }
+            } );
+        } );
+    </script>
+</head>
+<body>
+    <div class="content-panel">
+
+        <div class="block-left bolck-operate-user">
+            <div class="block-title">通讯消息</div>
+            <div id="divMessage"></div>
+            <div id="divOperate">
+                <div id="divUser" contenteditable="true">host</div>
+                <input type="text" id="txtMessage" />
+                <input type="button" id="btnSend" value="发送" />
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

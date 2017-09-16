@@ -14,7 +14,8 @@
   <script>
     //消息推送服务地址
     //var url = "rp1.teld.cn/api/WebSocket?user=grafanaCenter";
-    var url = "139.217.24.173:8080?user=grafanaCenter";
+    //var url = "139.217.24.173:8080?user=grafanaCenter"; /*正式*/
+    var url = "139.219.10.100:8080?user=grafanaCenter"; /*测试*/
 
     //消息推送对象
     var _sk = new socket();
@@ -41,6 +42,9 @@
     }
 
     $(function () {
+
+      $("#wsHostUrl").html(url);
+
       //点击发送
       $("#btnSend").unbind("click").bind("click", function () {
         if ($("#txtMessage").val() == "") {
@@ -115,6 +119,7 @@
         <input type="text" id="divUser" value="lefttop" />
         <input type="text" id="txtMessage" />
         <input type="button" id="btnSend" value="发送" />
+        <a href="大屏通讯示例/host.html" target="wshost">Open host.html</a>
       </div>
       <br>
       <div>
@@ -172,7 +177,14 @@
       <div class="block-title">
         说明
       </div>
-      <pre style="">
+      <pre>
+        socket服务端：
+        生产环境服务地址(已发布)：139.217.24.173:8080
+        测试环境服务地址(已发布)：139.219.10.100:8080
+
+        当前链接地址：<span style="color:red" id="wsHostUrl"></span>
+      </pre>
+      <pre>
 
          演示地址：<a target="_blank" href="http://t-bj-bdpapp.chinacloudapp.cn:4330">http://t-bj-bdpapp.chinacloudapp.cn:4330</a>
         使用 lefttop、leftbottom、righttop、rightbottm 登陆，密码与用户名一直

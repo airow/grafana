@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <style>
+        html, body
+        {
+            height: 100%;
+            width: 100%;
+        }
+
+        input
+        {
+            height: 30px;
+            line-height: 30px;
+            border: 1px solid #bab9b9;
+        }
+
+        #txtNum
+        {
+            width: 150px;
+        }
+
+        #btnCreate
+        {
+            height: 33px;
+            width: 50px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #dedede;
+        }
+
+            #btnCreate:hover
+            {
+                background-color: #ff6a00;
+            }
+    </style>
+    <script src="lib/jquery-3.2.1.js"></script>
+    <script>
+        $( function ()
+        {
+            $( "#btnCreate" ).unbind( "click" ).bind( "click", function ()
+            {
+                for ( var i = 0; i < parseInt( $( "#txtNum" ).val() ) ; i++ )
+                {
+                    window.open( "user.html?user=user" + parseInt( Math.random() * 100000) );
+                }
+            } );
+            
+        } );
+    </script>
+</head>
+<body>
+    <input type="text" id="txtNum" />
+    <input type="button" id="btnCreate" value="创建" />
+</body>
+</html>

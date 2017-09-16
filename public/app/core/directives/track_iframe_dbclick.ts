@@ -13,7 +13,8 @@ function trackIframeDbclick($animate) {
     restrict: 'A',
     link: function(scope, elem, attrs, ctrl, transclude) {
 
-      var blur = $("<button style='position:absolute; left:0; z-index:-1;'>blur</button>");
+      var blur = $("<button style='position:absolute; left:10px; top:10px; z-index:-1;" +
+        "width:0px;height: 0px; background-color: transparent;border: 0px;'></button>");
       elem.after(blur);
       var IframeOnClick = {
         blur: blur,

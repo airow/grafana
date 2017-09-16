@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="css/common.css" rel="stylesheet" />
+    <style>
+    </style>
+    <script src="lib/jquery-3.2.1.js"></script>
+    <script src="lib/socket.js"></script>
+    <script>
+        //消息推送服务地址
+        var url = "139.219.10.100:8080?user=host";
+
+        //消息推送对象
+        var _sk = new socket();
+        _sk.init( url, function ( mes )
+        {
+            dealMessage( mes );
+        } );
+
+        //接收到消息后的处理
+        function dealMessage( mes )
+        {
+            var jsonMes = JSON.parse( mes );//转换为json对象
+
+            //字符串
+            if ( typeof ( jsonMes.message ) == "string" )
+            {
+                //注册消息
+                if ( jsonMes.message.indexOf( "sign" ) != -1 )
+                {
+                    var _domUser = $( '<div class="user-item" user-name="' + jsonMes.sender + '">' + jsonMes.sender + '</div>' );
+
+                    if ( $( ".user-item" ).length == 0 )
+                    {
+                        _domUser.addClass( "user-select" );
+                    }
+
+                    $( "#divUserList" ).append( _domUser );
+
+                    regUserItem();
+                }
+                //注销信息
+                else if ( jsonMes.message.indexOf( "logout" ) != -1 )
+                {
+                    $( "div[user-name='" + jsonMes.sender + "']" ).remove();
+                }
+                //用户列表信息
+                else if ( jsonMes.message.indexOf( "list:" ) != -1 )
+                {
+                    $( ".user-item" ).remove();
+                    var list = jsonMes.message.split( ':' )[1].split( ',' );
+                    $.each( list, function ( i, item )
+                    {
+                        var _domUser = $( '<div class="user-item" user-name="' + item + '">' + item + '</div>' );
+                        if ( i == 0 )
+                        {
+                            _domUser.addClass( "user-select" );
+                        }
+                        $( "#divUserList" ).append( _domUser );
+                    } );
+
+                    regUserItem();
+                }
+                else
+                {
+                    var html = "";
+                    html += '<div class="message-item">';
+                    html += jsonMes.sender + ':<br/>';
+                    try
+                    {
+                        html += JSON.stringify( jsonMes.message );
+                    }
+                    catch ( e )
+                    { }
+                    html += '</div>';
+
+                    $( "#divMessage" ).append( $( html ) );
+                }
+            }
+            else
+            {
+                var html = "";
+                html += '<div class="message-item">';
+                html += jsonMes.sender + ':<br/>';
+                try
+                {
+                    html += JSON.stringify( jsonMes.message );
+                }
+                catch ( e )
+                { }
+                html += '</div>';
+
+                $( "#divMessage" ).append( $( html ) );
+
+            }
+        }
+
+        //用户列表点击事件
+        function regUserItem()
+        {
+            //选择用户
+            $( ".user-item" ).unbind( "click" ).bind( "click", function ()
+            {
+                if ( $( "#cbAll" ).is( ':checked' ) )
+                {
+                    return false;
+                }
+
+                $( ".user-item" ).removeClass( "user-select" );
+                $( this ).addClass( "user-select" );
+                $( "#divUser" ).html( $( this ).html() );
+            } );
+        }
+
+        $( function ()
+        {
+            //点击发送
+            $( "#btnSend" ).unbind( "click" ).bind( "click", function ()
+            {
+                if ( $( "#txtMessage" ).val() == "" )
+                {
+                    alert( "请输入要发送的内容！" );
+                    return;
+                }
+
+                //如果内容为json字符串不用加单引号
+                _sk.send( $( "#divUser" ).html() + "|" + $( "#txtMessage" ).val() );
+                $( "#txtMessage" ).val( "" );
+            } );
+
+            $( "body" ).keydown( function ( e )
+            {
+                if ( e.keyCode == 13 )
+                {
+                    $( "#btnSend" ).click();
+                }
+            } );
+
+            //选择用户
+            $( "#cbAll" ).unbind( "click" ).bind( "click", function ()
+            {
+                var _checked = $( this ).is( ':checked' );
+
+                if ( !_checked )
+                {
+                    $( ".user-item" ).eq( 0 ).click();
+                }
+                else
+                {
+                    $( ".user-item" ).removeClass( "user-select" ).addClass( "user-select" );
+                    $( "#divUser" ).html( "all" );
+                }
+            } );
+        } );
+    </script>
+</head>
+<body>
+    <div class="content-panel">
+
+        <div class="block-left bolck-operate">
+            <div class="block-title">通讯消息</div>
+            <div id="divMessage"></div>
+            <div id="divOperate">
+                <div id="divUser" contenteditable="true">all</div>
+                <input type="text" id="txtMessage" />
+                <input type="button" id="btnSend" value="发送" />
+            </div>
+        </div>
+
+        <div class="block-left bolck-userlist" id="divUserList">
+            <div class="block-title">
+                用户列表
+                <div class="check-all"><input type="checkbox" id="cbAll" /></div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

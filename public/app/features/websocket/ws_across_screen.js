@@ -91,17 +91,22 @@ define([
 
         ws.onError(function (event) {
           console.log('connection Error', event);
-          alertSrv.set("websocket connection", event.type, "error", 4000);
+          if (switchWSUser === false) {
+            alertSrv.set("websocket connection", event.type, "error", 4000);
+          }
         });
 
         ws.onClose(function (event) {
-          console.log('connection closed', event);
-          alertSrv.set("websocket connection", event.type, "warning", 4000);
+          console.log('connection closed @ ' + switchWSUser, event);
+          if (switchWSUser === false) {
+            alertSrv.set("websocket connection", event.type, "warning", 4000);
+          }
           //断开重连
           ws = connectWs(wsConnectUser);
         });
 
         ws.onOpen(function (event) {
+          switchWSUser = false;
           console.log('connection open');
           //_this.$rootScope.appEvent('alert-success', ['Dashboard Imported', dash.title]);
           alertSrv.set("websocket connection", event.type, "success", 4000);
@@ -110,6 +115,7 @@ define([
         return ws;
       }
 
+      var switchWSUser;
       var ws;
       if (contextSrv.user.orgRole === "Viewer") {
         ws = connectWs(wsConnectUser);
@@ -149,6 +155,7 @@ define([
             wsConnectUser.login = reConnectName;
             username = reConnectName;
 
+            switchWSUser = true;
             if (ws) {
               ws.close(true);
             } else {
