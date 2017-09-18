@@ -134,7 +134,8 @@
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit{
 	width:44px;
 	height:71px;
-	background-image:url(./img/teld-screen.png);
+  /* background-image:url(./img/teld-screen.png); */
+  background-image:url(./img/teld-orange-yellow.png);
 }
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_space,
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_separator,
