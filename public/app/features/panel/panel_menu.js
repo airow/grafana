@@ -11,7 +11,7 @@ function (angular, $, _, Tether) {
     .module('grafana.directives')
     .directive('panelMenu', function($compile) {
       var linkTemplate =
-          '<span class="panel-title drag-handle pointer">' +
+          '<span class="panel-title drag-handle pointer" ng-dblclick="ctrl.titledblclick()">' +
             '<span class="icon-gf panel-alert-icon"></span>' +
             '<span class="panel-title-text drag-handle">' +
               '<span ng-show="(!ctrl.timeInfo || ctrl.isPlotClick) && ctrl.panel.showTimeRange">' +
@@ -77,6 +77,10 @@ function (angular, $, _, Tether) {
           var timeout = null;
           var $menu = null;
           var teather;
+
+          ctrl.titledblclick = function () {
+            if (this.dblclick) { this.dblclick(); }
+          }.bind(ctrl);
 
           elem.append($link);
 

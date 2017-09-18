@@ -64,7 +64,8 @@ function trackIframeDbclick($animate) {
                 this.iframes[i].hasTracked = false;
               }
             }
-            this.blur.focus();
+            console.log(document.activeElement);
+            //this.blur.focus();
           }
         }
       };
