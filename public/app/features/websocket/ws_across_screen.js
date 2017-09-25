@@ -45,9 +45,11 @@ define([
       var messageRouter = {
         SCREEN_CONF: SCREEN_CONF,
         currentScreen: currentScreen,
-        "gotoprovince": changeDashboard,
-        "gotocity": changeDashboard,
-        "gotostat": changeDashboard,
+        "gotonational": changeDashboard,/* 全国 */
+        "gotoprovince": changeDashboard,/* 省份 */
+        "gotocity": changeDashboard,/* 城市 */
+        "gotostat": changeDashboard,/* 电站 */
+        "gotoplatformzhtheme": changeDashboard,/* 平台主题 */
         "gotodashboard": function (wsMessage) {
           var message = wsMessage.message;
           var params = message.params;

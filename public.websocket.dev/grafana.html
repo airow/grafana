@@ -123,14 +123,16 @@
       </div>
       <br>
       <div>
-        <input type="button" class="btnSendToGrafana" data-type="gotoprovince" data-params='{}' value="发送(省)" />
+        <input type="button" class="btnSendToGrafana" data-type="gotonational" data-params='{}' value="发送(全国)" />
+        <input type="button" class="btnSendToGrafana" data-type="gotoprovince" data-params='{"_$":{"citycode":"37","cityname":"山东省"}}' />
         <input type='button' class='btnSendToGrafana' data-type='gotocity' data-params='{"_$":{"citycode":"3702","cityname":"青岛市"}}'
         />
         <input type='button' class='btnSendToGrafana' data-type='gotostat' data-params='{"_$":{"statid":"da99de50-fef9-4141-91c4-9311921429a8","statcode":"3702120265","statname":"青岛特锐德云平台测试充电站"}}'
         />
 		    <input type='button' class='btnSendToGrafana' data-type='gotostat' data-params='{"_$":{"statid":"56fd1640-3e99-418d-9a7a-ff6f4c7e58ab","statcode":"4107020015","statname":"新乡公交新二街充电站"}}'
         />
-        <hr>
+        <input type="button" class='btnSendToGrafana' data-type="gotoplatformzhtheme" data-params="{'theme':'平台主题'}" />
+        <!-- <hr>
         <input type="button" class="btnSendToGrafana" data-type="gotoprovince" data-params='{}' value="发送(省)" />
         <input type='button' class='btnSendToGrafana' data-type='gotocity' data-params='{"_$":{"citycode":"11","cityname":"北京市"}}'
         />
@@ -145,7 +147,7 @@
         <input type='button' class='btnSendToGrafana' data-type='gotostat' data-params='{"_$":{"statid":"3701050004","statcode":"3701050004","statname":"青岛特锐德云平台测试充电站"}}'
         />
         <input type='button' class='btnSendToGrafana' data-type='gotostat' data-params='{"_$":{"statid":"da99de50-fef9-4141-91c4-9311921429a8","statcode":"3702120265","statname":"青岛特锐德云平台测试充电站"}}'
-        />
+        /> -->
         <hr>
         <input type='button' class='btnSendToGrafana' data-type='gotodashboard' data-params='{"dashboard":"dashboard://db/00-wsp","var":{"custon":"123"}}'
         />

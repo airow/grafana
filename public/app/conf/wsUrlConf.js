@@ -13,6 +13,11 @@ define([], function () {
    * 正式环境服务地址(未发布)：http://com.teld.cn/BigScreen/GetThemeUsers
    *
    ***********************************************************************
+   *
+   * 用户管理界面
+   * 测试用户管理界面（生产DW库）：http://com2.teld.cn/SocketUser/Index?FullName=通讯用户管理
+   * 生产用户管理界面（生产DW库）：http://com.teld.cn/SocketUser/Index?FullName=通讯用户管理
+   *
    */
 
   var conf = {
@@ -24,7 +29,7 @@ define([], function () {
      * */
     //wsServerUrl: 'ws://rp1.teld.cn/api/WebSocket?user=${login}',/** WebSocket host IIS */
     wsServerUrl: 'ws://139.219.10.100:8080?user=${login}',
-    remoteConfUrl: "http://com2.teld.cn/BigScreen/GetThemeUsers"
+    //remoteConfUrl: "http://com2.teld.cn/BigScreen/GetThemeUsers"
   };
 
   return conf;
