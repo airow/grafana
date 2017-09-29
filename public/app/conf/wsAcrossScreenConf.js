@@ -118,7 +118,7 @@ define([
             dashboard: 'dashboard://db/yun-wei-mian-ban-_u-quan-guo'
           },
           gotoprovince: {
-            /** 运维面板_U（城市） */
+            /** 运维面板_U（省份） */
             dashboard: 'dashboard://db/yun-wei-mian-ban-_u-sheng-fen'
           },
           gotocity: {
@@ -140,7 +140,7 @@ define([
             dashboard: 'dashboard://db/yun-wei-mian-ban-_d-quan-guo'
           },
           gotoprovince: {
-            /** 运维面板_D（城市） */
+            /** 运维面板_D（省份） */
             dashboard: 'dashboard://db/yun-wei-mian-ban-_d-sheng-fen'
           },
           gotocity: {
