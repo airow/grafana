@@ -813,9 +813,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     function formatter(n) {
       if (this.panel.serieType === this.ecConf.series.pie.type) {
-        let { name, percent } = this.seriesLabel[n];
+        let { name, percent, value } = this.seriesLabel[n];
         name = _.head(_.split(name, "[:]"));
-        return `${name}: ${percent}%`;
+
+        let returnVal = `${name}: ${percent}%`;
+
+        let formatTmpl = this.panel.echarts.legend.formatTmpl;
+        if (formatTmpl) {
+          let compiled = _.template(formatTmpl);
+          returnVal = compiled({ name, percent, value });
+        }
+        return returnVal;
       } else {
         return n;
       }

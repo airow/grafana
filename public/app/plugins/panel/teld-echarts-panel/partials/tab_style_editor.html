@@ -111,6 +111,12 @@
       <gf-form-switch class="gf-form" label="2 Side" label-class="width-8" checked="ctrl.panel.legendExt.twoSides" on-change="ctrl.render()"></gf-form-switch>
       <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.legend.textStyle' />
       <div class="gf-form">
+        <label class="gf-form-label width-8">formatter
+          <tip> ${name}=名称 ${percent}=百分比 ${value}=值</tip>
+        </label>
+        <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.legend.formatTmpl" class="gf-form-input">
+      </div>
+      <div class="gf-form">
         <label class="gf-form-label width-8">orient</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.legend.orient" class="gf-form-input">-->
         <div class="gf-form-select-wrapper max-width-15">
