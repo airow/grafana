@@ -26,10 +26,20 @@ module.exports = function(config) {
       src: [
         '<%= genDir %>/vendor/css/timepicker.css',
         '<%= genDir %>/vendor/css/spectrum.css',
-        '<%= genDir %>/css/grafana.Screen.css',
+        '<%= genDir %>/css/grafana.screen.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
       ],
       dest: '<%= genDir %>/css/grafana.Screen.min.css'
+    },
+
+    cssScreenYellow: {
+      src: [
+        '<%= genDir %>/vendor/css/timepicker.css',
+        '<%= genDir %>/vendor/css/spectrum.css',
+        '<%= genDir %>/css/grafana.screen_yellow.css',
+        '<%= genDir %>/vendor/css/font-awesome.min.css'
+      ],
+      dest: '<%= genDir %>/css/grafana.screen_yellow.min.css'
     },
 
     cssFonts: {

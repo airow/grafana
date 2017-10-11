@@ -388,7 +388,14 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     let src = this.panel.src;
 
     let compiled = _.template(src);
-    src = compiled(config.bootData.user);
+
+    let bindSource = {
+      name: config.bootData.user.name,
+      login: config.bootData.user.login,
+      orgId: config.bootData.user.orgId,
+      timestamp: (new Date()).valueOf()
+    };
+    src = compiled(bindSource);
 
     this.src = this.$sce.trustAsResourceUrl(src);
     this.style = {

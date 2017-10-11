@@ -17,6 +17,10 @@ module.exports = function(config) {
       src: '<%= genDir %>/css/grafana.Screen.min.css',
       dest: '<%= genDir %>/css'
     },
+    cssScreenYellow: {
+      src: '<%= genDir %>/css/grafana.Screen_Yellow.min.css',
+      dest: '<%= genDir %>/css'
+    },
     js: {
       src: '<%= genDir %>/app/boot.js',
       dest: '<%= genDir %>/app'
