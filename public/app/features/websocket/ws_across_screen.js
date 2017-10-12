@@ -125,8 +125,9 @@ define([
 
       return {
         //ws: this.ws,
+        currentScreen:currentScreen,
         conf: function (dash) {
-          if (currentScreen) {
+          if (this.currentScreen) {
             dash = dash || dashboardSrv.getCurrent();
             if (dash) {
               dash.hideDashNavbar = true;
