@@ -42,9 +42,13 @@ var option = {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
           offset: 0,
           color: '#FD9C00'
-        }, {
+        },
+        {
+          offset: 0.8,
+          color: '#A29834'
+        },{
           offset: 1,
-          color: '#24778B'
+          color: '#2E697A'
         }]),
         shadowColor: 'rgba(0, 0, 0, 0.1)',
         shadowBlur: 10

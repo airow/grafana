@@ -4,6 +4,9 @@ import echarts from 'echarts';
 
 var option = {
   "color": [
+    '#E3BE22', '#86C845', '#474FA7', '#12A1BE', '#143D7E', '#DF3D3B', '#6EB58C', '#56A5A5',
+    '#A577B3', '#1B83D9', '#A776B0', '#3DA68E', '#C8BE7E', '#895C4F', '#146D86', '#58A4D6',
+    //原始
     "#36a1c1",
     "#4971ac",
     "#3ca58e",
