@@ -53,13 +53,13 @@
     height: 90px !important;
 }
 /*渐变透明20%*/
-.chargeBorder{
+/*.chargeBorder{
     /*filter:alpha(opacity=80);*/
     /*-moz-opacity:0.8;*/
     /*-webkit-opacity: 0.8;*/
     /*-o-opacity: 0.8;*/
     /*opacity: 0.8;*/
-}
+/*}*/
 /*.chargeBorder .iconTitle,.chargeBg1 .iconTitle,.chargeBg2 .iconTitle,.chargeBg3 .iconTitle,.iconTip0 .iconTitle{*/
     /*!*background: url("../img/charg.png") center 5px;*!*/
     /*width: 36px;*/

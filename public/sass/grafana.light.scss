@@ -2,3 +2,19 @@
 @import "variables.light";
 @import "grafana";
 @import "../sass.teld/grafana.teld.light";
+
+.ecContainer .ec-extension-bmap
+{
+  background-color: $body-bg-gradient !important;
+}
+
+.remove_mb{
+  margin-left: 5px;
+  margin-right: 5px;
+
+  //移除panel的margin-bottom值
+  //应该在最外层和dash-row此类并列加上remove_mb此类名才有效
+  .panel-margin{
+    margin:0 0.4rem !important;
+  }
+}
