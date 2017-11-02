@@ -1,9 +1,8 @@
 ///<reference path="../../../../../../headers/echarts.d.ts" />
 ///<reference path="../../../../../../headers/echarts.graphic.d.ts" />
-
 import echarts from 'echarts';
 
-var chargTrend_24h = {
+var chargTrend_12m = {
   "color": [
     "#7EB26D",
     "#EAB839",
@@ -16,11 +15,11 @@ var chargTrend_24h = {
     "#508642",
     "#CCA300"
   ],
-  "backgroundColor": "#FBFBFB",
+  "backgroundColor": "#1F1D1D",
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#333",
+      "color": "#fff",
       "fontFamily": "Microsoft YaHei Regular",
       "fontSize": 18
     },
@@ -30,273 +29,33 @@ var chargTrend_24h = {
       "color": "#aaaaaa"
     }
   },
-
   "line": {
-    "itemStyle": {
+    "label": {
       "normal": {
-        "borderWidth": "1"
+        "show": true,
+        "textStyle": {
+          "color": "#fff",
+          "fontFamily": "Microsoft YaHei Light",
+          "fontSize": 12
+        },
+        "position": "top"
       }
     },
     "lineStyle": {
       "normal": {
         "width": "2"
-        // "color":["#2f9fcb"]
+        // "color":["#7867f5","#2082c2","#80d9fa","#2082c2","#2f9fcb"],
+        // "shadowColor":"#66fdfc",
+        // "shadowOffsetY":5
       }
     },
-    "symbolSize": "0",
+    "symbolSize": "4",
     "symbol": "circle",
-    "smooth": true,
-    "smoothMonotone": "x",
+    "smooth": false,
     "areaStyle": {
       "normal": {
         // "color":["#8b7cfd","#2082c2","#55cefc","#2aa3bb","#4d8ab7","#5eb4ed"],RadialGradient
         "opacity": 0.4
-      }
-    }
-  },
-  "radar": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": "1"
-      }
-    },
-    "lineStyle": {
-      "normal": {
-        "width": "11"
-      }
-    },
-    "symbolSize": "0",
-    "symbol": "circle",
-    "smooth": false
-  },
-  "bar": {
-    "barWidth": 6,
-    "itemStyle": {
-      "normal": {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-          offset: 0,
-          color: '#2fa1cd'
-        }, {
-          offset: 1,
-          color: '#20556c'
-        }]),
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowBlur: 10
-      },
-      "emphasis": {
-        color: new echarts.graphic.LinearGradient(
-          0, 0, 0, 1,
-          [
-            { offset: 0, color: '#2378f7' },
-            { offset: 0.7, color: '#2378f7' },
-            { offset: 1, color: '#83bff6' }
-          ]
-        )
-      }
-    }
-  },
-  "pie": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    },
-    "labelLine": {
-      "normal": {
-        "show": false,
-        "length": 3
-      }
-
-    },
-    "label": {
-      "normal": {
-        "formatter": "{b}\n{d}%",
-        "textStyle": {
-          "color": "#333",
-          "fontFamily": "Microsoft YaHei Light",
-          "fontSize": 12
-        }
-      },
-      "emphasis": {
-        "shadowBlur": 10,
-        "shadowOffsetX": 0,
-        "shadowColor": 'rgba(0, 0, 0, 0.5)'
-      }
-    }
-  },
-  "scatter": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    }
-  },
-  "boxplot": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    }
-  },
-  "parallel": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    }
-  },
-  "sankey": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    }
-  },
-  "funnel": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    }
-  },
-  "gauge": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      },
-      "emphasis": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    }
-  },
-  "candlestick": {
-    "itemStyle": {
-      "normal": {
-        "color": "#c23531",
-        "color0": "#314656",
-        "borderColor": "#c23531",
-        "borderColor0": "#314656",
-        "borderWidth": 1
-      }
-    }
-  },
-  "graph": {
-    "itemStyle": {
-      "normal": {
-        "borderWidth": 0,
-        "borderColor": "#ccc"
-      }
-    },
-    "lineStyle": {
-      "normal": {
-        "width": 1,
-        "color": "#aaaaaa"
-      }
-    },
-    "symbolSize": "0",
-    "symbol": "circle",
-    "smooth": false,
-    "color": [
-      "#d87c7c",
-      "#919e8b",
-      "#d7ab82",
-      "#6e7074",
-      "#61a0a8",
-      "#efa18d",
-      "#787464",
-      "#cc7e63",
-      "#724e58",
-      "#4b565b"
-    ],
-    "label": {
-      "normal": {
-        "textStyle": {
-          "color": "#eeeeee"
-        }
-      }
-    }
-  },
-  "map": {
-    "itemStyle": {
-      "normal": {
-        "areaColor": "#eeeeee",
-        "borderColor": "#444444",
-        "borderWidth": 0.5
-      },
-      "emphasis": {
-        "areaColor": "rgba(255,215,0,0.8)",
-        "borderColor": "#444444",
-        "borderWidth": 1
-      }
-    },
-    "label": {
-      "normal": {
-        "textStyle": {
-          "color": "#000000"
-        }
-      },
-      "emphasis": {
-        "textStyle": {
-          "color": "rgb(100,0,0)"
-        }
-      }
-    }
-  },
-  "geo": {
-    "itemStyle": {
-      "normal": {
-        "areaColor": "#eeeeee",
-        "borderColor": "#444444",
-        "borderWidth": 0.5
-      },
-      "emphasis": {
-        "areaColor": "rgba(255,215,0,0.8)",
-        "borderColor": "#444444",
-        "borderWidth": 1
-      }
-    },
-    "label": {
-      "normal": {
-        "textStyle": {
-          "color": "#000000"
-        }
-      },
-      "emphasis": {
-        "textStyle": {
-          "color": "rgb(100,0,0)"
-        }
       }
     }
   },
@@ -309,7 +68,7 @@ var chargTrend_24h = {
       }
     },
     "axisTick": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
@@ -317,18 +76,19 @@ var chargTrend_24h = {
     "axisLabel": {
       "show": true,
       "margin": 10,
+      "rotate": 40,
       "textStyle": {
-        "color": "#333",
+        "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16,
         // "align":"left"
       }
     },
     "splitLine": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": [
-          "#335478"
+          "#333"
         ],
         "width": 1,
         "opacity": 0.4
@@ -346,22 +106,22 @@ var chargTrend_24h = {
   },
   "valueAxis": {
     "axisLine": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
     },
     "axisTick": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
     },
     "axisLabel": {
       "show": true,
-      "margin": 20,
+      "margin": 10,
       "textStyle": {
-        "color": "#333",
+        "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16
       }
@@ -370,7 +130,7 @@ var chargTrend_24h = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#335478"
+          "#333"
         ],
         "width": 1,
         "opacity": 0.4
@@ -489,15 +249,15 @@ var chargTrend_24h = {
       }
     },
     formatter: ["<div style='left:-50px;top:-80px;border:0px solid #000;",
-      "position:relative;width:74px;height:24px;line-height:24px;",
-      "background:#086c89;;border-radius:4px;text-align:center;'>",
-      "	<div style='position:absolute;color:#086c89;width: 0px;height:0px;height:0px;",
-      "	line-height: 0px;border-width: 10px 15px 0;",
-      "	border-style: solid dashed dashed dashed;border-left-color: transparent;",
-      "	border-right-color: transparent;bottom: -10px;right: 50%;margin-right:-15px'>",
-      "	</div>",
-      "	{c}",
-      "</div>"].join(""),
+    "position:relative;width:74px;height:24px;line-height:24px;",
+    "background:#086c89;;border-radius:4px;text-align:center;'>",
+    "	<div style='position:absolute;color:#086c89;width: 0px;height:0px;height:0px;",
+    "	line-height: 0px;border-width: 10px 15px 0;",
+    "	border-style: solid dashed dashed dashed;border-left-color: transparent;",
+    "	border-right-color: transparent;bottom: -10px;right: 50%;margin-right:-15px'>",
+    "	</div>",
+    "	{c}",
+    "</div>"].join(""),
     backgroundColor: 'transparent'
   },
   "timeline": {
@@ -578,9 +338,10 @@ var chargTrend_24h = {
     "top": "82",
     "left": "14",
     "right": "14",
-    "bottom": "18",
+    "bottom": "50",
     "containLabel": true
   }
+
 };
 
-export default chargTrend_24h;
+export default chargTrend_12m;

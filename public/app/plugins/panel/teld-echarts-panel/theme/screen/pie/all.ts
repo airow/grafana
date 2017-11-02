@@ -14,9 +14,14 @@ import pie2_yellow from './yellow/battery1';
 import ring1_white from './white/terminalPie2';
 import ring2_white from './white/battery2';
 import pie1_white from './white/terminalPie1';
-import pie2_white from './yellow/battery1';
+import pie2_white from './white/battery1';
 
-let theme = { ring1, ring2, pie1, pie2,ring1_white,ring2_white, pie1_white,pie2_white };
+import ring1_black from './black/terminalPie2';
+import ring2_black from './black/battery2';
+import pie1_black from './black/terminalPie1';
+import pie2_black from './black/battery1';
+
+let theme = { ring1, ring2, pie1, pie2,ring1_white,ring2_white, pie1_white,pie2_white,ring1_black, ring2_black,pie1_black,pie2_black};
 
 auto_color(theme, { ring1_yellow, ring2_yellow, pie1_yellow, pie2_yellow,ring1_white,ring2_white, pie1_white,pie2_white});
 

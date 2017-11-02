@@ -16,11 +16,11 @@ var chargTrend_24h = {
     "#508642",
     "#CCA300"
   ],
-  "backgroundColor": "#FBFBFB",
+  "backgroundColor": "#1F1D1D",
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#333",
+      "color": "#fff",
       "fontFamily": "Microsoft YaHei Regular",
       "fontSize": 18
     },
@@ -70,28 +70,11 @@ var chargTrend_24h = {
     "smooth": false
   },
   "bar": {
-    "barWidth": 6,
+    "barWidth": 8,
     "itemStyle": {
       "normal": {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-          offset: 0,
-          color: '#2fa1cd'
-        }, {
-          offset: 1,
-          color: '#20556c'
-        }]),
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowBlur: 10
       },
       "emphasis": {
-        color: new echarts.graphic.LinearGradient(
-          0, 0, 0, 1,
-          [
-            { offset: 0, color: '#2378f7' },
-            { offset: 0.7, color: '#2378f7' },
-            { offset: 1, color: '#83bff6' }
-          ]
-        )
       }
     }
   },
@@ -117,7 +100,7 @@ var chargTrend_24h = {
       "normal": {
         "formatter": "{b}\n{d}%",
         "textStyle": {
-          "color": "#333",
+          "color": "#fff",
           "fontFamily": "Microsoft YaHei Light",
           "fontSize": 12
         }
@@ -229,21 +212,21 @@ var chargTrend_24h = {
     "symbol": "circle",
     "smooth": false,
     "color": [
-      "#d87c7c",
-      "#919e8b",
-      "#d7ab82",
-      "#6e7074",
-      "#61a0a8",
-      "#efa18d",
-      "#787464",
-      "#cc7e63",
-      "#724e58",
-      "#4b565b"
+      "#7EB26D",
+      "#EAB839",
+      "#6ED0E0",
+      "#EF843C",
+      "#E24D42",
+      "#1F78C1",
+      "#BA43A9",
+      "#705DA0",
+      "#508642",
+      "#CCA300"
     ],
     "label": {
       "normal": {
         "textStyle": {
-          "color": "#eeeeee"
+          "color": "#fff"
         }
       }
     }
@@ -264,7 +247,7 @@ var chargTrend_24h = {
     "label": {
       "normal": {
         "textStyle": {
-          "color": "#000000"
+          "color": "#fff"
         }
       },
       "emphasis": {
@@ -303,7 +286,7 @@ var chargTrend_24h = {
   "categoryAxis": {
     boundaryGap: false,
     "axisLine": {
-      "show": true,
+      "show": false,
       "lineStyle": {
         "color": "#333"
       }
@@ -318,7 +301,7 @@ var chargTrend_24h = {
       "show": true,
       "margin": 10,
       "textStyle": {
-        "color": "#333",
+        "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16,
         // "align":"left"
@@ -361,7 +344,7 @@ var chargTrend_24h = {
       "show": true,
       "margin": 20,
       "textStyle": {
-        "color": "#333",
+        "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16
       }
@@ -402,7 +385,7 @@ var chargTrend_24h = {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#333"
+        "color": "#fff"
       }
     },
     "splitLine": {
@@ -439,7 +422,7 @@ var chargTrend_24h = {
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#333"
+        "color": "#fff"
       }
     },
     "splitLine": {

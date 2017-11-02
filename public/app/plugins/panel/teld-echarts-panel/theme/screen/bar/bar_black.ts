@@ -15,11 +15,11 @@ var option = {
     "#508642",
     "#CCA300"
   ],
-  "backgroundColor": "#FBFBFB",
+  "backgroundColor": "#1F1D1D",
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#333",
+      "color": "#fff",
       "fontFamily": "Microsoft YaHei Regular",
       "fontSize": 18
     },
@@ -42,13 +42,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisLabel": {
@@ -56,7 +56,7 @@ var option = {
       "margin": 10,
       "rotate": 40,
       "textStyle": {
-        "color": "#333",
+        "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16,
         // "align":"left"
@@ -66,7 +66,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#333"
         ],
         "width": 1,
         "opacity": 0.4
@@ -86,20 +86,20 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisLabel": {
       "show": true,
       "margin": 10,
       "textStyle": {
-        "color": "#333",
+        "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16
       }
@@ -108,7 +108,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#333"
         ],
         "width": 1,
         "opacity": 0.4
@@ -128,26 +128,26 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#333"
+        "color": "#fff"
       }
     },
     "splitLine": {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#333"
         ]
       }
     },
@@ -165,13 +165,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#333"
       }
     },
     "axisLabel": {
@@ -184,7 +184,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#333"
         ]
       }
     },

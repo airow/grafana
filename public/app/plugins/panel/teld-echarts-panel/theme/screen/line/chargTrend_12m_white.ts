@@ -4,30 +4,24 @@ import echarts from 'echarts';
 
 var chargTrend_12m = {
   "color": [
-    "#d87c7c",
-    "#919e8b",
-    "#d7ab82",
-    "#6e7074",
-    "#61a0a8",
-    "#efa18d",
-    "#787464",
-    "#cc7e63",
-    "#724e58",
-    "#4b565b"
+    "#7EB26D",
+    "#EAB839",
+    "#6ED0E0",
+    "#EF843C",
+    "#E24D42",
+    "#1F78C1",
+    "#BA43A9",
+    "#705DA0",
+    "#508642",
+    "#CCA300"
   ],
-  "backgroundColor": new echarts.graphic.LinearGradient(1, 3, 0, 0, [{
-    offset: 0, color: '#374889',// '#204063'//'#190d02' // 0% 处的颜色
-  }, {
-    offset: 0.8, color: "#132A4B",//'#190d02'//'#204063' // 100% 处的颜色
-  }, {
-    offset: 1, color: "#032433",//'#190d02'//'#204063' // 100% 处的颜色
-  }], false),
+  "backgroundColor": "#FBFBFB",
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#639fb9",
+      "color": "#333",
       "fontFamily": "Microsoft YaHei Regular",
-      "fontSize": 32
+      "fontSize": 18
     },
     "left": 'center',
     "top": "18",
@@ -40,58 +34,41 @@ var chargTrend_12m = {
       "normal": {
         "show": true,
         "textStyle": {
-          "color": "#5fb0b0",
+          "color": "#333",
           "fontFamily": "Microsoft YaHei Light",
           "fontSize": 12
         },
         "position": "top"
       }
     },
-    "itemStyle": {
-      "normal": {
-        "color": "rgba(255,144,128,1)",
-        "borderColor": "#6cfffe",
-        "borderWidth": "3"
-      }
-    },
     "lineStyle": {
       "normal": {
-        "width": "2",
-        "color": ["#6cfffe"],
+        "width": "2"
         // "color":["#7867f5","#2082c2","#80d9fa","#2082c2","#2f9fcb"],
         // "shadowColor":"#66fdfc",
         // "shadowOffsetY":5
       }
     },
-    "symbolSize": "8",
+    "symbolSize": "4",
     "symbol": "emptyCircle",
     "smooth": false,
     "areaStyle": {
       "normal": {
         // "color":["#8b7cfd","#2082c2","#55cefc","#2aa3bb","#4d8ab7","#5eb4ed"],RadialGradient
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-          offset: 0,
-          color: '#276a6b'
-        }, {
-          offset: 0.8,
-          color: '#1b255e'
-        }], false),
-        shadowColor: 'rgba(0, 0, 0, 0.1)',
-        shadowBlur: 10,
-        "opacity": 0.9
+        "opacity": 0.4
       }
     }
   },
   "categoryAxis": {
     boundaryGap: false,
     "axisLine": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
     },
     "axisTick": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
@@ -101,14 +78,14 @@ var chargTrend_12m = {
       "margin": 10,
       "rotate": 40,
       "textStyle": {
-        "color": "#89b6dc",
+        "color": "#333",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16,
         // "align":"left"
       }
     },
     "splitLine": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": [
           "#335478"
@@ -129,13 +106,13 @@ var chargTrend_12m = {
   },
   "valueAxis": {
     "axisLine": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
     },
     "axisTick": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": "#333"
       }
@@ -144,13 +121,13 @@ var chargTrend_12m = {
       "show": true,
       "margin": 10,
       "textStyle": {
-        "color": "#89b6dc",
+        "color": "#333",
         "fontFamily": "Microsoft YaHei Light",
         "fontSize": 16
       }
     },
     "splitLine": {
-      "show": false,
+      "show": true,
       "lineStyle": {
         "color": [
           "#335478"

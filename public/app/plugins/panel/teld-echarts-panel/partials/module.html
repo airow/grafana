@@ -3,6 +3,7 @@
   <div class="teld_close" ng-click="ctrl.exitFullscreen()"><a><i class="closeIcon"></i></a></div>
     <div class="teld_head">
       <div class="head_right">
+        {{ctrl.currentMode}}
         <a ng-hide="ctrl.currentMode==='chart'" ng-click="ctrl.changeCurrentMode()" class="chart"><i></i>图表</a>
         <a ng-if="ctrl.panel.showTable" ng-hide="ctrl.currentMode==='list'" ng-click="ctrl.changeCurrentMode()" class="list"><i></i>列表</a>
       </div>
