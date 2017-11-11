@@ -24,6 +24,9 @@ export class SideMenuCtrl {
     this.user = contextSrv.user;
     this.appSubUrl = config.appSubUrl;
     this.showSignout = this.contextSrv.isSignedIn && !config['authProxyEnabled'];
+    if (this.showSignout === false && this.contextSrv.user.isProxySingedIn === false) {
+      this.showSignout = true;
+    }
     this.maxShownOrgs = 10;
 
     this.mainLinks = config.bootData.mainNavLinks;

@@ -65,6 +65,11 @@ define([
       };
 
       function connectWs(contextUser) {
+
+        if (contextSrv.user.orgRole !== "Viewer" || contextSrv.user.isProxySingedIn === true) {
+          return;
+        }
+
         var compiled = _.template(wsAcrossScreenConf.wsServerUrl);
         var wsServerUrl = compiled(contextUser);
 

@@ -43,23 +43,30 @@ func setIndexViewData(c *middleware.Context) (*dtos.IndexViewData, error) {
 		settings["appSubUrl"] = ""
 	}
 
+	var d = c.GetCookie("header_name")
+	var isProxySingedIn = len(d) > 0
+	if isProxySingedIn {
+		prefs.Theme = "light"
+	}
+
 	var data = dtos.IndexViewData{
 		User: &dtos.CurrentUser{
-			Id:             c.UserId,
-			IsSignedIn:     c.IsSignedIn,
-			Login:          c.Login,
-			Email:          c.Email,
-			Name:           c.Name,
-			OrgId:          c.OrgId,
-			OrgName:        c.OrgName,
-			OrgRole:        c.OrgRole,
-			GravatarUrl:    dtos.GetGravatarUrl(c.Email),
-			IsGrafanaAdmin: c.IsGrafanaAdmin,
-			LightTheme:     prefs.Theme == "light",
-			ThemeName:      prefs.Theme,
-			Timezone:       prefs.Timezone,
-			Locale:         locale,
-			HelpFlags1:     c.HelpFlags1,
+			Id:              c.UserId,
+			IsSignedIn:      c.IsSignedIn,
+			Login:           c.Login,
+			Email:           c.Email,
+			Name:            c.Name,
+			OrgId:           c.OrgId,
+			OrgName:         c.OrgName,
+			OrgRole:         c.OrgRole,
+			GravatarUrl:     dtos.GetGravatarUrl(c.Email),
+			IsGrafanaAdmin:  c.IsGrafanaAdmin,
+			LightTheme:      prefs.Theme == "light",
+			ThemeName:       prefs.Theme,
+			Timezone:        prefs.Timezone,
+			Locale:          locale,
+			HelpFlags1:      c.HelpFlags1,
+			IsProxySingedIn: isProxySingedIn,
 		},
 		Settings:                settings,
 		AppUrl:                  appUrl,
