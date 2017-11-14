@@ -18,6 +18,7 @@ var option = {
   "backgroundColor": "#FBFBFB",
   "textStyle": {},
   "title": {
+    "show": false,
     "textStyle": {
       "color": "#333",
       "fontFamily": "Microsoft YaHei Regular",
