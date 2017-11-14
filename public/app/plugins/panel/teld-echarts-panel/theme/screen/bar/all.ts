@@ -1,16 +1,18 @@
 import _ from 'lodash';
 import echarts from 'echarts';
 import dark from './bar_dark';
+import bar from './bar_light';
 import light from './bar_light';
-import light_light from './bar_white';
-import dark_dark from './bar_black';
+import bar_light from './bar_white';
+import bar_dark from './bar_black';
 
 import auto_color from '../../auto_color';
+import bar_yellow from './bar_light_yellow';
 import light_yellow from './bar_light_yellow';
 
-let theme = { dark, light};
+let theme = { bar,dark, light};
 
-auto_color(theme, { light_yellow,light_light,dark_dark });
+auto_color(theme, { bar_yellow,bar_light,bar_dark ,light_yellow});
 
 // _.forEach(theme, function (value, key) {
 //   echarts.registerTheme(key, value);
