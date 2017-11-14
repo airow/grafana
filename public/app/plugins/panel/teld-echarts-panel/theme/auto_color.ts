@@ -19,7 +19,7 @@ export default function (theme, autotheme) {
     });
   }else{
     _.forEach(theme, function (value, key) {
-      let autoConfig = autotheme[`${key}_${autoName}`];
+      let autoConfig = autotheme[`${key}_${themeName}`];
       if (autoConfig) {
         theme[key] = autoConfig;
       }
