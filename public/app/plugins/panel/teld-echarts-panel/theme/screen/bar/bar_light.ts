@@ -13,7 +13,11 @@ var option = {
     "#787464",
     "#cc7e63",
     "#724e58",
-    "#4b565b"
+    "#4b565b",
+    //原始
+    '#55a5a4', '#8d4968', '#acd9d2', '#af75ac', '#133e7f', '#7a9299', '#11a0be',
+    '#474ea7', '#7a9e61', '#6897bd', '#156c87', '#a58b66', '#c9bd7c', '#3ca58e',
+    '#1a7fd4', '#3a5966'
   ],
   "backgroundColor": new echarts.graphic.LinearGradient(1, 3, 0, 0, [{
     offset: 0, color: '#28657C',//'rgba(40,101,124,0.1)',// '#204063'//'#190d02' // 0% 处的颜色
