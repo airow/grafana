@@ -3,18 +3,14 @@
 import echarts from 'echarts';
 
 var option = {
-  "color": [
-    "#089846","#E8B308",
-    '#F23D35', '#6CB489', '#293790', '#089B46', '#26A7E4', '#A577B1', '#952793', '#E3BE22', '#6FA5D6',
-    //
-    "#6e5360", "#3595a6"
-  ],
+  "color": [ "#d87c7c","#919e8b"],
   "backgroundColor": "#FBFBFB",
   "textStyle": {},
   "title": {
+    "show": false,
     "text": "终端数行业投建比",
     "textStyle": {
-      "color": "#639fb9",
+      "color": "#333",
       "fontFamily": "Microsoft YaHei Regular",
       "fontSize": 32
     },
@@ -47,7 +43,7 @@ var option = {
       "normal": {
         "formatter": "{b}\n{d}%",
         "textStyle": {
-          "color": "#fff",
+          "color": "#333",
           "fontFamily": "Microsoft YaHei Light",
           "fontSize": 12
         }

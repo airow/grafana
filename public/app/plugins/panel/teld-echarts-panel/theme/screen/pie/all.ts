@@ -11,19 +11,21 @@ import ring2_yellow from './yellow/battery2';
 import pie1_yellow from './yellow/terminalPie1';
 import pie2_yellow from './yellow/battery1';
 
-import ring1_white from './white/terminalPie2';
-import ring2_white from './white/battery2';
-import pie1_white from './white/terminalPie1';
-import pie2_white from './white/battery1';
+import ring1_light from './white/terminalPie2';
+import ring2_light from './white/battery2';
+import pie1_light from './white/terminalPie1';
+import pie2_light from './white/battery1';
 
-import ring1_black from './black/terminalPie2';
-import ring2_black from './black/battery2';
-import pie1_black from './black/terminalPie1';
-import pie2_black from './black/battery1';
+import ring1_dark from './black/terminalPie2';
+import ring2_dark from './black/battery2';
+import pie1_dark from './black/terminalPie1';
+import pie2_dark from './black/battery1';
 
-let theme = { ring1, ring2, pie1, pie2,ring1_white,ring2_white, pie1_white,pie2_white,ring1_black, ring2_black,pie1_black,pie2_black};
+let theme = { ring1, ring2, pie1, pie2};
 
-auto_color(theme, { ring1_yellow, ring2_yellow, pie1_yellow, pie2_yellow,ring1_white,ring2_white, pie1_white,pie2_white});
+auto_color(theme, { ring1_yellow, ring2_yellow,pie1_yellow,pie2_yellow,
+    ring1_light,ring2_light,pie1_light,pie2_light,
+    ring1_dark,ring2_dark,pie1_dark,pie2_dark});
 
 // _.forEach(theme, function (value, key) {
 //   echarts.registerTheme(key, value);
