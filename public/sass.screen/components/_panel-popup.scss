@@ -89,7 +89,7 @@ $font-size36: 36px;
 .teld_panel_popup .teld_box{
   // display: none;
   padding: 0 58px;
-  border: 1px solid $blue-2;
+  // border: 1px solid $blue-2;
   background-color: $dark-6;
   // height:752px ;
   height: 100%;
@@ -111,11 +111,9 @@ $font-size36: 36px;
       height: 64px;
       line-height: 64px;
       text-align: center;
-      &:first-child{
-        border-right: 1px solid $blue-5;
-      }
+      border-right: 1px solid $blue-5;
       &:last-child{
-        border-bottom: none;
+        border-right: none;
       }
     }
   }

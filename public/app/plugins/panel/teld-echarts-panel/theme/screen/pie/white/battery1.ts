@@ -4,17 +4,28 @@ import echarts from 'echarts';
 
 var option = {
   "color": [
-    '#F23D35', '#6CB489', '#293790', '#089B46', '#26A7E4', '#A577B1', '#952793', '#E3BE22', '#6FA5D6',
+    "#d87c7c",
+    "#919e8b",
+    "#d7ab82",
+    "#6e7074",
+    "#61a0a8",
+    "#efa18d",
+    "#787464",
+    "#cc7e63",
+    "#724e58",
+    "#4b565b",
     //原始
     '#55a5a4', '#8d4968', '#acd9d2', '#af75ac', '#133e7f', '#7a9299', '#11a0be',
     '#474ea7', '#7a9e61', '#6897bd', '#156c87', '#a58b66', '#c9bd7c', '#3ca58e',
-    '#1a7fd4', '#3a5966'],
+    '#1a7fd4', '#3a5966'
+  ],
   "backgroundColor": "#FBFBFB",
   "textStyle": {},
   "title": {
+    "show": false,
     "text": "终端数行业投建比",
     "textStyle": {
-      "color": "#639fb9",
+      "color": "#333",
       "fontFamily": "Microsoft YaHei Regular",
       "fontSize": 32
     },
@@ -48,7 +59,7 @@ var option = {
       "normal": {
         "formatter": "{b}\n{d}%",
         "textStyle": {
-          "color": "#fff",
+          "color": "#333",
           "fontFamily": "Microsoft YaHei Light",
           "fontSize": 12
         }

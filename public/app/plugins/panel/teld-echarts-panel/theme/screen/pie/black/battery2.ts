@@ -3,13 +3,14 @@
 import echarts from 'echarts';
 
 var option = {
-  "color": ['#64344b', '#0c4b8c'],
+  "color": [ "#d87c7c","#919e8b"],
   "backgroundColor": "#1F1D1D",
   "textStyle": {},
   "title": {
+    "show": false,
     "text": "终端数行业投建比",
     "textStyle": {
-      "color": "#639fb9",
+      "color": "#fff",
       "fontFamily": "Microsoft YaHei Regular",
       "fontSize": 32
     },

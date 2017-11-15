@@ -18,6 +18,7 @@ var chargTrend_12m = {
   "backgroundColor": "#FBFBFB",
   "textStyle": {},
   "title": {
+    "show": false,
     "textStyle": {
       "color": "#333",
       "fontFamily": "Microsoft YaHei Regular",
