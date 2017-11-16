@@ -335,6 +335,18 @@
 			"revisionTime": "2016-12-15T22:53:35Z"
 		},
 		{
+			"checksumSHA1": "fOJ0Dq5bMAWizM9gpVEgGpEOvUU=",
+			"path": "github.com/opentracing/opentracing-go",
+			"revision": "1361b9cd60be79c4c3a7fa9841b3c132e40066a7",
+			"revisionTime": "2017-10-03T13:35:19Z"
+		},
+		{
+			"checksumSHA1": "Xtw8Y/mGT602XwYnbOooUz9uYxU=",
+			"path": "github.com/opentracing/opentracing-go/log",
+			"revision": "1361b9cd60be79c4c3a7fa9841b3c132e40066a7",
+			"revisionTime": "2017-10-03T13:35:19Z"
+		},
+		{
 			"checksumSHA1": "8z32QKTSDusa4QQyunKE4kyYXZ8=",
 			"path": "github.com/patrickmn/go-cache",
 			"revision": "e7a9def80f35fe1b170b7b8b68871d59dea117e1",
