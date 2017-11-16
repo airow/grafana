@@ -315,6 +315,12 @@
 			"versionExact": "v1.5.8"
 		},
 		{
+			"checksumSHA1": "sH+gOi3dWTCxkTqFeEo4KkITwpc=",
+			"path": "github.com/denisenkom/go-mssqldb",
+			"revision": "88555645b640cc621e32f8693d7586a1aa1575f4",
+			"revisionTime": "2017-10-06T17:24:03Z"
+		},
+		{
 			"checksumSHA1": "cVyhKIRI2gQrgpn5qrBeAqErmWM=",
 			"path": "github.com/go-ini/ini",
 			"revision": "6e4869b434bd001f6983749881c7ead3545887d8",
@@ -381,6 +387,10 @@
 			"path": "github.com/smartystreets/goconvey/convey/reporting",
 			"revision": "5db88ed452e937f2fd557de6f4f1af7f2eabed0b",
 			"revisionTime": "2016-08-23T18:01:44Z"
+		},
+		{
+			"path": "golang.org/x/crypto/md4",
+			"revision": ""
 		},
 		{
 			"checksumSHA1": "WHc3uByvGaMcnSoI21fhzYgbOgg=",
