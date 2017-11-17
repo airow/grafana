@@ -41,7 +41,13 @@ module.exports = function(config) {
         'remarkable/dist/*',
         'virtual-scroll/**/*',
         'mousetrap/**/*',
-        'echarts/**/*'
+        'echarts/**/*',
+        'brace/**/*',
+        'w3c-blob/**/*',
+        'buffer/**/*',
+        'base64-js/**/*',
+        'ieee754/**/*',
+        'isarray/**/*',
       ],
       dest: '<%= srcDir %>/vendor/npm'
     }

@@ -24,8 +24,8 @@ System.config({
     "angular-signalr-hub":    "vendor/angular-signalr-hub/signalr-hub.js",
     "ws":                     "vendor/require-undefined.js", /*mock angular-websocket require('ws') */
     "angular-websocket":      "vendor/angular-websocket-2.0.0/dist/angular-websocket.js",
-    "ace":             "vendor/ace-builds-1.2.8/src-min-noconflict/ace.js",
-    "ui-ace":          "vendor/ui-ace-0.2.3/ui-ace.js",
+    // "ace":             "vendor/ace-builds-1.2.8/src-min-noconflict/ace.js",
+    // "ui-ace":          "vendor/ui-ace-0.2.3/ui-ace.js",
     "Snap.svg":        "vendor/Snap.svg-0.5.1/dist/snap.svg.js",
     "me-pageloading":  "vendor/me-pageloading-0.4.1/me-pageloading.js",
     "flipcountdown":  "vendor/flipcountdown-3.0.5/jquery.flipcountdown.js",
@@ -45,7 +45,19 @@ System.config({
     "numeral": "vendor/numeral/numeral.js",
     'echarts': 'vendor/npm/echarts/dist/echarts.min.js',
     'echarts.china': 'vendor/npm/echarts/map/js/china.js',
-    'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js'
+    'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js',
+    'brace': 'vendor/npm/brace/index.js',
+    'brace/ext/language_tools': 'vendor/npm/brace/ext/language_tools.js',
+    'brace/theme/textmate': 'vendor/npm/brace/theme/textmate.js',
+    'brace/mode/text': 'vendor/npm/brace/mode/text.js',
+    'brace/snippets/text': 'vendor/npm/brace/snippets/text.js',
+    'brace/mode/sql': 'vendor/npm/brace/mode/sql.js',
+    'brace/snippets/sql': 'vendor/npm/brace/snippets/sql.js',
+    'w3c-blob': 'vendor/npm/w3c-blob/index.js',
+    'buffer': 'vendor/npm/buffer/index.js',
+    'base64-js': 'vendor/npm/base64-js/index.js',
+    'ieee754': 'vendor/npm/ieee754/index.js',
+    'isarray': 'vendor/npm/isarray/index.js',
   },
 
   packages: {
@@ -85,6 +97,6 @@ System.config({
     'vendor/npm/mousetrap/mousetrap.js': {
       format: 'global',
       exports: 'Mousetrap'
-    },
+    }
   }
 });
