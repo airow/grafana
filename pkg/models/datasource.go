@@ -9,15 +9,18 @@ import (
 )
 
 const (
-	DS_GRAPHITE      = "graphite"
-	DS_INFLUXDB      = "influxdb"
-	DS_INFLUXDB_08   = "influxdb_08"
-	DS_ES            = "elasticsearch"
-	DS_ES_TELD       = "teld-elasticsearch-datasource" //teld-elasticsearch-datasource plugin.json文件中的id
-	DS_OPENTSDB      = "opentsdb"
-	DS_CLOUDWATCH    = "cloudwatch"
-	DS_KAIROSDB      = "kairosdb"
-	DS_PROMETHEUS    = "prometheus"
+	DS_GRAPHITE    = "graphite"
+	DS_INFLUXDB    = "influxdb"
+	DS_INFLUXDB_08 = "influxdb_08"
+	DS_ES          = "elasticsearch"
+	DS_ES_TELD     = "teld-elasticsearch-datasource" //teld-elasticsearch-datasource plugin.json文件中的id
+	DS_OPENTSDB    = "opentsdb"
+	DS_CLOUDWATCH  = "cloudwatch"
+	DS_KAIROSDB    = "kairosdb"
+	DS_PROMETHEUS  = "prometheus"
+	// DS_POSTGRES      = "postgres"
+	DS_MYSQL         = "mysql"
+	DS_MSSQL         = "mssql"
 	DS_ACCESS_DIRECT = "direct"
 	DS_ACCESS_PROXY  = "proxy"
 )
@@ -64,6 +67,9 @@ var knownDatasourcePlugins map[string]bool = map[string]bool{
 	DS_CLOUDWATCH:  true,
 	DS_PROMETHEUS:  true,
 	DS_OPENTSDB:    true,
+	// DS_POSTGRES:    true,
+	DS_MYSQL:       true,
+	DS_MSSQL:       true,
 	"opennms":      true,
 	"druid":        true,
 	"dalmatinerdb": true,
