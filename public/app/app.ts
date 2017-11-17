@@ -12,8 +12,8 @@ import 'angular-ui';
 import 'angular-post-message';
 import 'angular-signalr-hub';
 import 'angular-websocket';
-import 'ace';
-import 'ui-ace';
+// import 'ace';
+// import 'ui-ace';
 import 'jquery.signalR';
 import 'Snap.svg';
 import 'me-pageloading';
@@ -92,7 +92,7 @@ export class GrafanaApp {
       'pasvaz.bindonce',
       'ui.bootstrap',
       'ui.bootstrap.tpls',
-      'ui.ace',
+      //'ui.ace',
       'ngPostMessage',
       'SignalR',
       'me-pageloading',
