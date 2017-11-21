@@ -8,5 +8,6 @@ module.exports = function(config) {
     css: ['<%= genDir %>/css'],
     teldrelease: ['<%= baseDir %>/public_release'],
     teldconf: ['<%= baseDir %>/public_release/app/conf'],
+    tmpteldconf: ['<%= baseDir %>/tmp/public/app/conf'],
   };
 };

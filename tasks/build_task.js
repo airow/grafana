@@ -23,7 +23,8 @@ module.exports = function(grunt) {
     'filerev',
     'remapFilerev',
     'usemin',
-    'uglify:genDir'
+    'uglify:genDir',
+    'clean:tmpteldconf',
   ]);
 
   // task to add [[.AppSubUrl]] to reved path

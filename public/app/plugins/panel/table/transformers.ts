@@ -485,6 +485,7 @@ function setColumnAlias(panel, model) {
     });
   }
 
+  panel.styles = panel.styles || [];
   let aliasStyles = panel.styles.filter(style => {
     return false === _.isEmpty(style.alias);
   });
