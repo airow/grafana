@@ -9,8 +9,8 @@
       "url": "https://grafana.com"
     },
     "logos": {
-      "small": "img/mysql_logo.svg",
-      "large": "img/mysql_logo.svg"
+      "small": "img/mssql_logo.svg",
+      "large": "img/mssql_logo.svg"
     }
   },
 
