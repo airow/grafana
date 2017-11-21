@@ -24,6 +24,7 @@ loadPluginCssPath({
 class FlipCountdownCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
 
+  dataType = 'timeseries';
   series: any[];
   data: any;
   fontSizes: any[];
@@ -32,6 +33,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
   panel: any;
   events: any;
   valueNameOptions: any[] = ['min','max','avg', 'current', 'total', 'name', 'first', 'delta', 'diff', 'range'];
+  tableColumnOptions: any;
 
   // Set and populate defaults
   panelDefaults = {
@@ -129,13 +131,18 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
   }
   initflipcountdown = false;
   onDataReceived(dataList) {
-    this.series = dataList.map(this.seriesHandler.bind(this));
-
-    var data: any = {};
-    this.setValues(data);
-
+    const data: any = {};
+    if (dataList.length > 0 && dataList[0].type === 'table') {
+      this.dataType = 'table';
+      const tableData = dataList.map(this.tableHandler.bind(this));
+      this.setTableValues(tableData, data);
+    } else {
+      this.dataType = 'timeseries';
+      this.series = dataList.map(this.seriesHandler.bind(this));
+      this.setValues(data);
+    }
     this.flipcountdownData.initValue = data.value;
-    this.flipcountdownData.valueFormated = data.valueFormated;
+    this.flipcountdownData.valueFormatted = data.valueFormatted;
     this.flipcountdownData.value = data.value;
     this.flipcountdownData.step = 0;
 
@@ -162,6 +169,67 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
 
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     return series;
+  }
+
+  tableHandler(tableData) {
+    const datapoints = [];
+    const columnNames = {};
+
+    tableData.columns.forEach((column, columnIndex) => {
+      columnNames[columnIndex] = column.text;
+    });
+
+    this.tableColumnOptions = columnNames;
+    if (!_.find(tableData.columns, ['text', this.panel.tableColumn])) {
+      this.setTableColumnToSensibleDefault(tableData);
+    }
+
+    tableData.rows.forEach((row) => {
+      const datapoint = {};
+
+      row.forEach((value, columnIndex) => {
+        const key = columnNames[columnIndex];
+        datapoint[key] = value;
+      });
+
+      datapoints.push(datapoint);
+    });
+
+    return datapoints;
+  }
+
+  setTableColumnToSensibleDefault(tableData) {
+    if (this.tableColumnOptions.length === 1) {
+      this.panel.tableColumn = this.tableColumnOptions[0];
+    } else {
+      this.panel.tableColumn = _.find(tableData.columns, (col) => { return col.type !== 'time'; }).text;
+    }
+  }
+
+  setTableValues(tableData, data) {
+    if (!tableData || tableData.length === 0) {
+      return;
+    }
+
+    if (tableData[0].length === 0 || tableData[0][0][this.panel.tableColumn] === undefined) {
+      return;
+    }
+
+    const datapoint = tableData[0][0];
+    data.value = datapoint[this.panel.tableColumn];
+
+    if (_.isString(data.value)) {
+      data.valueFormatted = _.escape(data.value);
+      // data.value = 0;
+      // data.valueRounded = 0;
+    } else {
+      const decimalInfo = this.getDecimalsForValue(data.value);
+      const formatFunc = kbn.valueFormats[this.panel.format];
+      data.valueFormatted = formatFunc(datapoint[this.panel.tableColumn], decimalInfo.decimals, decimalInfo.scaledDecimals);
+      data.valueRounded = kbn.roundValue(data.value, this.panel.decimals || 0);
+    }
+
+    //this.setValueMapping(data);
   }
 
   setColoring(options) {
@@ -239,10 +307,10 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
       if (this.panel.valueName === 'name') {
         data.value = 0;
         data.valueRounded = 0;
-        data.valueFormated = this.series[0].alias;
+        data.valueFormatted = this.series[0].alias;
       } else if (_.isString(lastValue)) {
         data.value = 0;
-        data.valueFormated = _.escape(lastValue);
+        data.valueFormatted = _.escape(lastValue);
         data.valueRounded = 0;
       } else {
         data.value = this.series[0].stats[this.panel.valueName];
@@ -250,9 +318,9 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
 
        var decimalInfo = this.getDecimalsForValue(data.value);
         // var formatFunc = kbn.valueFormats[this.panel.format];
-        // data.valueFormated = formatFunc(data.value, decimalInfo.decimals, decimalInfo.scaledDecimals);
+        // data.valueFormatted = formatFunc(data.value, decimalInfo.decimals, decimalInfo.scaledDecimals);
         // data.valueRounded = kbn.roundValue(data.value, decimalInfo.decimals);
-        data.valueRounded = data.valueFormated = data.value;
+        data.valueRounded = data.valueFormatted = data.value;
       }
 
       // Add $__name variable for using in prefix or postfix
@@ -267,7 +335,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
         // special null case
         if (map.value === 'null') {
           if (data.value === null || data.value === void 0) {
-            data.valueFormated = map.text;
+            data.valueFormatted = map.text;
             return;
           }
           continue;
@@ -276,7 +344,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
         // value/number to text mapping
         var value = parseFloat(map.value);
         if (value === data.valueRounded) {
-          data.valueFormated = map.text;
+          data.valueFormatted = map.text;
           return;
         }
       }
@@ -286,7 +354,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
         // special null case
         if (map.from === 'null' && map.to === 'null') {
           if (data.value === null || data.value === void 0) {
-            data.valueFormated = map.text;
+            data.valueFormatted = map.text;
             return;
           }
           continue;
@@ -296,14 +364,14 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
         var from = parseFloat(map.from);
         var to = parseFloat(map.to);
         if (to >= data.valueRounded && from <= data.valueRounded) {
-          data.valueFormated = map.text;
+          data.valueFormatted = map.text;
           return;
         }
       }
     }
 
     if (data.value === null || data.value === void 0) {
-      data.valueFormated = "no value";
+      data.valueFormatted = "no value";
     }
   };
 
@@ -338,7 +406,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     //return (this.flipcountdownData.value += this.flipcountdownData.step);
 
     let step = 0;
-    let val = +this.flipcountdownData.valueFormated;
+    let val = +this.flipcountdownData.valueFormatted;
     if (this.panel.stepValSubscriber.enabled) {
       let { varName, incrementModel } = this.panel.stepValSubscriber;
       varName = `teld.${varName}`;
@@ -360,7 +428,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     var formatFunc = kbn.valueFormats[this.panel.format];
     val = kbn.roundValue(val, decimalInfo.decimals);
     val = kbn.toFixed(val, decimalInfo.decimals);
-    this.flipcountdownData.valueFormated = val;
+    this.flipcountdownData.valueFormatted = val;
     val = val / (this.panel.divisor);
     val = kbn.toFixed(val, decimalInfo.decimals);
     //return val;
@@ -463,7 +531,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
 
   flipcountdownData = {
     initValue: 0,
-    valueFormated: 0,
+    valueFormatted: 0,
     value: 0,
     step: 0,
   };
