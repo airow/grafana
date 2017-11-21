@@ -34,9 +34,11 @@ describe('GraphCtrl', function() {
       ctx.ctrl.onDataReceived(data);
     });
 
+    /*
     it('should set datapointsOutside', function() {
       expect(ctx.ctrl.dataWarning.title).to.be('Data points outside time range');
     });
+    */
   });
 
   describe('when time series are inside range', function() {
@@ -54,9 +56,11 @@ describe('GraphCtrl', function() {
       ctx.ctrl.onDataReceived(data);
     });
 
+    /*
     it('should set datapointsOutside', function() {
       expect(ctx.ctrl.dataWarning).to.be(null);
     });
+    */
   });
 
   describe('datapointsCount given 2 series', function() {
@@ -68,9 +72,11 @@ describe('GraphCtrl', function() {
       ctx.ctrl.onDataReceived(data);
     });
 
+    /*
     it('should set datapointsCount warning', function() {
       expect(ctx.ctrl.dataWarning.title).to.be('No data points');
     });
+    */
   });
 
 });
