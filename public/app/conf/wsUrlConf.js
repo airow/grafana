@@ -22,7 +22,7 @@ define([], function () {
 
   var conf = {
     //账号模式，true为多屏单户，false单屏单户
-    singleUser: false,
+    singleUser: true,
     /** 支持变量
      * ${login}:grafana用户login;
      * ${orgId}:grafana用户orgId;
