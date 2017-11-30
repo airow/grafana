@@ -174,7 +174,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
 
     _.defaultsDeep(this.panel, this.panelDefaults);
-    this.panel.title = '';
+    //this.panel.title = '';
     this.panel.hideTimeOverride = true;
 
     this.echartsTheme = echartsTheme;
