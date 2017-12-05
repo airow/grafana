@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"regexp"
 	"strconv"
 
 	_ "github.com/denisenkom/go-mssqldb"
@@ -24,6 +25,29 @@ func init() {
 	tsdb.RegisterTsdbQueryEndpoint("mssql", NewMsSqlQueryEndpoint)
 }
 
+type namesRegexp struct {
+	*regexp.Regexp
+}
+
+func (r *namesRegexp) FindStringSubmatchMap(s string) map[string]string {
+	captures := make(map[string]string)
+
+	match := r.FindStringSubmatch(s)
+	if match == nil {
+		return captures
+	}
+
+	for i, name := range r.SubexpNames() {
+		//
+		if i == 0 {
+			continue
+		}
+		captures[name] = match[i]
+
+	}
+	return captures
+}
+
 func NewMsSqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoint, error) {
 	endpoint := &MsSqlQueryEndpoint{
 		log: log.New("tsdb.mssql"),
@@ -33,16 +57,23 @@ func NewMsSqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 		MacroEngine: NewMsSqlMacroEngine(),
 	}
 
-	// cnnstr := fmt.Sprintf("%s:%s@%s(%s)/%s?collation=utf8mb4_unicode_ci&parseTime=true&loc=UTC",
-	// 	datasource.User,
-	// 	datasource.Password,
-	// 	"tcp",
-	// 	datasource.Url,
-	// 	datasource.Database,
-	// )
+	url := datasource.Url
 
-	cnnstr := fmt.Sprintf("server=%s;database=%s;user id=%s;password=%s;connection timeout=30",
-		datasource.Url,
+	var hostExp = namesRegexp{regexp.MustCompile(`(?P<host>\S[^:,]+)[:,]?(?P<port>\d+)?`)}
+	var namesSubmatchMap = hostExp.FindStringSubmatchMap(url)
+
+	if namesSubmatchMap["host"] != "" {
+		url = namesSubmatchMap["host"]
+	}
+
+	port, error := strconv.Atoi(namesSubmatchMap["port"])
+	if error != nil {
+		port = 1433
+	}
+
+	cnnstr := fmt.Sprintf("server=%s;port=%d;database=%s;user id=%s;password=%s;connection timeout=30",
+		url,
+		port,
 		datasource.Database,
 		datasource.User,
 		datasource.Password,
@@ -54,6 +85,7 @@ func NewMsSqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 	//cnnstr = "odbc:driver={SQL Server};Server=dev-sh-ptdb.chinacloudapp.cn;Database=TeldETL;uid=sqladmin;pwd=123456a?;"
 	//cnnstr = "odbc:server=dev-sh-ptdb.chinacloudapp.cn;user id=sqladmin;password=123456a?;database=TeldETL;connection timeout=30"
 	endpoint.log.Debug("getEngine", "connection", cnnstr)
+	fmt.Println(cnnstr)
 
 	if err := endpoint.sqlEngine.InitEngine("mssql", datasource, cnnstr); err != nil {
 		return nil, err

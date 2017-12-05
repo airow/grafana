@@ -158,6 +158,8 @@ func fillWithSecureJsonData(cmd *m.UpdateDataSourceCommand) error {
 		}
 	}
 
+	// set version from db
+	cmd.Version = ds.Version
 	return nil
 }
 
