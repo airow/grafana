@@ -123,6 +123,10 @@
   font-family: "Microsoft YaHei Regular";
   color:#fff;
 }
+.panelAutoHeight{
+  display: table-cell;
+  vertical-align: middle;
+}
 .penelBg .titleRight{
     font-size: 36px !important;
     margin-top: 0;

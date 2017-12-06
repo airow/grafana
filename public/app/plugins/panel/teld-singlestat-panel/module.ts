@@ -12,11 +12,13 @@ import TimeSeries from 'app/core/time_series2';
 import {MetricsPanelCtrl, loadPluginCssPath} from 'app/plugins/sdk';
 
 import { finglestatEchartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
+import { submenuDirective } from '../../../features/dashboard/submenu/submenu';
 
 loadPluginCssPath({
   //cssPath: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.css',
   dark: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css',
-  light: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css'
+  light: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css',
+  //light: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css'
 });
 
 class SingleStatCtrl extends MetricsPanelCtrl {
@@ -32,7 +34,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     LR: {
       name: '左右',
       tmpl: [
-        '<div ng-dblclick="click()" class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        '<div ng-dblclick="click()" ng-style="customStyle" ng-class="{\'panelAutoHeight\':autoHeight}" ',
+        ' class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
         ' <div class="titleRight">',
         '   <span ng-style="postfixStyle" ng-bind="postfix"></span>&nbsp;<span ng-style="valueStyle" ng-bind="rightValue"></span>',
         ' </div>',
@@ -73,7 +76,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   };
   styleClass: any = {
     borderClass: {
-      LR: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'chargeBorder' }],
+      LR: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'chargeBorder' },{ name: '', value: '' }],
       UD: [{ name: 'default', value: 'panelSubBor' }]
     },
     bgClass: {
@@ -81,7 +84,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         { name: '渐变-蓝', value: 'chargeBg1' },
         { name: '渐变-紫', value: 'chargeBg2' },
         { name: '渐变-黄', value: 'chargeBg3' },
-        { name: '纯色-蓝', value: 'penelBg' }
+        { name: '纯色-蓝', value: 'penelBg' },
+        { name: '', value: '' }
       ],
       UD: [
         { name: '纯色-蓝', value: 'panelSubBg' }
@@ -95,68 +99,96 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       ]
     },
     iconClass: [
-      { name: '无', value: 'iconTip0' },
-      { name: '充电量及充电次数', value: 'charg_capacity' },
-      { name: '充电人数', value: 'charg_num' },
-      { name: '工单数', value: 'orders_num' },
-      { name: '注册人数', value: 'register_num' },
-      { name: '订单数', value: 'work_num' },
-      { name: '预警数', value: 'warning_num' },
-      { name: '公司', value: 'company' },
-      { name: '公司_r', value: 'company2' },
-      { name: '公司_w', value: 'company3' },
-      { name: '失败订单', value: 'fail_order' },
-      { name: '失败订单_r', value: 'fail_order2' },
-      { name: '失败订单_w', value: 'fail_order3' },
-      { name: '客户数', value: 'customer' },
-      { name: '客户数_r', value: 'customer2' },
-      { name: '客户数_w', value: 'customer3' },
-      { name: '开发平台伙伴', value: 'platform' },
-      { name: '开发平台伙伴_r', value: 'platform2' },
-      { name: '开发平台伙伴_w', value: 'platform3' },
-      { name: '异常订单', value: 'abnormal' },
-      { name: '异常订单_r', value: 'abnormal2' },
-      { name: '异常订单_w', value: 'abnormal3' },
-      { name: '离网率', value: 'loserate' },
-      { name: '离网率_r', value: 'loserate2' },
-      { name: '离网率_w', value: 'loserate3' },
-      { name: '覆盖城市', value: 'coveredCity' },
-      { name: '覆盖城市_r', value: 'coveredCity2' },
-      { name: '覆盖城市_w', value: 'coveredCity3' },
-      { name: '运营商', value: 'operator' },
-      { name: '运营商_r', value: 'operator2' },
-      { name: '运营商_w', value: 'operator3' },
-      { name: '电站', value: 'dianzh' },
+      { group: 'screen', name: '无', value: 'iconTip0' },
+      { group: 'screen', name: '充电量及充电次数', value: 'charg_capacity' },
+      { group: 'screen', name: '充电人数', value: 'charg_num' },
+      { group: 'screen', name: '工单数', value: 'orders_num' },
+      { group: 'screen', name: '注册人数', value: 'register_num' },
+      { group: 'screen', name: '订单数', value: 'work_num' },
+      { group: 'screen', name: '预警数', value: 'warning_num' },
+      { group: 'screen', name: '公司', value: 'company' },
+      { group: 'screen', name: '公司_r', value: 'company2' },
+      { group: 'screen', name: '公司_w', value: 'company3' },
+      { group: 'screen', name: '失败订单', value: 'fail_order' },
+      { group: 'screen', name: '失败订单_r', value: 'fail_order2' },
+      { group: 'screen', name: '失败订单_w', value: 'fail_order3' },
+      { group: 'screen', name: '客户数', value: 'customer' },
+      { group: 'screen', name: '客户数_r', value: 'customer2' },
+      { group: 'screen', name: '客户数_w', value: 'customer3' },
+      { group: 'screen', name: '开发平台伙伴', value: 'platform' },
+      { group: 'screen', name: '开发平台伙伴_r', value: 'platform2' },
+      { group: 'screen', name: '开发平台伙伴_w', value: 'platform3' },
+      { group: 'screen', name: '异常订单', value: 'abnormal' },
+      { group: 'screen', name: '异常订单_r', value: 'abnormal2' },
+      { group: 'screen', name: '异常订单_w', value: 'abnormal3' },
+      { group: 'screen', name: '离网率', value: 'loserate' },
+      { group: 'screen', name: '离网率_r', value: 'loserate2' },
+      { group: 'screen', name: '离网率_w', value: 'loserate3' },
+      { group: 'screen', name: '覆盖城市', value: 'coveredCity' },
+      { group: 'screen', name: '覆盖城市_r', value: 'coveredCity2' },
+      { group: 'screen', name: '覆盖城市_w', value: 'coveredCity3' },
+      { group: 'screen', name: '运营商', value: 'operator' },
+      { group: 'screen', name: '运营商_r', value: 'operator2' },
+      { group: 'screen', name: '运营商_w', value: 'operator3' },
+      { group: 'screen', name: '电站', value: 'dianzh' },
 
-      { name: '服务器', value: '服务器' },
-      { name: '工单', value: '工单' },
-      { name: '互联互通', value: '互联互通' },
-      { name: '机器', value: '机器' },
-      { name: '集群', value: '集群' },
-      { name: '节点', value: '节点' },
-      { name: '进程', value: '进程' },
-      { name: '平台', value: '平台' },
-      { name: '容器服务', value: '容器服务' },
-      { name: '时间', value: '时间' },
-      { name: '新增', value: '新增' },
-      { name: '修复', value: '修复' },
-      { name: '遗留', value: '遗留' },
-      { name: '预警', value: '预警' },
-      { name: '站点', value: '站点' },
+      {group: 'yunwei', name: '服务器', value: '服务器' },
+      {group: 'yunwei', name: '工单', value: '工单' },
+      {group: 'yunwei', name: '互联互通', value: '互联互通' },
+      {group: 'yunwei', name: '机器', value: '机器' },
+      {group: 'yunwei', name: '集群', value: '集群' },
+      {group: 'yunwei', name: '节点', value: '节点' },
+      {group: 'yunwei', name: '进程', value: '进程' },
+      {group: 'yunwei', name: '平台', value: '平台' },
+      {group: 'yunwei', name: '容器服务', value: '容器服务' },
+      {group: 'yunwei', name: '时间', value: '时间' },
+      {group: 'yunwei', name: '新增', value: '新增' },
+      {group: 'yunwei', name: '修复', value: '修复' },
+      {group: 'yunwei', name: '遗留', value: '遗留' },
+      {group: 'yunwei', name: '预警', value: '预警' },
+      {group: 'yunwei', name: '站点', value: '站点' },
 
-      { name: 'charg', value: 'iconTip0' },
-      { name: 'rise-o', value: 'iconTip1' },
-      { name: 'rise-r', value: 'iconTip2' },
-      { name: 'rise-b', value: 'iconTip3' },
-      { name: 'fall-o', value: 'iconTip4' },
-      { name: 'fall-r', value: 'iconTip5' },
-      { name: 'fall-b', value: 'iconTip6' },
-      { name: '充电', value: 'iconCharg' },
+      {group: 'default', name: 'charg', value: 'iconTip0' },
+      {group: 'default', name: 'rise-o', value: 'iconTip1' },
+      {group: 'default', name: 'rise-r', value: 'iconTip2' },
+      {group: 'default', name: 'rise-b', value: 'iconTip3' },
+      {group: 'default', name: 'fall-o', value: 'iconTip4' },
+      {group: 'default', name: 'fall-r', value: 'iconTip5' },
+      {group: 'default', name: 'fall-b', value: 'iconTip6' },
+      {group: 'default', name: '充电', value: 'iconCharg' },
+
+      { group: 'dataAnalysis', name: '1_1', value: 'da1_1' },
+      { group: 'dataAnalysis', name: '1_2', value: 'da1_2' },
+      { group: 'dataAnalysis', name: '2_1', value: 'da2_1' },
+      { group: 'dataAnalysis', name: '2_2', value: 'da2_2' },
+      { group: 'dataAnalysis', name: '3_1', value: 'da3_1' },
+      { group: 'dataAnalysis', name: '3_2', value: 'da3_2' },
+      { group: 'dataAnalysis', name: '4_1', value: 'da4_1' },
+      { group: 'dataAnalysis', name: '4_2', value: 'da4_2' },
+      { group: 'dataAnalysis', name: 'allsta', value: 'daallsta' },
+      { group: 'dataAnalysis', name: 'appBrisk', value: 'daappBrisk' },
+      { group: 'dataAnalysis', name: 'avgservecost', value: 'daavgservecost' },
+      { group: 'dataAnalysis', name: 'BuildPile', value: 'daBuildPile' },
+      { group: 'dataAnalysis', name: 'buildsta', value: 'dabuildsta' },
+      { group: 'dataAnalysis', name: 'chargeDegrees', value: 'dachargeDegrees' },
+      { group: 'dataAnalysis', name: 'chargingNumberCount', value: 'dachargingNumberCount' },
+      { group: 'dataAnalysis', name: 'consumeMoney', value: 'daconsumeMoney' },
+      { group: 'dataAnalysis', name: 'H', value: 'daH' },
+      { group: 'dataAnalysis', name: 'H1', value: 'daH1' },
+      { group: 'dataAnalysis', name: 'OperatePile', value: 'daOperatePile' },
+      { group: 'dataAnalysis', name: 'rechargeMoney', value: 'darechargeMoney' },
+      { group: 'dataAnalysis', name: 'revers', value: 'darevers' },
+      { group: 'dataAnalysis', name: 'runsta', value: 'darunsta' },
+      { group: 'dataAnalysis', name: 'Strategy', value: 'daStrategy' },
+      { group: 'dataAnalysis', name: 'YYZDS', value: 'daYYZDS' },
+      { group: 'dataAnalysis', name: 'ZDRJCDL', value: 'daZDRJCDL' },
+      { group: 'dataAnalysis', name: 'ZJFWDBS', value: 'daZJFWDBS' },
     ],
     heightClass: {
       LR: [
         { name: '76px', value: 'penelHeight' },
         { name: '90px', value: 'penelHeight2' },
+        { name: 'auto', value: 'penelHeight' },
       ],
       UD: [{ name: '95px', value: 'panelSubHeight' },]
     }
@@ -170,6 +202,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
+    autoHeight: false,
+    customStyle: { enable: false, style: {} },
     layout: 'LR',
     borderClass: '',
     bgClass: '',
@@ -759,6 +793,12 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       subScope.layout = panel.layout;
       subScope.borderClass = panel.borderClass;
       subScope.bgClass = panel.bgClass;
+      subScope.autoHeight = panel.autoHeight;
+      delete subScope.customStyle;
+      if (panel.customStyle.enable) {
+        //{ 'backgroundColor': 'green', color: 'red' };
+        subScope.customStyle = panel.customStyle.style;
+      }
       subScope.iconClass = panel.iconClass;
       subScope.heightClass = panel.heightClass;
 
