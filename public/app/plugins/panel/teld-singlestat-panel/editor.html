@@ -76,6 +76,7 @@
         <select class="gf-form-input" ng-model="ctrl.panel.layout" ng-options="f for f in ctrl.getLayout()" ng-change="ctrl.render()"></select>
       </div>
     </div>
+    <gf-form-switch ng-if='ctrl.panel.layout==="LR"' class="gf-form" label-class="width-8" label="AutoHeight" checked="ctrl.panel.autoHeight" on-change="ctrl.render()"></gf-form-switch>
     <div class="gf-form-inline" ng-if="ctrl.panel.layout==='LR'">
       <div class="gf-form">
         <label class="gf-form-label width-6">Position</label>
@@ -106,8 +107,25 @@
       <div class="gf-form">
         <label class="gf-form-label width-6">iconClass</label>
         <div class="gf-form-select-wrapper">
-          <select class="gf-form-input" ng-model="ctrl.panel.iconClass" ng-options="f.value as f.name for f in ctrl.getIconClass()" ng-change="ctrl.render()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.iconClass" ng-options="f.value as f.name group by f.group for f in ctrl.getIconClass()" ng-change="ctrl.render()"></select>
         </div>
+      </div>
+    </div>
+    <div class="gf-form-inline">
+        <gf-form-switch  class="gf-form" label-class="width-8" label="customStyle" checked="ctrl.panel.customStyle.enable" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">bg color</label>
+        <span class="gf-form-label">
+          <spectrum-picker ng-dblclick="ctrl.panel.customStyle.style.backgroundColor=null" ng-model="ctrl.panel.customStyle.style.backgroundColor" ng-change="ctrl.render()"></spectrum-picker>
+        </span>
+        <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.backgroundColor" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">color</label>
+        <span class="gf-form-label">
+          <spectrum-picker ng-dblclick="ctrl.panel.customStyle.style.color=null" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()"></spectrum-picker>
+        </span>
+        <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()" ng-model-onblur>
       </div>
     </div>
   </div>

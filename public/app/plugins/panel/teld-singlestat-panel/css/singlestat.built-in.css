@@ -135,9 +135,13 @@
     border-top:2px solid #3a7080;
 }
 .penelBg{
- background-color:#134562 ;
-font-family: "Microsoft YaHei Regular";
-    color:#fff;
+   background-color:#134562 ;
+   font-family: "Microsoft YaHei Regular";
+   color:#fff;
+}
+.panelAutoHeight{
+  display: table-cell;
+  vertical-align: middle;
 }
 .penelBg .titleRight{
     font-size: 36px !important;
@@ -379,6 +383,143 @@ font-family: "Microsoft YaHei Regular";
 .站点 .iconTitle{
   display: inline-block !important;
   background: url("../img/v2/站点.png") center;
+}
+
+.da1_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/1_1.png") center;
+}
+.da1_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/1_2.png") center;
+}
+.da2_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/2_1.png") center;
+}
+.da2_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/2_2.png") center;
+}
+.da3_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/3_1.png") center;
+}
+.da3_2.iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/3_2.png") center;
+}
+.da4_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/4_1.png") center;
+}
+.da4_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/4_2.png") center;
+}
+.da1_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/1_1.png") center;
+}
+.da1_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/1_2.png") center;
+}
+.da2_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/2_1.png") center;
+}
+.da2_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/2_2.png") center;
+}
+.da3_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/3_1.png") center;
+}
+.da3_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/3_2.png") center;
+}
+.da4_1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/4_1.png") center;
+}
+.da4_2 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/4_2.png") center;
+}
+.daallsta .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/allsta.png") center;
+}
+.daappBrisk .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/appBrisk.png") center;
+}
+.daavgservecost .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/avgservecost.png") center;
+}
+.daBuildPile .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/BuildPile.png") center;
+}
+.dabuildsta .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/buildsta.png") center;
+}
+.dachargeDegrees .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/chargeDegrees.png") center;
+}
+.dachargingNumberCount .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/chargingNumberCount.png") center;
+}
+.daconsumeMoney .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/consumeMoney.png") center;
+}
+.daH .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/H.png") center;
+}
+.daH1 .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/H1.png") center;
+}
+.daOperatePile .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/OperatePile.png") center;
+}
+.darechargeMoney .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/rechargeMoney.png") center;
+}
+.darevers .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/revers.png") center;
+}
+.darunsta .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/runsta.png") center;
+}
+.daStrategy .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/Strategy.png") center;
+}
+.daYYZDS .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/YYZDS.png") center;
+}
+.daZDRJCDL .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/ZDRJCDL.png") center;
+}
+.daZJFWDBS .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/ZJFWDBS.png") center;
 }
 
 /*上下两行的标题栏*/
