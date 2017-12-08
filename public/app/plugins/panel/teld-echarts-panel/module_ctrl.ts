@@ -9,7 +9,7 @@ import kbn from 'app/core/utils/kbn';
 import config from 'app/core/config';
 import appEvents from 'app/core/app_events';
 import TimeSeries from 'app/core/time_series2';
-
+import { colors } from 'app/core/core';
 import { MetricsPanelCtrl, loadPluginCss } from 'app/plugins/sdk';
 
 import echarts from 'echarts';
@@ -48,7 +48,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       category: {
         show: true,
         type: 'category',
-        boundaryGap: false,
+        //boundaryGap: false,
         /**
          * 在类目轴中，也可以设置为类目的序数（如类目轴 data: ['类A', '类B', '类C'] 中，序数 2 表示 '类C'。也可以设置为负数，如 -3）。
          * min: 'dataMin',
@@ -61,8 +61,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       value: {
         show: true,
         type: 'value',
-        min: 'dataMin',
-        max: 'dataMax',
+        // min: 'dataMin',
+        // max: 'dataMax',
         // axisLabel: {
         //   formatter: this.panel.formatter.yAxis.axisLabel.formatter.bind(this)
         // }
@@ -85,6 +85,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
+    xAxisMode: "time",
+    //xAxisMode: "series",
     formatter: {
       value: { format: 'teldString' },
       category: { format: 'teldString' },
@@ -520,9 +522,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         }
 
         let { value, name } = _.zipObject(zipObject, pointArray);
-        name = this.categoryFormat(name);
-        value = this.valueFormat(value);
-        return { value: [`${name}`, value] };
+        if (this.isSeriesBar()) {
+          value = this.valueFormat(value);
+          return value;
+        } else {
+          name = this.categoryFormat(name);
+          value = this.valueFormat(value);
+          return { value: [`${name}`, value] };
+        }
         //return { value: value };
       });
 
@@ -696,6 +703,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     return returnValue;
   }
+  serie2cateAxisSerie(series, axis) {
+    let axisData = series.map(serie => serie.name);
+
+    return _.defaultsDeep({ data: axisData }, axis);
+  }
 
   serie2cateAxis(serie, axis) {
     let axisData = serie.data.map(serieData => {
@@ -715,7 +727,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     switch (axisType) {
       case  this.ecConf.axis.category:
-        axis = this.categoryAxisAdapter(serie);
+        if (this.isSeriesBar()) {
+          axis = this.serie2cateAxisSerie(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
+        } else {
+          axis = this.categoryAxisAdapter(serie);
+        }
         break;
 
       case this.ecConf.axis.value:
@@ -776,15 +792,40 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return legendData;
   }
 
+  getBarSerieMode() {
+    var series = [{
+      type: 'bar',
+      data: this.ecSeries.map((s, index) => {
+        var colorIndex = index % colors.length;
+        var color = colors[colorIndex];
+        var itemStyle = { normal: { color } };
+        return { value: s.data[0], itemStyle };
+      })
+    }];
+
+    return series;
+  }
+
   getSeries() {
     let series = this.ecSeries;
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
-      case this.ecConf.series.bar.type:
         series = _.cloneDeep(this.ecSeries).map(item => { item.data.map(d => { d.value = d.value[1]; return d; }); return item; });
+        break;
+      case this.ecConf.series.bar.type:
+        if (this.isSeriesBar()) {
+          series = this.getBarSerieMode();
+        } else {
+          series = _.cloneDeep(this.ecSeries).map(item => { item.data.map(d => { d.value = d.value[1]; return d; }); return item; });
+        }
         break;
     }
     return series;
+  }
+
+  isSeriesBar() {
+    var mode = this.panel.xAxisMode;
+    return this.panel.serieType === "bar" && mode === "series";
   }
 
   onRender() {
@@ -796,7 +837,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
 
     let xAxis, categoryAxis;
-    xAxis = categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
+    if (this.isSeriesBar()) {
+      xAxis = categoryAxis = this.axisAdapter(this.ecSeries, this.ecConf.axis.category);
+    } else {
+      xAxis = categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
+    }
 
     let yAxis, valueAxis;
     yAxis = valueAxis = this.valueAxisAdapter();
