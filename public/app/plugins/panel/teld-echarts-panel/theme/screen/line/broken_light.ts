@@ -243,7 +243,7 @@ export default {
       }
     },
     "textStyle": {
-      "color": "#000"
+      "color": "#555"
     },
     backgroundColor: '#ECECEC'
   },

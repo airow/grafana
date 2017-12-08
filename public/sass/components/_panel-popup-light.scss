@@ -1,5 +1,6 @@
 $font-size32: 32px;
 $font-size36: 36px;
+$font-size16: 16px;
 
 .teld_panel{
   position: absolute;
@@ -54,8 +55,8 @@ $font-size36: 36px;
     text-align: center;
     a{
       display: block;
-      color: $blue-4;
-      font-size:$font-size32 ;
+      color: "#333";
+      font-size: 20px;
       font-family: $font-family-teld;
       i{
         width: 30px;
@@ -81,7 +82,7 @@ $font-size36: 36px;
   }
   .head_name{
     color: #fff;
-    font-size:$font-size36 ;
+    font-size:$font-size16 ;
     font-family: $font-family-teld2;
   }
 }
@@ -89,7 +90,7 @@ $font-size36: 36px;
 .teld_panel_popup .teld_box{
   // display: none;
   padding: 0 58px;
-  border: 1px solid $blue-2;
+  border: 1px solid $gray-6;
   // background-color: $dark-6;
   // height:752px ;
   height: 100%;
@@ -104,17 +105,21 @@ $font-size36: 36px;
     width: 100%;
     table-layout: fixed;
     thead th,tbody td{
-      border-bottom: 1px solid $blue-3;
-      color: $blue-4;
-      font-size:$font-size32 ;
+      border-bottom: 1px solid #fff;
+      color: #555;
+      font-size:$font-size16 ;
       font-family: $font-family-teld;
-      height: 64px;
-      line-height: 64px;
+      height: 32px;
+      line-height: 32px;
       text-align: center;
-      border-right: 1px solid $blue-3;
+      border-right: 1px solid #fff;
       &:last-child{
         border-right: none
       }
+    }
+    thead th{
+      color: #2AB2E4;
+      background: #ECECEC;
     }
   }
 }

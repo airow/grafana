@@ -48,7 +48,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       category: {
         show: true,
         type: 'category',
-        boundaryGap: false,
+        //boundaryGap: false,
         /**
          * 在类目轴中，也可以设置为类目的序数（如类目轴 data: ['类A', '类B', '类C'] 中，序数 2 表示 '类C'。也可以设置为负数，如 -3）。
          * min: 'dataMin',
@@ -61,8 +61,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       value: {
         show: true,
         type: 'value',
-        min: 'dataMin',
-        max: 'dataMax',
+        // min: 'dataMin',
+        // max: 'dataMax',
         // axisLabel: {
         //   formatter: this.panel.formatter.yAxis.axisLabel.formatter.bind(this)
         // }

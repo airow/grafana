@@ -10,9 +10,12 @@ import auto_color from '../../auto_color';
 import bar_yellow from './bar_light_yellow';
 import light_yellow from './bar_light_yellow';
 
-let theme = { bar,dark, light};
+let theme = { default: bar, dark, light };
 
-auto_color(theme, { bar_yellow,bar_light,bar_dark ,light_yellow});
+auto_color(theme, {
+  default_yellow: bar_yellow, default_light: bar_light, default_dark: bar_dark,
+  light_yellow
+});
 
 // _.forEach(theme, function (value, key) {
 //   echarts.registerTheme(key, value);

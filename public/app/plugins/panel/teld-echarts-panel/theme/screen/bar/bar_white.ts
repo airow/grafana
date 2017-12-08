@@ -31,7 +31,6 @@ var option = {
     }
   },
   "bar": {
-    "barWidth": 8,
     "itemStyle": {
       "normal": {
         "color": "#7EB26D"
@@ -39,7 +38,7 @@ var option = {
     }
   },
   "categoryAxis": {
-    boundaryGap: false,
+    boundaryGap: true,
     "axisLine": {
       "show": true,
       "lineStyle": {
@@ -50,16 +49,17 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": "#444343"
-      }
+      },
+      "alignWithLabel": true
     },
     "axisLabel": {
       "show": true,
       "margin": 10,
       "rotate": 40,
       "textStyle": {
-        "color": "#333",
-        "fontFamily": "Microsoft YaHei Light",
-        "fontSize": 16,
+        "color": "#555",
+        "fontFamily": "Microsoft YaHei Regular",
+        "fontSize": 12,
         // "align":"left"
       }
     },
@@ -87,22 +87,22 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisLabel": {
       "show": true,
       "margin": 10,
       "textStyle": {
-        "color": "#333",
-        "fontFamily": "Microsoft YaHei Light",
-        "fontSize": 16
+        "color": "#555",
+        "fontFamily": "Microsoft YaHei Regular",
+        "fontSize": 12
       }
     },
     "splitLine": {
@@ -218,10 +218,15 @@ var option = {
     "trigger": 'axis',
     "axisPointer": {
       "type": 'cross',
-      "label": {
-        "backgroundColor": '#6a7985'
+      lineStyle: {
+        color: "#BA3232",
+        width: 1,
       }
-    }
+    },
+    textStyle: {
+      color: "#555"
+    },
+    backgroundColor: '#ECECEC'
   },
   "visualMap": {
     "color": [
