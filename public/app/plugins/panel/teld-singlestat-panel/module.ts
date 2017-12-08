@@ -36,6 +36,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       tmpl: [
         '<div ng-dblclick="click()" ng-style="customStyle" ng-class="{\'panelAutoHeight\':autoHeight}" ',
         ' class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        ' <span ng-if="tip.enable" ng-style="tip.style" style="z-index:1;position: absolute;">',
+        ' <i class="grafana-tip fa fa-question-circle ng-scope" bs-tooltip="tip.context" data-original-title="" title=""></i></span>',
         ' <div class="titleRight">',
         '   <span ng-style="postfixStyle" ng-bind="postfix"></span>&nbsp;<span ng-style="valueStyle" ng-bind="rightValue"></span>',
         ' </div>',
@@ -204,6 +206,14 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   panelDefaults = {
     autoHeight: false,
     customStyle: { enable: false, style: {} },
+    tip: {
+      enable: false,
+      context: '',
+      style: {
+        top: '-24px',
+        right: '10px'
+      }
+    },
     layout: 'LR',
     borderClass: '',
     bgClass: '',
@@ -799,6 +809,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         //{ 'backgroundColor': 'green', color: 'red' };
         subScope.customStyle = panel.customStyle.style;
       }
+      subScope.tip = panel.tip;
       subScope.iconClass = panel.iconClass;
       subScope.heightClass = panel.heightClass;
 
