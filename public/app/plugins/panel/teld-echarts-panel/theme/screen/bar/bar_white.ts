@@ -42,13 +42,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       },
       "alignWithLabel": true
     },
@@ -67,10 +67,9 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#f4f4f4"
         ],
-        "width": 1,
-        "opacity": 0.4
+        "width": 2
       }
     },
     "splitArea": {
@@ -109,10 +108,9 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#f4f4f4"
         ],
-        "width": 1,
-        "opacity": 0.4
+        "width": 2
       }
     },
     "splitArea": {
@@ -129,13 +127,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisLabel": {
@@ -148,7 +146,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#f4f4f4"
         ]
       }
     },
@@ -166,13 +164,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#444343"
+        "color": "#555"
       }
     },
     "axisLabel": {
@@ -185,7 +183,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#444343"
+          "#f4f4f4"
         ]
       }
     },
@@ -250,7 +248,7 @@ var option = {
     }
   },
   "grid": {
-    "top": "82",
+    "top": "25",
     "left": "14",
     "right": "14",
     "bottom": "50",
