@@ -241,18 +241,14 @@ export default {
     axisPointer: {
       type: 'line',
       lineStyle: {
-        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-          offset: 0, color: 'rgba(4,238,241,0.8)'// 0% 处的颜色
-        }, {
-          offset: 1, color: 'rgba(25,92,160,0.2)' // 100% 处的颜色
-        }], false),
-        width: 3,
+        color: "#BA3232",
+        width: 1
       }
     },
     formatter: ["<div style='left:-50px;top:-80px;border:0px solid #000;",
       "position:relative;width:74px;height:24px;line-height:24px;",
-      "background:#086c89;;border-radius:4px;text-align:center;'>",
-      "	<div style='position:absolute;color:#086c89;width: 0px;height:0px;height:0px;",
+      "background:#000;;border-radius:4px;text-align:center;'>",
+      "	<div style='position:absolute;color:#000;width: 0px;height:0px;height:0px;",
       "	line-height: 0px;border-width: 10px 15px 0;",
       "	border-style: solid dashed dashed dashed;border-left-color: transparent;",
       "	border-right-color: transparent;bottom: -10px;right: 50%;margin-right:-15px'>",

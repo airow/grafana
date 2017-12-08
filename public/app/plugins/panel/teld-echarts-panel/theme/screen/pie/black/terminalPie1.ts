@@ -85,11 +85,18 @@ var option = {
   "legend": {
     "textStyle": {
       "color": "#fff"
-    }
+    },
+    itemWidth: 15,
+    itemHeight: 3
   },
   "tooltip": {
     "trigger": 'item',
-    "formatter": "{b} : {c} ({d}%)"
+    "formatter": "{b} : {c} ({d}%)",
+    textStyle: {
+      color: "#fff",
+      fontSize: 16
+    },
+    backgroundColor: '#2AB2E4'
   },
   "timeline": {
     "lineStyle": {

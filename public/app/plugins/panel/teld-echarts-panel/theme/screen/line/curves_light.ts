@@ -230,9 +230,9 @@ var chargTrend_24h = {
     }
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: 'item',
     "textStyle": {
-      "color": "#000"
+      "color": "#555"
     },
     axisPointer: {
       type: 'line',

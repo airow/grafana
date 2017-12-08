@@ -31,7 +31,6 @@ var option = {
     }
   },
   "bar": {
-    "barWidth": 8,
     "itemStyle": {
       "normal": {
         "color": "#7EB26D"
@@ -39,7 +38,7 @@ var option = {
     }
   },
   "categoryAxis": {
-    boundaryGap: false,
+    boundaryGap: true,
     "axisLine": {
       "show": true,
       "lineStyle": {
@@ -50,7 +49,8 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": "#333"
-      }
+      },
+      "alignWithLabel": true
     },
     "axisLabel": {
       "show": true,
@@ -58,8 +58,8 @@ var option = {
       "rotate": 40,
       "textStyle": {
         "color": "#fff",
-        "fontFamily": "Microsoft YaHei Light",
-        "fontSize": 16,
+        "fontFamily": "Microsoft YaHei Regular",
+        "fontSize": 12,
         // "align":"left"
       }
     },
@@ -102,7 +102,7 @@ var option = {
       "textStyle": {
         "color": "#fff",
         "fontFamily": "Microsoft YaHei Light",
-        "fontSize": 16
+        "fontSize": 12
       }
     },
     "splitLine": {
@@ -221,7 +221,8 @@ var option = {
       "label": {
         "backgroundColor": '#6a7985'
       }
-    }
+    },
+    backgroundColor: '#000'
   },
   "visualMap": {
     "color": [
