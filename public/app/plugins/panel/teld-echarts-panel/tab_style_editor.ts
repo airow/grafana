@@ -15,6 +15,11 @@ export class TabStyleEditorCtrl {
   getSerieType = () => {
     return _.keys(this.panelCtrl.ecConf.series);
   }
+
+  getXAxisMode = () => {
+    return ['time', 'series'];
+  }
+
   getThemeName: Function;
 
 
