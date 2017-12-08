@@ -111,21 +111,47 @@
         </div>
       </div>
     </div>
-    <div class="gf-form-inline">
-        <gf-form-switch  class="gf-form" label-class="width-8" label="customStyle" checked="ctrl.panel.customStyle.enable" on-change="ctrl.render()"></gf-form-switch>
-      <div class="gf-form">
-        <label class="gf-form-label width-7">bg color</label>
-        <span class="gf-form-label">
-          <spectrum-picker ng-dblclick="ctrl.panel.customStyle.style.backgroundColor=null" ng-model="ctrl.panel.customStyle.style.backgroundColor" ng-change="ctrl.render()"></spectrum-picker>
-        </span>
-        <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.backgroundColor" ng-change="ctrl.render()" ng-model-onblur>
+  </div>
+
+  <div class="editor-row">
+      <div class="section gf-form-group">
+        <h5 class="section-heading">customStyle</h5>
+        <div class="gf-form-inline">
+            <gf-form-switch  class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.customStyle.enable" on-change="ctrl.render()"></gf-form-switch>
+            <div class="gf-form">
+              <label class="gf-form-label width-7">bg color</label>
+              <span class="gf-form-label">
+                <spectrum-picker ng-dblclick="ctrl.panel.customStyle.style.backgroundColor=null" ng-model="ctrl.panel.customStyle.style.backgroundColor" ng-change="ctrl.render()"></spectrum-picker>
+              </span>
+              <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.backgroundColor" ng-change="ctrl.render()" ng-model-onblur>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label width-7">color</label>
+              <span class="gf-form-label">
+                <spectrum-picker ng-dblclick="ctrl.panel.customStyle.style.color=null" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()"></spectrum-picker>
+              </span>
+              <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()" ng-model-onblur>
+            </div>
+          </div>
       </div>
-      <div class="gf-form">
-        <label class="gf-form-label width-7">color</label>
-        <span class="gf-form-label">
-          <spectrum-picker ng-dblclick="ctrl.panel.customStyle.style.color=null" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()"></spectrum-picker>
-        </span>
-        <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()" ng-model-onblur>
+  </div>
+  <div class="editor-row">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Tip</h5>
+      <div class="gf-form-inline">
+          <gf-form-switch  class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.tip.enable" on-change="ctrl.render()"></gf-form-switch>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">context</label>
+            <input type="text" class="gf-form-input width-20" ng-model="ctrl.panel.tip.context" ng-change="ctrl.render()" ng-model-onblur>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">top</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.tip.style.top" ng-change="ctrl.render()" ng-model-onblur>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label width-7">right</label>
+            <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.tip.style.right" ng-change="ctrl.render()" ng-model-onblur>
+          </div>
       </div>
     </div>
   </div>

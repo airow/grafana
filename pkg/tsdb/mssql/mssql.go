@@ -71,7 +71,7 @@ func NewMsSqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 		port = 1433
 	}
 
-	cnnstr := fmt.Sprintf("server=%s;port=%d;database=%s;user id=%s;password=%s;connection timeout=30",
+	cnnstr := fmt.Sprintf("server=%s;port=%d;database=%s;user id=%s;password=%s;connection timeout=1200; dial timeout=1200",
 		url,
 		port,
 		datasource.Database,
