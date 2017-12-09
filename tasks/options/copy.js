@@ -50,6 +50,28 @@ module.exports = function(config) {
         'isarray/**/*',
       ],
       dest: '<%= srcDir %>/vendor/npm'
+    },
+
+    dist4330:{
+      cwd: '<%= genDir %>',
+      expand: true,
+      src: ['app/conf/wsUrlConf.4330.js'],
+      dest: '<%= genDir %>/app/conf',
+      rename: function(dest) {
+        console.log(dest + '/wsUrlConf.js');
+        return dest + '/wsUrlConf.js';
+      }
+    },
+    dist3420:{
+      fileName:3420,
+      cwd: '<%= genDir %>',
+      expand: true,
+      src: ['app/conf/wsUrlConf.3420.js'],
+      dest: '<%= genDir %>/app/conf',
+      rename: function(dest) {
+        console.log(dest + '/wsUrlConf.js');
+        return dest + '/wsUrlConf.js';
+      }
     }
 
   };
