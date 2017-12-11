@@ -26,6 +26,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     targets: [{}],
     transform: 'timeseries_to_columns',
     jsonr2c: false,
+    nowrap: false,
     pageSize: null,
     showHeader: true,
     styles: [
