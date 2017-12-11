@@ -41,12 +41,12 @@ module.exports = function(grunt) {
     'teld:dist_start',
     'copy:dist4330',
     'teld:dist_post',
-    'dist_finally'
+    'teld:dist_finally'
   ]);
   grunt.registerTask('teld:dist3420', [
     'teld:dist_start',
     'copy:dist3420',
     'teld:dist_post',
-    'dist_finally'
+    'teld:dist_finally'
   ]);
 };
