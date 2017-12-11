@@ -112,6 +112,14 @@ angular.module('$strap.directives').directive('bsTooltip', [
           });
         }
         element.tooltip({
+          placement: function () {
+            var pos = this.getPosition();
+            var placement = this.$element.data("placement") || "top";
+            var h = this.$tip.text().length / 18 * 12;
+            h = h < 30 ? 30 : h;
+            placement = placement === 'top' && pos.top < h ? 'bottom' : placement;
+            return placement;
+          },
           title: function () {
             return angular.isFunction(value) ? value.apply(null, arguments) : value;
           },
