@@ -85,7 +85,6 @@ func NewMsSqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 	//cnnstr = "odbc:driver={SQL Server};Server=dev-sh-ptdb.chinacloudapp.cn;Database=TeldETL;uid=sqladmin;pwd=123456a?;"
 	//cnnstr = "odbc:server=dev-sh-ptdb.chinacloudapp.cn;user id=sqladmin;password=123456a?;database=TeldETL;connection timeout=30"
 	endpoint.log.Debug("getEngine", "connection", cnnstr)
-	fmt.Println(cnnstr)
 
 	if err := endpoint.sqlEngine.InitEngine("mssql", datasource, cnnstr); err != nil {
 		return nil, err
