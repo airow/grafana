@@ -33,7 +33,6 @@ module.exports = function(grunt) {
       'clean:teldrelease',
       'copy:public_gen_to_releas',
       'clean:teldconf',
-      'compress:public_dist',
     ]);
 
 
@@ -41,12 +40,14 @@ module.exports = function(grunt) {
     'teld:dist_start',
     'copy:dist4330',
     'teld:dist_post',
-    'teld:dist_finally'
+    'teld:dist_finally',
+    'compress:public_dist4330'
   ]);
   grunt.registerTask('teld:dist3420', [
     'teld:dist_start',
     'copy:dist3420',
     'teld:dist_post',
-    'teld:dist_finally'
+    'teld:dist_finally',
+    'compress:public_dist3420'
   ]);
 };

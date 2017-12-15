@@ -47,6 +47,32 @@ module.exports = function(config) {
           dest: '',
         }
       ]
+    },
+    public_dist4330:{
+      options: {
+        archive: '<%= destDir %>/'+require('moment')().format("YYYY-MM-DD HHmm")+' public_dist_4330.zip'
+      },
+      files : [
+        {
+          expand: true,
+          cwd: '<%= baseDir %>/public_release',
+          src: ['**/*'],
+          dest: '',
+        }
+      ]
+    },
+    public_dist3420:{
+      options: {
+        archive: '<%= destDir %>/'+require('moment')().format("YYYY-MM-DD HHmm")+' public_dist_3420.zip'
+      },
+      files : [
+        {
+          expand: true,
+          cwd: '<%= baseDir %>/public_release',
+          src: ['**/*'],
+          dest: '',
+        }
+      ]
     }
   };
 
