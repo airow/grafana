@@ -855,7 +855,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
     function updateSubScope(value) {
       var orgiValue = value;
-      var decimalInfo = that.getDecimalsForValue(value);
+      var decimalInfo = that.getDecimalsForValue(+value);
       value = kbn.roundValue(value, decimalInfo.decimals);
       value = kbn.toFixed(value, decimalInfo.decimals);
 
