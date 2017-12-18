@@ -76,7 +76,7 @@ export class TableRenderer {
           return '-';
         }
 
-        if (_.isString(v)) {
+        if (_.isNaN(+v) && _.isString(v)) {
           return this.defaultCellFormater(v, style);
         }
 
