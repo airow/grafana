@@ -102,7 +102,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       ]
     },
     iconClass: [
-      { group: 'screen', name: '无', value: 'iconTip0' },
+      { name: '无', value: '' },
       { group: 'screen', name: '充电量及充电次数', value: 'charg_capacity' },
       { group: 'screen', name: '充电人数', value: 'charg_num' },
       { group: 'screen', name: '工单数', value: 'orders_num' },
