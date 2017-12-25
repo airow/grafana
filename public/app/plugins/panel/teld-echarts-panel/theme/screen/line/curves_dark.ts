@@ -59,13 +59,13 @@ var chargTrend_24h = {
     "axisLine": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -82,7 +82,7 @@ var chargTrend_24h = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#434343"
+          "#444343"
         ],
         "width": 1,
         "opacity": 1
@@ -102,13 +102,13 @@ var chargTrend_24h = {
     "axisLine": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": false,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -124,7 +124,7 @@ var chargTrend_24h = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#434343"
+          "#444343"
         ],
         "width": 1,
         "opacity": 1
@@ -144,13 +144,13 @@ var chargTrend_24h = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -163,7 +163,7 @@ var chargTrend_24h = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#ccc"
+          "#444343"
         ]
       }
     },
@@ -181,13 +181,13 @@ var chargTrend_24h = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -200,7 +200,7 @@ var chargTrend_24h = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#ccc"
+          "#444343"
         ]
       }
     },

@@ -3,7 +3,16 @@
 import echarts from 'echarts';
 
 var option = {
-  "color": [ "#d87c7c","#919e8b"],
+  // "color": [ "#d87c7c","#919e8b"],
+  "color": [ "#7FB26F","#E9B744",
+  "#71D0DF",
+  "#ED8343",
+  "#E04B46",
+  "#2579BF",
+  "#B943A8",
+  "#705D9E",
+  "#518644",
+  "#CBA21F"],
   "backgroundColor": "#FBFBFB",
   "textStyle": {},
   "title": {

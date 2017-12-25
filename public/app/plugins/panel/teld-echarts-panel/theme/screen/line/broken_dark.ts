@@ -65,13 +65,13 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -89,7 +89,7 @@ export default {
       "show": true,
       "lineStyle": {
         "color": [
-          "#434343"
+          "#444343"
         ],
         "width": 1,
         "opacity": 1
@@ -109,13 +109,13 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -131,7 +131,7 @@ export default {
       "show": true,
       "lineStyle": {
         "color": [
-          "#434343"
+          "#444343"
         ],
         "width": 1,
         "opacity": 1
@@ -151,19 +151,19 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "splitLine": {
@@ -188,19 +188,19 @@ export default {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
       "show": true,
       "textStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "splitLine": {

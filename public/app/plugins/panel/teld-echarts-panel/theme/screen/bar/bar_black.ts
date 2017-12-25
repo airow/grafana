@@ -42,13 +42,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       },
       "alignWithLabel": true
     },
@@ -67,10 +67,10 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#333"
+          "#444343"
         ],
         "width": 1,
-        "opacity": 0.4
+        "opacity": 1
       }
     },
     "splitArea": {
@@ -87,13 +87,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -109,10 +109,10 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#333"
+          "#444343"
         ],
         "width": 1,
-        "opacity": 0.4
+        "opacity": 1
       }
     },
     "splitArea": {
@@ -129,13 +129,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -148,7 +148,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#333"
+          "#444343"
         ]
       }
     },
@@ -166,13 +166,13 @@ var option = {
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#444343"
       }
     },
     "axisLabel": {
@@ -185,7 +185,7 @@ var option = {
       "show": true,
       "lineStyle": {
         "color": [
-          "#333"
+          "#444343"
         ]
       }
     },
