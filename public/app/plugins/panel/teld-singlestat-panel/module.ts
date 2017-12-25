@@ -346,7 +346,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     this.fontSizes = ['20%', '30%','50%','70%','80%','100%', '110%', '120%', '150%', '170%', '200%'];
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-singlestat-panel/editor.html', 2);
     this.addEditorTab('Echarts Events', finglestatEchartsEventEditorComponent);
-    //this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-singlestat-panel/mappings.html', 3);
+    this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-singlestat-panel/mappings.html', 3);
     this.unitFormats = kbn.getUnitFormats();
   }
 
@@ -487,7 +487,6 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
     const datapoint = tableData[0][0];
     data.value = datapoint[this.panel.tableColumn];
-
     if (_.isString(data.value)) {
       data.valueFormatted = _.escape(data.value);
       data.value = 0;
@@ -499,7 +498,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       data.valueRounded = kbn.roundValue(data.value, this.panel.decimals || 0);
     }
 
-    //this.setValueMapping(data);
+    // this.setValueMapping(data);
   }
 
   setColoring(options) {
@@ -644,7 +643,57 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       data.valueFormatted = "no value";
     }
   };
+  setValueMapping(data) {
+    // check value to text mappings if its enabled
+    if (this.panel.mappingType === 1) {
+      for (let i = 0; i < this.panel.valueMaps.length; i++) {
+        let map = this.panel.valueMaps[i];
+        // special null case
+        if (map.value === 'null') {
+          if (data.value === null || data.value === void 0) {
+            data.valueFormatted = map.text;
+            data.value = map.text;
+            return;
+          }
+          continue;
+        }
 
+        // value/number to text mapping
+        var value = parseFloat(map.value);
+        if (value === data.valueRounded) {
+          data.valueFormatted = map.text;
+          data.value = map.text;
+          return;
+        }
+      }
+    } else if (this.panel.mappingType === 2) {
+      for (let i = 0; i < this.panel.rangeMaps.length; i++) {
+        let map = this.panel.rangeMaps[i];
+        // special null case
+        if (map.from === 'null' && map.to === 'null') {
+          if (data.value === null || data.value === void 0) {
+            data.valueFormatted = map.text;
+            data.value = map.text;
+            return;
+          }
+          continue;
+        }
+
+        // value/number to range mapping
+        var from = parseFloat(map.from);
+        var to = parseFloat(map.to);
+        if (to >= data.valueRounded && from <= data.valueRounded) {
+          data.valueFormatted = map.text;
+          data.value = map.text;
+          return;
+        }
+      }
+    }
+
+    if (data.value === null || data.value === void 0) {
+      data.valueFormatted = "no value";
+    }
+  }
   removeValueMap(map) {
     var index = _.indexOf(this.panel.valueMaps, map);
     this.panel.valueMaps.splice(index, 1);
@@ -799,7 +848,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
     function getBigValueHtml() {
 
-      var value = applyColoringThresholds(data.value, data.valueFormatted);
+      // var value = applyColoringThresholds(data.value, data.valueFormatted);
+      var value = data.value;
 
       subScope.layout = panel.layout;
       subScope.borderClass = panel.borderClass;
@@ -858,6 +908,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       var decimalInfo = that.getDecimalsForValue(+value);
       value = kbn.roundValue(value, decimalInfo.decimals);
       value = kbn.toFixed(value, decimalInfo.decimals);
+      subScope.valueRounded= kbn.roundValue(value, decimalInfo.decimals);
 
       value = value / (that.panel.divisor);
       value = kbn.toFixed(value, decimalInfo.decimals);
@@ -909,10 +960,16 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         that.variableSrv.variables.push(variable);
         that.variableSrv.templateSrv.variableInitialized(variable);
       }
-
       subScope.value = value;
+      let subData = {
+        value: value,
+        valueFormatted: value,
+        valueRounded: subScope.valueRounded
+      };
+
+      that.setValueMapping(subData);
       if (panel.layout === 'LR') {
-        subScope[`${panel.valuePosition}Value`] = subScope.value;
+        subScope[`${panel.valuePosition}Value`] = subData.value;
         if (panel.valuePosition === 'left') { subScope.prefix = ''; }
         if (panel.valuePosition === 'right') { subScope.postfix = ''; }
       }
