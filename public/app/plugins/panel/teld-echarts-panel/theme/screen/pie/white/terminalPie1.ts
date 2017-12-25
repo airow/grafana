@@ -172,10 +172,10 @@ var option = {
     }
   },
   "grid": {
-    "top": "82",
+    "top": "25",
     "left": "14",
     "right": "14",
-    "bottom": "18",
+    "bottom": "50",
     "containLabel": true
   }
 };
