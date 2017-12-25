@@ -23,7 +23,7 @@ loadPluginCssPath({
 
 class SingleStatCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
-
+  updateSubScopeCounter = 0;
   dataType = 'timeseries';
   series: any[];
   data: any;
@@ -398,7 +398,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-
+    this.updateSubScopeCounter = 0;
     const data: any = {};
     if (dataList.length > 0 && dataList[0].type === 'table') {
       this.dataType = 'table';
@@ -714,7 +714,6 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     return returnVal;
   }
 
-
   link(scope, elem, attrs, ctrl) {
     var that = this;
     var $location = this.$location;
@@ -868,10 +867,12 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         value = returnVal = that.calcExpression(context);
 
         if (isNaN(returnVal)) {
-          that.$timeout(() => {
-            updateSubScope(orgiValue);
-            console.log('补偿计算-updateSubScope');
-          }, 300);
+          if (that.updateSubScopeCounter++ < 10) {
+            that.$timeout(() => {
+              updateSubScope(orgiValue);
+              console.log('补偿计算-updateSubScope');
+            }, 300);
+          }
           value = "";
         } else {
           value = kbn.toFixed(value, decimalInfo.decimals);

@@ -49,6 +49,10 @@ func LoginView(c *middleware.Context) {
 	c.Redirect(setting.AppSubUrl + "/")
 }
 
+func r302(c *middleware.Context) {
+	c.Redirect("http://localhost:3000/dashboard/db/000-cheng-se?orgId=1")
+}
+
 func tryLoginUsingRememberCookie(c *middleware.Context) bool {
 	// Check auto-login.
 	uname := c.GetCookie(setting.CookieUserName)
