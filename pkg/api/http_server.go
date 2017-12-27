@@ -196,7 +196,7 @@ func (hs *HttpServer) mapStaticCache(m *macaron.Macaron, rootDir string, dir str
 		now := time.Now()
 		t := time.Date(now.Year(), now.Month(), now.Day(), 8, 0, 0, 0, time.UTC)
 		expires := t.Add(24 * 60 * time.Minute).UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
-		fmt.Println(expires)
+		//fmt.Println(expires)
 		c.Resp.Header().Set("Expires", expires)
 	}
 
