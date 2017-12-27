@@ -186,6 +186,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { group: 'dataAnalysis', name: 'YYZDS', value: 'daYYZDS' },
       { group: 'dataAnalysis', name: 'ZDRJCDL', value: 'daZDRJCDL' },
       { group: 'dataAnalysis', name: 'ZJFWDBS', value: 'daZJFWDBS' },
+      { group: 'dataAnalysis', name: 'ChargFailNum', value: 'daChargFailNum' },
+      { group: 'dataAnalysis', name: 'ChargFailRate', value: 'daChargFailRate' },
+      { group: 'dataAnalysis', name: 'Dynamic', value: 'daDynamic' },
+      { group: 'dataAnalysis', name: 'Comment', value: 'daComment' },
+      { group: 'dataAnalysis', name: 'Feedback', value: 'daFeedback' },
+      { group: 'dataAnalysis', name: 'Offnetwork', value: 'daOffnetwork' },
+      { group: 'dataAnalysis', name: 'OffnetworkRate', value: 'daOffnetworkRate' },
     ],
     heightClass: {
       LR: [

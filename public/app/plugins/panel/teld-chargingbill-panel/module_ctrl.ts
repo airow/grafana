@@ -116,9 +116,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     this.events.on('panel-initialized', this.onPanelInitialized.bind(this));
 
-    this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
-    this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
-    this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
+    // this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
+    // this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
+    // this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
 
     this.cityCoord = transformGeoMap();
     this.play = true;

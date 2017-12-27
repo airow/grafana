@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	macaron "gopkg.in/macaron.v1"
 
@@ -146,7 +147,7 @@ func (hs *HttpServer) newMacaron() *macaron.Macaron {
 	// hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/theme-twilight.js", "theme-twilight.js")
 	// hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/theme-monokai.js", "theme-monokai.js")
 	// hs.mapStatic(m, setting.StaticRootPath, "vendor/ace-builds-1.2.8/src-min-noconflict/theme-xcode.js", "theme-xcode.js")
-	hs.mapStatic(m, setting.StaticRootPath, "", "public")
+	hs.mapStaticCache(m, setting.StaticRootPath, "", "public")
 	hs.mapStatic(m, setting.StaticRootPath, "robots.txt", "robots.txt")
 
 	m.Use(macaron.Renderer(macaron.RenderOptions{
@@ -171,6 +172,32 @@ func (hs *HttpServer) newMacaron() *macaron.Macaron {
 func (hs *HttpServer) mapStatic(m *macaron.Macaron, rootDir string, dir string, prefix string) {
 	headers := func(c *macaron.Context) {
 		c.Resp.Header().Set("Cache-Control", "public, max-age=3600")
+	}
+
+	if setting.Env == setting.DEV {
+		headers = func(c *macaron.Context) {
+			c.Resp.Header().Set("Cache-Control", "max-age=0, must-revalidate, no-cache")
+		}
+	}
+
+	m.Use(httpstatic.Static(
+		path.Join(rootDir, dir),
+		httpstatic.StaticOptions{
+			SkipLogging: true,
+			Prefix:      prefix,
+			AddHeaders:  headers,
+		},
+	))
+}
+
+func (hs *HttpServer) mapStaticCache(m *macaron.Macaron, rootDir string, dir string, prefix string) {
+	headers := func(c *macaron.Context) {
+		//c.Resp.Header().Set("Cache-Control", "public, max-age=36000")
+		now := time.Now()
+		t := time.Date(now.Year(), now.Month(), now.Day(), 8, 0, 0, 0, time.UTC)
+		expires := t.Add(24 * 60 * time.Minute).UTC().Format("Mon, 02 Jan 2006 15:04:05 GMT")
+		fmt.Println(expires)
+		c.Resp.Header().Set("Expires", expires)
 	}
 
 	if setting.Env == setting.DEV {

@@ -277,6 +277,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   ecInstanceResize(evt, payload) {
+    console.log('=ecInstanceResize=');
+    console.log(this.ecInstance);
+    console.log('=ecInstanceResize=');
     if (this.ecInstance) {
       this.$timeout(() => {
         this.ecInstance.resize();
