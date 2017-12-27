@@ -489,8 +489,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     data.value = datapoint[this.panel.tableColumn];
     if (_.isString(data.value)) {
       data.valueFormatted = _.escape(data.value);
-      data.value = 0;
-      data.valueRounded = 0;
+      // data.value = 0;
+      // data.valueRounded = 0;
+      data.value = data.value;
+      data.valueRounded = data.value;
     } else {
       const decimalInfo = this.getDecimalsForValue(data.value);
       const formatFunc = kbn.valueFormats[this.panel.format];
@@ -498,7 +500,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       data.valueRounded = kbn.roundValue(data.value, this.panel.decimals || 0);
     }
 
-    // this.setValueMapping(data);
+    this.setValueMapping(data);
   }
 
   setColoring(options) {
