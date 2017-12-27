@@ -245,17 +245,17 @@ export default {
         width: 1
       }
     },
-    formatter: ["<div style='left:-50px;top:-80px;border:0px solid #000;",
-      "position:relative;width:74px;height:24px;line-height:24px;",
-      "background:#000;;border-radius:4px;text-align:center;'>",
-      "	<div style='position:absolute;color:#000;width: 0px;height:0px;height:0px;",
-      "	line-height: 0px;border-width: 10px 15px 0;",
-      "	border-style: solid dashed dashed dashed;border-left-color: transparent;",
-      "	border-right-color: transparent;bottom: -10px;right: 50%;margin-right:-15px'>",
-      "	</div>",
-      "	{c}",
-      "</div>"].join(""),
-    backgroundColor: 'transparent'
+    // formatter: ["<div style='left:-50px;top:-80px;border:0px solid #000;",
+    //   "position:relative;width:74px;height:24px;line-height:24px;",
+    //   "background:#000;;border-radius:4px;text-align:center;'>",
+    //   "	<div style='position:absolute;color:#000;width: 0px;height:0px;height:0px;",
+    //   "	line-height: 0px;border-width: 10px 15px 0;",
+    //   "	border-style: solid dashed dashed dashed;border-left-color: transparent;",
+    //   "	border-right-color: transparent;bottom: -10px;right: 50%;margin-right:-15px'>",
+    //   "	</div>",
+    //   "	{c}",
+    //   "</div>"].join(""),
+    //backgroundColor: 'transparent'
   },
   "timeline": {
     "lineStyle": {
