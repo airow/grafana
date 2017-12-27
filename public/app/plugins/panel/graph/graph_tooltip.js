@@ -155,6 +155,53 @@ function ($, core) {
     });
 
     elem.bind("plothover", function (event, pos, item) {
+
+      function barHover(plot) {
+        var plotOptions = plot.getOptions();
+        var bars = plotOptions.series.bars;
+        var data = plot.getData();
+        var returnValue = null;
+
+        if (bars.show) {
+          var barLeft, barRight;
+          switch (bars.align) {
+            case "left":
+              barLeft = 0;
+              break;
+            case "right":
+              barLeft = -bars.barWidth;
+              break;
+            default:
+              barLeft = -bars.barWidth / 2;
+              break;
+          }
+
+          barRight = barLeft + bars.barWidth;
+
+          for (var index = 0; index < data.length; index++) {
+
+            if (pos.x >= index + 1 + barLeft &&
+              pos.x <= index + 1 + barRight) {
+              var element = data[index];
+
+              returnValue = {
+                datapoint: element.datapoints.points,
+                dataIndex: 1,
+                series: element,
+                seriesIndex: index
+              };
+              break;
+            }
+          }
+        }
+        return returnValue;
+      }
+
+      if (item === null) {
+        var plot = elem.data().plot;
+        item = barHover(plot);
+      }
+
       self.show(pos, item);
 
       // broadcast to other graph panels that we are hovering!
