@@ -65,7 +65,7 @@ export class GrafanaCtrl {
 }
 
 /** @ngInject */
-export function grafanaAppDirective(playlistSrv, contextSrv) {
+export function grafanaAppDirective(playlistSrv, contextSrv, $timeout) {
   return {
     restrict: 'E',
     controller: GrafanaCtrl,
@@ -209,6 +209,9 @@ export function grafanaAppDirective(playlistSrv, contextSrv) {
           popover.hide();
         }
       });
+
+      // var delay = 1000 * 10;
+      // $timeout(function () { alert(1); }, delay);
     }
   };
 }

@@ -215,7 +215,7 @@ var option = {
   "tooltip": {
     "trigger": 'axis',
     "axisPointer": {
-      "type": 'cross',
+      "type": 'shadow',
       lineStyle: {
         color: "#BA3232",
         width: 1,

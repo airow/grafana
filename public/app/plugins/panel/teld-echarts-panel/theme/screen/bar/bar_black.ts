@@ -217,7 +217,7 @@ var option = {
   "tooltip": {
     "trigger": 'axis',
     "axisPointer": {
-      "type": 'cross',
+      "type": 'shadow',
       "label": {
         "backgroundColor": '#6a7985'
       }

@@ -23,7 +23,7 @@ loadPluginCssPath({
 
 class SingleStatCtrl extends MetricsPanelCtrl {
   static templateUrl = 'module.html';
-
+  updateSubScopeCounter = 0;
   dataType = 'timeseries';
   series: any[];
   data: any;
@@ -186,6 +186,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { group: 'dataAnalysis', name: 'YYZDS', value: 'daYYZDS' },
       { group: 'dataAnalysis', name: 'ZDRJCDL', value: 'daZDRJCDL' },
       { group: 'dataAnalysis', name: 'ZJFWDBS', value: 'daZJFWDBS' },
+      { group: 'dataAnalysis', name: 'ChargFailNum', value: 'daChargFailNum' },
+      { group: 'dataAnalysis', name: 'ChargFailRate', value: 'daChargFailRate' },
+      { group: 'dataAnalysis', name: 'Dynamic', value: 'daDynamic' },
+      { group: 'dataAnalysis', name: 'Comment', value: 'daComment' },
+      { group: 'dataAnalysis', name: 'Feedback', value: 'daFeedback' },
+      { group: 'dataAnalysis', name: 'Offnetwork', value: 'daOffnetwork' },
+      { group: 'dataAnalysis', name: 'OffnetworkRate', value: 'daOffnetworkRate' },
     ],
     heightClass: {
       LR: [
@@ -398,7 +405,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-
+    this.updateSubScopeCounter = 0;
     const data: any = {};
     if (dataList.length > 0 && dataList[0].type === 'table') {
       this.dataType = 'table';
@@ -763,7 +770,6 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     return returnVal;
   }
 
-
   link(scope, elem, attrs, ctrl) {
     var that = this;
     var $location = this.$location;
@@ -919,10 +925,12 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         value = returnVal = that.calcExpression(context);
 
         if (isNaN(returnVal)) {
-          that.$timeout(() => {
-            updateSubScope(orgiValue);
-            console.log('补偿计算-updateSubScope');
-          }, 300);
+          if (that.updateSubScopeCounter++ < 10) {
+            that.$timeout(() => {
+              updateSubScope(orgiValue);
+              console.log('补偿计算-updateSubScope');
+            }, 300);
+          }
           value = "";
         } else {
           value = kbn.toFixed(value, decimalInfo.decimals);

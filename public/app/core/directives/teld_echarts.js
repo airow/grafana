@@ -13,6 +13,7 @@ define([
       return {
         link: function (scope, element) {
           function refreshChart() {
+
             var firstInit = false;
             var theme = (scope.config && scope.config.theme)
               ? scope.config.theme : 'default';
@@ -22,13 +23,24 @@ define([
               ecContainer = $('<div class="ecContainer" style="height:100%;">');
               element.append(ecContainer);
             }
+            if (scope.instance) {
+              console.log('scope.instance.clear()');
+              scope.instance.clear();
+            }
             var chart = scope.instance || (firstInit = true, scope.instance = echarts.init(ecContainer[0], theme));
+            // if (scope.instance) {
+            //   console.log('scope.instance.clear()');
+            //   scope.instance.clear();
+            //   scope.instance.dispose();
+            // }
+            // var chart = scope.instance = echarts.init(ecContainer[0], theme);
+            ecContainer = null;
             if (scope.config && scope.config.dataLoaded === false) {
               chart.showLoading();
             }
 
             if (scope.config && scope.config.dataLoaded) {
-              chart.setOption(scope.option);
+              chart.setOption(scope.option, true);
               chart.resize();
               chart.hideLoading();
             }
@@ -92,6 +104,29 @@ define([
             function (value) { if (value) { refreshChart(); } },
             true
           );
+
+          scope.$on("$destroy", function () {
+            console.log('teld echarts... destroy');
+            if (scope.bmap) {
+              scope.bmap = null;
+            }
+            if (scope.instance) {
+              scope.instance.clear();
+              console.log('teld echarts... clear');
+              scope.instance.dispose();
+              console.log('teld echarts... dispose');
+              scope.option = null;
+              scope.config = null;
+              scope.instance = null;
+              scope.bmap = null;
+              delete scope.option;
+              delete scope.config;
+              delete scope.instance;
+              delete scope.bmap;
+            }
+            element.off();
+            element.remove();
+          });
         },
         scope: {
           option: '=ecOption',

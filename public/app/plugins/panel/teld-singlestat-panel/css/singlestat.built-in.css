@@ -521,6 +521,35 @@
 	display: inline-block !important;
 	background: url("../img/DataAnalysis/ZJFWDBS.png") center;
 }
+.daChargFailNum .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/chargFailNum.png") center;
+}
+.daChargFailRate .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/chargFailRate.png") center;
+}
+.daDynamic .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/Dynamic.png") center;
+}
+.daComment .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/Comment.png") center;
+}
+.daFeedback .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/Feedback.png") center;
+}
+.daOffnetwork .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/Offnetwork.png") center;
+}
+.daOffnetworkRate .iconTitle {
+	display: inline-block !important;
+	background: url("../img/DataAnalysis/OffnetworkRate.png") center;
+}
+
 
 /*上下两行的标题栏*/
 .panelSubHeight{

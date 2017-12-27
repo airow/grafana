@@ -79,6 +79,15 @@ func GetTestDataScenarios(c *middleware.Context) Response {
 	return Json(200, &result)
 }
 
+func Get302(c *middleware.Context) Response {
+	return &NormalResponse{
+		status: 302,
+		header: http.Header{
+			"location": []string{"http://localhost:3000/dashboard/db/000-cheng-se?orgId=1"},
+		},
+	}
+}
+
 func GetInternalMetrics(c *middleware.Context) Response {
 	if metrics.UseNilMetrics {
 		return Json(200, util.DynMap{"message": "Metrics disabled"})

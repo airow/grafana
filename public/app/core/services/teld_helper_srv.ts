@@ -8,10 +8,11 @@ import coreModule from '../core_module';
 class TeldHelperSrv {
 
   varMappingConf: any[];
-
+  counter: number;
   /** @ngInject */
-  constructor(private $location, private backendSrv) {
+  constructor(private $location, private $window, private backendSrv) {
 
+    this.counter = 0;
     this.varMappingConf = [
       { qsKey: 'qs', varPrefix: '' },
       { qsKey: 'var', varPrefix: 'var-' },
@@ -25,8 +26,10 @@ class TeldHelperSrv {
    * search:{qs:{},var:{},_$:{}}
    */
   gotoDashboard(target, search?) {
+    var locationUrl = this.$window.location.origin;
     if (_.startsWith(target, "dashboard://")) {
       let uri = _.replace(target, 'dashboard://', '');
+      locationUrl += `/dashboard/${uri}`;
       this.$location.path(`dashboard/${uri}`);
     } else {
       this.backendSrv.search({ query: target }).then(hits => {
@@ -47,7 +50,16 @@ class TeldHelperSrv {
       }, qs);
     });
 
-    this.$location.search(qs);
+    this.counter++;
+    if (this.counter % 20 === 0) {
+      this.counter = 0;
+      if (false === _.isEmpty(qs)) {
+        locationUrl += '?' + angular.element.param(qs);
+      }
+      this.$window.location.assign(locationUrl);
+    } else {
+      this.$location.search(qs);
+    }
   }
 }
 
