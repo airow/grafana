@@ -34,7 +34,7 @@ $font-size16: 16px;
       width: 30px;
       height: 30px;
       display: inline-block;
-      background: url("/public/img/ddd/close.png")no-repeat top right;
+      background: url("/public/img/ddd/closeBack.png")no-repeat top right;
     }
   }
 
@@ -70,13 +70,13 @@ $font-size16: 16px;
     a.list{
       display: inline-block;
       i{
-        background: url("/public/img/ddd/list.png")no-repeat center;
+        background: url("/public/img/ddd/listBack.png")no-repeat center;
       }
     }
     a.chart{
       display: inline-block;
       i{
-        background: url("/public/img/ddd/chart.png")no-repeat center;
+        background: url("/public/img/ddd/chartBack.png")no-repeat center;
       }
     }
   }
