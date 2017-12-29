@@ -65,7 +65,7 @@ export class GrafanaCtrl {
 }
 
 /** @ngInject */
-export function grafanaAppDirective(playlistSrv, contextSrv, $timeout) {
+export function grafanaAppDirective(playlistSrv, contextSrv, $timeout, $window) {
   return {
     restrict: 'E',
     controller: GrafanaCtrl,
@@ -210,8 +210,16 @@ export function grafanaAppDirective(playlistSrv, contextSrv, $timeout) {
         }
       });
 
-      // var delay = 1000 * 10;
-      // $timeout(function () { alert(1); }, delay);
+      // var delayH = 24 - new Date().getHours() + 6;
+      // var delay = delayH * 3600000;
+
+      var now = new Date();
+      var trigger_hour = 9;
+      var offset_hour;
+      var delayH = (offset_hour = trigger_hour - now.getHours(), offset_hour) > 0 ? offset_hour : offset_hour + 23;
+      var delay = delayH * 3600000;
+      delay -= (now.getMinutes() * 60000);
+      $timeout(function () { $window.location.reload(); }, delay);
     }
   };
 }
