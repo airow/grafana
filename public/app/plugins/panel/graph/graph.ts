@@ -655,36 +655,37 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
         return "%H:%M";
       }
 
-      elem.bind("plotselected", function (event, ranges) {
-        scope.$apply(function() {
-          timeSrv.setTime({
-            from  : moment.utc(ranges.xaxis.from),
-            to    : moment.utc(ranges.xaxis.to),
+      if (panel.disableEvent !== true) {
+        elem.bind("plotselected", function (event, ranges) {
+          scope.$apply(function () {
+            timeSrv.setTime({
+              from: moment.utc(ranges.xaxis.from),
+              to: moment.utc(ranges.xaxis.to),
+            });
           });
         });
-      });
 
-      elem.bind("plotclick", function (event, pos, item) {
-        let eventArgs = { targetPanelId: "", clickPoint: !!item };
+        elem.bind("plotclick", function (event, pos, item) {
+          let eventArgs = { targetPanelId: "", clickPoint: !!item };
 
-        if (item) {
-          console.group('点击数据');
-          console.log(item.datapoint);//=>[1499406720000, 535.2230895541453] 0位时间轴
-          console.log(item.series.data[item.dataIndex]);//=>[1499406720000, 20.098296726168925, 0] 0位时间轴
-          console.groupEnd();
+          if (item) {
+            console.group('点击数据');
+            console.log(item.datapoint);//=>[1499406720000, 535.2230895541453] 0位时间轴
+            console.log(item.series.data[item.dataIndex]);//=>[1499406720000, 20.098296726168925, 0] 0位时间轴
+            console.groupEnd();
 
-          let from = moment(item.datapoint[0]);
-          let to = from.clone().add(1, 's');
-          eventArgs["timeRange"] = { from, to };
-        }
+            let from = moment(item.datapoint[0]);
+            let to = from.clone().add(1, 's');
+            eventArgs["timeRange"] = { from, to };
+          }
 
-        if (panel.publishPlotClick && panel.publishPlotClick !== "") {
-          _.split(panel.publishPlotClick, ',').forEach(publishEvent => {
-            $rootScope.$broadcast(`${publishEvent}_Plotclick`, eventArgs);
-          });
-        }
-      });
-
+          if (panel.publishPlotClick && panel.publishPlotClick !== "") {
+            _.split(panel.publishPlotClick, ',').forEach(publishEvent => {
+              $rootScope.$broadcast(`${publishEvent}_Plotclick`, eventArgs);
+            });
+          }
+        });
+      }
       scope.$on('$destroy', function() {
         tooltip.destroy();
         elem.off();

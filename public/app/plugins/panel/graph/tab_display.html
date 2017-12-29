@@ -133,11 +133,12 @@
 		</button>
 	</div>
 
-	<div class="edit-tab-content" ng-if="ctrl.subTabIndex === 2">
-		<graph-threshold-form panel-ctrl="ctrl"></graph-threshold-form>
+  <div class="edit-tab-content" ng-if="ctrl.subTabIndex === 2">
+    <graph-threshold-form panel-ctrl="ctrl"></graph-threshold-form>
   </div>
 
   <div class="edit-tab-content" ng-if="ctrl.subTabIndex === 3">
+    <gf-form-switch class="gf-form" label="disable Event" label-class="width-10" checked="ctrl.panel.disableEvent" on-change="ctrl.render()"></gf-form-switch>
 		<div class="section gf-form-group">
 			<h5 class="section-heading">plotclick</h5>
 			<input type="text" ng-model="ctrl.panel.publishPlotClick" ng-blur="ctrl.render()" data-min-length=0 data-items=100 class="gf-form-input width-15">
