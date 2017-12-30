@@ -132,7 +132,7 @@ define([
         //ws: this.ws,
         currentScreen:currentScreen,
         conf: function (dash) {
-          if (this.currentScreen) {
+          if (this.currentScreen || contextSrv.user.isProxySingedIn === true) {
             dash = dash || dashboardSrv.getCurrent();
             if (dash) {
               dash.hideDashNavbar = true;

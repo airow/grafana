@@ -109,7 +109,7 @@ class GraphCtrl extends MetricsPanelCtrl {
   };
 
   /** @ngInject */
-  constructor($scope, $injector, private annotationsSrv) {
+  constructor($scope, $injector, private annotationsSrv, private contextSrv) {
     super($scope, $injector);
 
     _.defaults(this.panel, this.panelDefaults);
@@ -155,7 +155,7 @@ class GraphCtrl extends MetricsPanelCtrl {
   }
 
   zoomOut(evt) {
-    if (this.panel.disableEvent !== true) {
+    if (this.panel.disableEvent !== true && this.contextSrv.user.isProxySingedIn !== true) {
       this.publishAppEvent('zoom-out', 2);
     }
   }

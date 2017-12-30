@@ -18,7 +18,7 @@ import {appEvents, coreModule} from 'app/core/core';
 import GraphTooltip from './graph_tooltip';
 import {ThresholdManager} from './threshold_manager';
 
-coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
+coreModule.directive('grafanaGraph', function($rootScope, timeSrv, contextSrv) {
   return {
     restrict: 'A',
     template: '',
@@ -655,7 +655,7 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv) {
         return "%H:%M";
       }
 
-      if (panel.disableEvent !== true) {
+      if (panel.disableEvent !== true && contextSrv.user.isProxySingedIn !== true) {
         elem.bind("plotselected", function (event, ranges) {
           scope.$apply(function () {
             timeSrv.setTime({
