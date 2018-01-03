@@ -23,6 +23,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   variableTypeDataSource: any[];
   isloaded: boolean;
   changePanelStrategyOptions: any;
+  search: any;
 
   // Set and populate defaults
   panelDefaults = {
@@ -44,8 +45,11 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
   /** @ngInject **/
   constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
-    private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv) {
+    private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv, private $location) {
     super($scope, $injector);
+
+
+    this.search = this.$location.search();
 
     this.variableTypeDataSource = ["custom", "teldCustom"];
 
@@ -392,6 +396,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     let bindSource = {
       name: config.bootData.user.name,
       login: config.bootData.user.login,
+      wslogin: this.search.teld_user || config.bootData.user.login,
       orgId: config.bootData.user.orgId,
       timestamp: (new Date()).valueOf()
     };

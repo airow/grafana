@@ -183,11 +183,13 @@ define([
             }).done(function (result) {
               console.log("loadConf done");
               returnValue = result;
+              returnValue.isloaded = true;
             }).fail(function (err) {
 
               if (err.statusText === "OK") {
                 var evalFunName = "eval";
                 returnValue = window[evalFunName]("(" + err.responseText + ")");
+                returnValue.isloaded = true;
                 console.log("loadConf fail, but eval");
               } else {
                 //alert('载入配置信息异常');

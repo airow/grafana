@@ -7,11 +7,19 @@ define([
     'use strict';
     var module = angular.module('grafana.services');
     module.factory('wsAcrossScreen', function ($interval, $websocket, contextSrv, alertSrv, dashboardSrv,
-      teldHelperSrv, wsAcrossScreenConfSrv) {
+      teldHelperSrv, wsAcrossScreenConfSrv, $location) {
 
       var wsAcrossScreenConf = wsAcrossScreenConfSrv;
 
       var wsConnectUser = _.defaults({}, contextSrv.user);
+
+      var search = $location.search();
+      if (search.teld_user) {
+        wsConnectUser.grafanaLogin = wsConnectUser.login;
+        wsConnectUser.login = search.teld_user;
+      }
+      console.log(wsConnectUser);
+
       var username = wsConnectUser.login;
 
       //var goto = wsAcrossScreenConf.goto;
@@ -66,7 +74,12 @@ define([
 
       function connectWs(contextUser) {
 
-        if (contextSrv.user.orgRole !== "Viewer" || contextSrv.user.isProxySingedIn === true) {
+        //if (contextSrv.user.orgRole !== "Viewer" || contextSrv.user.isProxySingedIn === true) {
+        if (contextSrv.user.orgRole !== "Viewer" && SCREEN_CONF.isloaded !== true) {
+          return;
+        }
+
+        if (!contextUser.login) {
           return;
         }
 
