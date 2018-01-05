@@ -76,8 +76,8 @@
         <select class="gf-form-input" ng-model="ctrl.panel.layout" ng-options="f for f in ctrl.getLayout()" ng-change="ctrl.render()"></select>
       </div>
     </div>
-    <gf-form-switch ng-if='ctrl.panel.layout==="LR"' class="gf-form" label-class="width-8" label="AutoHeight" checked="ctrl.panel.autoHeight" on-change="ctrl.render()"></gf-form-switch>
-    <div class="gf-form-inline" ng-if="ctrl.panel.layout==='LR'">
+    <gf-form-switch ng-if='ctrl.panel.layout==="LR" || ctrl.panel.layout==="Flex"' class="gf-form" label-class="width-8" label="AutoHeight" checked="ctrl.panel.autoHeight" on-change="ctrl.render()"></gf-form-switch>
+    <div class="gf-form-inline" ng-if="ctrl.panel.layout==='LR' || ctrl.panel.layout==='Flex'">
       <div class="gf-form">
         <label class="gf-form-label width-6">Position</label>
         <div class="gf-form-select-wrapper">
@@ -86,7 +86,7 @@
       </div>
     </div>
     <div class="gf-form-inline">
-      <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo'">
+      <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo' || ctrl.panel.layout==='Flex'">
         <label class="gf-form-label width-6">heightClass</label>
         <div class="gf-form-select-wrapper">
           <select class="gf-form-input" ng-model="ctrl.panel.heightClass" ng-options="f.value as f.name for f in ctrl.getHeightClass()" ng-change="ctrl.render()"></select>

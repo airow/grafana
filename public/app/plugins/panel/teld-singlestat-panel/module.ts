@@ -65,6 +65,21 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         '</div>'
       ].join('')
     },
+    Flex: {
+      name: '流式', tmpl: [
+        '<div class="teld_Flex {{iconClass}} {{valueLR}} {{borderClass}} {{bgClass}}" ng-style="customStyle" ',
+        'ng-class="{\'flexAutoHeight\':autoHeight}">',
+        ' <div class="titleIcon showAlign lv" ><div class="iconBox"><div class="iconTitle"></div></div></div>',
+        '<div class="valueMain showAlign lv" ng-bind="value">',
+        '</div>',
+        '<div class="wordMain showAlign  {{valueLR}}">',
+           '<div class="titleValue" ng-bind="postfix"></div>',
+        '</div>',
+        '<div class="valueMain showAlign rv" ng-bind="value"></div>',
+        '<div class="titleIcon showAlign rv"><div class="iconBox"><div class="iconTitle"></div></div></div>',
+        '</div>'
+      ].join('')
+    },
     listlunbo: {
       name: '电站状态', tmpl: [
         '<div class="listMain">',
@@ -80,7 +95,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   styleClass: any = {
     borderClass: {
       LR: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'chargeBorder' },{ name: '', value: '' }],
-      UD: [{ name: 'default', value: 'panelSubBor' }]
+      UD: [{ name: 'default', value: 'panelSubBor' }],
+      Flex: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'flex_chargeBorder' },{ name: '', value: '' }]
     },
     bgClass: {
       LR: [
@@ -99,10 +115,17 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         { name: '灰', value: 'pile-g' },
         { name: '红', value: 'pile-r' },
         { name: '黄', value: 'pile-y' },
-      ]
+      ],
+      Flex: [
+        { name: '渐变-蓝', value: 'chargeBg1' },
+        { name: '渐变-紫', value: 'chargeBg2' },
+        { name: '渐变-黄', value: 'chargeBg3' },
+        { name: '纯色-蓝', value: 'penelBg' },
+        { name: '', value: '' }
+      ],
     },
     iconClass: [
-      { name: '无', value: '' },
+      { name: '无', value: 'icon_none' },
       { group: 'screen', name: '充电量及充电次数', value: 'charg_capacity' },
       { group: 'screen', name: '充电人数', value: 'charg_num' },
       { group: 'screen', name: '工单数', value: 'orders_num' },
@@ -858,11 +881,11 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
       // var value = applyColoringThresholds(data.value, data.valueFormatted);
       var value = data.value;
-
       subScope.layout = panel.layout;
       subScope.borderClass = panel.borderClass;
       subScope.bgClass = panel.bgClass;
       subScope.autoHeight = panel.autoHeight;
+      subScope.valueLR = panel.valuePosition === "left" ? "vw" : "wv";
       delete subScope.customStyle;
       if (panel.customStyle.enable) {
         //{ 'backgroundColor': 'green', color: 'red' };
@@ -900,6 +923,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       //subScope.alert = window.alert;
       subScope.alert = function () { alert(12); };
 
+      layout = layouts[panel.layout];
       var jqHtml = compile(layout.tmpl)(subScope);
       //var jqHtml = compile(layout.tmpl)(subScope);
       //var jqHtml = compile(html.join(''))(s);
@@ -979,6 +1003,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
       that.setValueMapping(subData);
       if (panel.layout === 'LR') {
+        subScope.rightValue = subScope.leftValue = '';
         subScope[`${panel.valuePosition}Value`] = subData.value;
         if (panel.valuePosition === 'left') { subScope.prefix = ''; }
         if (panel.valuePosition === 'right') { subScope.postfix = ''; }

@@ -92,12 +92,12 @@
 /*最外层的类控制不同的显示方式 背景切换*/
 .chargeBg1{
     /* Firefox 3.6+ #09374F, #252f4a*/
-    background: -moz-linear-gradient(left,rgba(54,200,210,0.2), rgba(37,47,74,0.4));
+    background: -moz-linear-gradient(left,rgba(54,200,210,0.2), rgba(37,47,74,0.4)) !important;
     /* Safari 5.1+, Chrome 10+ */
-    background: -webkit-linear-gradient(left, rgba(54,200,210,0.2), rgba(37,47,74,0.4));
+    background: -webkit-linear-gradient(left, rgba(54,200,210,0.2), rgba(37,47,74,0.4)) !important;
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left,rgba(54,200,210,0.2), rgba(37,47,74,0.4));
-    background: linear-gradient(left, rgba(54,200,210,0.2), rgba(37,47,74,0.4));
+    background: -o-linear-gradient(left,rgba(54,200,210,0.2), rgba(37,47,74,0.4)) !important;
+    background: linear-gradient(left, rgba(54,200,210,0.2), rgba(37,47,74,0.4)) !important;
 }
 .chargeBg1 .titleLeft:before{
     border-bottom:2px solid #297a8a;
@@ -108,24 +108,24 @@
 
 .chargeBg2{
     /* Firefox 3.6+ #ff8d6e, #2b2f49*/
-    background: -moz-linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4));
+    background: -moz-linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4)) !important;
     /* Safari 5.1+, Chrome 10+ */
-    background: -webkit-linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4));
+    background: -webkit-linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4)) !important;
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left, rgba(255,141,110,0.2),rgba(43,47,73,0.4));
-    background: linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4));
+    background: -o-linear-gradient(left, rgba(255,141,110,0.2),rgba(43,47,73,0.4)) !important;
+    background: linear-gradient(left, rgba(255,141,110,0.2), rgba(43,47,73,0.4)) !important;
 }
 .chargeBg2 .titleLeft:before{
     border-bottom: 2px solid #805f63;
 }
 .chargeBg3{
     /* Firefox 3.6+ #caa82c, #292f48*/
-    background: -moz-linear-gradient(left, rgba(202,168,44,0.2), rgba(41,47,72,0.4));
+    background: -moz-linear-gradient(left, rgba(202,168,44,0.2), rgba(41,47,72,0.4)) !important;
     /* Safari 5.1+, Chrome 10+ */
-    background: -webkit-linear-gradient(left,rgba(202,168,44,0.2), rgba(41,47,72,0.4));
+    background: -webkit-linear-gradient(left,rgba(202,168,44,0.2), rgba(41,47,72,0.4)) !important;
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left, rgba(202,168,44,0.2), rgba(41,47,72,0.4));
-    background: linear-gradient(left,rgba(202,168,44,0.2), rgba(41,47,72,0.4));
+    background: -o-linear-gradient(left, rgba(202,168,44,0.2), rgba(41,47,72,0.4)) !important;
+    background: linear-gradient(left,rgba(202,168,44,0.2), rgba(41,47,72,0.4)) !important;
 }
 .chargeBg3 .titleLeft:before{
     border-bottom: 2px solid #787131;
@@ -672,4 +672,99 @@
 }
 .chargeIcon img{
    width:18px
+}
+
+/*标题栏自适应流式布局*/
+.ml{margin-left: 10px !important;}
+.mr{margin-right: 10px !important;}
+.showAlign{
+    /*垂直水平居中*/
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.teld_Flex{
+    display: flex;
+    background:#134562 ;
+    color: #fff;
+    font-family: "Microsoft YaHei Regular";
+    position: relative;
+}
+.teld_Flex .wordMain{
+    flex: 4;
+    padding: 10px;
+    /*margin-right: 10px;*/
+    display:flex;
+    font-size: 30px;
+    min-width: 130px;
+}
+.teld_Flex  .iconBox{
+    width: 36px;
+}
+.teld_Flex .iconTitle{
+    height: 36px;
+    width: 36px;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.teld_Flex .wordMain .titleValue{
+    margin-left: 10px;
+
+}
+.teld_Flex .valueMain,.teld_Flex .titleIcon{
+    /*flex: 2;*/
+    display: flex;
+    padding: 10px;
+    word-break: break-all;
+    word-wrap: break-word;
+    font-size: 36px;
+}
+.wv .lv{
+    display: none;
+}
+.vw .rv{
+    display: none;
+}
+.vw{
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+.wv{
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+.teld_Flex.icon_none .titleIcon{
+  display: none;
+}
+.flexAutoHeight{
+  height: 100%;
+}
+/*下面横线*/
+.flex_chargeBorder:before{
+  content: "";
+  width: 400px;
+  height: 2px;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  display: inline-block;
+  background-color: rgba(36,107,123,1);
+}
+/*小圆点*/
+.flex_chargeBorder:after{
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  background-color: #fff;
+  display: inline-block;
+  position: absolute;
+  bottom: -2px;
+  left: 400px;
+  box-shadow: 0 0 3px 3px rgba(36,107,123,0.8);
 }
