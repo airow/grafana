@@ -504,7 +504,39 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return series;
   }
 
+  fillingDataList(dataList) {
+    let merge = this.panel.merge;
+    if (merge && merge.enable && dataList.length > 1) {
+      let times = {};
+      dataList.forEach((element) => {
+        element.datapoints.forEach(datapoint => {
+          let time = datapoint[1];
+          let value = datapoint[0];
+
+          //times[time] = (times[time] || 0) + 1;
+          times[time] = time;
+        });
+      });
+
+      dataList.forEach((element) => {
+        let newdatapoints = [];
+
+        for (let key in times) {
+          let dp = _.find(element.datapoints, function (datapoint) {
+            return times[key] === datapoint[1];
+          });
+
+          newdatapoints.push(dp || [0, times[key]]);
+        }
+        element.datapoints = newdatapoints;
+      });
+    }
+  }
+
   defaultSeries(dataList) {
+
+    this.fillingDataList(dataList);
+
     let series = _.map(dataList, item => {
 
       let { target, metric, field } = item;

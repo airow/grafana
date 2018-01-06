@@ -506,7 +506,7 @@ function transformDataToTable(data, panel) {
   var model = new TableModel(),
     copyData = angular.copy(data);
 
-  if (!data || data.length === 0) {
+  if (!data || data.length === 0 || _.isString(data) ) {
     return model;
   }
 

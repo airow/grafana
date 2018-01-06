@@ -14,6 +14,11 @@
       Add new user
     </a>
   </div>
+  <div class="pull-left width-18">
+    <span style="position: relative;">
+      <input type="checkbox" ng-model="ctrl.showAll" ng-change="ctrl.getUsers()" />show proxy user
+    </span>
+  </div>
   <div class="search-field-wrapper pull-right width-18">
     <span style="position: relative;">
       <input  type="text" placeholder="Find user by name/login/email" tabindex="1" give-focus="true"
@@ -33,7 +38,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in ctrl.users">
+        <tr ng-repeat="user in ctrl.users" ng-style='{color:(user.email.indexOf("@proxy.teld.cn")>-1 ? "green":"inherit")}' ng-show='ctrl.showAll || user.email.indexOf("@proxy.teld.cn")==-1'>
           <td>{{user.id}}</td>
           <td>{{user.name}}</td>
           <td>{{user.login}}</td>
