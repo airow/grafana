@@ -46,7 +46,10 @@ func setIndexViewData(c *middleware.Context) (*dtos.IndexViewData, error) {
 	var d = c.GetCookie("header_name")
 	var isProxySingedIn = len(d) > 0
 	if isProxySingedIn {
-		prefs.Theme = "light"
+		prefs.Theme = c.Query("theme")
+		if prefs.Theme == "" {
+			prefs.Theme = "light"
+		}
 	}
 
 	var data = dtos.IndexViewData{
