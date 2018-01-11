@@ -170,5 +170,6 @@ export function tablePanelEditor($q, uiSegmentSrv) {
     scope: true,
     templateUrl: 'public/app/plugins/panel/table/editor.html',
     controller: TablePanelEditorCtrl,
+    dateUTCOffset: '',
   };
 }

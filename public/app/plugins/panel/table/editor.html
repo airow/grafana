@@ -85,7 +85,12 @@
 				<div class="gf-form" ng-if="style.type === 'date'">
 					<label class="gf-form-label">Format</label>
 					<metric-segment-model property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()" custom="true"></metric-segment-model>
-				</div>
+          <input type="number" class="gf-form-input width-6"
+					placeholder="8" data-placement="right"
+					ng-model="style.dateUTCOffset"
+					ng-change="editor.render()"
+					ng-model-onblur>
+        </div>
 				<gf-form-switch class="gf-form" label-class="width-8" ng-if="style.type === 'string'" label="Sanitize HTML" checked="style.sanitize" change="editor.render()"></gf-form-switch>
 				<div class="gf-form gf-form--grow">
 					<div class="gf-form-label gf-form-label--grow"></div>

@@ -34,6 +34,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         type: 'date',
         pattern: 'Time',
         dateFormat: 'YYYY-MM-DD HH:mm:ss',
+        dateUTCOffset: '',
       },
       {
         unit: 'short',

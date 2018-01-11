@@ -58,11 +58,19 @@ export class TableRenderer {
         if (v === undefined || v === null) {
           return '-';
         }
-
+        //_.isNaN(+"2017-12-58")==true,_.isNaN(+"20171258")==false
+        //将时间戳字符串转为数值型
+        if (_.isNaN(+v) === false) {
+          v = +v;
+        }
         if (_.isArray(v)) { v = v[0]; }
         var date = moment(v);
         if (this.isUtc) {
           date = date.utc();
+        }
+        if (style.dateUTCOffset) {
+          date = date.add(style.dateUTCOffset, 'h');//UTC和local格式都支持增加
+          // date = date.utcOffset(style.dateUTCOffset);//加上丢掉的8个时区数，必须是UTC格式的才管用
         }
         return date.format(style.dateFormat);
       };
@@ -148,6 +156,7 @@ export class TableRenderer {
   }
 
   formatColumnValue(colIndex, value) {
+    value = 1515366300000;
     if (this.formaters[colIndex]) {
       return this.formaters[colIndex](value);
     }
