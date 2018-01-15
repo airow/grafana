@@ -873,7 +873,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     //   option.yAxis = [{ data: yAxisData }];
     // }
-
-    this.ecOption.baseOption = option;
+    //_.extend(this.ecOption.baseOption, option);
+    this.ecOption.baseOption.series = option.series;
   }
 }
