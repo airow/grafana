@@ -1,14 +1,17 @@
 <div dash-class ng-if="dashboard">
 	<dashnav></dashnav>
 
-	<div class="dashboard-container">
+	<div class="dashboard-container" style="position: relative">
 		<div dash-editor-view></div>
 		<dashboard-search></dashboard-search>
 		<div class="clearfix"></div>
 
-		<dashboard-submenu ng-if="dashboard.meta.submenuEnabled" dashboard="dashboard"></dashboard-submenu>
-
-		<div class="clearfix"></div>
+		<dashboard-submenu ng-if="dashboard.meta.submenuEnabled" dashboard="dashboard">
+    </dashboard-submenu>
+    <div ng-style="{'position': dashboard.meta.submenuEnabled ? 'absolute' : 'static'}" class="dashNav navbar-inner"  ng-if="dashboard.isSubShowTime">
+      <gf-time-picker dashboard="dashboard"></gf-time-picker>
+    </div>
+    <div class="clearfix"></div>
 
     <dash-row class="dash-row" ng-repeat="row in dashboard.rows" row="row" dashboard="dashboard"
       ng-class="{'remove_mb': row.bgcolor.enabled}"

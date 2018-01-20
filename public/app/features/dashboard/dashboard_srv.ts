@@ -12,7 +12,29 @@ export class DashboardSrv {
   }
 
   create(dashboard, meta) {
-    return new DashboardModel(dashboard, meta);
+    // return new DashboardModel(dashboard, meta);
+    let dashboardObj;
+    dashboardObj = new DashboardModel(dashboard, meta);
+    //通过URL参数判断下方的时间是否显示
+    // let urlName = this.$location.search().isShowTime;
+    var routerObj = this.$location.search();
+    var urlName = "";
+    for (var key in routerObj) {
+      if (key === "isShowTime") {
+        urlName = key;
+        // return;
+      }
+    }
+    if (urlName === "isShowTime" && dashboardObj.hideDashNavbar === true) {
+      dashboardObj.isSubShowTime = true;
+    } else {
+      dashboardObj.isSubShowTime = false;
+      if (urlName !== "isShowTime" && dashboardObj.hideDashNavbar === true) {
+        dashboardObj.isSubShowTime = true;
+      }
+    }
+    return dashboardObj;
+
   }
 
   setCurrent(dashboard) {
