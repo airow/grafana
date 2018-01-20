@@ -397,6 +397,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       name: config.bootData.user.name,
       login: config.bootData.user.login,
       wslogin: this.search.teld_user || config.bootData.user.login,
+      isTeldUser: Boolean(this.search.teld_user) ? "Y" : "N",
       orgId: config.bootData.user.orgId,
       timestamp: (new Date()).valueOf()
     };

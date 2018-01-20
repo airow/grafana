@@ -29,7 +29,8 @@ define([], function () {
      * */
     //wsServerUrl: 'ws://rp1.teld.cn/api/WebSocket?user=${login}',/** WebSocket host IIS */
     wsServerUrl: 'ws://139.219.10.100:8080?user=${login}',
-    remoteConfUrl: "http://com2.teld.cn/BigScreen/GetThemeUsers"
+    remoteConfUrl_v2: "http://com2.teld.cn/BigScreen/GetThemeUsers",
+    remoteConfUrl: "http://com2.teld.cn/BigScreenSet/GetUserTheme"
   };
 
   return conf;

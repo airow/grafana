@@ -176,7 +176,7 @@ define([
               type: "get",
               async: false,
               url: this.remoteConfUrl,
-              data: { userCode: contextUser.login },
+              data: { userCode: contextUser.login, isTeldUser: Boolean(contextUser.isTeldUser) ? "Y" : "N" },
               //contentType: "application/json; charset=utf-8",
               dataType: "json",
               cache: false,

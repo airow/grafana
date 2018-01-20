@@ -214,7 +214,7 @@ export function grafanaAppDirective(playlistSrv, contextSrv, $timeout, $window) 
       // var delay = delayH * 3600000;
 
       var now = new Date();
-      var trigger_hour = 9;
+      var trigger_hour = 8;
       var offset_hour;
       var delayH = (offset_hour = trigger_hour - now.getHours(), offset_hour) > 0 ? offset_hour : offset_hour + 23;
       var delay = delayH * 3600000;

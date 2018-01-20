@@ -16,7 +16,9 @@ define([
       var search = $location.search();
       if (search.teld_user) {
         wsConnectUser.grafanaLogin = wsConnectUser.login;
+        wsConnectUser.teld_user = search.teld_user;
         wsConnectUser.login = search.teld_user;
+        wsConnectUser.isTeldUser = true;
       }
       console.log(wsConnectUser);
 
