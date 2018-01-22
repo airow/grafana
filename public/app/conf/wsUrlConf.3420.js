@@ -28,9 +28,10 @@ define([], function () {
      * ${orgId}:grafana用户orgId;
      * */
     //wsServerUrl: 'ws://rp1.teld.cn/api/WebSocket?user=${login}',/** WebSocket host IIS */
-    wsServerUrl: 'ws://139.217.24.173:8080?user=${login}',
-    remoteConfUrl_v2: "http://com.teld.cn/BigScreen/GetThemeUsers",
-    remoteConfUrl: "http://com.teld.cn/BigScreenSet/GetUserTheme"
+    //wsServerUrl: 'ws://139.217.24.173:8080?user=${login}',
+    wsServerUrl: 'wss://com2.teld.cn:8080?user=${login}',
+    remoteConfUrl_v1: "https://com.teld.cn/BigScreen/GetThemeUsers",
+    remoteConfUrl: "https://com.teld.cn/BigScreenSet/GetUserTheme"
   };
 
   return conf;
