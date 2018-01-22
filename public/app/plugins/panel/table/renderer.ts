@@ -156,7 +156,7 @@ export class TableRenderer {
   }
 
   formatColumnValue(colIndex, value) {
-    value = 1515366300000;
+    //value = 1515366300000;
     if (this.formaters[colIndex]) {
       return this.formaters[colIndex](value);
     }
