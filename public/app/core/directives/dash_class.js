@@ -40,18 +40,12 @@ define([
             var hideDashNavbar = $scope.dashboard.hideDashNavbar;
             if (lasthideDashNavbarVal !== hideDashNavbar) {
 
-              var routerObj = $location.search();
-              var urlName = "";
-              for (var key in routerObj) {
-                if (key === "isShowTime") {
-                  urlName = key;
-                  // return;
-                }
-              }
+              // var routerObj = $location.search();
+              var urlName = $location.search().isShowTime;
               var dashboardObj = $scope.dashboard;
               dashboardObj.isSubShowTime = false;
               if (dashboardObj.hideDashNavbar === true) {
-                dashboardObj.isSubShowTime = urlName === "isShowTime";
+                dashboardObj.isSubShowTime = urlName === "Y";
               }
 
               elem.toggleClass('hide-dashnavbar', hideDashNavbar);
