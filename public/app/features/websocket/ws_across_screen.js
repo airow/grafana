@@ -145,9 +145,11 @@ define([
 
       return {
         //ws: this.ws,
+        SCREEN_CONF: SCREEN_CONF,
         currentScreen:currentScreen,
         conf: function (dash) {
-          if (this.currentScreen || contextSrv.user.isProxySingedIn === true) {
+          var ss = this.SCREEN_CONF.isloaded && _.size(this.SCREEN_CONF) > 2;
+          if (ss || contextSrv.user.isProxySingedIn === true) {
             dash = dash || dashboardSrv.getCurrent();
             if (dash) {
               dash.hideDashNavbar = true;
