@@ -688,6 +688,21 @@
     -webkit-align-items: center;
     align-items: center;
 }
+@media screen and (max-width: 640px){
+  .teld_Flex{
+    font-size: 10px;
+    }
+}
+@media screen and (min-width:640px) and(max-width:960px){
+  .teld_Flex{
+    font-size: 12px;
+    }
+}
+@media screen and (min-width: 960px){
+  .teld_Flex{
+    font-size: 14px;
+    }
+}
 .teld_Flex{
     display: flex;
     background:#134562 ;
@@ -700,29 +715,35 @@
     padding: 10px;
     /*margin-right: 10px;*/
     display:flex;
-    font-size: 30px;
-    min-width: 130px;
+    /* font-size: 30px; */
+    /* min-width: 130px; */
+    font-size: 2.15em;
+    min-width: 9.29em;
+    line-height: 1.3em;
 }
 .teld_Flex  .iconBox{
     width: 36px;
+    height: 40px;
 }
 .teld_Flex .iconTitle{
-    height: 36px;
+    height: 40px;
     width: 36px;
     background-size: 100%;
     background-repeat: no-repeat;
 }
 .teld_Flex .wordMain .titleValue{
-    margin-left: 10px;
+    /* margin-left: 10px; */
+    margin-left: 0.714em;
 
 }
 .teld_Flex .valueMain,.teld_Flex .titleIcon{
     /*flex: 2;*/
     display: flex;
-    padding: 10px;
+    padding: 0.15em;
     word-break: break-all;
     word-wrap: break-word;
-    font-size: 36px;
+    /* font-size: 36px; */
+    font-size: 2.57em;
 }
 .wv .lv{
     display: none;
@@ -744,6 +765,12 @@
 .flexAutoHeight{
   height: 100%;
 }
+.iconL .rvIcon{
+ display: none;
+}
+.iconR .lvIcon{
+  display: none;
+ }
 /*下面横线*/
 .flex_chargeBorder:before{
   content: "";

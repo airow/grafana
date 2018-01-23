@@ -84,6 +84,12 @@
           <select class="gf-form-input" ng-model="ctrl.panel.valuePosition" ng-options="f for f in ctrl.position" ng-change="ctrl.render()"></select>
         </div>
       </div>
+      <div class="gf-form" ng-if="ctrl.panel.layout==='Flex'">
+        <label class="gf-form-label width-6">IconPosition</label>
+        <div class="gf-form-select-wrapper">
+          <select class="gf-form-input" ng-model="ctrl.panel.iconPosition" ng-options="f for f in ctrl.position" ng-change="ctrl.render()"></select>
+        </div>
+      </div>
     </div>
     <div class="gf-form-inline">
       <div class="gf-form" ng-hide="ctrl.panel.layout==='listlunbo' || ctrl.panel.layout==='Flex'">

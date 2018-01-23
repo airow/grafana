@@ -67,16 +67,19 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     },
     Flex: {
       name: '流式', tmpl: [
-        '<div class="teld_Flex {{iconClass}} {{valueLR}} {{borderClass}} {{bgClass}}" ng-style="customStyle" ',
+        '<div class="teld_Flex {{iconClass}} {{valueLR}} {{iconLR}} {{borderClass}} {{bgClass}}" ng-style="customStyle" ',
         'ng-class="{\'flexAutoHeight\':autoHeight}">',
-        ' <div class="titleIcon showAlign lv" ><div class="iconBox"><div class="iconTitle"></div></div></div>',
+        ' <span ng-if="tip.enable" ng-style="tip.style" style="z-index:1;position: absolute;">',
+        '  <i class="grafana-tip fa fa-question-circle" bs-tooltip="tip.context"></i>',
+        ' </span>',
+        ' <div class="titleIcon showAlign lvIcon" ><div class="iconBox"><div class="iconTitle"></div></div></div>',
         '<div class="valueMain showAlign lv" ng-bind="value">',
         '</div>',
         '<div class="wordMain showAlign  {{valueLR}}">',
            '<div class="titleValue" ng-bind="postfix"></div>',
         '</div>',
         '<div class="valueMain showAlign rv" ng-bind="value"></div>',
-        '<div class="titleIcon showAlign rv"><div class="iconBox"><div class="iconTitle"></div></div></div>',
+        '<div class="titleIcon showAlign rvIcon"><div class="iconBox"><div class="iconTitle"></div></div></div>',
         '</div>'
       ].join('')
     },
@@ -276,6 +279,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     // valueFontSize: '100%',
     // postfixFontSize: '100%',
     valuePosition: 'left',
+    iconPosition: 'left',
     thresholds: '',
     colorBackground: false,
     colorValue: false,
@@ -886,6 +890,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       subScope.bgClass = panel.bgClass;
       subScope.autoHeight = panel.autoHeight;
       subScope.valueLR = panel.valuePosition === "left" ? "vw" : "wv";
+      subScope.iconLR = panel.iconPosition === "left" ? "iconL" : "iconR";
       delete subScope.customStyle;
       if (panel.customStyle.enable) {
         //{ 'backgroundColor': 'green', color: 'red' };

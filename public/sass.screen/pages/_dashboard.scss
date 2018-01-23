@@ -258,4 +258,25 @@ div.flot-text {
     padding: 0.5rem .5rem .2rem .5rem;
   }
 }
-
+.dashNav {
+  float: right;
+  // position: absolute;
+  right: 10px;
+  top: 5px;
+  .nav > li {
+    float: left;
+    a{
+      float: none;
+      padding: 17px 13px 13px;
+      color: #666;
+      text-decoration: none;
+    }
+  }
+}
+.dashNav .nav > li > a .fa{
+  font-size: 115%;
+}
+.dashNav.navbar-inner{
+  background-color: transparent;
+  border-bottom: none;
+}
