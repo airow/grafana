@@ -10,19 +10,30 @@ export class TableRenderer {
   colorState: any;
   rowObj: any;
 
-  constructor(private panel, private table, private isUtc, private sanitize) {
+  constructor(private panel, private table, private isUtc, private sanitize, private templateSrv?) {
     this.formaters = [];
     this.colorState = {};
   }
 
   getColorForValue(value, style) {
     if (!style.thresholds) { return null; }
-
-    for (var i = style.thresholds.length; i > 0; i--) {
-      if (value >= style.thresholds[i - 1]) {
+    var thresholds = style.thresholds;
+    if (this.templateSrv) {
+      var thresholds = _.map(style.thresholds, item => {
+        return this.templateSrv.replace(item, this.panel.scopedVars);
+      });
+    }
+    for (var i = thresholds.length; i > 0; i--) {
+      if (value >= thresholds[i - 1]) {
         return style.colors[i];
       }
     }
+
+    // for (var i = style.thresholds.length; i > 0; i--) {
+    //   if (value >= style.thresholds[i - 1]) {
+    //     return style.colors[i];
+    //   }
+    // }
     return _.first(style.colors);
   }
 

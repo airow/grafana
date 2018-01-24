@@ -174,6 +174,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
     private dashboardSrv, private uiSegmentSrv, private $http, private $location, private $interval, private $sanitize, private $window) {
     super($scope, $injector);
+    this.templateSrv = $injector.get('templateSrv');
 
     _.defaultsDeep(this.panel, this.panelDefaults);
     //this.panel.title = '';
@@ -401,7 +402,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   renderTableRows() {
     this.table.sort(this.panel.sort);
-    var renderer = new TableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    var renderer = new TableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize, this.templateSrv);
     this.tbodyHtml = this.$sce.trustAsHtml(renderer.render(0));
   }
 

@@ -57,6 +57,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, private annotationsSrv, private $sanitize) {
     super($scope, $injector);
     this.pageIndex = 0;
+    this.templateSrv = $injector.get('templateSrv');
 
     if (this.panel.styles === void 0) {
       this.panel.styles = this.panel.columns;
@@ -183,7 +184,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   }
 
   exportCsv() {
-    var renderer = new TableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    var renderer = new TableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize, this.templateSrv);
     FileExport.exportTableDataToCsv(renderer.render_values());
   }
 
@@ -204,7 +205,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
 
     function appendTableRows(tbodyElem) {
-      var renderer = new TableRenderer(panel, data, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize);
+      var renderer = new TableRenderer(panel, data, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize, ctrl.templateSrv);
       tbodyElem.empty();
       tbodyElem.html(renderer.render(ctrl.pageIndex));
     }
