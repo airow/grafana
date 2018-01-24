@@ -80,7 +80,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         '</div>',
         '<div class="valueMain showAlign rv" ng-bind="value"></div>',
         '<div class="titleIcon showAlign rvIcon"><div class="iconBox"><div class="iconTitle"></div></div></div>',
-        '</div>'
+        '</div>',
+        '<div class="teld_FlexValue {{bgClass}}">1111112233</div>'
       ].join('')
     },
     listlunbo: {

@@ -688,37 +688,23 @@
     -webkit-align-items: center;
     align-items: center;
 }
-@media screen and (max-width: 640px){
-  .teld_Flex{
-    font-size: 10px;
-    }
-}
-@media screen and (min-width:640px) and(max-width:960px){
-  .teld_Flex{
-    font-size: 12px;
-    }
-}
-@media screen and (min-width: 960px){
-  .teld_Flex{
-    font-size: 14px;
-    }
-}
 .teld_Flex{
     display: flex;
     background:#134562 ;
     color: #fff;
     font-family: "Microsoft YaHei Regular";
     position: relative;
+    min-height: 6.33em;
 }
 .teld_Flex .wordMain{
     flex: 4;
-    padding: 10px;
+    padding: 0.15em;
     /*margin-right: 10px;*/
     display:flex;
     /* font-size: 30px; */
     /* min-width: 130px; */
     font-size: 2.15em;
-    min-width: 9.29em;
+    /* min-width: 9.29em; */
     line-height: 1.3em;
 }
 .teld_Flex  .iconBox{
@@ -731,11 +717,11 @@
     background-size: 100%;
     background-repeat: no-repeat;
 }
-.teld_Flex .wordMain .titleValue{
+/* .teld_Flex .wordMain .titleValue{
     /* margin-left: 10px; */
-    margin-left: 0.714em;
+    /* margin-left: 0.714em; */
 
-}
+/*} */
 .teld_Flex .valueMain,.teld_Flex .titleIcon{
     /*flex: 2;*/
     display: flex;
@@ -744,6 +730,7 @@
     word-wrap: break-word;
     /* font-size: 36px; */
     font-size: 2.57em;
+    white-space: nowrap;
 }
 .wv .lv{
     display: none;
@@ -771,6 +758,7 @@
 .iconR .lvIcon{
   display: none;
  }
+ 
 /*下面横线*/
 .flex_chargeBorder:before{
   content: "";
@@ -794,4 +782,50 @@
   bottom: -2px;
   left: 400px;
   box-shadow: 0 0 3px 3px rgba(36,107,123,0.8);
+}
+@media screen and (max-width: 767px){
+  .teld_Flex{
+    font-size: 8px;
+    }
+    .teld_FlexValue{
+      display: none;
+    }
+    .wv .rv{
+      display: flex;
+    }
+}
+@media screen and (min-width: 768px) and (max-width:1024px){
+  .teld_Flex{
+    font-size: 12px;
+    min-height: 2em;
+    }
+    .teld_FlexValue{
+      display: block;
+      text-align: right;
+      padding: 0.2em;
+      font-size: 2.57em;
+      color: #fff;
+      padding-top: 0;
+    }
+    .wv .rv{
+      display: none;
+    }
+    .wordMain{
+      padding-bottom: 0;
+    }
+
+}
+@media screen and (min-width: 1025px){
+  .teld_Flex{
+    font-size: 14px;
+    }
+  .teld_Flex .wordMain .titleValue{
+    margin-left: 10px;
+  }
+  .teld_FlexValue{
+    display: none;
+  }
+  .wv .rv{
+    display: flex;
+  }
 }
