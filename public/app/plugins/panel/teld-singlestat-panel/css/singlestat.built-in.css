@@ -790,7 +790,7 @@
     .teld_FlexValue{
       display: none;
     }
-    .wv .rv{
+    .wv .rv,.vw.wordMain .titleValue{
       display: flex;
     }
 }
@@ -803,11 +803,17 @@
       display: block;
       text-align: right;
       padding: 0.2em;
-      font-size: 2.57em;
       color: #fff;
       padding-top: 0;
     }
-    .wv .rv{
+    .teld_FlexValue .flexValue{
+      font-size: 2.57em;
+    }
+    .teld_FlexValue .flexText{
+      font-size: 2.15em;
+      line-height: 1.2em;
+    }
+    .wv .rv,.vw.wordMain .titleValue{
       display: none;
     }
     .wordMain{
@@ -825,7 +831,7 @@
   .teld_FlexValue{
     display: none;
   }
-  .wv .rv{
+  .wv .rv,.vw.wordMain .titleValue{
     display: flex;
   }
 }
