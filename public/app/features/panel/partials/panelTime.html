@@ -9,7 +9,14 @@
 
 		<input type="text" class="gf-form-input max-width-8" placeholder="1h"
 			empty-to-null ng-model="ctrl.panel.timeFrom" valid-time-span
-			ng-change="ctrl.refresh()" ng-model-onblur></input>
+      ng-change="ctrl.refresh()" ng-model-onblur></input>
+
+    <gf-form-switch class="gf-form"
+			label="Enable From StartOf" label-class="width-12"
+			checked="ctrl.panel.enableFromStartOf" switch-class="max-width-6" on-change="ctrl.refresh()">
+		</gf-form-switch>
+    <input ng-show="ctrl.panel.enableFromStartOf" type="text" class="gf-form-input max-width-8" min-length="0" bs-typeahead="['year','month','day','hour']" placeholder="year,month,day,hour"
+			empty-to-null ng-model="ctrl.panel.fromStartOf" ng-change="ctrl.refresh()" ng-model-onblur></input>
 	</div>
 
 	<div class="gf-form">

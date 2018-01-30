@@ -264,7 +264,8 @@ class MetricsPanelCtrl extends PanelCtrl {
 
     var metricsQuery = {
       panelId: this.panel.id,
-      range: this.range,
+      //range: this.range,
+      range: { raw: this.range.raw, from: this.range.from.clone(), to: this.range.to.clone() },
       rangeRaw: this.rangeRaw,
       interval: this.interval,
       intervalMs: this.intervalMs,
@@ -274,6 +275,11 @@ class MetricsPanelCtrl extends PanelCtrl {
       scopedVars: scopedVars,
       cacheTimeout: this.panel.cacheTimeout
     };
+
+    if (this.panel.enableFromStartOf) {
+      metricsQuery.range.from.startOf(this.panel.fromStartOf);
+    }
+
 
     return datasource.query(metricsQuery);
   }
