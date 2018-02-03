@@ -54,6 +54,12 @@ describe("findHoverIndexFromData", function() {
     expect(tooltip.findHoverIndexFromData(posX, series)).to.be(series.data.length - 1);
   });
 
+  it("should return -1 if posX out of upper bounds with out", function() {
+    var posX = 108;
+    var upperOutIndex = -1;
+    expect(tooltip.findHoverIndexFromData(posX, series, upperOutIndex)).to.be(upperOutIndex);
+  });
+
   it("should return i if posX in series", function() {
     var posX = 104;
     expect(tooltip.findHoverIndexFromData(posX, series)).to.be(4);

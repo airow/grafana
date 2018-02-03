@@ -33,7 +33,7 @@ function ($, core) {
       return j/ps - 1;
     };
 
-    this.findHoverIndexFromData = function(posX, series) {
+    this.findHoverIndexFromData = function (posX, series, notFoundReturnValue) {
       var lower = 0;
       var upper = series.data.length - 1;
       var middle;
@@ -46,6 +46,9 @@ function ($, core) {
           return middle;
         } else if (series.data[middle][0] < posX) {
           lower = middle + 1;
+          if (lower === series.data.length && notFoundReturnValue !== undefined) {
+            return notFoundReturnValue;
+          }
         } else {
           upper = middle - 1;
         }
@@ -84,7 +87,11 @@ function ($, core) {
           continue;
         }
 
-        hoverIndex = this.findHoverIndexFromData(pos.x, series);
+        hoverIndex = this.findHoverIndexFromData(pos.x, series, -1);
+        if (hoverIndex === -1) {
+          continue;
+        }
+
         hoverDistance = pos.x - series.data[hoverIndex][0];
         pointTime = series.data[hoverIndex][0];
 
