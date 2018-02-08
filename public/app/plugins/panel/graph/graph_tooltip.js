@@ -1,8 +1,9 @@
 define([
   'jquery',
   'app/core/core',
+  'lodash',
 ],
-function ($, core) {
+function ($, core, _) {
   'use strict';
 
   var appEvents = core.appEvents;
@@ -71,6 +72,23 @@ function ($, core) {
       var last_value = 0; //needed for stacked values
 
       var minDistance, minTime;
+      var originalSeriesList = seriesList;
+      seriesList = _.cloneDeep(seriesList);
+
+      var seriesListLength = _.map(seriesList, function (n) { return n.data.length; });
+      var maxLength = _.max(seriesListLength);
+      var maxSeries = _.find(seriesList, function (n) { return n.data.length === maxLength; });
+
+      _(seriesList).forEach(function (value) {
+        var c = maxLength - value.data.length;
+        if (c > 0) {
+          var valueLength = value.data.length - 1;
+          var ll = _.map(_.filter(maxSeries.data, function (v) {
+            return v[0] > value.data[valueLength][0];
+          }), function (v) { return [v[0], 0]; });
+          value.data = _.concat(value.data, ll);
+        }
+      });
 
       for (i = 0; i < seriesList.length; i++) {
         series = seriesList[i];
@@ -87,8 +105,9 @@ function ($, core) {
           continue;
         }
 
-        hoverIndex = this.findHoverIndexFromData(pos.x, series, -1);
-        if (hoverIndex === -1) {
+        //hoverIndex = this.findHoverIndexFromData(pos.x, series, -1);
+        hoverIndex = this.findHoverIndexFromData(pos.x, series);
+        if (hoverIndex >= seriesListLength[i]) {
           continue;
         }
 
@@ -140,7 +159,7 @@ function ($, core) {
           index: i
         });
       }
-
+      seriesList = originalSeriesList;
       // Contat the 3 sub-arrays
       results = results[0].concat(results[1],results[2]);
 
