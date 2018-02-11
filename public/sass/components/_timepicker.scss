@@ -86,6 +86,9 @@
       font-weight: bold;
     }
   }
+  button.btn-default {
+    @include buttonBackground($btn-inverse-bg, $btn-inverse-bg-hl);
+  }
 }
 
 .input-datetime-format {
