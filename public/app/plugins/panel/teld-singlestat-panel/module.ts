@@ -525,7 +525,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
     const datapoint = tableData[0][0];
     data.value = datapoint[this.panel.tableColumn];
-    if (_.isString(data.value)) {
+    if (_.isNaN(_.toNumber(data.value)) && _.isString(data.value)) {
       data.valueFormatted = _.escape(data.value);
       // data.value = 0;
       // data.valueRounded = 0;
