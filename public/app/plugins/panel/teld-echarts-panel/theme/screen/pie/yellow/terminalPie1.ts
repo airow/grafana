@@ -81,7 +81,7 @@ var option = {
   },
   "legend": {
     "textStyle": {
-      "color": "#333333"
+      "color": "rgb(251, 246, 246)"
     }
   },
   "tooltip": {

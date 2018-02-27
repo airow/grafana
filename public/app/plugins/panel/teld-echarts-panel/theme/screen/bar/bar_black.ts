@@ -31,9 +31,13 @@ var option = {
     }
   },
   "bar": {
+    "barWidth": 6,
     "itemStyle": {
       "normal": {
-        "color": "#7EB26D"
+        "color": "#7EB26D",
+        "opacity": 0.7,
+        shadowColor: 'rgba(0, 0, 0, 0.1)',
+        shadowBlur: 10
       }
     }
   },

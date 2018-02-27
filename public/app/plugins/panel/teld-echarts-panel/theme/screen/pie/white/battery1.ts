@@ -26,7 +26,7 @@ var option = {
     "textStyle": {
       "color": "#333",
       "fontFamily": "Microsoft YaHei Regular",
-      "fontSize": 32
+      "fontSize": 18
     },
     "left": 'center',
     "top": "18",

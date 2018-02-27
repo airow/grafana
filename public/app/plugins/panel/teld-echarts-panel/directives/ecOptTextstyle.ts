@@ -36,6 +36,9 @@ function ecOptTextstyleDirective($compile, datasourceSrv, $rootScope, $q, $http,
         scope.getFontFamily = () => {
           return fontFamily;
         };
+        scope.delItem = (key) => {
+          delete scope.textStyle[key];
+        };
       },
       post: function postLink(scope, elem, attrs) {
         scope.refresh = function () {
