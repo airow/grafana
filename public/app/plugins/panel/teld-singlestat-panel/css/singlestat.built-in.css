@@ -836,49 +836,49 @@
   }
 }
 
-.grafana-app._dark .penelBg{
+.grafana-app._dark .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).penelBg{
     background: none !important;
     background-color: rgba(54,200,210,0.2) !important;
 }
 
 
-.grafana-app._dark .penelBg .titleLeft:before {
+.grafana-app._dark .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).penelBg .titleLeft:before {
   border-bottom-color:rgba(54,200,210,0.2);
 }
 
-.grafana-app._light .penelBorder{
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).penelBorder{
   border-top-color: rgba(54,200,210,0.2);
 }
 
-.grafana-app._light .chargeBorder .titleLeft:after{
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBorder .titleLeft:after{
   box-shadow: 0 0 3px 3px rgba(54,200,210,0.2);;
 }
 
-.grafana-app._light .penelBg,
-.grafana-app._light .chargeBg1,
-.grafana-app._light .chargeBg2,
-.grafana-app._light .chargeBg3 {
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).penelBg,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg1,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg2,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg3 {
     color: black;
     background: none !important;
     background-color:#f8f8f8 !important;
 }
 
 
-.grafana-app._light .penelBg .titleLeft:before,
-.grafana-app._light .chargeBg1 .titleLeft:before,
-.grafana-app._light .chargeBg2 .titleLeft:before,
-.grafana-app._light .chargeBg3 .titleLeft:before {
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).penelBg .titleLeft:before,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg1 .titleLeft:before,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg2 .titleLeft:before,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg3 .titleLeft:before {
   border-bottom-color:#D8D9DA;
 }
-.grafana-app._light .penelBorder{
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).penelBorder{
   border-top-color: #D8D9DA;
 }
-.grafana-app._light .chargeBorder .titleLeft:after{
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBorder .titleLeft:after{
   box-shadow: 0 0 3px 3px #D8D9DA;
 }
 
 .flex_chargeBorder.chargeBg1:before{
-  background-color: #297a8a   ;
+  background-color: #297a8a;
 }
 
 .flex_chargeBorder.chargeBg2:before{
@@ -889,12 +889,12 @@
   background-color:#787131
 }
 
-.grafana-app._light .flex_chargeBorder.chargeBg1:before,
-.grafana-app._light .flex_chargeBorder.chargeBg2:before,
-.grafana-app._light .flex_chargeBorder.chargeBg3:before{
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).flex_chargeBorder.chargeBg1:before,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).flex_chargeBorder.chargeBg2:before,
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).flex_chargeBorder.chargeBg3:before{
   background-color:#D8D9DA;
 }
 
-.grafana-app._light .flex_chargeBorder:after{
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).flex_chargeBorder:after{
   box-shadow: 0 0 3px 3px #D8D9DA;
 }
