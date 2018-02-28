@@ -820,6 +820,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     scope.click = this.echartsEventPublish.bind(this);
 
     var subScope = scope.$new();
+    if (this.panel.calcExpression.enable !== true) {
+      setElementHeight();
+      getBigValueHtml({ value: 0 });
+    }
 
     if (this.panel.stepVal.enabled) {
       this.intervalHandle = this.$interval(() => {
@@ -885,10 +889,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         value + '</span>';
     }
 
-    function getBigValueHtml() {
+    function getBigValueHtml(defaultData?) {
 
       // var value = applyColoringThresholds(data.value, data.valueFormatted);
-      var value = data.value;
+      var value = defaultData ? defaultData.value : data.value;
       subScope.layout = panel.layout;
       subScope.borderClass = panel.borderClass;
       subScope.bgClass = panel.bgClass;
