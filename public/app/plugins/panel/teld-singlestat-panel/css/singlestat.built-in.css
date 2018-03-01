@@ -860,7 +860,7 @@
 .grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).chargeBg3 {
     color: black;
     background: none !important;
-    background-color:#f8f8f8 !important;
+    background-color:#E8E8E8 !important;
 }
 
 
@@ -897,4 +897,8 @@
 
 .grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']).flex_chargeBorder:after{
   box-shadow: 0 0 3px 3px #D8D9DA;
+}
+
+.grafana-app._light .teld-singlestat-panel div[ng-style="customStyle"]:not([style*='background-color']) .iconTitle {
+    filter: invert(100%);
 }
