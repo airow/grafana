@@ -145,7 +145,7 @@ coreModule.directive('dashRow', function($rootScope) {
       }, scope);
 
       $rootScope.onAppEvent('panel-fullscreen-exit', function() {
-        element.show();
+        if (scope.ctrl.row.hideRow !== true) { element.show(); }
       }, scope);
     }
   };

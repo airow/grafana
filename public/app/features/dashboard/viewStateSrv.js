@@ -72,6 +72,11 @@ function (angular, _, $, config) {
       var urlState = _.clone(this.state);
       urlState.fullscreen = this.state.fullscreen ? true : null;
       urlState.edit = this.state.edit ? true : null;
+      // _.forEach(this.dashboard.templating.list, item => {
+      //   if (item.type === 'custom') {
+      //     urlState['_$' + item.name] = item.current.value;
+      //   }
+      // });
       return urlState;
     };
 

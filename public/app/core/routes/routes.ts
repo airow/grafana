@@ -20,8 +20,13 @@ function setupAngularRoutes($routeProvider, $locationProvider, mePageLoadingProv
 
   var reloadOnSearch = false;
   if (config && config.bootData && config.bootData.user && config.bootData.user.orgRole) {
-    reloadOnSearch = config.bootData.user.orgRole === "Viewer";
+    if (config.bootData.user.orgRole === "Viewer") {
+      //reloadOnSearch = config.bootData.user.orgName.indexOf("大屏") !== -1;
+      var reg = /大屏/;
+      reloadOnSearch = reg.test(config.bootData.user.orgName);
+    }
   }
+
 
   $routeProvider
   .when('/', {
