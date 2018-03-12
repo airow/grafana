@@ -33,7 +33,7 @@ export default {
   "line": {
     "label": {
       "normal": {
-        "show": true,
+        "show": false,
         "textStyle": {
           "color": "#fff",
           "fontFamily": "Microsoft YaHei Light",
@@ -45,9 +45,6 @@ export default {
     "lineStyle": {
       "normal": {
         "width": "2"
-        // "color":["#7867f5","#2082c2","#80d9fa","#2082c2","#2f9fcb"],
-        // "shadowColor":"#66fdfc",
-        // "shadowOffsetY":5
       }
     },
     "symbolSize": "4",
@@ -233,7 +230,7 @@ export default {
   },
   "legend": {
     "textStyle": {
-      "color": "#333333"
+      "color": "#fff"
     }
   },
   tooltip: {

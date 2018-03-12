@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import kbn from 'app/core/utils/kbn';
+import angular from 'angular';
 
 export class SeriesEditorCtrl {
   panel: any;
@@ -46,6 +47,31 @@ export class SeriesEditorCtrl {
 
   removeArgument(args,index) {
     args.splice(index, 1);
+  }
+
+  removeTargetByKey = (target, key) => {
+    delete target[key];
+  }
+
+  addMarkLine() {
+    var columnMarkLineDefaults = {
+      type: 'average',
+      label: {
+        position: 'middle'
+      },
+      lineStyle: {
+        width: 1
+      }
+    };
+
+    let marklines = this.panel.marklines || [];
+    this.panel.marklines = marklines;
+
+    this.panel.marklines.push(angular.copy(columnMarkLineDefaults));
+  }
+
+  removeMarkLine(markline) {
+    this.panel.marklines = _.without(this.panel.marklines, markline);
   }
 
   render() {

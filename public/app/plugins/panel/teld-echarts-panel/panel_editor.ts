@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import kbn from 'app/core/utils/kbn';
+import angular from 'angular';
 
 export class PanelEditorCtrl {
   panel: any;
@@ -17,6 +18,22 @@ export class PanelEditorCtrl {
 
   render() {
     this.panelCtrl.render();
+  }
+
+  addMarkLine() {
+    var columnMarkLineDefaults = {
+      type: 'average',
+      label: {
+        position: 'middle'
+      },
+      lineStyle: {}
+    };
+
+    this.panel.marklines.push(angular.copy(columnMarkLineDefaults));
+  }
+
+  removeMarkLine(markline) {
+    this.panel.marklines = _.without(this.panel.marklines, markline);
   }
 }
 

@@ -234,7 +234,7 @@ var option = {
   },
   "legend": {
     "textStyle": {
-      "color": "#333333"
+      "color": "#fff"
     }
   },
   "tooltip": {

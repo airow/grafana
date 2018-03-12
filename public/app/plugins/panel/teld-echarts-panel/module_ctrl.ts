@@ -437,17 +437,19 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           first.datapoints.push(temp);
         });
       } else {
-        let timeseries = first.datapoints[0][1];
-        _.each(mergeItem, eachItme => {
-          let dataItem: any = { target: eachItme.target };
-          dataItem = _.find(dataList, dataItem) || dataItem;
-          if (dataItem.datapoints) {
-            dataItem.datapoints[0][0] = eachItme.val;
-          } else {
-            dataItem.datapoints = [[eachItme.val, timeseries]];
-            dataList.push(dataItem);
-          }
-        });
+        if (first && first.datapoints && first.datapoints.length > 0) {
+          let timeseries = first.datapoints[0][1];
+          _.each(mergeItem, eachItme => {
+            let dataItem: any = { target: eachItme.target };
+            dataItem = _.find(dataList, dataItem) || dataItem;
+            if (dataItem.datapoints) {
+              dataItem.datapoints[0][0] = eachItme.val;
+            } else {
+              dataItem.datapoints = [[eachItme.val, timeseries]];
+              dataList.push(dataItem);
+            }
+          });
+        }
       }
     }
 
@@ -577,6 +579,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
       let serie = this.getDefaultSerie();
       _.defaultsDeep(serie, {
+        metric,
         encode,
         name: target,
         type: serieType,
@@ -636,6 +639,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         };
       }
     }
+
+    serie.markLine = { data: this.getMarklineDate() };
 
     return _.cloneDeep(serie);
   }
@@ -786,8 +791,19 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let axis: any;
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
-      case this.ecConf.series.bar.type:
+        if (this.panel.xAxisMode === 'series') {
+          var groupBySerieKeys = _.map(serie, function (item) { return item.name.toLocaleLowerCase().split(' ' + item.metric)[0]; });
+          //groupBySerieKeys = _.groupBy(groupBySerieKeys, function (item) { return item; });
+          //groupBySerieKeys = _.map(groupBySerieKeys, function (val, key) { return { name: key }; });
+          groupBySerieKeys = _.groupBy(groupBySerieKeys, function (item) { return "sort."+item; });
+          groupBySerieKeys = _.map(groupBySerieKeys, function (val, key) { return { name: _.first(val) }; });
+          axis = this.serie2cateAxisSerie(groupBySerieKeys, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
+        } else {
+          axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
+        }
 
+        break;
+      case this.ecConf.series.bar.type:
         axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
         break;
       case this.ecConf.series.pie.type:
@@ -820,6 +836,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         return serie.data.map(item => { return { name: item.name, item }; });
       });
       legendData = _.flatten(legendData);
+    } else if (this.panel.serieType === this.ecConf.series.line.type) {
+      if (this.panel.xAxisMode === 'series') {
+        var groupBySeries = _.groupBy(this.ecSeries, 'metric');
+        legendData = _.map(groupBySeries, function (val, key) { return key; });
+      } else {
+        legendData = series.map(serie => {
+          return { name: serie.name, serie };
+        });
+      }
     } else {
       legendData = series.map(serie => {
         return { name: serie.name, serie };
@@ -842,11 +867,72 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return series;
   }
 
+  getMarklineDate() {
+    var markLineData = [];
+    if (this.panel.marklines) {
+      markLineData = this.panel.marklines.map(item => {
+        return {
+          type: item.type,
+          label: {
+            normal: item.label
+          },
+          lineStyle: {
+            normal: item.lineStyle
+          }
+        };
+      });
+    }
+    return markLineData;
+  }
+
+  getLineSerieMode() {
+
+    var series = [];
+    var groupBySeries = _.groupBy(this.ecSeries, 'metric');
+
+    var markLineData = this.getMarklineDate();
+
+    for (var metric in groupBySeries) {
+
+      var s = groupBySeries[metric];
+      series.push({
+        type: 'line',
+        name: metric,
+        markLine: { data: markLineData },
+        markPoint: _.first(s).markPoint,
+        label: { show: false },
+        data: s.map((s, index) => {
+          var colorIndex = index % colors.length;
+          var color = colors[colorIndex];
+          var itemStyle = {  };
+          if (s.data.length > 0 && s.data[0].value) {
+            return { value: s.data[0].value[1], itemStyle };
+          } else {
+            return { value: 0, itemStyle };
+          }
+        })
+      });
+    }
+
+    return series;
+  }
+
   getSeries() {
     let series = this.ecSeries;
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
-        series = _.cloneDeep(this.ecSeries).map(item => { item.data.map(d => { d.value = d.value[1]; return d; }); return item; });
+        if (this.panel.xAxisMode === 'series') {
+          series = this.getLineSerieMode();
+        } else {
+          var that = this;
+          series = _.cloneDeep(this.ecSeries).map(item => {
+            item.data.map(d => {
+              d.value = d.value[1];
+              return d;
+            });
+            return item;
+          });
+        }
         break;
       case this.ecConf.series.bar.type:
         if (this.isSeriesBar()) {
@@ -873,7 +959,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
 
     let xAxis, categoryAxis;
-    if (this.isSeriesBar()) {
+    //if (this.isSeriesBar()) {
+    if (this.panel.xAxisMode === 'series') {
       xAxis = categoryAxis = this.axisAdapter(this.ecSeries, this.ecConf.axis.category);
     } else {
       xAxis = categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
@@ -998,7 +1085,28 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     //option.legend = this.panel.echarts.legend.show ? option.legend : undefined;
     //this.ecOption.baseOption = _.defaultsDeep (option, this.ecOption.baseOption);
-    let baseOption = _.defaultsDeep(option, this.ecOption.baseOption);
+    //let baseOption = _.defaultsDeep(option, this.ecOption.baseOption);
+    let o = _.cloneDeep(this.ecOption.baseOption);
+    for (var key in option) {
+      o[key] = option[key];
+    }
+    // delete o.series[0].markLine;
+
+    // o.series[0].markLine = {
+    //   // label: { show: false, position: 'start' },
+    //   // lineStyle: { color: 'black', width: 4 },
+    //   lable: { normal: { show: false } },
+    //   lineStyle: { normal: { color: 'blue' } },
+    //   data: [{
+    //     name: '平均线',
+    //     // label: { show: false, position: 'start' },
+    //     // lineStyle: { color: 'black', width: 3 },
+    //     // 支持 'average', 'min', 'max'
+    //     type: 'average'
+    //   }]
+    // };
+    //let baseOption = _.defaultsDeep(option, this.ecOption.baseOption);
+    let baseOption = o;
     // if (false === this.panel.echarts.legend.show) {
     //   baseOption.legend = undefined;
     // }

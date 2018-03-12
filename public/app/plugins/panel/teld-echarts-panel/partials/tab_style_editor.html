@@ -177,7 +177,7 @@
           <select class="gf-form-input" ng-model="ctrl.panel.serieType" ng-options="serie for serie in ctrl.getSerieType()" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
-      <div class="gf-form" ng-if="ctrl.panel.serieType==='bar'">
+      <div class="gf-form" ng-if="ctrl.panel.serieType!=='pie'">
         <span class="gf-form-label width-8">xAxisMode</span>
         <div class="gf-form-select-wrapper max-width-8">
           <select class="gf-form-input" ng-model="ctrl.panel.xAxisMode" ng-options="axisMode for axisMode in ctrl.getXAxisMode()" ng-change="ctrl.refresh()"></select>
