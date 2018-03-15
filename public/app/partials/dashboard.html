@@ -8,7 +8,7 @@
 
 		<dashboard-submenu ng-if="dashboard.meta.submenuEnabled" dashboard="dashboard">
     </dashboard-submenu>
-    <div ng-style="{'position': dashboard.meta.submenuEnabled ? 'absolute' : 'static'}" class="dashNav navbar-inner"  ng-if="dashboard.isSubShowTime">
+    <div ng-style="{'position': dashboard.meta.submenuEnabled ? 'absolute' : 'static'}" class="dashNav navbar-inner isSubShowTime"  ng-if="dashboard.isSubShowTime">
       <gf-time-picker dashboard="dashboard"></gf-time-picker>
     </div>
     <div class="clearfix"></div>

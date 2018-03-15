@@ -19,3 +19,12 @@
     margin:0 0.4rem !important;
   }
 }
+
+.dashNav.navbar-inner.isSubShowTime {
+  min-height:22px !important;
+
+  .nav.gf-timepicker-nav li a{
+    padding-top: 0px !important;
+    padding-bottom: 5px !important;
+  }
+}
