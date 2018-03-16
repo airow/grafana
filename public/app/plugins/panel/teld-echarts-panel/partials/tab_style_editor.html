@@ -182,6 +182,8 @@
         <div class="gf-form-select-wrapper max-width-8">
           <select class="gf-form-input" ng-model="ctrl.panel.xAxisMode" ng-options="axisMode for axisMode in ctrl.getXAxisMode()" ng-change="ctrl.refresh()"></select>
         </div>
+        <gf-form-switch class="gf-form" label="合并Bar" label-class="width-6" checked="ctrl.panel.groupBar" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="堆叠" label-class="width-4" checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Theme Name</label>

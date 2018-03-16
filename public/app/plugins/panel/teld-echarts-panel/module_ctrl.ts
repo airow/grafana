@@ -745,7 +745,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return returnValue;
   }
   serie2cateAxisSerie(series, axis) {
-    let axisData = series.map(serie => serie.name);
+    let axisData = (series || []).map(serie => serie.name);
 
     return _.defaultsDeep({ data: axisData }, axis);
   }
@@ -770,6 +770,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       case  this.ecConf.axis.category:
         if (this.isSeriesBar()) {
           axis = this.serie2cateAxisSerie(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
+          if (this.panel.groupBar) {
+            axis.data = _.uniq(axis.data);
+          }
         } else {
           axis = this.categoryAxisAdapter(serie);
         }
@@ -829,6 +832,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   //坐标轴构建
 
   legend(series) {
+    series = series || [];
     let legendData: any;
     if (this.panel.serieType === this.ecConf.series.pie.type) {
       legendData = series.map(serie => {
@@ -853,8 +857,42 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return legendData;
   }
 
+  getGroupBarSerieMode() {
+
+    var series = [];
+    var isStack =  this.panel.groupBarStack ? 'stack' : null;
+    if (this.ecSeries) {
+      var d = {};
+      _.each(_.groupBy(this.ecSeries, t => t.name), (value, key) => {
+        _.each(value, (s, index) => {
+          let serie = this.getDefaultSerie();
+          serie = d[index] = d[index] || _.defaultsDeep(serie, {
+            type: 'bar',
+            stack: isStack,
+            data: []
+          });
+
+          var colorIndex = index % colors.length;
+          var color = colors[colorIndex];
+          var itemStyle = { normal: { color } };
+          serie.data.push({ value: s.data[0], itemStyle });
+        });
+      });
+
+      _.each(d, (vv) => {
+        series.push(vv);
+      });
+    }
+
+    return series;
+  }
+
   getBarSerieMode() {
-    var series = [{
+
+    if (this.panel.groupBar) { return this.getGroupBarSerieMode(); }
+
+    let serie = this.getDefaultSerie();
+    serie = _.defaultsDeep(serie, {
       type: 'bar',
       data: this.ecSeries.map((s, index) => {
         var colorIndex = index % colors.length;
@@ -862,7 +900,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         var itemStyle = { normal: { color } };
         return { value: s.data[0], itemStyle };
       })
-    }];
+    });
+
+    var series = [serie];
 
     return series;
   }
