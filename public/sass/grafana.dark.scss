@@ -20,11 +20,35 @@
   }
 }
 
-.dashNav.navbar-inner.isSubShowTime {
-  min-height:22px !important;
+// .dashNav.navbar-inner.isSubShowTime {
+//   min-height:22px !important;
 
-  .nav.gf-timepicker-nav li a{
-    padding-top: 0px !important;
-    padding-bottom: 5px !important;
+//   .nav.gf-timepicker-nav li a{
+//     padding-top: 0px !important;
+//     padding-bottom: 5px !important;
+//   }
+// }
+
+
+.dashboard-container-isSubShowTime{
+  padding-top:0.4rem !important;
+
+  .dashNav.navbar-inner {
+    min-height:22px !important;
+
+    .nav.gf-timepicker-nav li a{
+      padding-top: 0px !important;
+      padding-bottom: 5px !important;
+    }
+  }
+
+  .submenu-controls{
+    margin-bottom: 0.4rem !important;
+  }
+
+
+  dashboard-submenu + .dashNav.navbar-inner .nav.gf-timepicker-nav
+  {
+   margin-top: 10px;
   }
 }
