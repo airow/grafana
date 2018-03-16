@@ -73,11 +73,11 @@ func (m *MsSqlMacroEngine) evaluateMacro(name string, args []string) (string, er
 		if len(args) == 0 {
 			return "", fmt.Errorf("missing time column argument for macro %v", name)
 		}
-		return fmt.Sprintf("%s >= FROM_UNIXTIME(%d) AND %s <= FROM_UNIXTIME(%d)", args[0], uint64(m.TimeRange.GetFromAsMsEpoch()/1000), args[0], uint64(m.TimeRange.GetToAsMsEpoch()/1000)), nil
+		return fmt.Sprintf("%s >= DATEADD(HOUR, 8, DATEADD(SECOND, %d, '1970-01-01')) AND %s <= DATEADD(HOUR, 8, DATEADD(SECOND, %d, '1970-01-01'))", args[0], uint64(m.TimeRange.GetFromAsMsEpoch()/1000), args[0], uint64(m.TimeRange.GetToAsMsEpoch()/1000)), nil
 	case "__timeFrom":
-		return fmt.Sprintf("FROM_UNIXTIME(%d)", uint64(m.TimeRange.GetFromAsMsEpoch()/1000)), nil
+		return fmt.Sprintf("DATEADD(HOUR, 8, DATEADD(SECOND, %d, '1970-01-01'))", uint64(m.TimeRange.GetFromAsMsEpoch()/1000)), nil
 	case "__timeTo":
-		return fmt.Sprintf("FROM_UNIXTIME(%d)", uint64(m.TimeRange.GetToAsMsEpoch()/1000)), nil
+		return fmt.Sprintf("DATEADD(HOUR, 8, DATEADD(SECOND, %d, '1970-01-01'))", uint64(m.TimeRange.GetToAsMsEpoch()/1000)), nil
 	case "__unixEpochFilter":
 		if len(args) == 0 {
 			return "", fmt.Errorf("missing time column argument for macro %v", name)
