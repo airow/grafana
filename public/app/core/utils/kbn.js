@@ -714,6 +714,13 @@ function($, _, numeral, moment) {
     return value + '%';
   };
 
+  kbn.valueFormats.teldPercentGreater100 = function (size, decimals) {
+    if (size === null) { return ""; }
+    var suffix = '%';
+    var value = kbn.toFixed(100 * size, decimals);
+    return value + suffix;
+  };
+
   kbn.valueFormats.teldInt = function (size) {
     if (size === null) { return ""; }
     var value = kbn.toFixed(size, 0);
@@ -939,6 +946,7 @@ function($, _, numeral, moment) {
         submenu: [
           {text: '千分位',       value: 'thousandsSeparator'  },
           {text: '百分比',       value: 'teldPercent'  },
+          { text: '百分比>100', value: 'teldPercentGreater100' },
           {text: '整数',       value: 'teldInt'  },
         ]
       },

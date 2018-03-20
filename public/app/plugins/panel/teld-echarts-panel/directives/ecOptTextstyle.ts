@@ -32,6 +32,15 @@ function ecOptTextstyleDirective($compile, datasourceSrv, $rootScope, $q, $http,
           return fontWeight;
         };
 
+        var fontStyle = ['normal','italic','oblique'];
+        scope.getFontStyle = () => {
+          /**
+           * return ['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'];
+           * 不可以 * https://docs.angularjs.org/error/$rootScope/infdig
+           */
+          return fontStyle;
+        };
+
         var fontFamily = ['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC'];
         scope.getFontFamily = () => {
           return fontFamily;

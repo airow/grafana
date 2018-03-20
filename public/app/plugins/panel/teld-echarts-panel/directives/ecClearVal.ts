@@ -32,6 +32,8 @@ function ecClearValDirective($compile, datasourceSrv, $rootScope, $q, $http, $te
         delete _.get(scope, prefix)[key];
       };
 
+      scope.class = attrs.ecClass;
+
       scope.isShow = function () {
         return undefined !== _.get(scope, attrs.ecTarget);
       };

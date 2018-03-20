@@ -109,28 +109,42 @@
     <div class="section gf-form-group">
       <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.legend.show" on-change="ctrl.render()"></gf-form-switch>
       <gf-form-switch class="gf-form" label="2 Side" label-class="width-8" checked="ctrl.panel.legendExt.twoSides" on-change="ctrl.render()"></gf-form-switch>
-      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.legend.textStyle' />
       <div class="gf-form">
         <label class="gf-form-label width-8">formatter
-          <tip> ${name}=名称 ${percent}=百分比 ${value}=值</tip>
         </label>
         <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.legend.formatTmpl" class="gf-form-input">
+        <label class="gf-form-label"><tip> ${name}=名称 ${percent}=百分比 ${value}=值</tip></label>
       </div>
       <div class="gf-form">
-        <label class="gf-form-label width-8">orient</label>
-        <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.legend.orient" class="gf-form-input">-->
-        <div class="gf-form-select-wrapper max-width-15">
+          <ec-clear-val ec-target='ctrl.panel.echarts.legend.orient' ec-class='width-8'></ec-clear-val>
+        <div class="gf-form-select-wrapper max-width-16">
           <select class="gf-form-input" ng-model="ctrl.panel.echarts.legend.orient" ng-options="serie for serie in ['horizontal','vertical']" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
       <div class="gf-form">
-        <label class="gf-form-label width-8">align</label>
-        <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.legend.align" class="gf-form-input">-->
-        <div class="gf-form-select-wrapper max-width-15">
+        <ec-clear-val ec-target='ctrl.panel.echarts.legend.align' ec-class='width-8'></ec-clear-val>
+        <div class="gf-form-select-wrapper max-width-16">
           <select class="gf-form-input" ng-model="ctrl.panel.echarts.legend.align" ng-options="serie for serie in ['auto','left','right']" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">textStyle</label>
+      </div>
+      <ec-opt-textstyle ctrl='ctrl' text-style='ctrl.panel.echarts.legend.textStyle' />
+    </div>
+    <div class="section gf-form-group">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">position</label>
+      </div>
       <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.legend' />
+    </div>
+    <div class="section gf-form-group" ng-if='ctrl.panel.groupBar'>
+        <div class="gf-form">
+          <label class="gf-form-label">groupBarLegends
+              <tip>groupBar模式，自定义legend。数量顺序与Metrics的query一致</tip>
+          </label>
+          <input type="text" ng-model="ctrl.panel.groupBarLegends" min-length="0" class="gf-form-input" placeholder="groupBarLegends">
+        </div>
     </div>
   </div>
   <!-- end legend -->
@@ -150,14 +164,15 @@
         <spectrum-picker ng-model="ctrl.panel.echarts.tooltip.backgroundColor" ng-change="refresh()"></spectrum-picker>
       </div>
       <div class="gf-form">
-        <label class="gf-form-label width-8">formatter
-          <tip>模板变量有 {a}, {b}，{c}，{d}，{e}，分别表示系列名，数据名，数据值等。 在 trigger 为 'axis' 的时候，会有多个系列的数据，此时可以通过 {a0}, {a1}, {a2} 这种后面加索引的方式表示系列的索引。 不同图表类型下的 {a}，{b}，{c}，{d} 含义不一样。 其中变量{a}, {b}, {c}, {d}在不同图表类型下代表数据含义为：
-<br/>折线（区域）图、柱状（条形）图、K线图 : {a}（系列名称），{b}（类目值），{c}（数值）, {d}（无）
-<br/>散点图（气泡）图 : {a}（系列名称），{b}（数据名称），{c}（数值数组）, {d}（无）
-<br/>地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
-<br/>饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）</tip>
-        </label>
+        <label class="gf-form-label width-8">formatter</label>
         <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.tooltip.formatter" class="gf-form-input">
+        <label class="gf-form-label">
+            <tip>模板变量有 {a}, {b}，{c}，{d}，{e}，分别表示系列名，数据名，数据值等。 在 trigger 为 'axis' 的时候，会有多个系列的数据，此时可以通过 {a0}, {a1}, {a2} 这种后面加索引的方式表示系列的索引。 不同图表类型下的 {a}，{b}，{c}，{d} 含义不一样。 其中变量{a}, {b}, {c}, {d}在不同图表类型下代表数据含义为：
+  <br/>折线（区域）图、柱状（条形）图、K线图 : {a}（系列名称），{b}（类目值），{c}（数值）, {d}（无）
+  <br/>散点图（气泡）图 : {a}（系列名称），{b}（数据名称），{c}（数值数组）, {d}（无）
+  <br/>地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
+  <br/>饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）</tip>
+          </label>
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -224,6 +239,10 @@
     <div class="section gf-form-group">
       <h5 class="section-heading">Base</h5>
       <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.show" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">name</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.name" class="gf-form-input">
+      </div>
     </div>
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
@@ -235,7 +254,7 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate" class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">format</label>
@@ -268,7 +287,7 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.rotate" class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>
@@ -312,6 +331,10 @@
       <h5 class="section-heading">Base</h5>
       <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
+        <label class="gf-form-label width-8">name</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.name" class="gf-form-input">
+      </div>
+      <div class="gf-form">
         <label class="gf-form-label width-8">min</label>
         <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" class="gf-form-input">
       </div>
@@ -330,12 +353,13 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.rotate" class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">format</label>
         <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.yAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.yAxis.axisLabel, $subItem)"></div>
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.yAxis.axisLabel.decimals" class="gf-form-input width-3">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -363,7 +387,7 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.rotate" class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>

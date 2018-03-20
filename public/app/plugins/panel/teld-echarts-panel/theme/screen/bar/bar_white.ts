@@ -44,13 +44,13 @@ var option = {
   "categoryAxis": {
     boundaryGap: true,
     "axisLine": {
-      "show": true,
+      "show": false,
       "lineStyle": {
         "color": "#555"
       }
     },
     "axisTick": {
-      "show": true,
+      "show": false,
       "lineStyle": {
         "color": "#555"
       },
@@ -88,13 +88,13 @@ var option = {
   },
   "valueAxis": {
     "axisLine": {
-      "show": true,
+      "show": false,
       "lineStyle": {
         "color": "#555"
       }
     },
     "axisTick": {
-      "show": true,
+      "show": false,
       "lineStyle": {
         "color": "#555"
       }

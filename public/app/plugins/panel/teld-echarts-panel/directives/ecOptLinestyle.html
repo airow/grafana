@@ -1,19 +1,19 @@
 <div class="gf-form">
-  <label class="gf-form-label width-8">color</label>
+    <ec-clear-val ec-target='lineStyle.color' ec-class='width-8'></ec-clear-val>
   <spectrum-picker ng-model="lineStyle.color" ng-change="refresh()"></spectrum-picker>
 </div>
 <div class="gf-form">
-  <label class="gf-form-label width-8">width</label>
+  <ec-clear-val ec-target='lineStyle.width' ec-class='width-8'></ec-clear-val>
   <input type="text" ng-model="lineStyle.width" on-change="refresh()" class="gf-form-input">
 </div>
 <div class="gf-form">
-  <label class="gf-form-label width-8">type</label>
+  <ec-clear-val ec-target='lineStyle.type' ec-class='width-8'></ec-clear-val>
   <!--<input type="text" on-change="refresh()" ng-model="lineStyle.type" class="gf-form-input">-->
   <div class="gf-form-select-wrapper max-width-15">
     <select class="gf-form-input" ng-model="lineStyle.type" ng-options="serie for serie in ['solid','dotted','dash']" ng-change="refresh()"></select>
   </div>
 </div>
 <div class="gf-form">
-  <label class="gf-form-label width-8">opacity</label>
+  <ec-clear-val ec-target='lineStyle.opacity' ec-class='width-8'></ec-clear-val>
   <input type="text" on-change="render()" ng-model="lineStyle.opacity" class="gf-form-input">
 </div>

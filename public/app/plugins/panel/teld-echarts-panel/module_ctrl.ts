@@ -63,9 +63,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         type: 'value',
         // min: 'dataMin',
         // max: 'dataMax',
-        // axisLabel: {
-        //   formatter: this.panel.formatter.yAxis.axisLabel.formatter.bind(this)
-        // }
+        axisLabel: {
+          //formatter: this.panel.formatter.yAxis.axisLabel.formatter.bind(this)
+          formatter: function(){
+            var f = '' ;
+            var ff = this.axisLableFormatter;
+          }
+        }
       }
     },
     series: {
@@ -263,8 +267,20 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   axisLableFormatter(axis, value, index) {
-    let formater = this.valueFormats[this.panel.formatter[axis].axisLabel.format];
-    return formater(value);
+    var formatterConf = this.panel.formatter[axis].axisLabel;
+    var decimals = formatterConf.decimals;
+    let formater = this.valueFormats[formatterConf.format];
+    return formater(value, decimals);
+  }
+
+  yAxisLableFormatter(value, index) {
+    var returnValue = this.axisLableFormatter('yAxis', value, index);
+    return returnValue;
+  }
+
+  xAxisLableFormatter(value, index) {
+    var returnValue = this.axisLableFormatter('xAxis', value, index);
+    return returnValue;
   }
 
   onTearDown() {
@@ -542,7 +558,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     let series = _.map(dataList, item => {
 
-      let { target, metric, field } = item;
+      let { target, metric, field, refId } = item;
 
       let serieType = this.panel.serieType;
 
@@ -579,6 +595,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
       let serie = this.getDefaultSerie();
       _.defaultsDeep(serie, {
+        refId,
         metric,
         encode,
         name: target,
@@ -808,6 +825,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         break;
       case this.ecConf.series.bar.type:
         axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
+        if (this.panel.formatter.xAxis.axisLabel) {
+          axis.axisLabel.formatter = this.xAxisLableFormatter.bind(this);
+        }
         break;
       case this.ecConf.series.pie.type:
         axis = undefined;
@@ -822,6 +842,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       case this.ecConf.series.line.type:
       case this.ecConf.series.bar.type:
         axis = _.defaultsDeep(this.ecConf.axis.value, this.panel.echarts.yAxis);
+        if (this.panel.formatter.yAxis.axisLabel) {
+          axis.axisLabel.formatter = this.yAxisLableFormatter.bind(this);
+        }
         break;
       case this.ecConf.series.pie.type:
         axis = undefined;
@@ -850,8 +873,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         });
       }
     } else {
-      legendData = series.map(serie => {
-        return { name: serie.name, serie };
+      legendData = series.map((serie, index) => {
+
+        var colorIndex = index % colors.length;
+        var color = colors[colorIndex];
+
+        return {
+          //name: serie.name, textStyle: _.first(serie.data).itemStyle.normal
+          name: serie.name, textStyle: { color: color }
+        };
       });
     }
     return legendData;
@@ -879,11 +909,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         });
       });
 
-      _.each(d, (vv) => {
-        series.push(vv);
+      var groupBarLegends = (this.panel.groupBarLegends || "").split(',');
+      _.each(d, (serie, index) => {
+        serie.itemStyle = _.first(serie.data).itemStyle;
+        serie.name = groupBarLegends[index];
+        series.push(serie);
       });
     }
-
     return series;
   }
 
@@ -894,7 +926,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let serie = this.getDefaultSerie();
     serie = _.defaultsDeep(serie, {
       type: 'bar',
-      data: this.ecSeries.map((s, index) => {
+      data: (this.ecSeries || []).map((s, index) => {
         var colorIndex = index % colors.length;
         var color = colors[colorIndex];
         var itemStyle = { normal: { color } };
@@ -907,10 +939,32 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return series;
   }
 
+  markLineformatter(params) {
+    var valueFormatter = this.yAxisLableFormatter.bind(this);
+    var returnValue = [];
+    var param = _.isArray(params) ? params[0] : params;
+    // returnValue.push(paramArray[0].name);
+    // _.each(paramArray, function (param, index) {
+    //   var item = [param.marker];
+    //   switch (param.seriesName) {
+    //     case "\u0000-":
+    //       break;
+    //     default:
+    //       item.push(param.seriesName + "：");
+    //       break;
+    //   }
+    //   param.value = valueFormatter(param.value);
+    //   item.push(param.value);
+    //   returnValue.push(_.join(item, ''));
+    // }
+    return valueFormatter(param.value);
+  }
+
   getMarklineDate() {
     var markLineData = [];
     if (this.panel.marklines) {
       markLineData = this.panel.marklines.map(item => {
+        item.label.formatter = this.markLineformatter.bind(this);
         return {
           type: item.type,
           label: {
@@ -935,16 +989,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     for (var metric in groupBySeries) {
 
       var s = groupBySeries[metric];
-      series.push({
+
+      let serie = this.getDefaultSerie();
+      serie = _.defaultsDeep(serie, {
         type: 'line',
         name: metric,
         markLine: { data: markLineData },
         markPoint: _.first(s).markPoint,
-        label: { show: false },
         data: s.map((s, index) => {
           var colorIndex = index % colors.length;
           var color = colors[colorIndex];
-          var itemStyle = {  };
+          var itemStyle = {};
           if (s.data.length > 0 && s.data[0].value) {
             return { value: s.data[0].value[1], itemStyle };
           } else {
@@ -952,6 +1007,25 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
         })
       });
+
+      series.push(serie);
+      // series.push({
+      //   type: 'line',
+      //   name: metric,
+      //   markLine: { data: markLineData },
+      //   markPoint: _.first(s).markPoint,
+      //   label: { show: false },
+      //   data: s.map((s, index) => {
+      //     var colorIndex = index % colors.length;
+      //     var color = colors[colorIndex];
+      //     var itemStyle = {  };
+      //     if (s.data.length > 0 && s.data[0].value) {
+      //       return { value: s.data[0].value[1], itemStyle };
+      //     } else {
+      //       return { value: 0, itemStyle };
+      //     }
+      //   })
+      // });
     }
 
     return series;
@@ -1038,8 +1112,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
 
 
-    let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(this.ecSeries) };
-    legend = _.defaultsDeep(legend, this.panel.echarts.legend);
+    // let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(this.ecSeries) };
+    // legend = _.defaultsDeep(legend, this.panel.echarts.legend);
 
     let grid = _.defaultsDeep({}, this.panel.echarts.grid);
 
@@ -1051,9 +1125,38 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       yAxis,
       grid,
       //series: this.ecSeries,
-      series: this.getSeries(),
-      legend: [legend]
+      series: this.getSeries()
+      //legend: [legend]
+      //legend: legend
     };
+
+    if (_.isEmpty(option.tooltip.formatter)) {
+      option.tooltip.formatter = function (params, ticket, callback) {
+        var valueFormatter = this.yAxisLableFormatter.bind(this);
+        var returnValue = [];
+        var paramArray = _.isArray(params) ? params : [params];
+        returnValue.push(paramArray[0].name);
+        _.each(paramArray, function (param, index) {
+          var item = [param.marker];
+          switch (param.seriesName) {
+            case "\u0000-":
+              break;
+            default:
+              item.push(param.seriesName + "：");
+              break;
+          }
+          param.value = valueFormatter(param.value);
+          item.push(param.value);
+          returnValue.push(_.join(item, ''));
+        });
+        return _.join(returnValue, '<br/>');
+      }.bind(this);
+    }
+
+
+    let legend: any = { name: 'legend', data: this.legend(option.series) };
+    legend = _.defaultsDeep(legend, this.panel.echarts.legend);
+    option.legend = legend;
 
     let merge = this.panel.merge;
     if (merge && merge.enable && option.series.length > 1) {
@@ -1086,6 +1189,23 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       // lll.data = news;
       // option.series.push(lll);
     }
+
+    let cumulativeConf = this.panel.cumulativeConf;
+    if (cumulativeConf && cumulativeConf.enable) {
+      _.each(option.series, function (serie, index) {
+        var cumulative = 0;
+        _.each(serie.data, function (item, dataIndex) {
+          var current = _.get(item, 'value', item);
+          cumulative += current;
+          if (_.has(item, 'value')) {
+            item.value = cumulative;
+          } else {
+            item = cumulative;
+          }
+        });
+      });
+    }
+
 
     /** 左右布局legend */
 
