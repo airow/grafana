@@ -157,7 +157,8 @@ class MetricsPanelCtrl extends PanelCtrl {
   }
 
   setRangeString() {
-    var time = angular.copy(this.timeSrv.timeRange());
+    //var time = angular.copy(this.timeSrv.timeRange());
+    var time = angular.copy(this.range);
     var timeRaw = angular.copy(time.raw);
 
     if (!this.dashboard.isTimezoneUtc()) {
@@ -177,9 +178,9 @@ class MetricsPanelCtrl extends PanelCtrl {
     this.range = this.timeSrv.timeRange();
     this.rangeRaw = this.range.raw;
 
-    this.setRangeString();
-
     this.applyPanelTimeOverrides();
+
+    this.setRangeString();
 
     if (this.panel.maxDataPoints) {
       this.resolution = this.panel.maxDataPoints;

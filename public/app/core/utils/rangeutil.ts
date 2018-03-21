@@ -57,6 +57,18 @@ _.each(rangeOptions, function (frame) {
   rangeIndex[frame.from + ' to ' + frame.to] = frame;
 });
 
+//补全 月份
+for (var month = 1; month <= 12; month++) {
+  var frame = { from: `now-${month}M`, to: 'now', en_display: `Last ${month} month`, display: `近 ${month} 月` };
+  rangeIndex[frame.from + ' to ' + frame.to] = frame;
+}
+
+//补全 年份
+for (var year = 1; year <= 50; year++) {
+  var frame = { from: `now-${year}y`, to: 'now', en_display: `Last ${year} years`, display: `近 ${year} 年` };
+  rangeIndex[frame.from + ' to ' + frame.to] = frame;
+}
+
 export  function getRelativeTimesList(timepickerSettings, currentDisplay) {
   var groups = _.groupBy(rangeOptions, (option: any) => {
     option.active = option.display === currentDisplay;

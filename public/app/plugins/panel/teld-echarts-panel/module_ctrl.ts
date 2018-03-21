@@ -89,6 +89,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
+    hideTimeOverride: true,
     xAxisMode: "time",
     //xAxisMode: "series",
     formatter: {
@@ -182,7 +183,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     _.defaultsDeep(this.panel, this.panelDefaults);
     //this.panel.title = '';
-    this.panel.hideTimeOverride = true;
+    //this.panel.hideTimeOverride = true;
 
     this.echartsTheme = echartsTheme;
     this.echartsThemeName = echartsThemeName;
@@ -394,7 +395,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   renderTable(dataList) {
 
-    if (false === this.panel.showTable) { return; }
+    //if (false === this.panel.showTable) { return; }
 
     this.dataRaw = dataList;
 
