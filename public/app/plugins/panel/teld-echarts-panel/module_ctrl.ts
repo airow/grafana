@@ -1197,7 +1197,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         var cumulative = 0;
         _.each(serie.data, function (item, dataIndex) {
           var current = _.get(item, 'value', item);
-          cumulative += current;
+          cumulative += (+current);
           if (_.has(item, 'value')) {
             item.value = cumulative;
           } else {
