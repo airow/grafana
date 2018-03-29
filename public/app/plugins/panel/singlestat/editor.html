@@ -117,4 +117,14 @@
       <gf-form-switch class="gf-form" label-class="width-10" switch-class="max-width-6" label="Threshold markers" checked="ctrl.panel.gauge.thresholdMarkers" on-change="ctrl.render()"></gf-form-switch>
     </div>
   </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Layout</h5>
+    <div class="gf-form">
+      <span class="gf-form-label width-15">@media (max-width: 767px)<tip>小屏比例,col2=1/2,col3=1/3</tip></span>
+      <select class="gf-form-input" ng-model="ctrl.panel.colx" ng-options="f for f in ['col2','col3']">
+        <option value=""></option>
+      </select>
+    </div>
+  </div>
 </div>
