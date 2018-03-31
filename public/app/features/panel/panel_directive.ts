@@ -100,6 +100,28 @@ module.directive('grafanaPanel', function($rootScope, $document) {
         panelContainer.addClass('panel-transparent', true);
       }
 
+      if (ctrl.panel.boxShadow && ctrl.panel.boxShadow.show) {
+        let boxShadowConf = ctrl.panel.boxShadow;
+        let { inset, outset } = boxShadowConf;
+        let defVal = { Xoffset: 0, Yoffset: 0, Blur: 0, Spread: 0, Color: '' };
+        inset = _.defaults(inset, defVal);
+        outset = _.defaults(outset, defVal);
+
+        let boxShadow = [];
+        if (inset) {
+          let insetVal = `inset ${inset.Xoffset}px ${inset.Yoffset || 0}px ${inset.Blur || 0}px ${inset.Spread || 0}px ${inset.Color}`;
+          //let insetVal = `inset ${inset.Xoffset}px ${inset.Yoffset || 0}px ${inset.Blur || 0}px ${inset.Spread || 0}px ${inset.Color}`;
+          boxShadow.push(insetVal);
+        }
+        if (outset) {
+          let outsetVal = `${outset.Xoffset || 0}px ${outset.Yoffset || 0}px ${outset.Blur || 0}px ${outset.Spread || 0}px ${outset.Color}`;
+          boxShadow.push(outsetVal);
+        }
+        let boxShadowVal = boxShadow.join(', ');
+        panelContainer.css('box-shadow', boxShadowVal);
+        //panelContainer.css('box-shadow', 'inset 0 1px 1px rgba(0, 0, 0, 0.025), 8px 8px 5px 7px rgba(24, 84, 132, 0.5)');
+      }
+
       ctrl.events.on('render', () => {
         if (lastHeight !== ctrl.containerHeight) {
           /** 填充屏幕 */

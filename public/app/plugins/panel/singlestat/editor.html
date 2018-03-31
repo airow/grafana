@@ -75,6 +75,12 @@
         </a>
       </span>
     </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-8">ForeColor</label>
+      <span class="gf-form-label width-6">
+        <spectrum-picker ng-model="ctrl.panel.ForeColor" ng-change="ctrl.render()"></spectrum-picker>
+      </span>
+    </div>
   </div>
 
   <div class="section gf-form-group">
@@ -125,6 +131,43 @@
       <select class="gf-form-input" ng-model="ctrl.panel.colx" ng-options="f for f in ['col2','col3']">
         <option value=""></option>
       </select>
+    </div>
+    <gf-form-switch class="gf-form" label-class="width-15" switch-class="max-width-6" label="box-shadow" checked="ctrl.panel.boxShadow.show" on-change="ctrl.render()"></gf-form-switch>
+    <div ng-if="ctrl.panel.boxShadow.show">
+      <div class="gf-form">
+        <label class="gf-form-label width-10">&nbsp;</label>
+        <label class="gf-form-label width-6">Inset</label>
+        <label class="gf-form-label width-6">Outset</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">X offset</label>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.inset.Xoffset" ng-change="ctrl.render()" ng-model-onblur>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.outset.Xoffset" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Y offset</label>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.inset.Yoffset" ng-change="ctrl.render()" ng-model-onblur>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.outset.Yoffset" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Blur</label>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.inset.Blur" ng-change="ctrl.render()" ng-model-onblur>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.outset.Blur" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Spread</label>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.inset.Spread" ng-change="ctrl.render()" ng-model-onblur>
+        <input type="number" class="gf-form-input width-6" placeholder="0" data-placement="right" ng-model="ctrl.panel.boxShadow.outset.Spread" ng-change="ctrl.render()" ng-model-onblur>
+      </div>
+      <div class="gf-form">
+          <label class="gf-form-label width-10">Color</label>
+          <span class="gf-form-label width-6">
+            <spectrum-picker ng-model="ctrl.panel.boxShadow.inset.Color" ng-change="ctrl.render()" ></spectrum-picker>
+          </span>
+          <span class="gf-form-label width-6">
+            <spectrum-picker ng-model="ctrl.panel.boxShadow.outset.Color" ng-change="ctrl.render()" ></spectrum-picker>
+          </span>
+      </div>
     </div>
   </div>
 </div>
