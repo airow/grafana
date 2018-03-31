@@ -158,7 +158,7 @@ export class PanelCtrl {
     if (!this.fullscreen) { //  duplication is not supported in fullscreen mode
       menu.push({ text: 'Duplicate', click: 'ctrl.duplicate()', role: 'Editor' });
     }
-    menu.push({text: 'Share', click: 'ctrl.sharePanel(); dismiss();'});
+    menu.push({ text: 'Share', click: 'ctrl.sharePanel(); dismiss();', role: 'Editor' });
     return menu;
   }
 
@@ -319,7 +319,7 @@ export class PanelCtrl {
   }
 
   getExtendedMenu() {
-    var actions = [{text: 'Panel JSON', click: 'ctrl.editPanelJson(); dismiss();'}];
+    var actions = [{ text: 'Panel JSON', click: 'ctrl.editPanelJson(); dismiss();', role: 'Editor' }];
     this.events.emit('init-panel-actions', actions);
     return actions;
   }

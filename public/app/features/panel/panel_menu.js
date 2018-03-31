@@ -9,7 +9,7 @@ function (angular, $, _, Tether) {
 
   angular
     .module('grafana.directives')
-    .directive('panelMenu', function($compile) {
+    .directive('panelMenu', function($compile, $location) {
       var linkTemplate =
           '<span class="panel-title drag-handle pointer" ng-dblclick="ctrl.titledblclick()">' +
             '<span class="icon-gf panel-alert-icon"></span>' +
@@ -42,20 +42,23 @@ function (angular, $, _, Tether) {
         }
 
         template += '<div class="panel-menu-row">';
-        template += '<a class="panel-menu-link" gf-dropdown="extendedMenu"><i class="fa fa-bars"></i></a>';
+        var hidePanelMenu = $location.search().hpm;
+        if (!hidePanelMenu) {
+          template += '<a class="panel-menu-link" gf-dropdown="extendedMenu"><i class="fa fa-bars"></i></a>';
 
-        _.each(ctrl.getMenu(), function(item) {
-          // skip edit actions if not editor
-          if (item.role === 'Editor' && !ctrl.dashboard.meta.canEdit) {
-            return;
-          }
+          _.each(ctrl.getMenu(), function (item) {
+            // skip edit actions if not editor
+            if (item.role === 'Editor' && !ctrl.dashboard.meta.canEdit) {
+              return;
+            }
 
-          template += '<a class="panel-menu-link" ';
-          if (item.click) { template += ' ng-click="' + item.click + '"'; }
-          if (item.href) { template += ' href="' + item.href + '"'; }
-          template += '>';
-          template += item.text + '</a>';
-        });
+            template += '<a class="panel-menu-link" ';
+            if (item.click) { template += ' ng-click="' + item.click + '"'; }
+            if (item.href) { template += ' href="' + item.href + '"'; }
+            template += '>';
+            template += item.text + '</a>';
+          });
+        }
 
         template += '</div>';
         template += '</div>';
