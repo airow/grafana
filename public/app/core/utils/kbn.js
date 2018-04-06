@@ -707,6 +707,30 @@ function($, _, numeral, moment) {
     return numeral(size).format('0,0.' + _.repeat('0', decimals));
   };
 
+  kbn.valueFormats.thousandsSeparator10 = function (size, decimals) {
+    size = size / 10;
+    return kbn.valueFormats.thousandsSeparator(size, decimals);
+  };
+
+  kbn.valueFormats.thousandsSeparator100 = function (size, decimals) {
+    size = size / 100;
+    return kbn.valueFormats.thousandsSeparator(size, decimals);
+  };
+
+  kbn.valueFormats.thousandsSeparator1000 = function (size, decimals) {
+    size = size / 1000;
+    return kbn.valueFormats.thousandsSeparator(size, decimals);
+  };
+
+  kbn.valueFormats.teldWatt = function (size, decimals) {
+    return kbn.valueFormats.thousandsSeparator(size, decimals) + '瓦';
+  };
+
+  kbn.valueFormats.teldKWatt = function (size, decimals) {
+    size = size / 1000;
+    return kbn.valueFormats.thousandsSeparator(size, decimals) + '千瓦';
+  };
+
   kbn.valueFormats.teldPercent = function (size, decimals) {
     if (size === null) { return ""; }
     var value = kbn.toFixed(100 * size, decimals);
@@ -944,10 +968,20 @@ function($, _, numeral, moment) {
       {
         text: 'teld',
         submenu: [
-          {text: '千分位',       value: 'thousandsSeparator'  },
-          {text: '百分比',       value: 'teldPercent'  },
+          { text: '千分位', value: 'thousandsSeparator' },
+          { text: '千分位-10', value: 'thousandsSeparator10' },
+          { text: '千分位-100', value: 'thousandsSeparator100' },
+          { text: '千分位-1000', value: 'thousandsSeparator1000' },
+          { text: '百分比', value: 'teldPercent' },
           { text: '百分比>100', value: 'teldPercentGreater100' },
-          {text: '整数',       value: 'teldInt'  },
+          { text: '整数', value: 'teldInt' },
+        ]
+      },
+      {
+        text: 'teld功率',
+        submenu: [
+          { text: '瓦', value: 'teldWatt' },
+          { text: '千瓦', value: 'teldKWatt' }
         ]
       },
       {
