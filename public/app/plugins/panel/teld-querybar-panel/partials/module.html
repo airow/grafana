@@ -1,0 +1,55 @@
+<div class="teld-querybar-panel">
+  teld-querybar-panel
+  <div>
+    <div class="tabbed-view-header">
+      <ul class="gf-tabs">
+        <li class="gf-tabs-item" ng-repeat="target in ctrl.panel.targets">
+          <a class="gf-tabs-link" ng-click="ctrl.currentTab = target.refId" ng-class="{active: ctrl.currentTab === target.refId}">
+            {{target.refId}}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="-tabbed-view-body">
+      <div ng-repeat="target in ctrl.panel.targets" ng-if="ctrl.currentTab === target.refId">
+          {{target.refId}}
+          <div class="myslides">
+              <ks-swiper-container loop="false" show-nav-buttons="false" space-between="1" pagination-clickable="false">
+                  <ks-swiper-slide ng-repeat="s in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]">
+                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/{{s}}.jpg">
+                  </ks-swiper-slide>
+              </ks-swiper-container>
+          </div>
+
+          <div class="myslides">
+              <ks-swiper-container loop="false" show-nav-buttons="false" slides-per-view="4" space-between="5" pagination-clickable="false">
+                  <ks-swiper-slide>
+                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/1.jpg">
+                  </ks-swiper-slide>
+                  <ks-swiper-slide>
+                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/2.jpg">
+                  </ks-swiper-slide>
+              </ks-swiper-container>
+          </div>
+
+          <div class="myslides">
+              <ks-swiper-container loop="true" show-nav-buttons="true" slides-per-view="4" space-between="5" pagination-clickable="false">
+                  <ks-swiper-slide ng-repeat="s in [1,2,3,4,5]">
+                      <img ng-src="http://api.randomuser.me/portraits/thumb/women/{{s}}.jpg">
+                  </ks-swiper-slide>
+              </ks-swiper-container>
+          </div>
+
+          <div class="myslides" ng-controller="TestCtrl">
+              <ks-swiper-container autoplay="500" swiper="swiper" on-ready="onReadySwiper(swiper)">
+                  <ks-swiper-slide ng-repeat="s in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]">
+                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/{{s}}.jpg">
+                  </ks-swiper-slide>
+              </ks-swiper-container>
+              <button ng-click="next()">Next</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
