@@ -54,6 +54,8 @@
       'echarts': 'vendor/npm/echarts/dist/echarts.min.js',
       'echarts.china': 'vendor/npm/echarts/map/js/china.js',
       'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js',
+    // 'swiper': 'vendor/angular-swiper-0.4.0/swiper/js/swiper.js',
+    // 'angular-swiper': 'vendor/angular-swiper-0.4.0/angular-swiper.js',
       'brace': 'vendor/npm/brace/index.js',
       'brace/ext/language_tools': 'vendor/npm/brace/ext/language_tools.js',
       'brace/theme/textmate': 'vendor/npm/brace/theme/textmate.js',

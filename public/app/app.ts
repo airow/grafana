@@ -18,6 +18,12 @@ import 'jquery.signalR';
 import 'Snap.svg';
 import 'me-pageloading';
 
+import 'vendor/angular-swiper-0.4.0/swiper/css/swiper.css!css';
+import 'vendor/angular-swiper-0.4.0/swiper/js/swiper.js';
+import 'vendor/angular-swiper-0.4.0/angular-swiper.js';
+// import 'swiper';
+// import 'angular-swiper';
+
 import $ from 'jquery';
 import angular from 'angular';
 import config from 'app/core/config';
@@ -97,6 +103,7 @@ export class GrafanaApp {
       'SignalR',
       'me-pageloading',
       'ngWebSocket',
+      'ksSwiper',
     ];
 
     var module_types = ['controllers', 'directives', 'factories', 'services', 'filters', 'routes'];
