@@ -1,55 +1,82 @@
 <div class="teld-querybar-panel">
-  teld-querybar-panel
   <div>
     <div class="tabbed-view-header">
-      <ul class="gf-tabs">
-        <li class="gf-tabs-item" ng-repeat="target in ctrl.panel.targets">
-          <a class="gf-tabs-link" ng-click="ctrl.currentTab = target.refId" ng-class="{active: ctrl.currentTab === target.refId}">
+      <ul class="gf-tabs" ng-show="ctrl.defineQuery">
+        <li class="gf-tabs-item" ng-dblclick="ctrl.defineQuery!=ctrl.defineQuery" ng-repeat="target in ctrl.panel.targets">
+          <a class="gf-tabs-link" ng-click="ctrl.changeQueryBarTab(target)" ng-class="{active: ctrl.currentTarget.refId === target.refId}">
             {{target.refId}}
           </a>
+          <!-- <a class="gf-tabs-link" ng-if="ctrl.currentTarget.refId === target.refId" ng-class="{active: ctrl.currentTarget.refId === target.refId}">
+              <i class="fa fa-refresh"></i>
+          </a> -->
         </li>
       </ul>
+      <h2 class="tabbed-view-title" ng-show="!ctrl.defineQuery">
+          <span ng-repeat="target in ctrl.panel.targets">{{target.refId}}:{{target.select}},</span>
+      </h2>
+      <button class="tabbed-view-close-btn" ng-click="ctrl.defineQuery=!ctrl.defineQuery">
+        <i class="fa" ng-class="{true:'fa-remove',false:'fa-remove'}[ctrl.defineQuery||false]"></i>
+      </button>
     </div>
+    <div class="-tabbed-view-body" ng-show="ctrl.defineQuery">
+      <div ng-repeat="target in ctrl.panel.targets" ng-if="ctrl.currentTarget.refId === target.refId">
+        <div class="gf-form-inline" style="margin-top: 5px;">
+          <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
+            <label class="gf-form-label query-keyword width-5">{{dsQueryVariable.label}}</label>
+            <input type="text" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId][dsQueryVariable.name].value" spellcheck="false" placeholder="Lucene query">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <a ng-click="ctrl.toggleQuery(target)">
+                <i class="fa fa-filter"></i>filter
+              </a>
+            </label>
+            <label class="gf-form-label">
+              <a ng-click="ctrl.query()">
+                <i class="fa fa-search"></i>search
+              </a>
+            </label>
+          </div>
+        </div>
+        <ks-swiper-container loop="false" show-nav-buttons="true" on-ready="ctrl.onReadySwiper(swiper)" override-parameters="{observer: true, observeParents: true}">
+          <ks-swiper-slide ng-repeat="row in ctrl.getQueryResult(target)">
+            <div ng-click="ctrl.setQueryBarVariable(target, row)">
+              <div class="lt" style="background-color: #6cb6d2;
+              width: 50px;
+              height: 50px;
+              border-radius: 100%;
+              margin-left: 10px;
+              margin-top: 15px;
+              float: left;"><p style="color: #fff;
+                font-size: 20px;
+                font-weight: 300;
+                text-align: center;
+                line-height: 50px;">{{$index}}</p></div>
+              <div class="rt" style="width: 60%;
+              height: 50px;
+              border-radius: 100%;
+              margin-left: 10px;
+              float: left;
+              padding: 22px 10px;"><p style="color: #8e8e93;
+              font-size: 14px;
+              font-weight: 300;
+              text-align: left;">{{row.name}},{{row.valueTmpl || row.value}}</p></div>
+            </div>
+          </ks-swiper-slide>
+      </ks-swiper-container>
 
-    <div class="-tabbed-view-body">
-      <div ng-repeat="target in ctrl.panel.targets" ng-if="ctrl.currentTab === target.refId">
-          {{target.refId}}
-          <div class="myslides">
-              <ks-swiper-container loop="false" show-nav-buttons="false" space-between="1" pagination-clickable="false">
+          <!-- <div class="myslides">
+              <ks-swiper-container autoplay="false" swiper="ctrl.swiper" on-ready="ctrl.onReadySwiper(swiper)">
                   <ks-swiper-slide ng-repeat="s in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]">
-                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/{{s}}.jpg">
+                      <img ng-click="ctrl.alert(s);" ng-src="http://api.randomuser.me/portraits/thumb/men/{{s}}.jpg">
                   </ks-swiper-slide>
               </ks-swiper-container>
-          </div>
-
-          <div class="myslides">
-              <ks-swiper-container loop="false" show-nav-buttons="false" slides-per-view="4" space-between="5" pagination-clickable="false">
-                  <ks-swiper-slide>
-                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/1.jpg">
-                  </ks-swiper-slide>
-                  <ks-swiper-slide>
-                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/2.jpg">
-                  </ks-swiper-slide>
-              </ks-swiper-container>
-          </div>
-
-          <div class="myslides">
-              <ks-swiper-container loop="true" show-nav-buttons="true" slides-per-view="4" space-between="5" pagination-clickable="false">
-                  <ks-swiper-slide ng-repeat="s in [1,2,3,4,5]">
-                      <img ng-src="http://api.randomuser.me/portraits/thumb/women/{{s}}.jpg">
-                  </ks-swiper-slide>
-              </ks-swiper-container>
-          </div>
-
-          <div class="myslides" ng-controller="TestCtrl">
-              <ks-swiper-container autoplay="500" swiper="swiper" on-ready="onReadySwiper(swiper)">
-                  <ks-swiper-slide ng-repeat="s in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]">
-                      <img ng-src="http://api.randomuser.me/portraits/thumb/men/{{s}}.jpg">
-                  </ks-swiper-slide>
-              </ks-swiper-container>
-              <button ng-click="next()">Next</button>
-          </div>
+              <button ng-click="ctrl.next()">Next</button>
+          </div> -->
       </div>
     </div>
+  </div>
+  <div ng-show="ctrl.defineQuery">
+      [<span ng-repeat="(key,variable) in ctrl.querybarVariable">{{key}}:{{variable.current.text}},</span>]
   </div>
 </div>

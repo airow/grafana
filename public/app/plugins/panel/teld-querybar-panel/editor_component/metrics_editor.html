@@ -1,19 +1,120 @@
 
 <div class="query-editor-rows gf-form-group">
   <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
-    <rebuild-on-change property="ctrl.panel.datasource || target.datasource" show-null="true">
-      <plugin-component type="query-ctrl">
-      </plugin-component>
-    </rebuild-on-change>
+      <div class="section">
+        <h5 class="section-heading">Base Config</h5>
+        <!-- <div class="gf-form-inline"> -->
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">Tab Name</label>
+            <input type="text" class="gf-form-input" ng-model="target.refId" spellcheck="false" placeholder="Lucene query">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">Name</label>
+            <input type="text" class="gf-form-input" ng-model="target.conf.name" spellcheck="false" placeholder="name">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">Value</label>
+            <input type="text" class="gf-form-input" ng-model="target.conf.value" spellcheck="false" placeholder="sub title">
+          </div>
+          <div class="gf-form max-width-15">
+            <label class="gf-form-label query-keyword">Template</label>
+            <input type="text" class="gf-form-input" ng-model="target.conf.valueTmpl" spellcheck="false" placeholder="alias patterns">
+          </div>
+        <!-- </div> -->
+      </div>
+      <div class="section">
+        <h5 class="section-heading">Variables</h5>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-10">Variable Prefix</label>
+          <input type="text" class="gf-form-input" ng-model="target.conf.variablePrefix" spellcheck="false" placeholder="Lucene query">
+        </div>
+        <h5 class="section-heading">Query</h5>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-15">Variable</label>
+            <label class="gf-form-label query-keyword width-10">Name</label>
+            <label class="gf-form-label query-keyword width-10">Label</label>
+            <label class="gf-form-label">
+              <a ng-click="target.conf.dsQueryVariables.push({})">
+                <i class="fa fa-plus"></i>
+              </a>
+            </label>
+          </div>
+        </div>
+        <div class="gf-form-inline" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-15">${{target.conf.variablePrefix}}_ds_{{dsQueryVariable.name}}</label>
+            <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.name" spellcheck="false" placeholder="name">
+            <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.label" spellcheck="false" placeholder="label">
+            <label class="gf-form-label">
+              <a ng-click="ctrl.removeVariable(target.conf.dsQueryVariables, bindVariable)">
+                <i class="pointer fa fa-remove"></i>
+              </a>
+            </label>
+            <label class="gf-form-label" ng-hide="$last">
+              <a ng-click="ctrl.move(target.conf.dsQueryVariables,$index,$index+1)">
+                <i class="pointer fa fa-arrow-down"></i>
+              </a>
+            </label>
+            <label class="gf-form-label" ng-hide="$first">
+              <a ng-click="ctrl.move(target.conf.dsQueryVariables,$index,$index-1)">
+                <i class="pointer fa fa-arrow-up"></i>
+              </a>
+            </label>
+          </div>
+        </div>
+          <h5 class="section-heading">Publish</h5>
+          <div class="gf-form-inline">
+            <div class="gf-form">
+              <label class="gf-form-label query-keyword width-15">Variable</label>
+              <label class="gf-form-label query-keyword width-10">Name</label>
+              <label class="gf-form-label query-keyword width-10">Field</label>
+              <label class="gf-form-label">
+                <a ng-click="target.conf.bindVariables.push({})">
+                  <i class="fa fa-plus"></i>
+                </a>
+              </label>
+            </div>
+          </div>
+          <div class="gf-form-inline" ng-repeat="bindVariable in target.conf.bindVariables">
+            <div class="gf-form">
+              <label class="gf-form-label query-keyword width-15">${{target.conf.variablePrefix}}_{{bindVariable.name}}</label>
+              <input type="text" class="gf-form-input width-10" ng-model="bindVariable.name" spellcheck="false" placeholder="name">
+              <input type="text" class="gf-form-input width-10" ng-model="bindVariable.field" spellcheck="false" placeholder="field">
+              <label class="gf-form-label">
+                <a ng-click="ctrl.removeVariable(target.conf.bindVariables, bindVariable)">
+                  <i class="fa fa-remove"></i>
+                </a>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <h5 class="section-heading">Linkage</h5>
+          <div class="gf-form-inline">
+            <div class="gf-form" ng-repeat="link in target.conf.linkage">
+              <input type="text" class="gf-form-input width-10" ng-model="link.refId" spellcheck="false" placeholder="name">
+              <label class="gf-form-label">
+                <a ng-click="ctrl.removeVariable(target.conf.linkage, link)">
+                  <i class="fa fa-remove"></i>
+                </a>
+              </label>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label">
+                <a ng-click="target.conf.linkage.push({})">
+                  <i class="fa fa-plus"></i>
+                </a>
+              </label>
+            </div>
+          </div>
+        </div>
+        <rebuild-on-change property="ctrl.panel.datasource || target.datasource" show-null="true">
+        <plugin-component type="query-ctrl">
+        </plugin-component>
+      </rebuild-on-change>
+      <br>
   </div>
 </div>
 
 <mixed-metrics-ds-selector panel-ctrl="ctrl"></mixed-metrics-ds-selector>
-
-<div class="gf-form-group">
-  <rebuild-on-change property="ctrl.panel.datasource" show-null="true">
-    <plugin-component type="query-options-ctrl">
-    </plugin-component>
-  </rebuild-on-change>
-</div>
-

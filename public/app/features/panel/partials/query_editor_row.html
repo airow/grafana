@@ -12,15 +12,6 @@
       </a>
     </label>
   </div>
-  <div class="gf-form" ng-if="ctrl.target.isQuerybar">
-    <input ng-show="ctrl.editRefId" type="text" class="gf-form-input width-8"
-          placeholder="tab name" data-placement="right"
-          ng-model="ctrl.target.refId"
-          ng-model-onblur>
-    <label class="gf-form-label">
-      <i class="fa fa-pencil" ng-class="{true:'fa-remove',false:'fa-pencil'}[ctrl.editRefId||false]" ng-click="ctrl.editRefId=!ctrl.editRefId"></i>
-    </label>
-  </div>
 
 	<div class="gf-form-query-content gf-form-query-content--collapsed" ng-if="ctrl.collapsed">
 		<div class="gf-form">
