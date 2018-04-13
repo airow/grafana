@@ -23,7 +23,7 @@ var template = `
 
     <div class="gf-form gf-form--offset-1">
       <label class="gf-form-label">
-        Tab name
+        页签
       </label>
       <input type="text" class="gf-form-input" ng-model="ctrl.dsSegment.name" placeholder="Tab name">
     </div>

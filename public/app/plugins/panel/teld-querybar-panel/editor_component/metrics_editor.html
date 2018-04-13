@@ -5,20 +5,35 @@
         <h5 class="section-heading">Base Config</h5>
         <!-- <div class="gf-form-inline"> -->
           <div class="gf-form">
-            <label class="gf-form-label query-keyword width-7">Tab Name</label>
+            <label class="gf-form-label query-keyword width-7">页签</label>
             <input type="text" class="gf-form-input" ng-model="target.refId" spellcheck="false" placeholder="Lucene query">
           </div>
           <div class="gf-form">
-            <label class="gf-form-label query-keyword width-7">Name</label>
+            <label class="gf-form-label query-keyword width-7">主标题</label>
             <input type="text" class="gf-form-input" ng-model="target.conf.name" spellcheck="false" placeholder="name">
           </div>
           <div class="gf-form">
-            <label class="gf-form-label query-keyword width-7">Value</label>
+            <label class="gf-form-label query-keyword width-7">上副标题</label>
+            <input type="text" class="gf-form-input" ng-model="target.conf.value_TL" spellcheck="false" placeholder="sub title">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">下副标题</label>
             <input type="text" class="gf-form-input" ng-model="target.conf.value" spellcheck="false" placeholder="sub title">
           </div>
-          <div class="gf-form max-width-15">
-            <label class="gf-form-label query-keyword">Template</label>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-7">Template</label>
             <input type="text" class="gf-form-input" ng-model="target.conf.valueTmpl" spellcheck="false" placeholder="alias patterns">
+          </div>
+          <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-7" checked="target.conf.required">
+          </gf-form-switch>
+          <div class="gf-form" ng-if="target.conf.required">
+            <label class="gf-form-label width-7">下标</label>
+            <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false" placeholder="alias patterns">
+          </div>
+          <div class="gf-form-inline">
+
+            <!-- <gf-form-switch class="gf-form" label="默认" label-class="width-7" checked="target.conf.defaultValue">
+            </gf-form-switch> -->
           </div>
         <!-- </div> -->
       </div>
@@ -31,9 +46,10 @@
         <h5 class="section-heading">Query</h5>
         <div class="gf-form-inline">
           <div class="gf-form">
-            <label class="gf-form-label query-keyword width-15">Variable</label>
-            <label class="gf-form-label query-keyword width-10">Name</label>
-            <label class="gf-form-label query-keyword width-10">Label</label>
+            <label class="gf-form-label query-keyword width-15">变量格式</label>
+            <label class="gf-form-label query-keyword width-10">变量名</label>
+            <label class="gf-form-label query-keyword width-10">标签</label>
+            <label class="gf-form-label query-keyword width-5">Null</label>
             <label class="gf-form-label">
               <a ng-click="target.conf.dsQueryVariables.push({})">
                 <i class="fa fa-plus"></i>
@@ -46,6 +62,7 @@
             <label class="gf-form-label query-keyword width-15">${{target.conf.variablePrefix}}_ds_{{dsQueryVariable.name}}</label>
             <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.name" spellcheck="false" placeholder="name">
             <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.label" spellcheck="false" placeholder="label">
+            <input type="text" class="gf-form-input width-5" ng-model="dsQueryVariable.nullValue" spellcheck="false" placeholder="null value">
             <label class="gf-form-label">
               <a ng-click="ctrl.removeVariable(target.conf.dsQueryVariables, bindVariable)">
                 <i class="pointer fa fa-remove"></i>
@@ -66,9 +83,10 @@
           <h5 class="section-heading">Publish</h5>
           <div class="gf-form-inline">
             <div class="gf-form">
-              <label class="gf-form-label query-keyword width-15">Variable</label>
-              <label class="gf-form-label query-keyword width-10">Name</label>
-              <label class="gf-form-label query-keyword width-10">Field</label>
+              <label class="gf-form-label query-keyword width-15">变量格式</label>
+              <label class="gf-form-label query-keyword width-10">变量名</label>
+              <label class="gf-form-label query-keyword width-10">字段</label>
+              <label class="gf-form-label query-keyword width-5">Null</label>
               <label class="gf-form-label">
                 <a ng-click="target.conf.bindVariables.push({})">
                   <i class="fa fa-plus"></i>
@@ -78,12 +96,18 @@
           </div>
           <div class="gf-form-inline" ng-repeat="bindVariable in target.conf.bindVariables">
             <div class="gf-form">
-              <label class="gf-form-label query-keyword width-15">${{target.conf.variablePrefix}}_{{bindVariable.name}}</label>
+              <label class="gf-form-label query-keyword width-15"><i style="margin: auto 5px;" class="fa fa-eye" ng-if="$first"></i>${{target.conf.variablePrefix}}_{{bindVariable.name}}</label>
               <input type="text" class="gf-form-input width-10" ng-model="bindVariable.name" spellcheck="false" placeholder="name">
               <input type="text" class="gf-form-input width-10" ng-model="bindVariable.field" spellcheck="false" placeholder="field">
+              <input type="text" class="gf-form-input width-5" ng-model="bindVariable.nullValue" spellcheck="false" placeholder="null value">
               <label class="gf-form-label">
                 <a ng-click="ctrl.removeVariable(target.conf.bindVariables, bindVariable)">
                   <i class="fa fa-remove"></i>
+                </a>
+              </label>
+              <label class="gf-form-label" ng-hide="$first">
+                <a ng-click="ctrl.move(target.conf.bindVariables,$index,0)">
+                  <i class="pointer fa fa-eye"></i>
                 </a>
               </label>
             </div>

@@ -4,7 +4,7 @@
       <ul class="gf-tabs" ng-show="ctrl.defineQuery">
         <li class="gf-tabs-item" ng-dblclick="ctrl.defineQuery!=ctrl.defineQuery" ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link" ng-click="ctrl.changeQueryBarTab(target)" ng-class="{active: ctrl.currentTarget.refId === target.refId}">
-            {{target.refId}}
+            {{target.refId}} <i ng-if="target.conf.required" style="color: red;" class="fa fa-asterisk"></i>
           </a>
           <!-- <a class="gf-tabs-link" ng-if="ctrl.currentTarget.refId === target.refId" ng-class="{active: ctrl.currentTarget.refId === target.refId}">
               <i class="fa fa-refresh"></i>
@@ -19,52 +19,53 @@
       </button>
     </div>
     <div class="-tabbed-view-body" ng-show="ctrl.defineQuery">
-      <div ng-repeat="target in ctrl.panel.targets" ng-if="ctrl.currentTarget.refId === target.refId">
-        <div class="gf-form-inline" style="margin-top: 5px;">
+      <div ng-repeat="target in ctrl.panel.targets" style="margin-top: 2px;" st2yle="border: 1px red solid;border-top: 0px;padding: 10px;" ng-if="ctrl.currentTarget.refId === target.refId">
+        <div class="gf-form-inline">
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
-            <label class="gf-form-label query-keyword width-5">{{dsQueryVariable.label}}</label>
-            <input type="text" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId][dsQueryVariable.name].value" spellcheck="false" placeholder="Lucene query">
+            <label class="gf-form-label query-keyword">{{dsQueryVariable.label}}</label>
+            <input type="text" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value" spellcheck="false" placeholder="Lucene query">
           </div>
           <div class="gf-form">
             <label class="gf-form-label">
               <a ng-click="ctrl.toggleQuery(target)">
-                <i class="fa fa-filter"></i>filter
-              </a>
-            </label>
-            <label class="gf-form-label">
-              <a ng-click="ctrl.query()">
-                <i class="fa fa-search"></i>search
+                <i class="fa fa-filter"></i>
               </a>
             </label>
           </div>
         </div>
-        <ks-swiper-container loop="false" show-nav-buttons="true" on-ready="ctrl.onReadySwiper(swiper)" override-parameters="{observer: true, observeParents: true}">
-          <ks-swiper-slide ng-repeat="row in ctrl.getQueryResult(target)">
-            <div ng-click="ctrl.setQueryBarVariable(target, row)">
-              <div class="lt" style="background-color: #6cb6d2;
-              width: 50px;
-              height: 50px;
-              border-radius: 100%;
-              margin-left: 10px;
-              margin-top: 15px;
-              float: left;"><p style="color: #fff;
-                font-size: 20px;
-                font-weight: 300;
-                text-align: center;
-                line-height: 50px;">{{$index}}</p></div>
-              <div class="rt" style="width: 60%;
-              height: 50px;
-              border-radius: 100%;
-              margin-left: 10px;
-              float: left;
-              padding: 22px 10px;"><p style="color: #8e8e93;
-              font-size: 14px;
-              font-weight: 300;
-              text-align: left;">{{row.name}},{{row.valueTmpl || row.value}}</p></div>
+        <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="false" on-ready="ctrl.onReadySwiper(swiper)" override-parameters="{mousewheelControl:true,observer: true, observeParents: true}">
+          <ks-swiper-slide slider-cls='{{ctrl.getSliderCls(target,$index)}}' ng-repeat="row in ctrl.getQueryResult(target)">
+            <div ng-if="row.isNil">
+              <div ng-click="ctrl.setQueryBarVariable(target, row)">
+                <div class="empty">
+                  <p style="font-weight: bold;">无</p>
+                </div>
+              </div>
+            </div>
+            <div ng-if="!row.isNil">
+              <div ng-click="ctrl.setQueryBarVariable(target, $index, row)" style="background-color: red;">
+                <div class="activeflag"><i class="fa fa-check-square-o"></i></div>
+                <div class="lt">
+                  <p>{{$index+1}}</p>
+                </div>
+                <div class="rt">
+                  <div>
+                    <p class="top" ng-if="row.top" ng-style="row.topStyle" ng-class="row.topCls">{{row.top}}</p>
+                    <p class="title" ng-style="row.titleStyle" ng-class="row.titleCls">{{row.title || (row.valueTmpl || row.value)}}</p>
+                    <p class="bottom" ng-if="row.bottom" ng-style="row.bottomStyle" ng-class="row.bottomCls">{{row.bottom}}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </ks-swiper-slide>
-      </ks-swiper-container>
-
+          <ks-swiper-slide ng-if="ctrl.spin">
+            <div>
+              <div class="empty">
+                <p><i class="fa fa-refresh fa-spin" style="font-size: 24px;"></i></p>
+              </div>
+            </div>
+          </ks-swiper-slide>
+        </ks-swiper-container>
           <!-- <div class="myslides">
               <ks-swiper-container autoplay="false" swiper="ctrl.swiper" on-ready="ctrl.onReadySwiper(swiper)">
                   <ks-swiper-slide ng-repeat="s in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]">
@@ -77,6 +78,23 @@
     </div>
   </div>
   <div ng-show="ctrl.defineQuery">
-      [<span ng-repeat="(key,variable) in ctrl.querybarVariable">{{key}}:{{variable.current.text}},</span>]
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword">过滤条件</label>
+        </div>
+        <div class="gf-form" ng-repeat="(key,variable) in ctrl.getExprVariables()">
+          <!-- <label class="gf-form-label query-keyword">{{key}}</label>
+          <label class="gf-form-label">&nbsp;{{variable.current.text}}&nbsp;</label> -->
+          <label class="gf-form-label">{{key}}：{{variable.current.text}}</label>
+          <!-- [{{ctrl.query()}}] -->
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.query()">
+              <i class="fa fa-search"></i>查询
+            </a>
+          </label>
+        </div>
+      </div>
   </div>
 </div>
