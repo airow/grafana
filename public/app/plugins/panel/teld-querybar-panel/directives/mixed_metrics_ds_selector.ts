@@ -25,7 +25,11 @@ var template = `
       <label class="gf-form-label">
         页签
       </label>
-      <input type="text" class="gf-form-input" ng-model="ctrl.dsSegment.name" placeholder="Tab name">
+      <input type="text" class="gf-form-input width-6" ng-model="ctrl.dsSegment.title" placeholder="Title">
+      <label class="gf-form-label">
+        变量前缀
+      </label>
+      <input type="text" class="gf-form-input width-6" ng-model="ctrl.dsSegment.variablePrefix" placeholder="variable Prefix">
     </div>
 
     <div class="gf-form gf-form--offset-1">
@@ -66,8 +70,22 @@ export class MixedMetricsDsSelectorCtrl {
     var target: any = {isNew: true};
 
     target.datasource = this.dsSegment.value;
-    target.refId = this.dsSegment.name;
+    //target.refId = this.dsSegment.name;
     target.isQuerybar = true;
+
+    _.defaultsDeep(target, this.panelCtrl.defTargetConf);
+    target.conf.title = this.dsSegment.title;
+    target.refId = target.conf.variablePrefix = this.dsSegment.variablePrefix;
+
+    let datasourceMeta = _.find(this.datasources, { value: this.dsSegment.value });
+    target.conf.meta = {
+      datasource: {
+        id: datasourceMeta.meta.id,
+        name: datasourceMeta.meta.name,
+        nullValue: this.panelCtrl.datasourceNullValue[datasourceMeta.meta.id] || ""
+      }
+    };
+
     this.panelCtrl.panel.targets.push(target);
     this.dsSegment.name = null;
   }
