@@ -1,7 +1,7 @@
 <div class="teld-querybar-panel">
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
-      <ul class="gf-tabs">
+      <ul class="gf-tabs" style="margin-top: 0px;">
         <li class="gf-tabs-item" ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.changeQueryBarTab(target)"
             ng-class="{active: ctrl.currentTarget.refId === target.refId}">
@@ -10,31 +10,24 @@
           </a>
         </li>
       </ul>
-      <!-- <h2 class="tabbed-view-title" ng-show="!ctrl.defineQuery">
-          <span ng-repeat="target in ctrl.panel.targets">{{target.refId}}:{{target.select}},</span>
-      </h2>
-      <button class="tabbed-view-close-btn" ng-click="ctrl.defineQuery=!ctrl.defineQuery">
-        <i class="fa" ng-class="{true:'fa-remove',false:'fa-remove'}[ctrl.defineQuery||false]"></i>
-      </button> -->
     </div>
     <div class="-tabbed-view-body">
       <div ng-repeat="target in ctrl.panel.targets" style="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;"
         st2yle="border: 1px red solid;border-top: 0px;padding: 10px;" ng-if="ctrl.currentTarget.refId === target.refId">
         <div class="gf-form-inline">
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
-            <!-- <label ng-if='dsQueryVariable.label' class="gf-form-label query-keyword">{{dsQueryVariable.label}}</label> -->
-            <input type="text" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
+            <input type="text" ng-keyup="ctrl.enterkey(target)"  style="padding-top: 2px; padding-bottom: 2px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
               spellcheck="false" placeholder="{{dsQueryVariable.label}}">
           </div>
           <div class="gf-form" ng-if="target.conf.dsQueryVariables.length>0">
-            <label class="gf-form-label">
+            <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
               <a ng-click="ctrl.toggleQuery(target)">
                 <i class="fa fa-filter"></i>
               </a>
             </label>
           </div>
         </div>
-        <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="false" on-ready="ctrl.onReadySwiper(swiper)"
+        <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="true" on-ready="ctrl.onReadySwiper(swiper)"
           override-parameters="{mousewheelControl:true,observer: true, observeParents: true}">
           <ks-swiper-slide slider-cls='{{ctrl.getSliderCls(target,$index)}}' ng-repeat="row in ctrl.getQueryResult(target)">
             <div ng-if="row.isNil">
@@ -54,9 +47,9 @@
                 </div>
                 <div class="rt">
                   <div>
-                    <p class="top" ng-if="row.labelTop" ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
-                    <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls">{{row.label}}</p>
-                    <p class="bottom" ng-if="row.labelBottom" ng-style="row.conf.bottomStyle" ng-class="row.bconf.ottomCls">{{row.labelBottom}}</p>
+                    <p class="top"  ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
+                    <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls"><div>{{row.label}}</div></p>
+                    <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.bconf.ottomCls">{{row.labelBottom}}</p>
                   </div>
                 </div>
               </div>
@@ -84,23 +77,17 @@
     </div>
   </div>
   <div style="margin-top: 3px;">
-    <div class="gf-form-inline">
-      <!-- <div class="gf-form filter">
-          <label class="gf-form-label query-keyword">过滤条件</label>
-        </div> -->
+    <div class="gf-form-inline" style="height: 30px;margin-top: 8px;">
       <div class="gf-form filter" ng-repeat="(key,variable) in ctrl.getExprVariables()">
-        <!-- <label class="gf-form-label query-keyword">{{key}}</label>
-          <label class="gf-form-label">&nbsp;{{variable.current.text}}&nbsp;</label> -->
         <label class="gf-form-label">{{key}}：
           <span class="filter-value">{{variable.current.text}}</span>
         </label>
-        <!-- [{{ctrl.query()}}] -->
       </div>
-      <div class="gf-form">
+      <div class="gf-form filter-button">
         <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.query();">
           <i class="fa fa-search"></i>
         </button>
-        <button type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuery=!ctrl.defineQuery">
+        <button type="button" class="btn gf-form-btn" ng-click="ctrl.row.height=1;ctrl.defineQuery=!ctrl.defineQuery">
           <i class="fa" ng-class="{true:'fa-angle-double-up',false:'fa-angle-double-down'}[ctrl.defineQuery]"></i>
         </button>
       </div>

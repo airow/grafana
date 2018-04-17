@@ -18,11 +18,11 @@ import 'jquery.signalR';
 import 'Snap.svg';
 import 'me-pageloading';
 
-import 'vendor/angular-swiper-0.4.0/swiper/css/swiper.css!css';
-import 'vendor/angular-swiper-0.4.0/swiper/js/swiper.js';
-import 'vendor/angular-swiper-0.4.0/angular-swiper.js';
-// import 'swiper';
-// import 'angular-swiper';
+// import 'vendor/angular-swiper-0.4.0/swiper/css/swiper.css!css';
+// import 'vendor/angular-swiper-0.4.0/swiper/js/swiper.js';
+// import 'vendor/angular-swiper-0.4.0/angular-swiper.js';
+import 'swiper';
+import 'angular-swiper';
 
 import $ from 'jquery';
 import angular from 'angular';

@@ -16,6 +16,11 @@ import './directives/all';
 import { loadPluginCss } from 'app/plugins/sdk';
 
 loadPluginCss({
+  dark: '/public/app/plugins/panel/teld-querybar-panel/css/swiper.3.0.8.built-in.css',
+  light: '/public/app/plugins/panel/teld-querybar-panel/css/swiper.3.0.8.built-in.css'
+});
+
+loadPluginCss({
   dark: '/public/app/plugins/panel/teld-querybar-panel/css/swiper.built-in.css',
   light: '/public/app/plugins/panel/teld-querybar-panel/css/swiper.built-in.css'
 });
@@ -74,7 +79,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   // Set and populate defaults
   panelDefaults = {
-    height: 100,
+    height: 10,
     datasource: 'default',
     targets: []
   };
@@ -82,7 +87,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   /** @ngInject **/
   constructor($scope, $injector) {
     super($scope, $injector);
-    this.$window = this.$injector.get("$window");
+    this.$window = $injector.get("$window");
     this.$q = $injector.get('$q');
     this.datasourceSrv = $injector.get('datasourceSrv');
     this.timeSrv = $injector.get('timeSrv');
@@ -98,7 +103,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.querybarVariable = {};
     this.querybarDsVariable = {};
     this.currentTabInfo = {};
-    this.currentTarget = _.head(this.panel.targets);
+    //this.currentTarget = _.head(this.panel.targets);
+
+    this.currentTarget = _.find(this.panel.targets, { refId: this.panel.selectTab }) || this.panel.targets[0];
     this.row.notWatchHeight = true;
 
     _.each(this.panel.targets, target => {
@@ -267,6 +274,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let target = this.currentTarget;
     if (target.conf.required) {
       let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
+      delete tabInfo.selectedIndex;
       if (_.isNil(tabInfo.selectedIndex)) {
         //_.set(tabInfo, '.selectedIndex', 0);
         let predicateValue = target.conf.predicateValue || 0;
@@ -279,9 +287,12 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         this.setQueryBarVariable(target, index, sortDatapoints[index]);
         if (false === this.isFirstLoaded) {
           this.isFirstLoaded = true;
-
-        }this.query();
+        }
+        //this.query();
       }
+    } else {
+      let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
+      this.setQueryBarVariable(target, tabInfo.selectedIndex, {});
     }
 
     this.render();
@@ -327,7 +338,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       } else {
         //this.swiper[target.refId].update(true);
         let tabInfo = this.currentTabInfo[target.refId];
-        if (tabInfo.swiper) {
+        if (tabInfo && tabInfo.swiper) {
           //this.$timeout(function () { tabInfo.swiper.slideTo(tabInfo.selectedIndex, 0, false); }, 100);
           let moveToIndex = tabInfo.selectedIndex || tabInfo.swiper.snapIndex;
           this.$timeout(function () { tabInfo.swiper.slideTo(moveToIndex, 0, false); }, 100);
@@ -412,7 +423,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let selectedIndex = tabInfo.selectedIndex;
     if (selectedIndex === index) {
       if (target.conf.required) {
-        this.alertSrv.set("警告", '条件为必须', "warning", 2000);
+        this.alertSrv.set("警告", `${target.conf.title}为必选项`, "warning", 2000);
         return;
       }
       delete tabInfo.selectedIndex;
@@ -440,13 +451,23 @@ export class TeldQuerybarCtrl extends PanelCtrl {
             }
           }
         }
+        value = _.isEmpty(value) ? nullValue : value;
         variable.current = { text: value, value: value };
       });
       this.templateSrv.updateTemplateData();
       //this.$timeout(function () { tabInfo.swiper.slideTo(index, 1000, false); }, 100);
       tabInfo.swiper.slideTo(index, 1000, false);
+      if (this.panel.stopClickRefresh !== true) {
+        this.query();
+      }
     }
     this.syncLinkageTarget(target);
+  }
+
+  enterkey(target) {
+    if (window.event['keyCode'] === 13) {
+      this.toggleQuery(target);
+    }
   }
 
   clearTargetBindVariables(target) {
@@ -458,6 +479,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       variable.current = { text: this.ALL_VALUE, value: nullValue };
     });
     this.templateSrv.updateTemplateData();
+    this.query();
   }
 
   //设置状态
@@ -523,7 +545,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let returnValue = _.get(this.queryResult, refId);
     returnValue = _.slice(returnValue, 0, target.conf.size || 40);
 
-    let templateSettings = { imports: this.imports };
+    let templateSettings = { imports: this.imports, variable: 'value' };
 
     returnValue = _.map(returnValue, item => {
 
@@ -537,6 +559,14 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       item.bottomStyle = (new Function('return ' + target.conf.bottomStyle))();
       return item;
     });
+
+
+    // let tabInfo = this.currentTabInfo[target.refId];
+    // delete tabInfo.selectedIndex;
+    // this.clearTargetBindVariables(target);
+    if (target.conf.required) {
+      //this.setQueryBarVariable(target, target.conf.predicateValue, _.first(returnValue));
+    }
 
     return returnValue;
   }

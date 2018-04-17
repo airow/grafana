@@ -1,6 +1,14 @@
 <div class="query-editor-rows gf-form-group">
+  <div class="gf-form">
+    <label class="gf-form-label query-keyword width-6">默认页签</label>
+    <select class="gf-form-input width-10" ng-model="ctrl.panel.selectTab" ng-options="option.refId as option.conf.title for option in ctrl.panel.targets">
+    </select>
+    <gf-form-switch class="gf-form" label="禁用刷新" label-class="query-keyword width-6" checked="ctrl.panel.stopClickRefresh">
+    </gf-form-switch>
+  </div>
+  <hr>
   <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
-    <h5 class="section-heading">Datasource &nbsp;<i class="fa fa-refresh" ng-click="ctrl.toggleQuery(target)"></i></h5>
+    <h5 class="section-heading" style="font-size:24px; font-style: italic;">{{target.conf.title}} &nbsp;<i class="fa fa-refresh" ng-click="ctrl.toggleQuery(target)"></i></h5>
     <rebuild-on-change property="ctrl.panel.datasource || target.datasource" show-null="true">
       <plugin-component type="query-ctrl">
       </plugin-component>
@@ -9,19 +17,11 @@
       <h5 class="section-heading">Base Config</h5>
       <div class="gf-form-inline">
         <div class="gf-form">
+          <label class="gf-form-label query-keyword width-6">refId</label>
+          <input type="text" class="gf-form-input width-6" ng-disabled="true" ng-model="target.refId" spellcheck="false" placeholder="refId">
           <label class="gf-form-label query-keyword width-6">页签</label>
           <input type="text" class="gf-form-input width-6" ng-model="target.conf.title" spellcheck="false" placeholder="Title">
-          <label class="gf-form-label query-keyword width-6">refId</label>
-          <input type="text" class="gf-form-input width-6" ng-model="target.refId" spellcheck="false" placeholder="refId">
         </div>
-        <div class="gf-form offset-width-12">
-          <label class="gf-form-label query-keyword width-6">Field</label>
-
-          <label class="gf-form-label query-keyword width-6">Value</label>
-
-        </div>
-      </div>
-      <div div class="gf-form-inline">
         <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-6" checked="target.conf.required">
         </gf-form-switch>
         <div class="gf-form" ng-if="target.conf.required">
@@ -75,9 +75,9 @@
       </div>
       <div class="gf-form-inline">
         <div class="gf-form">
-          <label class="gf-form-label width-6">上副标题</label>
-          <input type="text" class="gf-form-input width-30" ng-model="target.conf.topTemplate" spellcheck="false" placeholder="Template">
-          <input type="text" class="gf-form-input offset-width-10 width-30" ng-model="target.conf.topStyle" spellcheck="false" placeholder="Style">
+          <label class="gf-form-label width-21">上副标题</label>
+          <input type="text" class="gf-form-input width-25" ng-model="target.conf.topTemplate" spellcheck="false" placeholder="Template">
+          <input type="text" class="gf-form-input width-30" ng-model="target.conf.topStyle" spellcheck="false" placeholder="Style">
         </div>
       </div>
     </div>
