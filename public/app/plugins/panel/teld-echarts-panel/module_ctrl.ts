@@ -1155,7 +1155,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
 
 
-    let legend: any = { name: 'legend', data: this.legend(option.series) };
+    let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(option.series) };
     legend = _.defaultsDeep(legend, this.panel.echarts.legend);
     option.legend = legend;
 
