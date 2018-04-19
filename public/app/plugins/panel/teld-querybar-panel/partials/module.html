@@ -1,7 +1,7 @@
-<div class="teld-querybar-panel">
+<div class="teld-querybar-panel" style="margin-bottom: -7px;">
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
-      <ul class="gf-tabs" style="margin-top: 0px;">
+      <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" style="margin-top: 0px;">
         <li class="gf-tabs-item" ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.changeQueryBarTab(target)"
             ng-class="{active: ctrl.currentTarget.refId === target.refId}">
@@ -18,6 +18,10 @@
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
             <input type="text" ng-keyup="ctrl.enterkey(target)"  style="padding-top: 2px; padding-bottom: 2px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
               spellcheck="false" placeholder="{{dsQueryVariable.label}}">
+          </div>
+          <div class="gf-form" ng-if='target.conf.orderByOptions.length'>
+            <select style="padding-top: 2px; padding-bottom: 2px; height: 24px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].orderBy" ng-options="option.text for option in target.conf.orderByOptions">
+            </select>
           </div>
           <div class="gf-form" ng-if="target.conf.dsQueryVariables.length>0">
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
@@ -76,8 +80,8 @@
       </div>
     </div>
   </div>
-  <div style="margin-top: 3px;">
-    <div class="gf-form-inline" style="height: 30px;margin-top: 8px;">
+  <div>
+    <div class="gf-form-inline">
       <div class="gf-form filter" ng-repeat="(key,variable) in ctrl.getExprVariables()">
         <label class="gf-form-label">{{key}}：
           <span class="filter-value">{{variable.current.text}}</span>

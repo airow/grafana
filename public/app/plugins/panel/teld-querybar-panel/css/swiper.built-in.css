@@ -65,6 +65,7 @@
 
 .teld-querybar-panel .gf-form.filter .gf-form-label{
   background-color:inherit;
+  padding: 0px;
 }
 
 .teld-querybar-panel .filter-value{
@@ -188,11 +189,23 @@
 }
 
 .swiper-slide .rt .bottom {
+  position: relative;
+  left: -47px;
+  width: 200px;
+  right: 0px;
+}
+
+.swiper-slide .rt .bottom {
   font-size: 13px;
   /* color: black; */
   text-align: right;
   padding-right: 20px;
   font-style: italic;
+
+  width: 200px;
+  left: -65px;
+  position: relative;
+
 }
 
 .swiper-slide .lt p {
@@ -224,6 +237,7 @@
 }
 
 .filter-button button{
+  margin-top: 3px;
   margin-left: 3px;
   margin-right: 3px;
   padding-top: 5px;

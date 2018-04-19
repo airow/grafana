@@ -29,7 +29,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
 
   time = { from: moment("2013-01-01"), to: "now" };
-  ALL_VALUE = '-全部-';
+  ALL_TEXT = '-全部-';
   isFirstLoaded = false;
   spin = true;
   defTargetConf = {
@@ -37,7 +37,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       linkage: [],
       dsQueryVariables: [{ name: 'query', label: '过滤' }],
       bindVariables: [],
-      predicateValue: 0
+      predicateValue: 0,
+      orderByOptions: [],
     }
   };
 
@@ -63,7 +64,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   queryResult: any;
 
   querybarVariable: any;
-
+  generalVariable: any;
   querybarDsVariable: any;
 
   $window: any;
@@ -101,6 +102,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.defineQuery = true;
     this.queryResult = {};
     this.querybarVariable = {};
+    this.generalVariable = {};
     this.querybarDsVariable = {};
     this.currentTabInfo = {};
     //this.currentTarget = _.head(this.panel.targets);
@@ -112,7 +114,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.initDashboardVariables(target);
     });
 
-    this.changeQueryBarTab(this.currentTarget);
+    if (this.panel.subscribeRefresh) {
+      this.events.on('refresh', this.onRefresh.bind(this));
+    } else {
+      this.changeQueryBarTab(this.currentTarget);
+    }
 
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
@@ -121,17 +127,27 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
   }
 
-
-
   addDsQueryVariable(target, dsQueryVariable, nullValue) {
     let variable = this.variableSrv.addVariable({
       //hide: 2,
       type: 'teldCustom',
       name: `${target.conf.variablePrefix}_ds_${dsQueryVariable.name}`,
       query: '',
-      current: { value: dsQueryVariable.nullValue || nullValue, text: this.ALL_VALUE }
+      current: { value: dsQueryVariable.nullValue || nullValue, text: dsQueryVariable.nullText || this.ALL_TEXT }
     });
     _.set(this.querybarDsVariable, variable.name, variable);
+    return variable;
+  }
+
+  addGeneralVariable(target, variableConf) {
+    let variable = this.variableSrv.addVariable({
+      //hide: 2,
+      type: 'teldCustom',
+      name: `${target.conf.variablePrefix}_${variableConf.name}`,
+      query: '',
+      current: { value: variableConf.value, text: variableConf.text }
+    });
+    _.set(this.generalVariable, variable.name, variable);
     return variable;
   }
 
@@ -141,52 +157,45 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       type: 'teldCustom',
       name: `${target.conf.variablePrefix}_${bindVariable.name}`,
       query: '',
-      current: { value: bindVariable.nullValue || nullValue, text: this.ALL_VALUE }
+      current: { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT }
     });
     _.set(this.querybarVariable, variable.name, variable);
     return variable;
   }
 
+  setVariableOrderByCurrent(variableOrderBy, itme) {
+    variableOrderBy.current.text = itme.text;
+    variableOrderBy.current.value = `<orderby='${itme.value}'/>`;
+  }
+
   initDashboardVariables(target) {
-    // _.defaultsDeep(target, this.defTargetConf);
-    // target.variablePrefix = _.camelCase(target.refId);
-    //_.defaults(target, defTargetConf);
+
     target.conf.variablePrefix = target.conf.variablePrefix || target.refId;
-    //target.conf.title = target.conf.title || target.refId;
+
     let nullValue = target.conf.meta.datasource.nullValue;
 
+
+    let orderByDefaultConf = _.first(target.conf.orderByOptions);
+    if (false === _.isNil(orderByDefaultConf)) {
+      let variableOrderBy = this.addGeneralVariable(target, _.defaults({ name: 'orderby' }, orderByDefaultConf));
+      this.setVariableOrderByCurrent(variableOrderBy, orderByDefaultConf);
+      _.set(this.currentTabInfo, `${target.refId}.orderBy`, orderByDefaultConf);
+    }
+
     _.each(target.conf.bindVariables, bindVariable => {
-      // let variable = this.variableSrv.addVariable({
-      //   //hide: 2,
-      //   type: 'teldCustom',
-      //   name: `${target.conf.variablePrefix}_${bindVariable.name}`,
-      //   query: '',
-      //   current: { value: bindVariable.nullValue || nullValue, text: this.ALL_VALUE }
-      // });
-      // _.set(this.querybarVariable, variable.name, variable);
       let variable = this.addBindVariable(target, bindVariable, nullValue);
     });
 
     _.each(target.conf.dsQueryVariables, dsQueryVariable => {
-      // let dsQuery = this.variableSrv.addVariable({
-      //   //hide: 2,
-      //   type: 'teldCustom',
-      //   name: `${target.conf.variablePrefix}_ds_${dsQueryVariable.name}`,
-      //   query: '',
-      //   current: { value: dsQueryVariable.nullValue || nullValue, text: this.ALL_VALUE }
-      // });
-      // _.set(this.querybarDsVariable, dsQuery.name, dsQuery);
       let dsQuery = this.addDsQueryVariable(target, dsQueryVariable, nullValue);
     });
 
-    // this.variableSrv.updateOptions(variable);
-    // this.variableSrv.setOptionAsCurrent(variable, variable.current);
     this.variableSrv.templateSrv.updateTemplateData();
   }
 
   onInitEditMode() {
     this.addEditorTab('Metrics', metricsEditorComponent);
-    this.addEditorTab('Options', optionsEditorComponent);
+    // this.addEditorTab('Options', optionsEditorComponent);
     //this.editorTabIndex = 1;
   }
 
@@ -265,7 +274,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     if (_.size(datapoints) === 0) {
       sortDatapoints = [{ isNil: true, field: '无', fieldValue: 'N/A', _original: {} }];
     } else {
-      sortDatapoints = _.orderBy(datapoints, item => { return Number(item.fieldValue); }, 'desc');
+      if (_.size(targetConf.orderByOptions) === 0) {
+        sortDatapoints = _.orderBy(datapoints, item => { return Number(item.fieldValue); }, targetConf.fieldOrder || 'desc');
+      } else {
+        sortDatapoints = datapoints;
+      }
     }
 
     _.set(this.queryResult, this.currentTarget.refId, sortDatapoints);
@@ -298,11 +311,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.render();
   }
 
-  onRefresh() {
-    this.render();
-  }
-
   onRender() {
+    console.log('onRender');
     this.renderingCompleted();
     this.spin = false;
   }
@@ -374,7 +384,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       let bindVariable = _.first(target.conf.bindVariables);
       if (bindVariable) {
         let variable = _.get(this.querybarVariable, `${target.conf.variablePrefix}_${bindVariable.name}`);
-        if (variable && variable.current.text !== this.ALL_VALUE) {
+        if (variable && variable.current.text !== (bindVariable.nullText || this.ALL_TEXT)) {
           _.set(result, target.conf.title, variable);
         }
       }
@@ -395,6 +405,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   setQuerybarDs(target) {
     let conf = target.conf;
+    let tabInfo = this.currentTabInfo[target.refId];
+
+    let orderBy = _.find(this.generalVariable, { name: `${target.refId}_orderby` });
+    if (false === _.isNil(orderBy) && false === _.isNil(tabInfo.orderBy)) {
+      this.setVariableOrderByCurrent(orderBy, tabInfo.orderBy);
+    }
+
     _.each(conf.dsQueryVariables, dsQueryVariable => {
       let nullValue = dsQueryVariable.nullValue || conf.meta.datasource.nullValue;
       let valuePath = `${target.refId}.dsQuery.${dsQueryVariable.name}.value`;
@@ -434,6 +451,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.setPublishSelectVlaue(target);
       _.each(conf.bindVariables, bindVariable => {
         let nullValue = bindVariable.nullValue || conf.meta.datasource.nullValue;
+        let nullText = bindVariable.nullText || this.ALL_TEXT;
 
         let variablePath = `${conf.variablePrefix}_${bindVariable.name}`;
         let variable = _.get(this.querybarVariable, variablePath);
@@ -442,17 +460,22 @@ export class TeldQuerybarCtrl extends PanelCtrl {
           variable = this.addBindVariable(target, bindVariable, nullValue);
         }
         let value = _.get(selectedItem, bindVariable.field);
+        let text = value;
         if (_.isNil(value)) {
-          value = _.get(selectedItem._original, bindVariable.field);
+          text = value = _.get(selectedItem._original, bindVariable.field);
           if (_.isNil(value)) {
-            value = _.get(selectedItem, "_original." + bindVariable.field, nullValue);
+            text = value = _.get(selectedItem, "_original." + bindVariable.field, nullValue);
             if (_.isNil(value)) {
               value = nullValue;
+              text = nullText;
             }
           }
         }
-        value = _.isEmpty(value) ? nullValue : value;
-        variable.current = { text: value, value: value };
+        if (_.isEmpty(value)) {
+          value = nullValue;
+          text = nullText;
+        }
+        variable.current = { text: text, value: value };
       });
       this.templateSrv.updateTemplateData();
       //this.$timeout(function () { tabInfo.swiper.slideTo(index, 1000, false); }, 100);
@@ -476,7 +499,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       let variablePath = `${conf.variablePrefix}_${bindVariable.name}`;
       let variable = _.get(this.querybarVariable, variablePath);
       let nullValue = bindVariable.nullValue || conf.meta.datasource.nullValue;
-      variable.current = { text: this.ALL_VALUE, value: nullValue };
+      variable.current = { text: bindVariable.nullText || this.ALL_TEXT, value: nullValue };
     });
     this.templateSrv.updateTemplateData();
     this.query();
@@ -502,7 +525,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         if (_.startsWith(key, variablePrefix)) {
           let nameField = _.replace(key, variablePrefix, '');
           let dsQueryVariableConf = _.find(itemTargetConf.dsQueryVariables, { name: nameField });
-          variable.current = { text: this.ALL_VALUE, value: dsQueryVariableConf.nullValue || nullValue };
+          variable.current = { text: dsQueryVariableConf.nullText || this.ALL_TEXT, value: dsQueryVariableConf.nullValue || nullValue };
         }
       });
 
@@ -511,7 +534,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         if (_.startsWith(key, bindVariablePrefix)) {
           let nameField = _.replace(key, bindVariablePrefix, '');
           let queryVariableConf = _.find(itemTargetConf.bindVariables, { name: nameField });
-          variable.current = { text: this.ALL_VALUE, value: queryVariableConf.nullValue || nullValue };
+          variable.current = { text: queryVariableConf.nullText || this.ALL_TEXT, value: queryVariableConf.nullValue || nullValue };
         }
       });
     });
@@ -573,6 +596,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
 
   onMetricsPanelRefresh() {
+    console.log('onMetricsPanelRefresh');
     this.spin = true;
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
@@ -711,14 +735,33 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   move(variableArray, index, newIndex) {
     _.move(variableArray, index, newIndex);
   }
+  triggerRefresh = false;
 
   query() {
-    //this.refresh();
-    this.timeSrv.refreshDashboard();
+    console.log('query');
+    this.triggerRefresh = true;
+    if (this.panel.subscribeRefresh) {
+
+    } else {
+      this.timeSrv.refreshDashboard();
+    }
     return true;
+  }
+
+  onRefresh() {
+    //this.render();
+    //this.changeQueryBarTab(this.currentTarget);
+    console.log('onRefresh');
+    //this.onMetricsPanelRefresh();
+    if (this.triggerRefresh === true) {
+      this.triggerRefresh = false;
+    } else {
+      this.toggleQuery(this.currentTarget);
+    }
   }
 
   alert(s) {
     window.alert(s);
   }
+
 }

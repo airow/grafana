@@ -134,7 +134,7 @@ coreModule.directive('dashRow', function($rootScope) {
       scope.$watchGroup(['ctrl.row.collapse', 'ctrl.row.height'], function() {
         element.toggleClass('dash-row--collapse', scope.ctrl.row.collapse);
         if (scope.ctrl.row.notWatchHeight) {
-          element.find('.panels-wrapper').css({ minHeight: '1px' });
+          element.find('.panels-wrapper').css({ minHeight: element.find(".teld-querybar-panel").height() });
           return;
         }
         element.find('.panels-wrapper').css({ minHeight: scope.ctrl.row.collapse ? '5px' : scope.ctrl.row.height });
