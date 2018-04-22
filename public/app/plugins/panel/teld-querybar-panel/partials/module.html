@@ -1,4 +1,4 @@
-<div class="teld-querybar-panel" style="margin-bottom: -7px;">
+<div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" style="margin-top: 0px;">
@@ -32,7 +32,7 @@
           </div>
         </div>
         <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="true" on-ready="ctrl.onReadySwiper(swiper)"
-          override-parameters="{mousewheelControl:true,observer: true, observeParents: true}">
+          override-parameters="{slideToClickedSlide:true, grabCursor:true, mousewheelControl:true,observer: true, observeParents: true}">
           <ks-swiper-slide slider-cls='{{ctrl.getSliderCls(target,$index)}}' ng-repeat="row in ctrl.getQueryResult(target)">
             <div ng-if="row.isNil">
               <div ng-click="ctrl.setQueryBarVariable(target, row)">
@@ -53,7 +53,7 @@
                   <div>
                     <p class="top"  ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
                     <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls"><div>{{row.label}}</div></p>
-                    <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.bconf.ottomCls">{{row.labelBottom}}</p>
+                    <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.conf.bottomCls">{{row.labelBottom}}</p>
                   </div>
                 </div>
               </div>

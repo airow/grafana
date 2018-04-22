@@ -71,6 +71,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   currentTarget: any;
   currentTabInfo: any;
 
+  querybarPanelStyle: any;
+  originalWidth: any;
+  device: any;
+
   datasourceNullValue = {
     "mssql": '%',
     "mysql": '%',
@@ -96,6 +100,30 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.variableSrv = $injector.get('variableSrv');
     this.alertSrv = $injector.get('alertSrv');
     this.uiSegmentSrv = $injector.get('uiSegmentSrv');
+
+    this.device = (function () {
+      var ua = window.navigator.userAgent;
+      var android = ua.match(/(Android);?[\s\/]+([\d.]+)?/);
+      var ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
+      var ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/);
+      var iphone = !ipad && ua.match(/(iPhone\sOS|iOS)\s([\d_]+)/);
+      return {
+        ios: ipad || iphone || ipod,
+        android: android
+      };
+    })();
+
+    this.querybarPanelStyle = {};
+    let panelsWrapper: any;
+    this.originalWidth = this.$window.innerWidth;
+    if (this.device.ios) {
+      this.querybarPanelStyle.width = this.originalWidth - 33.187;
+      //panelsWrapper.width = this.originalWidth - 11.187;
+      this.$scope.$watch('$viewContentLoaded', (event) => {
+        $("div.main-view .dash-row .panels-wrapper").width(this.originalWidth - 11.187);
+        //alert($("div.main-view .dash-row .panels-wrapper").length);
+      });
+    }
 
     _.defaults(this.panel, this.panelDefaults);
 
@@ -407,7 +435,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let conf = target.conf;
     let tabInfo = this.currentTabInfo[target.refId];
 
-    let orderBy = _.find(this.generalVariable, { name: `${target.refId}_orderby` });
+    let orderBy = _.find(this.generalVariable, { name: `${conf.variablePrefix}_orderby` });
     if (false === _.isNil(orderBy) && false === _.isNil(tabInfo.orderBy)) {
       this.setVariableOrderByCurrent(orderBy, tabInfo.orderBy);
     }
@@ -576,10 +604,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       item.labelBottom = _.template(target.conf.bottomTemplate || item.fieldValue, templateSettings)(item._original);
       item.labelTop = _.template(target.conf.topTemplate || item.topTitle, templateSettings)(item._original);
 
-      item.conf = target.conf;
-      item.topStyle = (new Function('return ' + target.conf.topStyle))();
-      item.titleStyle = (new Function('return ' + target.conf.titleStyle))();
-      item.bottomStyle = (new Function('return ' + target.conf.bottomStyle))();
+      item.conf = _.defaultsDeep({}, target.conf);
+      item.conf.topStyle = (new Function('return ' + target.conf.topStyle))();
+      item.conf.titleStyle = (new Function('return ' + target.conf.titleStyle))();
+      item.conf.bottomStyle = (new Function('return ' + target.conf.bottomStyle))();
       return item;
     });
 

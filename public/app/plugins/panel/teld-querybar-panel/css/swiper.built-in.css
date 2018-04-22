@@ -188,11 +188,8 @@
   color:white;
 }
 
-.swiper-slide .rt .bottom {
-  position: relative;
-  left: -47px;
-  width: 200px;
-  right: 0px;
+.swiper-slide .rt .top {
+  width: 100%;
 }
 
 .swiper-slide .rt .bottom {
