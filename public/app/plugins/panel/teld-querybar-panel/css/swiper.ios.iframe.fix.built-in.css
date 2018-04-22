@@ -1,0 +1,35 @@
+@media screen and (min-width: 1366px) and (max-width: 1366px) {
+  .teld-querybar-panel{
+    width: 1332.813px;
+  }
+}
+@media screen and (min-width: 1024px) and (max-width: 1024px) {
+  .teld-querybar-panel{
+    width: 990.813px;
+  }
+}
+@media screen and (min-width: 375px) and (max-width: 375px) {
+  .teld-querybar-panel{
+    /* width: 341.813px !important; */
+    width: 331px !important;
+    border: 1px red solid;
+  }
+}
+@media screen and (min-width: 320px) and (max-width: 320px) {
+  .teld-querybar-panel{
+    width: 286.813px;
+  }
+}
+
+@media screen and (min-width: 360px) and (max-width: 360px) {
+  .teld-querybar-panel{
+    width: 326.813px;
+  }
+}
+
+
+@media screen and (min-width: 414px) and (max-width: 414px) {
+  .teld-querybar-panel{
+    width: 380.813px;
+  }
+}
