@@ -352,7 +352,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       () => { return this.$window.innerWidth; },
       (value) => {
         console.log(1);
-        swiper.params.slidesPerView = (value / 250);
+        swiper.params.slidesPerView = (value / 325);
         //swiper.params.slidesPerView = _.floor(value / 325);
         // swiper.params.slidesPerView = _.floor(value / 250);
         // if (swiper.params.slidesPerView === 1) {

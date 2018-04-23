@@ -199,8 +199,9 @@
   padding-right: 20px;
   font-style: italic;
 
-  width: 200px;
-  left: -65px;
+  width: 100%;
+  /* width: 200px;
+  left: -65px; */
   position: relative;
 
 }
