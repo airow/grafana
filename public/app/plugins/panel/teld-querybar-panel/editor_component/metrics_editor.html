@@ -11,6 +11,8 @@
     <input type="text" class="gf-form-input width-5" ng-model="ctrl.panel.displayCount" spellcheck="false" placeholder="displayCount">
     <gf-form-switch class="gf-form" label="隐藏标题" label-class="query-keyword width-6" checked="ctrl.panel.hiddenTabbedVieHheader">
     </gf-form-switch>
+    <label class="gf-form-label query-keyword width-6">滑块宽<tip>最小值190</tip></label>
+    <input type="number" min="190" class="gf-form-input width-5" ng-model="ctrl.panel.slideWidth" spellcheck="false" placeholder="250">
   </div>
   <hr>
   <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
@@ -28,13 +30,19 @@
           <label class="gf-form-label query-keyword width-6">页签</label>
           <input type="text" class="gf-form-input width-6" ng-model="target.conf.title" spellcheck="false" placeholder="Title">
           <label class="gf-form-label query-keyword width-6">显示条数</label>
-    <input type="text" class="gf-form-input width-5" ng-model="target.conf.displayCount" spellcheck="false" placeholder="displayCount">
+          <input type="text" class="gf-form-input width-5" ng-model="target.conf.displayCount" spellcheck="false" placeholder="displayCount">
         </div>
         <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-6" checked="target.conf.required">
         </gf-form-switch>
         <div class="gf-form" ng-if="target.conf.required">
           <label class="gf-form-label width-7">索引/表达式</label>
           <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false" placeholder="alias patterns">
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-6">滑块宽<tip>最小值190,默认值250</tip></label>
+          <input type="number" min="190" class="gf-form-input width-6" ng-model="target.slideWidth" spellcheck="false" placeholder="250">
         </div>
       </div>
       <h5 class="section-heading">OrderBy <label class="gf-form-label width-10">${{target.conf.variablePrefix}}_orderby</label></h5>

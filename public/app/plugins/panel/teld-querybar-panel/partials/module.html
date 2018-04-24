@@ -42,7 +42,7 @@
               </div>
             </div>
             <div ng-if="!row.isNil">
-              <div ng-click="ctrl.setQueryBarVariable(target, $index, row)" style="background-color: red;">
+              <div ng-click="ctrl.setQueryBarVariable(target, $index, row)" style="padding-right:20px;">
                 <div class="activeflag">
                   <i class="fa fa-check-square-o"></i>
                 </div>
@@ -52,7 +52,9 @@
                 <div class="rt">
                   <div>
                     <p class="top"  ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
-                    <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls"><div>{{row.label}}</div></p>
+                    <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls">
+                      <div>{{row.label}}</div>
+                    </p>
                     <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.conf.bottomCls">{{row.labelBottom}}</p>
                   </div>
                 </div>

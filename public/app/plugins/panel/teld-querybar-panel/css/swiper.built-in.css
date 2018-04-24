@@ -158,11 +158,11 @@
   float: left;
 }
 .swiper-slide .rt {
-  width: 65%;
+  /* width: 65%; */
   height: 80px;
-  border-radius: 100%;
-  /* margin-left: 10px; */
-  float: left;
+  /* border-radius: 100%; */
+  margin-left: 40px;
+  /* float: left; */
   padding: 10px;
   /* padding-right: 0px; */
   position: relative;
@@ -199,7 +199,6 @@
   padding-right: 20px;
   font-style: italic;
 
-  width: 100%;
   /* width: 200px;
   left: -65px; */
   position: relative;

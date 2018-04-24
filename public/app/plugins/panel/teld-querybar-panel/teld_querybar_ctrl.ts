@@ -86,6 +86,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   panelDefaults = {
     height: 10,
     datasource: 'default',
+    slideWidth: 250,
     targets: []
   };
 
@@ -342,7 +343,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   onRender() {
     console.log('onRender');
     this.renderingCompleted();
-    this.spin = false;
+    if (this.device.ios) {
+      this.$timeout(() => { this.spin = false; }, 2000);
+    } else {
+      this.spin = false;
+    }
   }
 
   onReadySwiper(swiper) {
@@ -352,7 +357,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       () => { return this.$window.innerWidth; },
       (value) => {
         console.log(1);
-        swiper.params.slidesPerView = (value / 325);
+        let slideWidth = this.currentTarget.slideWidth;
+        slideWidth = slideWidth || (this.panel.slideWidth || this.panelDefaults.slideWidth);
+        swiper.params.slidesPerView = (value / slideWidth);
         //swiper.params.slidesPerView = _.floor(value / 325);
         // swiper.params.slidesPerView = _.floor(value / 250);
         // if (swiper.params.slidesPerView === 1) {
