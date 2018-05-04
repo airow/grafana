@@ -9,7 +9,6 @@ var option = {
   "backgroundColor": "#011a2f",
   "textStyle": {},
   "title": {
-    "text": "终端数行业投建比",
     "textStyle": {
       "color": "#639fb9",
       "fontFamily": "Microsoft YaHei Regular",

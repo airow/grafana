@@ -23,7 +23,6 @@ var option = {
   "textStyle": {},
   "title": {
     "show": false,
-    "text": "终端数行业投建比",
     "textStyle": {
       "color": "#fff",
       "fontFamily": "Microsoft YaHei Regular",
