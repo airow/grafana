@@ -6,6 +6,8 @@ module.exports = function(config) {
       dest: '<%= genDir %>',
       cwd: '<%= genDir %>',
       options: {
+        //sourceMap: true,
+        mangle: false,
         quite: true,
         compress: {},
         preserveComments: false,

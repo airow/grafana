@@ -722,6 +722,11 @@ function($, _, numeral, moment) {
     return kbn.valueFormats.thousandsSeparator(size, decimals);
   };
 
+  kbn.valueFormats.thousandsSeparator10000 = function (size, decimals) {
+    size = size / 10000;
+    return kbn.valueFormats.thousandsSeparator(size, decimals);
+  };
+
   kbn.valueFormats.teldWatt = function (size, decimals) {
     return kbn.valueFormats.thousandsSeparator(size, decimals) + '瓦';
   };
@@ -972,6 +977,7 @@ function($, _, numeral, moment) {
           { text: '千分位-10', value: 'thousandsSeparator10' },
           { text: '千分位-100', value: 'thousandsSeparator100' },
           { text: '千分位-1000', value: 'thousandsSeparator1000' },
+          { text: '千分位-10000', value: 'thousandsSeparator10000' },
           { text: '百分比', value: 'teldPercent' },
           { text: '百分比>100', value: 'teldPercentGreater100' },
           { text: '整数', value: 'teldInt' },

@@ -17,6 +17,11 @@ export class MysqlDatasource {
 
   interpolateVariable(value) {
     if (typeof value === 'string') {
+      let regExp = new RegExp("<orderby='(.+?)'/>");
+      let matches = regExp.exec(value);
+      if (matches) {
+        return matches[1];
+      }
       return '\'' + value + '\'';
     }
 

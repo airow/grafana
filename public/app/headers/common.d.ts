@@ -13,6 +13,11 @@ declare module 'lodash' {
   export default lodash;
 }
 
+declare module 'numeral' {
+  var numeral: any;
+  export default numeral;
+}
+
 declare module 'moment' {
   var moment: any;
   export default moment;
