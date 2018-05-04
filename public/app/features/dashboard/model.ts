@@ -116,7 +116,7 @@ export class DashboardModel {
 
     // 去除teldxxx变量类型的保存
     _.remove(this.templating.list, function (n) {
-      return _.startsWith(n.type, 'teld') || false === n.canSaved;
+      return _.startsWith(n.type, 'teld') && true !== n.canSaved || false === n.canSaved;
     });
 
     // make clone

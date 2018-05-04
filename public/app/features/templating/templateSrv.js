@@ -227,6 +227,24 @@ function (angular, _, kbn) {
       });
     };
 
+    this.replaceScopedVars = function(target, scopedVars, format) {
+      if (!target) { return target; }
+
+      var variable, value;
+      this._regex.lastIndex = 0;
+
+      return target.replace(this._regex, function(match, g1, g2) {
+        if (scopedVars) {
+          value = scopedVars[g1 || g2];
+          if (value) {
+            return self.formatValue(value.value, format, variable);
+          }
+        }
+
+        return match;
+      });
+    };
+
     this.replaceWithEmpty = function(target, scopedVars, format) {
       if (!target) { return target; }
 
@@ -271,6 +289,67 @@ function (angular, _, kbn) {
         var res = self.formatValue(value, format, variable);
         return res;
       });
+    };
+
+    this.teldExpression2ScopedVars = function (scopedVars, format) {
+      var teldExpressionVariables = _.filter(this.variables, { type: 'teldExpression' });
+      var that = this;
+      var templateOptions = {
+        //interpolate: /{{([\s\S]+?)}}/g,
+        imports: {
+          m: {
+            _regex: this._regex,
+            _: this._,
+            has: function (variable, expression) {
+              //debugger;
+              var regex = /\$(\w+)|\[\[([\s\S]+?)\]\]/g;
+              var f = regex.test(variable);
+              console.log(variable);
+              console.log(f);
+              if (f) {
+                return '';
+              }
+
+              var data = {};
+              variable = variable.replace(/\./g, '_');
+              data[variable] = variable;
+              var boolString = _.template('${' + variable + '}')(data);
+              //var boolString = _.template('${' + variable + '}')();
+              if ((/^false$/i).test(boolString)) {
+                return '';
+              }
+
+              // if (boolString === variable) {
+              //   return '';
+              // }
+              return expression;
+            }
+          }
+        }
+      };
+
+      var scopedExpressionVars = _.transform(teldExpressionVariables, function (result, item) {
+
+        var value = that.replace(item.query, scopedVars, format);
+
+        //value = "AND 电站类型.keyword:/$type.*/ [$type => AND 电站类型.keyword:/$type.*/] [$type =>  AND 电站类型.keyword:/$type.*/ ]";
+
+        value = value.replace(/\]\s+\[/g, ']\r\n[');
+        value = value.replace(/\[\s*(.[^\s]*)\s*=>\s*(.*)\]/gm, "${m.has(\"$1\", \" $2 \")}");
+
+        console.group("expression 解析" + item.name);
+        console.log('    ' + item.query);
+        console.log(' => ' + value);
+        //debugger;
+        value = _.template(value, templateOptions)();
+        value = value.replace(/\r\n/g, ' ');
+        console.log(' => ' + value);
+        console.groupEnd();
+
+        result[item.name] = { text: item.name, value: value };
+      }, {});
+
+      return scopedExpressionVars;
     };
 
     this.isAllValue = function(value) {

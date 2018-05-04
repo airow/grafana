@@ -42,15 +42,22 @@ export class MssqlDatasource {
   }
 
   query(options) {
+
+    var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVars(options.scopedVars, this.interpolateVariable);
+    console.log(scopedExpressionVars);
+    //debugger;
     var queries = _.filter(options.targets, item => {
       return item.hide !== true;
     }).map(item => {
+      var rawSql = item.rawSql;
+      rawSql = this.templateSrv.replaceScopedVars(rawSql, scopedExpressionVars);
+      rawSql = this.templateSrv.replace(rawSql, options.scopedVars, this.interpolateVariable);
       return {
         refId: item.refId,
         intervalMs: options.intervalMs,
         maxDataPoints: options.maxDataPoints,
         datasourceId: this.id,
-        rawSql: this.templateSrv.replace(item.rawSql, options.scopedVars, this.interpolateVariable),
+        rawSql: rawSql,
         format: item.format,
       };
     });
