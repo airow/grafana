@@ -202,7 +202,7 @@ module.directive('grafanaPanel', function($rootScope, $document) {
             content: function() {
               return ctrl.getInfoContent({mode: 'tooltip'});
             },
-            position: 'top center',
+            position: 'top left',
             classes: ctrl.error ? 'drop-error' : 'drop-help',
             openOn: 'hover',
             hoverOpenDelay: 100,
