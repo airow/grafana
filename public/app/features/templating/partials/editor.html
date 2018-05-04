@@ -259,6 +259,37 @@
         </div>
       </div>
 
+      <div ng-if="current.type === 'teldExpression'" class="gf-form-group">
+        <h5 class="section-heading">options</h5>
+        <div class="gf-form">
+          <span class="gf-form-label">Expression</span>
+          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" placeholder="your expression"></input>
+        </div>
+
+        <div class="gf-form">
+          <span class="gf-form-label width-14">说明</span>
+        </div>
+        <div class="gf-form">
+          <code>[$type => AND 电站类型.keyword:/$type.*/] 当$type有效势，会输出 => 后的内容 </code>
+        </div>
+        <div class="gf-form">
+          <code>${m.has("$type", " AND CityName.keyword:/$type2.*/ ")}</code>
+        </div>
+
+        <!-- <div class="gf-form">
+          ES和sql处理方式冲突这个简单逻辑处理不支持。
+          <code>$type出可以使用简单表达式 如$type!='%'，需要注意表达式要为一个整体不可以有空格，像“$type != '%'” 是无效的。 </code>
+        </div>
+        <div class="gf-form">
+          <span class="gf-form-label width-14">MSSQL 表达式格式</span>
+          <code>[$type!='%' => AND 电站类型.keyword:/$type.*/]</code>
+        </div>
+        <div class="gf-form">
+          <span class="gf-form-label width-14">ES 表达式格式</span>
+          <code>[ <span style="color: white; background-color:red; ">'</span>$type<span style="color: white; background-color:red; ">'</span>!=='公共' =>AND 电站类型.keyword:/$type.*/] 注意$type前后的引号</code>
+        </div> -->
+      </div>
+
       <div class="section gf-form-group" ng-show="variableTypes[current.type].supportsMulti">
         <h5 class="section-heading">Selection Options</h5>
         <div class="section">

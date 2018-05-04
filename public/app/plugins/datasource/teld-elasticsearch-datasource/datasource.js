@@ -208,12 +208,17 @@ define([
         }
         */
 
+        var scopedExpressionVars = templateSrv.teldExpression2ScopedVars(options.scopedVars, 'lucene');
+        console.log(scopedExpressionVars);
+
         for (var i = 0; i < options.targets.length; i++) {
           target = options.targets[i];
           if (target.hide) { continue; }
 
           //var queryString = templateSrv.replace(target.query || '*', options.scopedVars, 'lucene');
-          var queryString = templateSrv.replaceWithEmpty(target.query || '*', options.scopedVars, 'lucene');
+          var queryString = target.query || '*';
+          queryString = templateSrv.replaceScopedVars(queryString, scopedExpressionVars);
+          queryString = templateSrv.replaceWithEmpty(queryString, options.scopedVars, 'lucene');
 
           // var whileCount = 0;
           // var exp = /.*:"(\@.*)"\s?(and|or)?/;
