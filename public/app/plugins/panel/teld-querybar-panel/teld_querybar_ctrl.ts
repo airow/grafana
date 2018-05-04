@@ -158,7 +158,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   addDsQueryVariable(target, dsQueryVariable, nullValue) {
     let variable = this.variableSrv.addVariable({
-      //hide: 2,
+      hide: 2,
       type: 'teldCustom',
       name: `${target.conf.variablePrefix}_ds_${dsQueryVariable.name}`,
       query: '',
@@ -170,7 +170,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   addGeneralVariable(target, variableConf) {
     let variable = this.variableSrv.addVariable({
-      //hide: 2,
+      hide: 2,
       type: 'teldCustom',
       name: `${target.conf.variablePrefix}_${variableConf.name}`,
       query: '',
@@ -182,7 +182,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   addBindVariable(target, bindVariable, nullValue) {
     let variable = this.variableSrv.addVariable({
-      //hide: 2,
+      hide: 2,
       type: 'teldCustom',
       name: `${target.conf.variablePrefix}_${bindVariable.name}`,
       query: '',
@@ -326,7 +326,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
           index = _.findIndex(sortDatapoints, predicate);
           index = index === -1 ? 0 : index;
         }
-        this.setQueryBarVariable(target, index, sortDatapoints[index]);
+        let itemIndex = (index >= sortDatapoints.length ? sortDatapoints.length - 1 : index);
+        this.setQueryBarVariable(target, index, sortDatapoints[itemIndex]);
         if (false === this.isFirstLoaded) {
           this.isFirstLoaded = true;
         }
