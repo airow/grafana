@@ -1,0 +1,74 @@
+<div class="editor-row">
+  <h5 class="section-heading">Series</h5>
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label" ng-repeat="target in ctrl.metricsTarget()">series['{{target}}']</label>
+    </div>
+  </div>
+  <h5 class="section-heading">Dash Vars</h5>
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label">如：vars['dashVarName']</label>
+      <label class="gf-form-label" ng-repeat="var in ctrl.dashVars()">vars['{{var}}']</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <h5 class="section-heading">Calc Serie</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="ALL" label-class="width-4" checked="ctrl.allChecked" on-change="ctrl.checkedAll()"></gf-form-switch>
+        <label class="gf-form-label query-keyword width-10">标签</label>
+        <label class="gf-form-label query-keyword width-30">表达式</label>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.panel.calcSeriesConf.push({enable:true,target:''})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="calcSerie in ctrl.panel.calcSeriesConf">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-4" checked="calcSerie.enable" on-change="ctrl.refresh()"></gf-form-switch>
+        <input type="text" class="gf-form-input width-10" ng-model="calcSerie.target" spellcheck="false" placeholder="target">
+        <input type="text" class="gf-form-input width-30" ng-model="calcSerie.expression" spellcheck="false" placeholder="value">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.calcSeriesConf, option)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(ctrl.panel.calcSeriesConf,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(ctrl.panel.calcSeriesConf,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h5 class="section-heading">Hide Metric</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form" ng-repeat="metric in ctrl.panel.hideMetrics">
+        <select class="gf-form-input" ng-model="metric.target" ng-options="f for f in ctrl.metricsTarget()">
+        </select>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.hideMetrics, metric)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.panel.hideMetrics.push({})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
