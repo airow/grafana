@@ -12,9 +12,11 @@ import _ from 'lodash';
 import TimeSeries from 'app/core/time_series2';
 import config from 'app/core/config';
 import * as fileExport from 'app/core/utils/file_export';
+import * as graphutils from 'app/core/utils/graphutils';
 import {MetricsPanelCtrl, alertTab} from 'app/plugins/sdk';
 import {DataProcessor} from './data_processor';
 import {axesEditorComponent} from './axes_editor';
+import {calcSeriesEditorComponent} from './calcSeries_editor';
 
 class GraphCtrl extends MetricsPanelCtrl {
   static template = template;
@@ -131,6 +133,7 @@ class GraphCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Axes', axesEditorComponent, 2);
     this.addEditorTab('Legend', 'public/app/plugins/panel/graph/tab_legend.html', 3);
     this.addEditorTab('Display', 'public/app/plugins/panel/graph/tab_display.html', 4);
+    this.addEditorTab('Calc', calcSeriesEditorComponent, 5);
 
     if (config.alertingEnabled) {
       this.addEditorTab('Alert', alertTab, 5);
@@ -175,8 +178,13 @@ class GraphCtrl extends MetricsPanelCtrl {
     this.render([]);
   }
 
+  calcSeries(calcSeriesConf, data, hideMetrics) {
+    return graphutils.calcSeries(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
+  }
+
   onDataReceived(dataList) {
     this.dataList = dataList;
+    dataList = this.calcSeries(this.panel.calcSeriesConf, dataList, this.panel.hideMetrics);
     this.seriesList = this.processor.getSeriesList({dataList: dataList, range: this.range});
 
     this.dataWarning = null;

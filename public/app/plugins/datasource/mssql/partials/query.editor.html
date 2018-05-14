@@ -48,6 +48,13 @@ Table:
 Macros:
 - $__time(column) -&gt; DATEDIFF(SS, '1970-01-01 00:00:00', CAST(column AS DATETIME)) as time_sec
 - $__timeutc8(column) -&gt; DATEDIFF(SS, '1970-01-01 08:00:00', CAST(column AS DATETIME)) as time_sec
+
+- $__unix(column) -&gt; 转换Unix时间戳 -&gt; DATEDIFF(SS, '1970-01-01 00:00:00', CAST(column AS DATETIME))
+- $__timeFrom() -&gt; 开始时间 -&gt; DATEADD(HOUR, 8, DATEADD(SECOND, timeFrom, '1970-01-01'))
+- $__timeTo() -&gt; 结束时间 -&gt; DATEADD(HOUR, 8, DATEADD(SECOND, timeTo, '1970-01-01'))
+- $__timeFilter(column) -&gt;  column &gt;=  $__timeFrom() AND column &lt;=  $__timeTo()
+
+SELECT 日期字段报错尝试 CAST(column AS DATETIME)
 		</pre>
 	</div>
 

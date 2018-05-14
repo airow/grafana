@@ -59,6 +59,11 @@ func replaceAllStringSubmatchFunc(re *regexp.Regexp, str string, repl func([]str
 
 func (m *MsSqlMacroEngine) evaluateMacro(name string, args []string) (string, error) {
 	switch name {
+  case "__unix":
+		if len(args) == 0 {
+			return "", fmt.Errorf("missing time column argument for macro %v", name)
+		}
+		return fmt.Sprintf("DATEDIFF(SS, '1970-01-01', CAST(%s AS DATETIME))", args[0]), nil
 	case "__time":
 		if len(args) == 0 {
 			return "", fmt.Errorf("missing time column argument for macro %v", name)
