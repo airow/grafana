@@ -234,8 +234,8 @@ define([
           //queryString = 'stacityName:"@pcityname" AND IfFastCharging:"快充" AND IfFastChargin2g:"快2充" AND stacityName:"@pcityname"';
           var newArray = [];
           var reg = /.*:"(\@.*)"\s?/;
-          var regO = /(AND|OR)/;
-          regO = /(AND|OR|\(|\))/;
+          var regAndOr = /(AND|OR)/;
+          var regO = /(AND|OR|\(|\))/;
           var d = queryString.split(regO);
           for (var ii = 0; ii < d.length; ii++) {
             if (reg.test(d[ii])) {
@@ -245,7 +245,11 @@ define([
                 }
               }
             } else {
-              newArray.push(_.trim(d[ii]));
+              if (regAndOr.test(d[ii])) {
+                newArray.push(" " + d[ii] + " ");
+              } else {
+                newArray.push(_.trim(d[ii]));
+              }
             }
           }
 
@@ -257,7 +261,7 @@ define([
             }
           }
 
-          queryString = newArray.length === 0 ? "*" : newArray.join(' ');
+          queryString = newArray.length === 0 ? "*" : newArray.join('');
 
           //"所属城市:\"$citycode\" AND 所属3城市:\"$cit3ycode\"".replace(/.*:"\$citycode"/,"").replace(/(and|or)/i,'')
 
