@@ -2,7 +2,7 @@
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" style="margin-top: 0px;">
-        <li class="gf-tabs-item" ng-repeat="target in ctrl.panel.targets">
+        <li class="gf-tabs-item" ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.changeQueryBarTab(target)"
             ng-class="{active: ctrl.currentTarget.refId === target.refId}">
             {{target.conf.title}}
@@ -12,7 +12,7 @@
       </ul>
     </div>
     <div class="-tabbed-view-body">
-      <div ng-repeat="target in ctrl.panel.targets" style="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;"
+      <div ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets" style="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;"
         st2yle="border: 1px red solid;border-top: 0px;padding: 10px;" ng-if="ctrl.currentTarget.refId === target.refId">
         <div class="gf-form-inline">
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
