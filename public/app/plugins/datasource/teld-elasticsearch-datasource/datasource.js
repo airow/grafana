@@ -277,6 +277,10 @@ define([
 
           var searchType = (queryObj.size === 0 && this.esVersion < 5) ? 'count' : 'query_then_fetch';
           var header = this.getQueryHeader(searchType, options.range.from, options.range.to);
+
+          /*附加数据权限*/
+          header = attachDataPermission(target, header);
+
           payload += header + '\n';
 
           payload += esQuery + '\n';
@@ -435,6 +439,15 @@ define([
       this.getTagValues = function (options) {
         return this.getTerms({ field: options.key, query: '*' });
       };
+
+      function attachDataPermission(target, header) {
+        if (_.size(target.dataPermission) > 0) {
+          var headerJson = angular.fromJson(header);
+          headerJson.dataPermission = target.dataPermission.map(item => { return _.omit(item, ['$$hashKey']); });
+          header = angular.toJson(headerJson);
+        }
+        return header;
+      }
     }
 
     return {

@@ -13,12 +13,14 @@ export class ElasticQueryCtrl extends QueryCtrl {
 
   esVersion: any;
   rawQueryOld: string;
+  permissionOptions: any;
 
   /** @ngInject **/
   constructor($scope, $injector, private $rootScope, private $timeout, private uiSegmentSrv) {
     super($scope, $injector);
 
     this.esVersion = this.datasource.esVersion;
+    this.target.dataPermission = this.target.dataPermission || [];
     this.queryUpdated();
   }
 
@@ -29,6 +31,10 @@ export class ElasticQueryCtrl extends QueryCtrl {
     .catch(this.handleQueryError.bind(this));
   }
 
+  getPermissionOptionsPromise(queryStr, callback) {
+    return ["mockCode", "Code5002340003", "mockName"];
+  }
+
   queryUpdated() {
     var newJson = angular.toJson(this.datasource.queryBuilder.build(this.target), true);
     if (newJson !== this.rawQueryOld) {
@@ -37,6 +43,15 @@ export class ElasticQueryCtrl extends QueryCtrl {
     }
 
     this.$rootScope.appEvent('elastic-query-updated');
+  }
+
+  removeItem(itemArray, item) {
+    var index = _.indexOf(itemArray, itemArray);
+    itemArray.splice(index, 1);
+  }
+
+  moveItem(itemArray, index, newIndex) {
+    _.move(itemArray, index, newIndex);
   }
 
   getCollapsedText() {

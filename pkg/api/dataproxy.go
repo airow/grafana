@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"strings"
-	"time"
+  "strings"
+  "time"
+  "regexp"
 
 	"github.com/grafana/grafana/pkg/api/cloudwatch"
 	"github.com/grafana/grafana/pkg/bus"
@@ -59,9 +60,11 @@ func NewReverseProxy(ds *m.DataSource, proxyPath string, targetUrl *url.URL) *ht
 			req.Header.Add("Authorization", dsAuth)
 		}
 
-		// clear cookie headers
-		req.Header.Del("Cookie")
-		req.Header.Del("Set-Cookie")
+    if ds.Type != m.DS_ES_TELD {
+	  	// clear cookie headers
+      req.Header.Del("Cookie")
+      req.Header.Del("Set-Cookie")
+    }
 	}
 
 	return &httputil.ReverseProxy{Director: director, FlushInterval: time.Millisecond * 200}
@@ -98,7 +101,22 @@ func ProxyDataSourceRequest(c *middleware.Context) {
 		}
 	}
 
-	targetUrl, _ := url.Parse(ds.Url)
+
+  Url := ds.Url
+  if ds.Type == m.DS_ES_TELD {
+
+    //Url = strings.Replace(Url,  "${currenthost}", c.Req.Host, -1)
+    if strings.Contains(c.Req.Host,"localhost") {
+        reg := regexp.MustCompile(`\$\{currenthost?\|?(.*)\}`)
+        Url = reg.ReplaceAllString(Url, "${1}")
+        // fmt.Printf(Url)
+    }else{
+        reg := regexp.MustCompile(`(\$\{currenthost.*\})`)
+        Url = reg.ReplaceAllString(Url, c.Req.Host)
+    }
+  }
+
+	targetUrl, _ := url.Parse(Url)
 	if len(setting.DataProxyWhiteList) > 0 {
 		if _, exists := setting.DataProxyWhiteList[targetUrl.Host]; !exists {
 			c.JsonApiErr(403, "Data proxy hostname and ip are not included in whitelist", nil)
@@ -153,8 +171,10 @@ func ProxyDataSourceRequest(c *middleware.Context) {
 	}
 
 	logProxyRequest(ds.Type, c)
-	proxy.ServeHTTP(c.Resp, c.Req.Request)
-	c.Resp.Header().Del("Set-Cookie")
+  proxy.ServeHTTP(c.Resp, c.Req.Request)
+  if ds.Type != m.DS_ES_TELD {
+    c.Resp.Header().Del("Set-Cookie")
+  }
 }
 
 func logProxyRequest(dataSourceType string, c *middleware.Context) {
