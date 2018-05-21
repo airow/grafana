@@ -75,7 +75,6 @@
     <div class="gf-form offset-width-9">
       <metric-segment-model property="permission.field" get-options="ctrl.getFields()" on-change="onChange()" css-class="width-9"></metric-segment-model>
     </div>
-    {{permission.values}}
     <div class="gf-form" ng-repeat="value in permission.values track by $index">
       <input type="text" class="gf-form-input width-10" min-length="0" bs-typeahead='ctrl.getPermissionOptionsPromise'
 			 ng-model="permission.values[$index]" ng-change="ctrl.refresh()" ng-model-onblur></input>

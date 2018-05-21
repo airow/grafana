@@ -24,6 +24,16 @@ export class MssqlDatasource {
         return matches[1];
       }
 
+      let matchesIn = new RegExp("<in=(.+?) />").exec(value);
+      if (matchesIn) {
+        return ` IN ${matchesIn[1]}`;
+      }
+
+      let matchesLike = new RegExp("<like />").exec(value);
+      if (matchesLike) {
+        return ' LIKE \'%\'';
+      }
+
       return '\'' + value + '\'';
     }
 
