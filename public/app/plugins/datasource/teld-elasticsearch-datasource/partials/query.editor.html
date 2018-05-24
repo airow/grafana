@@ -77,7 +77,7 @@
     </div>
     <div class="gf-form" ng-repeat="value in permission.values track by $index">
       <input type="text" class="gf-form-input width-10" min-length="0" bs-typeahead='ctrl.getPermissionOptionsPromise'
-			 ng-model="permission.values[$index]" ng-change="ctrl.refresh()" ng-model-onblur></input>
+       ng-model="permission.values[$index]" ng-change="ctrl.refresh()" ng-model-onblur></input>
       <label class="gf-form-label">
         <a ng-click="permission.values.splice($index,1)">
           <i class="query-keyword fa fa-remove"></i>
