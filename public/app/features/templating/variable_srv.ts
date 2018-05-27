@@ -85,6 +85,11 @@ export class VariableSrv {
   }
 
   processTeldSqlVariable(variable) {
+    if (window.document.cookie.indexOf("telda") === -1) {
+      variable.current = { text: '<like />', value: '<like />' };
+      variable.initLock.resolve();
+      return;
+    }
 
     return this.$http({
       method: 'GET',
