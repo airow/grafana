@@ -1065,6 +1065,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return this.panel.serieType === "bar" && mode === "series";
   }
 
+  setAxis(axis) {
+    if (axis) {
+      if (_.isNil(axis.axisLabel.interval)) {
+        axis.axisLabel.interval = 'auto';
+      }
+    }
+  }
+
   onRender() {
 
     if (this.enablePanelRefresh && (!this.ecSeries || this.ecSeries.length === 0)) {
@@ -1089,10 +1097,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       _.defaultsDeep(xAxis, categoryAxis);
     }
 
+    this.setAxis(xAxis);
+
     if (valueAxis) {
       yAxis = _.cloneDeep(this.panel.echarts.yAxis);
       _.defaultsDeep(yAxis, valueAxis);
     }
+
+    this.setAxis(yAxis);
 
     function formatter(n) {
       if (this.panel.serieType === this.ecConf.series.pie.type) {
