@@ -443,7 +443,7 @@ define([
       function attachDataPermission(target, header) {
         if (_.size(target.dataPermission) > 0) {
           var headerJson = angular.fromJson(header);
-          headerJson.dataPermission = target.dataPermission.map(item => { return _.omit(item, ['$$hashKey']); });
+          headerJson.dataPermission = target.dataPermission.map(function (item) { return _.omit(item, ['$$hashKey']); });
           header = angular.toJson(headerJson);
         }
         return header;
