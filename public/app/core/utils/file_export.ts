@@ -50,20 +50,38 @@ export function exportSeriesListToCsvColumns(seriesList) {
 };
 
 export function exportTableDataToCsv(table) {
-    var text = 'sep=;\n';
-    // add header
-    _.each(table.columns, function(column) {
-        text += column.text + ';';
-    });
-    text += '\n';
-    // process data
-    _.each(table.rows, function(row) {
-        _.each(row, function(value) {
-            text += value + ';';
-        });
-        text += '\n';
-    });
-    saveSaveBlob(text, 'grafana_data_export.csv');
+    return exportTableDataToCsvzh_CN(table);
+    // var text = 'sep=;\n';
+    // // add header
+    // _.each(table.columns, function(column) {
+    //     text += column.text + ';';
+    // });
+    // text += '\n';
+    // // process data
+    // _.each(table.rows, function(row) {
+    //     _.each(row, function(value) {
+    //         text += value + ';';
+    //     });
+    //     text += '\n';
+    // });
+    // saveSaveBlob(text, 'grafana_data_export.csv');
+};
+
+function exportTableDataToCsvzh_CN(table) {
+  var text = '\uFEFF';
+  // add header
+  _.each(table.columns, function(column) {
+      text += column.text + ',';
+  });
+  text += '\n';
+  // process data
+  _.each(table.rows, function(row) {
+      _.each(row, function(value) {
+          text += value + ',';
+      });
+      text += '\n';
+  });
+  saveSaveBlob(text, 'grafana_data_export.csv');
 };
 
 export function saveSaveBlob(payload, fname) {

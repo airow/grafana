@@ -120,6 +120,11 @@ export class TableRenderer {
           </a>
         </span>`;
 
+      if (this['isRenderValues'] ) {
+        text = text.replace('&nbsp;', '');
+        templateString = `${text}`;
+      }
+
       return v =>  {
         let bindData = _.assign({
           timestamp: (new Date()).valueOf(),
@@ -245,18 +250,24 @@ export class TableRenderer {
 
   render_values() {
     let rows = [];
-
+    let columnKey = this.table.columns.map(i =>  i.text);
     for (var y = 0; y < this.table.rows.length; y++) {
       let row = this.table.rows[y];
+      this.rowObj = _.zipObject(columnKey, row);
+      this['isRenderValues'] = true;
       let new_row = [];
       for (var i = 0; i < this.table.columns.length; i++) {
-        new_row.push(this.formatColumnValue(i, row[i]));
+        if (this.table.columns[i].hidden) { continue; }
+        let columnValue = this.formatColumnValue(i, row[i]);
+        new_row.push(columnValue);
       }
       rows.push(new_row);
     }
+    let columns = this.table.columns.filter(i => i.hidden !== true);
+    columns = _.clone(columns).map(i => { i.text = i.alias || i.text; return i; });
     return {
-        columns: this.table.columns,
-        rows: rows,
+      columns: columns,
+      rows: rows,
     };
   }
 }

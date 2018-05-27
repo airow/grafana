@@ -12,11 +12,12 @@ export class DashRowCtrl {
   dashboard: any;
   row: any;
   dropView: number;
+  draggable: true;
 
   /** @ngInject */
-  constructor(private $scope, private $rootScope, private $timeout) {
+  constructor(private $scope, private $rootScope, private $timeout, contextSrv) {
     this.row.title = this.row.title || 'Row title';
-
+    this.draggable = contextSrv.isEditor;
     if (this.row.isNew) {
       this.dropView = 1;
     }
