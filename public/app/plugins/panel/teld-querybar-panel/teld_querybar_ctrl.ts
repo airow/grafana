@@ -28,7 +28,7 @@ loadPluginCss({
 export class TeldQuerybarCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
 
-  time = { from: moment("2013-01-01"), to: "now" };
+  //time = { from: moment("2013-01-01"), to: "now" };
   ALL_TEXT = '-全部-';
   isFirstLoaded = false;
   spin = true;
@@ -660,9 +660,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   timeRange() {
+    var time = { from: moment("2013-01-01"), to: "now" };
+    if (this.panel.dashboardTime) {
+      time = this.timeSrv.time;
+    }
     var raw = {
-      from: moment.isMoment(this.time.from) ? moment(this.time.from) : this.time.from,
-      to: moment.isMoment(this.time.to) ? moment(this.time.to) : this.time.to,
+      from: moment.isMoment(time.from) ? moment(time.from) : time.from,
+      to: moment.isMoment(time.to) ? moment(time.to) : time.to,
     };
 
     return {
