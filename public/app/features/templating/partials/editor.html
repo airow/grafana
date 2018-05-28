@@ -66,6 +66,7 @@
 
     <div class="gf-form" ng-show="mode === 'list'">
       <div class="gf-form-button-row">
+        <a type="button" class="btn gf-form-button btn-success" ng-click="getVariables();"><i class="fa" ng-class="{true:'fa-folder',false:'fa-folder-open'}[showAll]" ></i></a>
         <a type="button" class="btn gf-form-button btn-success" ng-click="mode = 'new';"><i class="fa fa-plus" ></i>&nbsp;&nbsp;New</a>
       </div>
     </div>
