@@ -63,6 +63,7 @@ export class PanelCtrl {
     if (this.panel.isNew) {
       delete this.panel.isNew;
     }
+    this.panel.dyHide = false;
   }
 
   init() {
@@ -345,11 +346,26 @@ export class PanelCtrl {
   }
 
   render(payload?) {
+    //this.panel.dyHide = this.panel.;
+    //this.panel.dyHide = this.panel.type === "graph";
+    var contextSrv = this.$injector.get('contextSrv');
+    if (this.panel.hideexpress) {
+      var templateSrv = this.$injector.get('templateSrv');
+      var data = _.transform(templateSrv.variables, (r, variable) => { r[variable.name] = variable.current.value; }, {});
+      var panelHide = _.template('${' + this.panel.hideexpress + "}")(data) === 'true';
+
+      if (contextSrv.isEditor) {
+        this.panel.editorHide = panelHide;
+      } else {
+        this.panel.dyHide = panelHide;
+      }
+      this.row.hideRow = _.size(_.filter(this.row.panels, p => { return !p.dyHide; })) === 0;
+    }
+
     // ignore if other panel is in fullscreen mode
     if (this.otherPanelInFullscreenMode()) {
       return;
     }
-
     this.calculatePanelHeight();
     this.timing.renderStart = new Date().getTime();
     this.events.emit('render', payload);

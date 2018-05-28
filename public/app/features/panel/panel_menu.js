@@ -14,6 +14,7 @@ function (angular, $, _, Tether) {
           '<span class="panel-title drag-handle pointer" ng-dblclick="ctrl.titledblclick()">' +
             '<span class="icon-gf panel-alert-icon"></span>' +
             '<span class="panel-title-text drag-handle">' +
+              '<span>{{ctrl.panel.editorHide}}</span>' +
               '<span ng-show="(!ctrl.timeInfo || ctrl.isPlotClick) && ctrl.panel.showTimeRange">' +
                 '{{ctrl.rangeStringPanel}} &nbsp;'+
               '</span>' +
