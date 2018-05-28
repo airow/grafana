@@ -13,6 +13,8 @@
     </gf-form-switch>
     <label class="gf-form-label query-keyword width-6">滑块宽<tip>最小值190</tip></label>
     <input type="number" min="190" class="gf-form-input width-5" ng-model="ctrl.panel.slideWidth" spellcheck="false" placeholder="250">
+    <gf-form-switch class="gf-form" label="使用右上角时间" label-class="query-keyword width-8" checked="ctrl.panel.dashboardTime">
+    </gf-form-switch>
   </div>
   <hr>
   <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">

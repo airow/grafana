@@ -13,7 +13,8 @@ function (angular, $, _, Tether) {
       var linkTemplate =
           '<span class="panel-title drag-handle pointer" ng-dblclick="ctrl.titledblclick()">' +
             '<span class="icon-gf panel-alert-icon"></span>' +
-            '<span class="panel-title-text drag-handle">' +
+            '<span class="panel-title-text drag-handle" '+
+                ' ng-class="{true:\'fa fa-eye-slash text-warning\',false:\'\'}[ctrl.panel.editorHide]">' +
               '<span ng-show="(!ctrl.timeInfo || ctrl.isPlotClick) && ctrl.panel.showTimeRange">' +
                 '{{ctrl.rangeStringPanel}} &nbsp;'+
               '</span>' +

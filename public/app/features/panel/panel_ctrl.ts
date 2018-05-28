@@ -2,6 +2,7 @@
 
 import config from 'app/core/config';
 import _ from 'lodash';
+import moment from 'moment';
 import angular from 'angular';
 import $ from 'jquery';
 import {profiler} from 'app/core/profiler';
@@ -63,6 +64,8 @@ export class PanelCtrl {
     if (this.panel.isNew) {
       delete this.panel.isNew;
     }
+    this.panel.dyHide = false;
+    this.panel.editorHide = false;
   }
 
   init() {
@@ -344,12 +347,38 @@ export class PanelCtrl {
     this.height = this.containerHeight - (PANEL_BORDER + PANEL_PADDING + (this.panel.title ? TITLE_HEIGHT : EMPTY_TITLE_HEIGHT));
   }
 
+
+
+  visibility() {
+    var contextSrv = this.$injector.get('contextSrv');
+    if (this.panel.hideexpress) {
+      var templateSrv = this.$injector.get('templateSrv');
+      var compiled = _.template('${' + this.panel.hideexpress + "}", {
+        'variable': ['vars'],
+        imports: {
+          '_': _,
+          'moment': moment
+        }
+      });
+
+      var contextData = _.transform(templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
+      var panelHide = compiled(contextData) === 'true';
+
+      if (contextSrv.isEditor) {
+        this.panel.editorHide = panelHide;
+      } else {
+        this.panel.dyHide = panelHide;
+      }
+      this.row.hideRow = _.size(_.filter(this.row.panels, eachPanel => { return !eachPanel.dyHide; })) === 0;
+    }
+  }
+
   render(payload?) {
+    this.visibility();
     // ignore if other panel is in fullscreen mode
     if (this.otherPanelInFullscreenMode()) {
       return;
     }
-
     this.calculatePanelHeight();
     this.timing.renderStart = new Date().getTime();
     this.events.emit('render', payload);
