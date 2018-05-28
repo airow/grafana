@@ -20,6 +20,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   overwriteTimeRange: any;
   originalTitle: string;
   isPlotClick: boolean;
+  $compile: any;
 
   panelDefaults = {
     drill_timePlotclick: false,
@@ -58,6 +59,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     this.pageIndex = 0;
     this.templateSrv = $injector.get('templateSrv');
+    this.$compile = $injector.get('$compile');
 
     if (this.panel.styles === void 0) {
       this.panel.styles = this.panel.columns;
@@ -164,6 +166,17 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     return super.render(this.table);
   }
 
+  selectObj: any;
+  select(obj) {
+    if (this.selectObj !== obj) {
+
+    } else {
+      this.selectObj = null;
+    }
+
+    alert(1);
+  }
+
   toggleColumnSort(col, colIndex) {
     // remove sort flag from current column
     if (this.table.columns[this.panel.sort.col]) {
@@ -207,7 +220,13 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     function appendTableRows(tbodyElem) {
       var renderer = new TableRenderer(panel, data, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize, ctrl.templateSrv);
       tbodyElem.empty();
-      tbodyElem.html(renderer.render(ctrl.pageIndex));
+      //tbodyElem.html(renderer.render(ctrl.pageIndex));
+
+      var compileFn = ctrl.$compile(renderer.render(ctrl.pageIndex));
+      //var $dom = compileFn(s);
+      var $dom = compileFn(ctrl.$scope);
+      // 添加到文档中
+      $dom.appendTo(tbodyElem);
     }
 
     function switchPage(e) {

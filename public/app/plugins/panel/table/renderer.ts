@@ -166,6 +166,23 @@ export class TableRenderer {
       };
     }
 
+    if (style.type === 'select') {
+      let templateString = "";
+      return v => {
+        let bindData = _.assign({
+          timestamp: (new Date()).valueOf(),
+          currentUser: config.bootData.user
+        }, this.rowObj);
+
+        // let compiled = _.template(`<span ng-click='ctrl.select(${})'>asdfasdf</span>`);
+        // let returnValue = compiled({ d: bindData });
+        // return returnValue;
+
+        return `<span class='fa' ng-class='{true:"fa-eye",false:""}[ctrl.selectObj==${JSON.stringify(this.rowObj)}]'
+         ng-click='ctrl.select(${JSON.stringify(this.rowObj)})'>asdfasdf</span>`;
+      };
+    }
+
     return (value) => {
       return this.defaultCellFormater(value, style);
     };
