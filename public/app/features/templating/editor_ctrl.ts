@@ -53,7 +53,7 @@ export class VariableEditorCtrl {
         return {text: ds.meta.name, value: ds.meta.id};
       }).value();
 
-      $scope.variables = $scope.getVariables();
+      $scope.variables = variableSrv.variables;
       $scope.reset();
 
       $scope.$watch('mode', function(val) {
