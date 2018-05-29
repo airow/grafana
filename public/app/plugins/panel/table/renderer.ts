@@ -221,7 +221,8 @@ export class TableRenderer {
   }
 
   renderSelectCell(value, index, cindex, addWidthHack = false) {
-    if (this.panel.publishVariables.enable !== true) {
+
+    if (_.get(this.panel, 'publishVariables.enable', false) !== true) {
       return "";
     }
     //value = this.formatColumnValue(columnIndex, value);
