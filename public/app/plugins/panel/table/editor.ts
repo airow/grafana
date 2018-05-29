@@ -41,7 +41,7 @@ export class TablePanelEditorCtrl {
       {text: 'String', value: 'string'},
       {text: 'Date', value: 'date'},
       {text: 'Hidden', value: 'hidden'},
-      {text: 'link', value: 'link'},
+      {text: 'link', value: 'link'}
     ];
     this.timeRangeUnits = [
       {text: 'Second', value: 'seconds'},

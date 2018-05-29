@@ -39,6 +39,7 @@ export class VariableEditorCtrl {
         $scope.variables = _.filter(variableSrv.variables, v => { return v.canSaved !== false; });
       }
       $scope.showAll = !$scope.showAll;
+      return $scope.variables;
     };
 
     $scope.init = function() {
@@ -52,8 +53,7 @@ export class VariableEditorCtrl {
         return {text: ds.meta.name, value: ds.meta.id};
       }).value();
 
-      //$scope.variables = variableSrv.variables;
-      $scope.getVariables();
+      $scope.variables = variableSrv.variables;
       $scope.reset();
 
       $scope.$watch('mode', function(val) {

@@ -220,7 +220,38 @@ export class TableRenderer {
     return '<td' + style + '>' + value + widthHack + '</td>';
   }
 
-  render(page) {
+  renderSelectCell(value, index, cindex, addWidthHack = false) {
+    if (this.panel.publishVariables.enable !== true) {
+      return "";
+    }
+    //value = this.formatColumnValue(columnIndex, value);
+    var style = '';
+    if (this.colorState.cell) {
+      style = ' style="background-color:' + this.colorState.cell + ';color: white"';
+      this.colorState.cell = null;
+    } else if (this.colorState.value) {
+      style = ' style="color:' + this.colorState.value + '"';
+      this.colorState.value = null;
+    }
+
+    // because of the fixed table headers css only solution
+    // there is an issue if header cell is wider the cell
+    // this hack adds header content to cell (not visible)
+    var widthHack = '';
+    if (addWidthHack) {
+      widthHack = '<div class="table-panel-width-hack">' + '选择' + '</div>';
+    }
+
+    var valueFn = (v, i, ci) => {
+      return `<span class='spanRow fa ${i === ci ? "fa-eye text-success" : "fa-eye-slash"}'
+       ng-class='{true:"fa-eye text-success",false:"fa-eye-slash"}[ctrl.selectedIndex==${i}]'
+       ng-click='ctrl.select(${i},${JSON.stringify(v)})'></span>`;
+    };
+    value = valueFn(value, index, cindex);
+    return '<td' + style + '>' + value + widthHack + '</td>';
+  }
+
+  render(page, cindex?) {
     let pageSize = this.panel.pageSize || 100;
     let startPos = page * pageSize;
     let endPos = Math.min(startPos + pageSize, this.table.rows.length);
@@ -233,6 +264,7 @@ export class TableRenderer {
       this.rowObj = _.zipObject(columnKey, row);
       let cellHtml = '';
       let rowStyle = '';
+      cellHtml += this.renderSelectCell(this.rowObj, y, cindex, false);
       for (var i = 0; i < this.table.columns.length; i++) {
         cellHtml += this.renderCell(i, row[i], y === startPos);
       }

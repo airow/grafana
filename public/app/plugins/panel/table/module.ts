@@ -20,6 +20,9 @@ class TablePanelCtrl extends MetricsPanelCtrl {
   overwriteTimeRange: any;
   originalTitle: string;
   isPlotClick: boolean;
+  $compile: any;
+  variableSrv: any;
+  alertSrv: any;
 
   panelDefaults = {
     drill_timePlotclick: false,
@@ -51,6 +54,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     fontSize: '100%',
     sort: {col: 0, desc: true},
     filterNull: false,
+    publishVariables: { variablesConf: [] }
   };
 
   /** @ngInject */
@@ -58,6 +62,9 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     this.pageIndex = 0;
     this.templateSrv = $injector.get('templateSrv');
+    this.variableSrv = $injector.get('variableSrv');
+    this.$compile = $injector.get('$compile');
+    this.alertSrv = $injector.get('alertSrv');
 
     if (this.panel.styles === void 0) {
       this.panel.styles = this.panel.columns;
@@ -90,11 +97,16 @@ class TablePanelCtrl extends MetricsPanelCtrl {
         });
       }
     }
+
+    if (this.panel.publishVariables.enable) {
+      this.bindPublishVariables({}, false);
+    }
   }
 
   onInitEditMode() {
     this.addEditorTab('Options', tablePanelEditor, 2);
     this.addEditorTab('Drill', 'public/app/plugins/panel/table/partials/drill.html');
+    this.addEditorTab('Variables', 'public/app/plugins/panel/table/partials/variables.html');
   }
 
   onInitPanelActions(actions) {
@@ -156,13 +168,70 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
+  isFirstRender: any;
   render() {
+    if (this.seftRowRefresh) {
+      this.seftRowRefresh = false;
+      return;
+    }
+    this.isFirstRender = false;
     this.table = transformDataToTable(this.dataRaw, this.panel);
     if (this.panel.jsonr2c !== true) {
       this.table.sort(this.panel.sort);
     }
     return super.render(this.table);
   }
+
+  removeVariable(variableArray, variable) {
+    var index = _.indexOf(variableArray, variable);
+    variableArray.splice(index, 1);
+  }
+  move(variableArray, index, newIndex) {
+    _.move(variableArray, index, newIndex);
+  }
+  selectedIndex: any;
+  select(index, obj) {
+    var isSelect = this.selectedIndex !== index;
+
+    if (isSelect) {
+      this.selectedIndex = index;
+    } else {
+      if (this.panel.publishVariables.required) {
+        this.alertSrv.set("警告", `必选项不支持取消`, "warning", 2000);
+        return;
+      }
+      this.selectedIndex = null;
+    }
+
+    this.bindPublishVariables(obj, isSelect);
+    this.seftRowRefresh = true;
+    this.timeSrv.refreshDashboard();
+  }
+
+  bindPublishVariables(obj, isSelect) {
+    _.each(this.panel.publishVariables.variablesConf, conf => {
+      var name = conf.name || conf.field;
+      var varName = `${this.panel.publishVariables.prefixVariables}_${name}`;
+      var value = _.get(obj, conf.field, conf.nullValue);
+      var val = isSelect ? value : conf.nullValue;
+      let variable = this.templateSrv.getVariable('$' + varName, 'teldCustom');
+
+      let query = val === conf.nullValue ? "" : val;
+      let current = { value: val, text: query };
+      variable = variable || this.variableSrv.addVariable({
+        hide: 2,
+        type: 'teldCustom',
+        name: varName,
+        query: query,
+        current: current
+      });
+      variable.query = val;
+      variable.current = current;
+    });
+    this.templateSrv.updateTemplateData();
+  }
+
+  seftRowRefresh: any;
 
   toggleColumnSort(col, colIndex) {
     // remove sort flag from current column
@@ -207,7 +276,27 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     function appendTableRows(tbodyElem) {
       var renderer = new TableRenderer(panel, data, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize, ctrl.templateSrv);
       tbodyElem.empty();
-      tbodyElem.html(renderer.render(ctrl.pageIndex));
+      //tbodyElem.html(renderer.render(ctrl.pageIndex));
+
+      var compileFn = ctrl.$compile(renderer.render(ctrl.pageIndex, ctrl.selectedIndex));
+      //var $dom = compileFn(s);
+      var $dom = compileFn(ctrl.$scope);
+      // 添加到文档中
+      $dom.appendTo(tbodyElem);
+
+      if (ctrl.panel.publishVariables.enable) {
+        let $timeout = ctrl.$injector.get('$timeout');
+        if (ctrl.panel.publishVariables.load && ctrl.isFirstRender !== true) {
+          $timeout(() => {
+            ctrl.isFirstRender = true;
+            let columnKey = data.columns.map(i => i.text);
+            let row = data.rows[0];
+            let rowObj = _.zipObject(columnKey, row);
+            ctrl.selectedIndex = null;
+            ctrl.select(0, rowObj);
+          });
+        }
+      }
     }
 
     function switchPage(e) {

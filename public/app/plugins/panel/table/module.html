@@ -5,6 +5,7 @@
     <table class="table-panel-table" ng-style="{'white-space':ctrl.panel.nowrap ? 'nowrap' : 'initial'}">
 			<thead>
 				<tr>
+          <th style="width: 50px;" ng-show="ctrl.panel.publishVariables.enable"></th>
 					<th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
 						<div class="table-panel-table-header-inner pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
 							{{col.alias||col.text}}
