@@ -39,6 +39,7 @@ export class VariableEditorCtrl {
         $scope.variables = _.filter(variableSrv.variables, v => { return v.canSaved !== false; });
       }
       $scope.showAll = !$scope.showAll;
+      return $scope.variables;
     };
 
     $scope.init = function() {

@@ -1,0 +1,47 @@
+<div class="editor-row">
+
+  <div class="section gf-form-group">
+
+		<h5 class="section-heading">发布变量</h5>
+    <gf-form-switch class="gf-form" label="启用"  checked="ctrl.panel.publishVariables.enable" on-change="ctrl.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label="必选"  checked="ctrl.panel.publishVariables.required" on-change="ctrl.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label="默认选中"  checked="ctrl.panel.publishVariables.load" on-change="ctrl.render()"></gf-form-switch>
+
+    <div class="gf-form">
+      <label class="gf-form-label">变量前缀</label>
+      <input type="text" class="gf-form-input width-6" data-placement="right" ng-model="ctrl.panel.publishVariables.prefixVariables" ng-change="ctrl.render()" ng-model-onblur>
+    </div>
+
+  </div>
+
+  <div class="section gf-form-group">
+      <h5 class="section-heading">Publish</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-15">变量格式</label>
+          <label class="gf-form-label query-keyword width-10">变量名</label>
+          <label class="gf-form-label query-keyword width-10">字段</label>
+          <label class="gf-form-label query-keyword width-10">Null</label>
+          <label class="gf-form-label">
+            <a ng-click="ctrl.panel.publishVariables.variablesConf.push({})">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <div class="gf-form-inline" ng-repeat="variable in ctrl.panel.publishVariables.variablesConf">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-15">
+            <i style="margin: auto 5px;" class="fa fa-eye" ng-if="$first"></i>${{ctrl.panel.publishVariables.prefixVariables}}_{{variable.name}}</label>
+          <input type="text" class="gf-form-input width-10" ng-model="variable.name" spellcheck="false" placeholder="name">
+          <input type="text" class="gf-form-input width-10" ng-model="variable.field" spellcheck="false" placeholder="field">
+          <input type="text" class="gf-form-input width-10" ng-model="variable.nullValue" spellcheck="false" placeholder="null value">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeVariable(ctrl.panel.publishVariables.variablesConf, variable)">
+              <i class="fa fa-remove"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+  </div>
+</div>
