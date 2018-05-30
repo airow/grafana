@@ -108,7 +108,14 @@ define([
           };
 
           var type = _.get(wsMessage, "message.type");
-          messageRouter[type](wsMessage);
+          var mr = messageRouter[type];
+          if (mr) {
+            mr(wsMessage);
+          } else {
+            mr = changeDashboard;
+            mr(wsMessage);
+          }
+          //messageRouter[type](wsMessage);
         });
 
         ws.onError(function (event) {
