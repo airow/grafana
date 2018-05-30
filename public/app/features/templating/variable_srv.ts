@@ -10,7 +10,7 @@ export class VariableSrv {
   variables: any;
 
   /** @ngInject */
-  constructor(private $rootScope, private $q, private $location, private $injector, private templateSrv) {
+  constructor(private $rootScope, private $q, private $location, private $injector, private templateSrv, private $http) {
     // update time variant variables
     $rootScope.$on('refresh', this.onDashboardRefresh.bind(this), $rootScope);
     $rootScope.$on('template-variable-value-updated', this.updateUrlParamsWithCurrentVariables.bind(this), $rootScope);
@@ -73,12 +73,45 @@ export class VariableSrv {
         return variable.updateOptions().then(variable.initLock.resolve);
       }
 
-      variable.initLock.resolve();
+      if (variable.type === 'teldSqlDataPermissions') {
+        return this.processTeldSqlVariable(variable);
+      } else {
+        variable.initLock.resolve();
+      }
     }).finally(() => {
       this.templateSrv.variableInitialized(variable);
       delete variable.initLock;
     });
   }
+
+  processTeldSqlVariable(variable) {
+    if (window.document.cookie.indexOf("telda") === -1) {
+      variable.current = { text: '<like />', value: '<like />' };
+      variable.initLock.resolve();
+      return;
+    }
+
+    return this.$http({
+      method: 'GET',
+      url: `/datap/${variable.query}`
+    })
+      .then(response => {
+        var data = response.data;
+        if (data === "*") {
+          data = ' <like />';
+        } else {
+          data = _.split(data, ",");
+          data = ` <in=('${_.join(data, "','")}') />`;
+        }
+        variable.current = { text: data, value: data };
+      }).catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        variable.initLock.resolve();
+      });
+  }
+
 
   createVariableFromModel(model) {
     var ctor = variableTypes[model.type].ctor;

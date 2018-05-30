@@ -291,6 +291,14 @@
         </div> -->
       </div>
 
+      <div ng-if="current.type === 'teldSqlDataPermissions'" class="gf-form-group">
+        <h5 class="section-heading">Custom Options</h5>
+        <div class="gf-form">
+          <span class="gf-form-label width-14">授权对象</span>
+          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" required></input>
+        </div>
+      </div>
+
       <div class="section gf-form-group" ng-show="variableTypes[current.type].supportsMulti">
         <h5 class="section-heading">Selection Options</h5>
         <div class="section">

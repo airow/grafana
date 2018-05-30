@@ -55,4 +55,58 @@
         ng-change="ctrl.refresh()" ng-model-onblur></input>
     </div>
   </div>
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-9">数据权限</label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-9">字段</label>
+      <label class="gf-form-label query-keyword width-10">授权对象</label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target.dataPermission.push({field:'select field',values:['']})">
+          <i class="fa fa-plus"></i>
+        </a>
+      </label>
+    </div>
+  </div>
+  <div class="gf-form-inline" ng-repeat="permission in ctrl.target.dataPermission">
+    <div class="gf-form offset-width-9">
+      <metric-segment-model property="permission.field" get-options="ctrl.getFields()" on-change="onChange()" css-class="width-9"></metric-segment-model>
+    </div>
+    <div class="gf-form" ng-repeat="value in permission.values track by $index">
+      <input type="text" class="gf-form-input width-10" min-length="0" bs-typeahead='ctrl.getPermissionOptionsPromise'
+       ng-model="permission.values[$index]" ng-change="ctrl.refresh()" ng-model-onblur></input>
+      <label class="gf-form-label">
+        <a ng-click="permission.values.splice($index,1)">
+          <i class="query-keyword fa fa-remove"></i>
+        </a>
+      </label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="permission.values.push('')">
+          <i class="query-keyword fa fa-plus"></i>
+        </a>
+      </label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.removeItem(ctrl.target.dataPermission, permission)">
+          <i class="pointer fa fa-trash"></i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-hide="$last">
+        <a ng-click="ctrl.moveItem(ctrl.target.dataPermission,$index,$index+1)">
+          <i class="pointer fa fa-arrow-down"></i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-hide="$first">
+        <a ng-click="ctrl.moveItem(ctrl.target.dataPermission,$index,$index-1)">
+          <i class="pointer fa fa-arrow-up"></i>
+        </a>
+      </label>
+    </div>
+  </div>
 </query-editor-row>

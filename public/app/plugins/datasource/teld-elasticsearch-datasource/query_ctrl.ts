@@ -13,13 +13,33 @@ export class ElasticQueryCtrl extends QueryCtrl {
 
   esVersion: any;
   rawQueryOld: string;
+  permissionOptions: any;
+  getPermissionOptionsPromise: any;
 
   /** @ngInject **/
-  constructor($scope, $injector, private $rootScope, private $timeout, private uiSegmentSrv) {
+  constructor($scope, $injector, private $rootScope, private $timeout, private uiSegmentSrv, private $http) {
     super($scope, $injector);
 
     this.esVersion = this.datasource.esVersion;
+    this.target.dataPermission = this.target.dataPermission || [];
     this.queryUpdated();
+
+    this.getPermissionOptionsPromise = (query, callback) => {
+      return this.$http({
+        method: 'GET',
+        url: '/dataplist'
+      }).then(function successCallback(response) {
+        if (response.status === 200) {
+          callback(response.data);
+        } else {
+          callback([]);
+        }
+      }, function errorCallback(response) {
+        callback([]);
+      }).catch((err) => {
+        callback([]);
+      });
+    };
   }
 
   getFields(type) {
@@ -29,6 +49,14 @@ export class ElasticQueryCtrl extends QueryCtrl {
     .catch(this.handleQueryError.bind(this));
   }
 
+  // getPermissionOptionsPromise(queryStr, callback) {
+  //   debugger;
+  //   //var h = this.$injector.get('$http');
+
+  //   //return this.$injector.get('$http').get()
+  //   //return ["mockCode", "Code5002340003", "mockName"];
+  // }
+
   queryUpdated() {
     var newJson = angular.toJson(this.datasource.queryBuilder.build(this.target), true);
     if (newJson !== this.rawQueryOld) {
@@ -37,6 +65,15 @@ export class ElasticQueryCtrl extends QueryCtrl {
     }
 
     this.$rootScope.appEvent('elastic-query-updated');
+  }
+
+  removeItem(itemArray, item) {
+    var index = _.indexOf(itemArray, itemArray);
+    itemArray.splice(index, 1);
+  }
+
+  moveItem(itemArray, index, newIndex) {
+    _.move(itemArray, index, newIndex);
   }
 
   getCollapsedText() {

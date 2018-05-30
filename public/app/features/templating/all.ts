@@ -12,6 +12,7 @@ import {AdhocVariable} from './adhoc_variable';
 import {TeldCustomVariable} from './teld_custom_variable';
 import {TeldAdhocVariable} from './teld_adhoc_variable';
 import {TeldExpressionVariable} from './teld_expression_variable';
+import {TeldSqlDataPermissionsVariable} from './teld_ds_sql_datapermissions_variable';
 
 export {
   VariableSrv,
@@ -25,4 +26,5 @@ export {
   TeldCustomVariable,
   TeldAdhocVariable,
   TeldExpressionVariable,
+  TeldSqlDataPermissionsVariable,
 }
