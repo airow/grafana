@@ -5,20 +5,20 @@ import _ from 'lodash';
 declare var window: any;
 
 export function exportSeriesListToCsv(seriesList) {
-    var text = 'sep=;\nSeries;Time;Value\n';
+    var text = '\uFEFFSeries,Time,Value\n';
     _.each(seriesList, function(series) {
         _.each(series.datapoints, function(dp) {
-            text += series.alias + ';' + new Date(dp[1]).toISOString() + ';' + dp[0] + '\n';
+            text += series.alias + ',' + new Date(dp[1]).toISOString() + ',' + dp[0] + '\n';
         });
     });
     saveSaveBlob(text, 'grafana_data_export.csv');
 };
 
 export function exportSeriesListToCsvColumns(seriesList) {
-    var text = 'sep=;\nTime;';
+    var text = '\uFEFFTime,';
     // add header
     _.each(seriesList, function(series) {
-        text += series.alias + ';';
+        text += series.alias + ',';
     });
     text = text.substring(0,text.length-1);
     text += '\n';
@@ -39,9 +39,9 @@ export function exportSeriesListToCsvColumns(seriesList) {
 
     // make text
     for (var i = 0; i < dataArr[0].length; i++) {
-        text += dataArr[0][i] + ';';
+        text += dataArr[0][i] + ',';
         for (var j = 1; j < dataArr.length; j++) {
-            text += dataArr[j][i] + ';';
+            text += dataArr[j][i] + ',';
         }
         text = text.substring(0,text.length-1);
         text += '\n';
@@ -51,7 +51,7 @@ export function exportSeriesListToCsvColumns(seriesList) {
 
 export function exportTableDataToCsv(table) {
     return exportTableDataToCsvzh_CN(table);
-    // var text = 'sep=;\n';
+    // var text = '\uFEFF\nsep=;\n';
     // // add header
     // _.each(table.columns, function(column) {
     //     text += column.text + ';';
