@@ -5,4 +5,8 @@
   <div style="height:100%;">
     <iframe ng-style="ctrl.style" src="{{ctrl.src}}" _track-iframe-dbclick></iframe>
   </div>
+  <div style="position: absolute; bottom: 100px; right: 100px;">
+    <button ng-click="ctrl.goto('m1')">m1</button>
+    <button ng-click="ctrl.goto('m2')">m2</button>
+  </div>
 </div>

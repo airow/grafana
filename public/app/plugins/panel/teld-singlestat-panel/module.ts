@@ -15,10 +15,8 @@ import { finglestatEchartsEventEditorComponent } from '../teld-eventhandler-edit
 import { submenuDirective } from '../../../features/dashboard/submenu/submenu';
 
 loadPluginCssPath({
-  //cssPath: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.css',
-  dark: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css',
-  light: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css',
-  //light: '/public/app/plugins/panel/teld-singlestat-panel/css/singlestat.built-in.css'
+  dark: '/public/app/plugins/panel/teld-iframe-panel/css/teld-iframe-panel.built-in.css',
+  light: '/public/app/plugins/panel/teld-iframe-panel/css/teld-iframe-panel.built-in.css',
 });
 
 class SingleStatCtrl extends MetricsPanelCtrl {

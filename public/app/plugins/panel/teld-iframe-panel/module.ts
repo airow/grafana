@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
-import { PanelCtrl } from 'app/plugins/sdk';
+import { PanelCtrl , loadPluginCssPath } from 'app/plugins/sdk';
 import { kibanaEditor } from './editor/kibana';
 import appEvents from 'app/core/app_events';
 import config from 'app/core/config';
@@ -45,7 +45,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
   /** @ngInject **/
   constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
-    private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv, private $location) {
+    private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv, private $location,
+    private wsAcrossScreen) {
     super($scope, $injector);
 
 
@@ -97,6 +98,30 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   onInitPanelActions(actions) {
     //actions.push({ text: '最小化', click: 'ctrl.min()' });
     actions.push(this.action_panelstate);
+  }
+
+  goto(i){
+    // for (var item in UserList) {
+    //   if (item != loginname) {
+    //     _sk.send(item + "|" + jsondata);
+    //   }
+    //   console.log(item);
+    // }
+
+    var u = { "m1": 'http://localhost/rightbottom-m1.jpg', "m2": 'http://www.qq.com' };
+
+    // ["shfh_shfh2"].forEach(element => {
+    //   this.wsAcrossScreen.sendTo(element, { type: i, params: {} });
+    //   this.src = u[i];
+    // });
+
+    //this.wsAcrossScreen.sendTo('shfh_shfh2', { type: i, params: {} });
+    this.wsAcrossScreen.sendToAll({ type: i, params: {} }, (function (sendContext) {
+      var changeSrc = u[i];
+      this.src = this.$sce.trustAsResourceUrl(changeSrc);
+      console.log('change iframe src to', changeSrc);
+    }).bind(this));
+    //alert(i);
   }
 
   messageIncoming(event, data) {
