@@ -5,9 +5,16 @@ import angular from 'angular';
 import moment from 'moment';
 import { PanelCtrl , loadPluginCssPath } from 'app/plugins/sdk';
 import { kibanaEditor } from './editor/kibana';
+import { WebsocketEditor } from './editor/websocket';
 import appEvents from 'app/core/app_events';
 import config from 'app/core/config';
 
+// loadPluginCssPath({
+//   cssPath: '/public/app/plugins/panel/teld-iframe-panel/css/teld-iframe-panel.built-in.css',
+//   //cssPath: '/public/app/plugins/panel/teld-querybar-panel/css/swiper.3.0.8.built-in.css'
+// });
+
+System.import('/public/app/plugins/panel/teld-iframe-panel/css/teld-iframe-panel.built-in.css!css');
 export class TeldIframePanelCtrl extends PanelCtrl {
   static templateUrl = `partials/module.html`;
 
@@ -24,6 +31,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   isloaded: boolean;
   changePanelStrategyOptions: any;
   search: any;
+  currentScene: any;
+  $interval: any;
 
   // Set and populate defaults
   panelDefaults = {
@@ -37,6 +46,12 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     variables: [],
     isIframe: false,
     kibanaConf: {},
+    websocketConf: {
+      enable: false,
+      scene: [{ buttons: [{}], cmds: [{}] }],
+      clocks: { style: { top: '50px', right: '50px', color: '#FFF' } },
+      teldlogo: { style: { top: '0px', left: '0px' } }
+    },
     containerStyle: {
       'margin-top': '30px',
       'margin-bottom': '20px',
@@ -46,9 +61,10 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   /** @ngInject **/
   constructor($scope, $injector, private templateSrv, private $sce, private $rootScope, private timeSrv,
     private variableSrv, private dashboardSrv, private uiSegmentSrv, private datasourceSrv, private $location,
-    private wsAcrossScreen) {
+    private wsAcrossScreen, $interval) {
     super($scope, $injector);
 
+    this.$interval = $interval;
 
     this.search = this.$location.search();
 
@@ -62,7 +78,13 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
-    this.events.on('render', this.onRender.bind(this));
+    if (this.panel.websocketConf.enable) {
+      this.onRender();
+      this.currentScene = _.first(this.panel.websocketConf.scene);
+      this.gotoScene(this.currentScene);
+    } else {
+      this.events.on('render', this.onRender.bind(this));
+    }
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
 
     /*grafana与kibana时间同步
@@ -86,6 +108,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     $scope.$on('$destroy', function () {
       messageIncomingHandler();
       messageIncomingHandler = null;
+      if ($scope.ctrl.timehandler) {
+        $scope.ctrl.$interval.cancel($scope.ctrl.timehandler);
+      }
     });
 
     this.changePanelStrategyOptions = {
@@ -93,11 +118,46 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       'V2': 'v2',
       // 'Data field': 'field',
     };
-  }
 
+
+    if (this.panel.websocketConf.clocks && this.panel.websocketConf.clocks.enable) {
+      this.timehandler = this.$interval((function () {
+        let m = moment().locale('zh-cn');
+        this.clocks = { m, time: m.format('HH:mm:ss'), date: m.format('LL dddd') };
+        //this.time = moment().locale('zh-cn').format('HH:mm:ss');
+      }).bind(this), 1000);
+    }
+
+    // let timeHandle = this.$interval(function () {
+    //   console.log(moment().locale('zh-cn').format('HH:mm:ss'));
+    //   //this.time = moment().locale('zh-cn').format('HH:mm:ss');
+    // }, 1000);
+
+  }
+  timehandler: any;
   onInitPanelActions(actions) {
     //actions.push({ text: '最小化', click: 'ctrl.min()' });
     actions.push(this.action_panelstate);
+  }
+
+  gotoScene(scene, cmd?) {
+    cmd = cmd || _.first(scene.cmds).name;
+    this.wsAcrossScreen.sendToAll({ type: cmd, params: {} }, (function (sendContext) {
+      //var changeSrc = scene.src;
+      var changeSrc = this.formatSrc(scene.src);
+      this.src = this.$sce.trustAsResourceUrl(changeSrc);
+      console.log('change iframe src to', changeSrc);
+    }).bind(this));
+  }
+
+  changeScene(nextSceneName) {
+    var findScene = _.find(this.panel.websocketConf.scene, { name: nextSceneName });
+    if (_.isNil(findScene)) {
+      console.log('asdfasdf');
+    } else {
+      this.currentScene = findScene;
+      this.gotoScene(this.currentScene);
+    }
   }
 
   goto(i){
@@ -386,6 +446,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-iframe-panel/partials/editor.html');
     this.addEditorTab('KibanaConf', kibanaEditor);
     this.addEditorTab('Variables', 'public/app/plugins/panel/teld-iframe-panel/partials/variables.html');
+    this.addEditorTab('Websocket', WebsocketEditor);
     this.editorTabIndex = 1;
   }
 
@@ -412,10 +473,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     return viewState.fullscreen && editMode;
   }
 
-  onRender() {
-
-    let src = this.panel.src;
-
+  formatSrc(src) {
+    let returnValue = src;
     let compiled = _.template(src);
 
     let bindSource = {
@@ -424,9 +483,32 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       wslogin: this.search.teld_user || config.bootData.user.login,
       isTeldUser: Boolean(this.search.teld_user) ? "Y" : "N",
       orgId: config.bootData.user.orgId,
+      wshostformat: this.wsAcrossScreen.Conf.wsServerUrl,
+      wshost: (this.wsAcrossScreen.Conf.wsServerUrl || "").replace('?user=${login}', ''),
       timestamp: (new Date()).valueOf()
     };
-    src = compiled(bindSource);
+    returnValue = compiled(bindSource);
+
+    return returnValue;
+  }
+
+  onRender() {
+
+    // let src = this.panel.src;
+
+    // let compiled = _.template(src);
+
+    // let bindSource = {
+    //   name: config.bootData.user.name,
+    //   login: config.bootData.user.login,
+    //   wslogin: this.search.teld_user || config.bootData.user.login,
+    //   isTeldUser: Boolean(this.search.teld_user) ? "Y" : "N",
+    //   orgId: config.bootData.user.orgId,
+    //   timestamp: (new Date()).valueOf()
+    // };
+    // src = compiled(bindSource);
+
+    let src = this.formatSrc(this.panel.src);
 
     this.src = this.$sce.trustAsResourceUrl(src);
     this.style = {

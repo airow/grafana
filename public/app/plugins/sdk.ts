@@ -16,7 +16,7 @@ export function loadPluginCss(options) {
 
 export function loadPluginCssPath(options) {
   if (options.cssPath) {
-    let css = _.template(options.cssPath, config.bootData.user);
+    let css = _.template(options.cssPath)(config.bootData.user);
     System.import(css + '!css');
   } else {
     loadPluginCss(options);

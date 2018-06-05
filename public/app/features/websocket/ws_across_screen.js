@@ -152,6 +152,8 @@ define([
 
       return {
         //ws: this.ws,
+        Conf: wsAcrossScreenConf,
+        username: username,
         SCREEN_CONF: SCREEN_CONF,
         currentScreen:currentScreen,
         conf: function (dash) {
@@ -186,6 +188,7 @@ define([
             currentScreen = SCREEN_CONF[_.toLower(reConnectName)];
             wsConnectUser.login = reConnectName;
             username = reConnectName;
+            this.username = username;
 
             switchWSUser = true;
             if (ws) {
@@ -212,8 +215,44 @@ define([
             message = JSON.stringify(message);
           }
 
-          var sendMessage = to + "|'" + message + "'";
+          var sendMessage = to + "|" + message;
           ws.send(sendMessage);
+        },
+        sendToAll: function (message, cb) {
+
+          console.group('wsAcrossScreen.sendToAll');
+          console.log(username, 'send', message);
+          var messageStr;
+          if (angular.isObject(message)) {
+            messageStr = JSON.stringify(message);
+          }
+
+          var userList = _.transform(SCREEN_CONF,
+            function (result, value, key) {
+              if (false === _.isEmpty(value)) {
+                result.push(key);
+              }
+            }, []);
+
+          userList = _.pull(userList, username);
+
+          var sendContext = { ws: this };
+
+          _.each(userList, function (to) {
+            sendContext[to] = message;
+            console.log('\t', 'to', to);
+            var sendMessage = to + "|" + messageStr;
+            ws.send(sendMessage);
+          });
+
+          if (cb) {
+            console.log('invoking callback');
+            cb(sendContext);
+            console.log('callback complete');
+          }
+
+          console.log('Send complete');
+          console.groupEnd();
         }
       };
     });
