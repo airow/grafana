@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+  <meta charset="utf-8" />
+  <link href="./css/button.css" rel="stylesheet">
+  <script src="lib/jquery-3.2.1.js"></script>
+  <script src="lib/jquery.query-object.js"></script>
+  <script src="lib/socket.js"></script>
+  <script>
+
+    //debugger;
+    var users = $.query.get('users') || ['m4_1', 'm4_2'];
+    var wslogin = $.query.get('wslogin') || 'wslogin' + Math.random();
+    var wsurl = $.query.get('wsurl') || "wss://com2.teld.cn:8080";
+    var animationSrc = $.query.get('imgSrc') || 'http://graf.teld.cn:4330/public/img/ddd/总.gif';
+  	var isloop = ($.query.get('isloop') ==='y');
+
+
+    //消息推送对象
+    var _sk = new socket();
+    _sk.init(wsurl, wslogin, dealMessage);
+
+    //接收到消息后的处理
+    function dealMessage(mes) {
+      console.log(mes);
+      alert(mes);
+    }
+
+    function replay() {
+      playTime = new Date();
+      $("#imgPlace").attr('src', $("#imgPlace").attr('src'));
+      play();
+    }
+
+    function play() {
+      sendTo('play');
+      setTimeout(function () { sendTo('stop') }, 14000);
+    }
+
+    function sendMessage(type) {
+      for (var index in users) {
+        var user = users[index];
+        var wsUser = [wslogin, user].join('_');
+        var message = {
+          wsUser: wsUser,
+          playTime: playTime,
+          now: new Date(),
+          type: type
+        };
+        console.group(wslogin, 'send Message to', wsUser);
+        var sendMessage = wsUser + "|'" + JSON.stringify(message) + "'";
+        console.log('message=', sendMessage)
+        _sk.send(sendMessage);
+        console.groupEnd();
+      }
+    }
+
+    function sendTo(type) {
+      $('#btnScan').attr('disabled', false);
+      sendMessage(type);
+
+	  if(isloop && type==='stop'){
+      setTimeout(function () { $('#btnScan').click(); }, 8000);}
+    }
+
+    var playTime = new Date();
+    $(function () {
+      if(isloop){$('#btnScan').hide();}
+      //animationSrc += '?r=' + Math.random();
+      $("#imgPlace").attr('src', animationSrc);
+
+      $('#btnScan').click(function () {
+        $(this).attr('disabled', true);
+        replay();
+      });
+
+      play();
+    });
+  </script>
+</head>
+
+<body style='overflow: hidden;'>
+  <button id='btnScan' class="btnScene" disabled="disabled" style='position: absolute; right:21px; bottom: 75px;'>扫描</button>
+  <img id='imgPlace' />
+</body>
+
+</html>

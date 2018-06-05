@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta name="description">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="http://com2.teld.cn/Content/img/favicon.ico" type="image/x-icon">
+
+
+
+
+    <link href="./assets/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/font-awesome.min.css" rel="stylesheet">
+    <link href="./assets/beyond.min.css" rel="stylesheet">
+    <link href="./assets/teld-default.min.css" rel="stylesheet">
+    <link href="./assets/MainRight.css" rel="stylesheet">
+    <link href="./assets/ball.css" rel="stylesheet">
+    <link href="./assets/ball.animation.css" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar {
+            width: 1px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #030a14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #030a14;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #030a14
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background-color: #030a14
+        }
+
+        .page-body {
+            color: white;
+            padding: 0px;
+            background-color: #030a14;
+        }
+
+        .container-padding {
+            padding: 31px 40px 60px 50px;
+        }
+
+        .page-body {
+
+            background-image: url("images/vt_Bottom_Right_Bg.jpg");
+        }
+
+        body {
+            font-size: 50px;
+        }
+
+        .imgCss{
+          width: 90px;
+          margin-top: -29px;
+          margin-left: 35px;
+          margin-right: 25px;
+        }
+    </style>
+
+    <style>
+        .widget-caption-lg {
+            line-height: 34px;
+            padding: 0;
+            margin: 0;
+            float: left;
+            text-align: left;
+            font-weight: 400 !important;
+            font-size: 18px;
+            padding-top: 5px;
+        }
+
+        .logo{
+          background-image: url(./images/体检.png);
+          background-repeat: no-repeat;
+          background-size: 64px;
+          background-position: 20px center;
+          padding-left: 90px;
+        }
+
+        .defen{
+          font-size: 120px;
+          margin: auto 15px;
+        }
+
+        /*调整面包屑头部内左边边距*/
+
+        .page-header {
+            padding-left: 0px;
+        }
+
+        .six-sec-ease-in-out {
+            -webkit-transition: width 6s ease-in-out;
+            -moz-transition: width 6s ease-in-out;
+            -ms-transition: width 6s ease-in-out;
+            -o-transition: width 6s ease-in-out;
+            transition: width 6s ease-in-out;
+        }
+        #defening{
+          height: 287px;
+          line-height: 287px;
+        }
+        #defen{
+          height: 287px;
+          line-height: 236px;
+        }
+    </style>
+
+    <script src="./assets/jquery-2.1.4.min.js"></script>
+    <script src="./assets/bootstrap.min.js"></script>
+
+    <!-- <script src="../lib/jquery-3.2.1.js"></script> -->
+  <script src="../lib/jquery.query-object.js"></script>
+  <script src="../lib/socket.js"></script>
+  <script>
+    var wslogin = $.query.get('wslogin') || 'wslogin' + Math.random();
+    var wsurl = $.query.get('wsurl') || "wss://com2.teld.cn:8080";
+
+    //消息推送对象
+    var _sk = new socket();
+    _sk.init(wsurl, wslogin, dealMessage);
+
+    //接收到消息后的处理
+    function dealMessage(mes) {
+      console.log(mes);
+      //$("#message").text(mes + $("#message").text() + '\r\n');
+      var jsonMes = eval("(" + mes + ")");//转换为json对象
+      var sender = jsonMes.sender;
+      var message = jsonMes.message;
+      var messageJson = JSON.parse(jsonMes.message);
+      var textContext = [
+        '接受时间=' + new Date(),
+        'sender=' + sender,
+        'message=' + message,
+        '\r\n'
+      ];
+
+      var wsEventHandler = pageCtrl.wsEventHandler[messageJson.type] || function () {
+        console.log(mes);
+      }
+      wsEventHandler();
+    }
+  </script>
+
+
+</head>
+<!-- /Head -->
+<!-- Body -->
+
+<body style="overflow: hidden;">
+    <div style="position: absolute;right: 150px;top: 450px;z-index: 1;">
+      <div class="teld_testBall_lg">
+        <!--动画实现-->
+        <div class="mod_info1__logo mod_info1__logoall"></div>
+        <div class="mod_info1__logo2 mod_info1__logoall animation"></div>
+        <div class="mod_info1__logo1 mod_info1__logoall animation"></div>
+        <div class="teld_testScore scoreShow">
+          <span id='df_scan'></span>
+        </div>
+      </div>
+    </div>
+    <!-- /Navbar -->
+    <!-- Main Container -->
+    <div class="main-container container-fluid">
+        <div class="page-container">
+            <div id="divChargeTestBg">
+                <div class="page-body" id="page-body">
+                    <div class="row container-padding row_bg">
+                        <ul class="pre-list">
+                            <li class="col-xs-12 divNoPadding">
+                                <div id="divRight" class="col-xs-12 divNoPadding">
+                                    <div class="yhzc yhzc_bg" style="color: #d4ffcd;height: 140px;line-height: 140px;padding-right: 50px;">
+                                      <span style="float:left">
+                                        <img class="imgCss" src="images/体检.png">
+                                        <span style="font-size:80px">体检得分</span>
+                                      </span>
+                                    </div>
+                                    <div class="yhzc_bottom"></div>
+                                </div>
+                            </li>
+                            <li class="col-xs-8 border_css">
+                                <div class="" style="margin-left: 90px;">
+                                    <div id='defening'> 您的爱车正在体检</div>
+                                    <div id='defen' style="display: none;">
+                                      您的爱车本次体检得
+                                      <span id='df_zong' class="tjdf defen" style="font-size: 120px; color:rgb(104,209,80);">98</span>分
+                                    </div>
+                                  </div>
+                            </li>
+                            <li class="col-xs-8">
+                                <div style="background-color: rgba(2, 9, 15, 0.4); line-height:130px;">
+                                    <div class="border_css col-xs-6 divNoPadding" style="text-align: center;">
+                                        <div class="col-xs-12">充电行为(权重30%)</div>
+                                        <div class="col-xs-12" style="color: rgb(1,168,210);"><span id='df_congdian' class="defen" style="font-size: 120px;">100</span></div>
+                                    </div>
+                                    <div class="border_css col-xs-6 divNoPadding"  style="text-align: center;">
+                                        <div class="col-xs-12">驾驶行为(权重20%)</div>
+                                        <div class="col-xs-12" style="color: rgb(1,168,210);"><span id='df_jiashi' class="defen" style="font-size: 120px;">100</span></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="col-xs-8">
+                                <div style="background-color: rgba(2, 9, 15, 0.4); line-height:130px;">
+                                    <div class="border_css col-xs-6 divNoPadding" style="text-align: center;">
+                                        <div class="col-xs-12">电池状态(权重30%)</div>
+                                        <div class="col-xs-12" style="color: rgb(1,168,210);"><span id='df_dianchi' class="defen"  style="font-size: 120px;">60</span></div>
+                                    </div>
+                                    <div class="border_css col-xs-6 divNoPadding" style="text-align: center;">
+                                        <div class="col-xs-12">故障分析(权重20%)</div>
+                                        <div class="col-xs-12" style="color: rgb(1,168,210);"><span id='df_guzhang' class="defen"  style="font-size: 120px;">90</span></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        var pageCtrl = {
+            init: function () {
+              $(".border_css").css({ minHeight: '287px' });
+              $("#page-body").height($(window).outerHeight());
+            },
+            wsEventHandler: {
+              play: function () {
+                $("#defening").show();
+                $("#defen").hide();
+                for (key in dfConf) {
+                  $('#' + key).css({color:'rgb(1,168,210)', fontSize: '70px' }).html('<i class="fa fa-spinner fa-spin"></i>');
+                }
+                $('#df_scan').css({ fontSize: '50px' }).html('检测中');
+                $(".animation").show();
+              },
+              stop: function () {
+                var i = 0;
+                for (key in dfConf) {
+                  (function (k, item, index) {
+                    var kk = k, ii = item;
+                    return function () {
+                      setTimeout(function () {
+                        $('#' + kk).css({ fontSize: '120px' }).html('<span style="margin: auto 15px;">' + ii.val + '</span><span style="font-size:50px;">分</span>');
+                        if (ii.error) {
+                          $('#' + kk).css({ color: '#ed4300' })
+                        }
+                        $("#df_zong").html(ii.scanVal);
+                      },  index * 1000);
+                    };
+                  })(key, dfConf[key], i++)();
+                }
+
+                setTimeout(function () {
+                  $(".animation").hide();
+                  $('#df_scan').html($("#df_zong").html()).css({ fontSize: '120px' });
+                  $("#defening").hide();
+                  $("#defen").show();
+                }, (i) * 1000);
+              }
+            }
+          };
+        var dfConf = {
+            //df_zong: { val: 100, scanVal: 100 },
+            df_congdian: { val: 100 , scanVal: 100 },
+            df_jiashi: { val: 100 , scanVal: 100 },
+            df_dianchi: { val: 60, scanVal: 96, error: true },
+            df_guzhang: { val: 90 , scanVal: 86 },
+            };
+        $(function () {
+            pageCtrl.init();
+            pageCtrl.wsEventHandler.play();
+        });
+
+        //setTimeout(function () { pageCtrl.wsEventHandler.stop(); }, 5000);
+
+        $(window).resize(function () {
+            pageCtrl.init();
+        });
+
+    </script>
+
+    <script>
+
+        document.body.style.overflowX = document.body.style.overflowY = "hidden";
+
+        document.title = "";
+    </script>
+
+
+    <!--  /Body -->
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+﻿ body {
+            font-size: 38px;
+        }
+
+        .textCenter {
+            text-align: center;
+        }
+
+        ul, li {
+            list-style: none !important;
+            margin: 0px !important;
+            padding: 0px 0px 0px 0px !important;
+        }
+         .pre-section {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pre-list {
+            overflow: hidden;
+            position: relative;
+        }
+
+            .pre-list > li {
+                padding: 0px 0px 0px 0px !important;
+            }
+         .divNoPadding {
+            padding: 0px;
+        }
+          .cdzl_Num {
+            color: #69cf4f;
+        }
+           .tpl_Num {
+            color: #00a9d0;
+        }
+             .jy_Num {
+            color: #ffbf01;
+        }
+             .font_Max {
+            font-size: 65px;
+            padding-right: 10px;
+        }
+              .font_Max_2 {
+            font-size: 65px;
+            padding-right: 10px;
+        }
+
+        .border_css {
+            border: 1px solid #1c2d1d;
+        }
+         .textPadd30 {
+            padding-left: 30px;
+        }
+         .textPadd50 {
+            padding-left: 50px;
+        }
+         .echartsBg{
+             background-color: #02090f !important;
+             opacity: 0.7;
+         }
+         .vt_4_opacity{
+             opacity: 0.7;
+         }
+
+          .cdzl_bg {
+            background-color: #1b2b2a;
+            /* margin-top: 83px; */
+        }
+
+        .cdzl {
+            color: #d1fec7;
+            line-height: 122px;
+        }
+
+       
+
+        .cdzl_bottom {
+            background-color: #325c34;
+            height: 13px;
+        }
+
+        .tpl {
+            color: #b9f1ff;
+            line-height: 122px;
+        }
+
+        .tpl_bg {
+            background-color: #0e293c;
+            margin-top: 40px;
+        }
+
+       
+
+        .tpl_bottom {
+            background-color: #094f68;
+            height: 13px;
+        }
+
+        .jy {
+            color: #fee49a;
+            line-height: 122px;
+        }
+
+        .jy_bg {
+            background-color: #1d1f1e;
+            margin-top: 40px;
+        }
+
+      
+
+        .jy_bottom {
+            background-color: #615116;
+            height: 13px;
+        }
+
+
+
+
+
+        /***/
+         .title_css{
+                color: white;
+                line-height: 90px;
+                font-size:38px;
+                font-weight: initial;
+        }
+        .cdzs_bg {
+            background-color: #1b2b2a;
+        }
+
+        .cdzs {
+            color: #d1fec7;
+            height: 185px;
+            margin-top: 100px;
+        }
+        .cdzs_bottom {
+            background-color: #325c34;
+            height: 16px;
+        }
+        .cdzs_div_a{
+            background: #183425;
+        }
+        .cdzs_div_b{
+            background: #294a2d;
+        }
+
+
+          .yhzc {
+            color: #fee49a;
+            /* height: 185px; */
+            /* margin-top: 100px; */
+        }
+        .yhzc_bg {
+            background-color: #1d1f1e;
+        }
+        .yhzc_bottom {
+            background-color: #615116;
+            height: 16px;
+        }
+        .yhzc_div_a{
+            background: #353012;
+        }
+        .yhzc_div_b{
+            background: #534619;
+        }
+        .div-a{
+           line-height: 112px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            position: absolute;
+            z-index: 2;
+            left: 0;
+            top: -16px;
+            width: 100%;
+            
+        }
+        .div-b{
+            height: 116px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            left: 0;
+            
+        }
+        .title_font{
+            font-size:28px;
+        }
+        .Num_font{
+            font-size:40px;
+        }
+        .Triangular_Css{
+           border-bottom: 100px solid red; 
+            border-left: 50px solid transparent; 
+            border-right: 50px solid transparent; 
+            height: 0; 
+            width: 100px; 
+        }
+        .font_posi{
+                display: inline-block;
+                padding-top: 50px;
+        }
+        .png_center{
+            position: absolute;
+            margin-top: -10px;
+        }

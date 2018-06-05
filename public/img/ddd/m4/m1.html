@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+  <meta charset="utf-8" />
+  <script src="lib/jquery-3.2.1.js"></script>
+  <script src="lib/jquery.query-object.js"></script>
+  <script src="lib/socket.js"></script>
+  <script>
+    var wslogin = $.query.get('wslogin') || 'wslogin' + Math.random();
+    var wsurl = $.query.get('wsurl') || "wss://com2.teld.cn:8080";
+
+    //消息推送对象
+    var _sk = new socket();
+    _sk.init(wsurl, wslogin, dealMessage);
+
+    //接收到消息后的处理
+    function dealMessage(mes) {
+      console.log(mes);
+      //$("#message").text(mes + $("#message").text() + '\r\n');
+      var jsonMes = eval("(" + mes + ")");//转换为json对象
+      var sender = jsonMes.sender;
+      var message = jsonMes.message;
+      var messageJson = JSON.parse(jsonMes.message);
+      var textContext = [
+        '接受时间=' + new Date(),
+        'sender=' + sender,
+        'message=' + message,
+        '\r\n'
+      ];
+      $("#message").text($("#message").text() + textContext.join('\r\n'));
+    }
+  </script>
+</head>
+
+<body style='overflow: hidden;'>
+  <textarea id='message' style="width: 100%; height: 100%;" rows="100"></textarea>
+</body>
+
+</html>
