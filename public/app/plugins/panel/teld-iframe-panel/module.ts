@@ -151,6 +151,9 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   }
 
   changeScene(nextSceneName) {
+    if (nextSceneName === this.currentScene.name) {
+      return;
+    }
     var findScene = _.find(this.panel.websocketConf.scene, { name: nextSceneName });
     if (_.isNil(findScene)) {
       console.log('asdfasdf');

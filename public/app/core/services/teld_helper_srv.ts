@@ -50,8 +50,13 @@ class TeldHelperSrv {
       }, qs);
     });
 
+    if (this.counter > Number.MAX_VALUE - 1000) {
+      this.counter = 0;
+    }
     this.counter++;
-    if (this.counter % 20 === 0) {
+    var falseValue = false;
+    console.log('通讯切屏次数' + this.counter);
+    if (this.counter % 20 === 0 && falseValue) {
       this.counter = 0;
       if (false === _.isEmpty(qs)) {
         locationUrl += '?' + angular.element.param(qs);

@@ -46,7 +46,7 @@
         }
 
         .border_css {
-            border: 1px solid #1c2d1d;
+            border: 1px solid #0E242F;
         }
          .textPadd30 {
             padding-left: 30px;
@@ -72,7 +72,7 @@
             line-height: 122px;
         }
 
-       
+
 
         .cdzl_bottom {
             background-color: #325c34;
@@ -89,7 +89,7 @@
             margin-top: 40px;
         }
 
-       
+
 
         .tpl_bottom {
             background-color: #094f68;
@@ -106,7 +106,7 @@
             margin-top: 40px;
         }
 
-      
+
 
         .jy_bottom {
             background-color: #615116;
@@ -145,16 +145,16 @@
         }
 
 
-          .yhzc {
-            color: #fee49a;
+        .yhzc {
+            color: #0E242F;
             /* height: 185px; */
             /* margin-top: 100px; */
         }
         .yhzc_bg {
-            background-color: #1d1f1e;
+            background-color: #0E242F;
         }
         .yhzc_bottom {
-            background-color: #615116;
+            background-color: #04394B;
             height: 16px;
         }
         .yhzc_div_a{
@@ -172,7 +172,7 @@
             left: 0;
             top: -16px;
             width: 100%;
-            
+
         }
         .div-b{
             height: 116px;
@@ -182,7 +182,7 @@
             z-index: 1;
             width: 100%;
             left: 0;
-            
+
         }
         .title_font{
             font-size:28px;
@@ -191,11 +191,11 @@
             font-size:40px;
         }
         .Triangular_Css{
-           border-bottom: 100px solid red; 
-            border-left: 50px solid transparent; 
-            border-right: 50px solid transparent; 
-            height: 0; 
-            width: 100px; 
+           border-bottom: 100px solid red;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            height: 0;
+            width: 100px;
         }
         .font_posi{
                 display: inline-block;

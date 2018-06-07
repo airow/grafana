@@ -20,10 +20,10 @@
     <span class="gotoSwitch" ng-if='ctrl.panel.websocketConf.showGotoButton'>
       <span class="gotoScene" style="position: absolute; top:-276px;" ng-style="ctrl.panel.websocketConf.gotoStyle">
         <div ng-repeat="scene in ctrl.panel.websocketConf.scene">
-          <button class="btnScene gotoScene{{$index+1}}" ng-click="ctrl.changeScene(scene.name)">{{scene.text}}</button>
+          <button class="btnScene gotoScene{{$index+1}}" ng-class="{true:'currentScene',false: ''}[scene===ctrl.currentScene]" ng-click="ctrl.changeScene(scene.name)">{{scene.text}}</button>
         </div>
       </span>
-      <button class="btnScene" ng-class="button.cls" ng-click="ctrl.changeScene(button.to)">跳转</button>
+      <button class="btnScene" ng-class="button.cls">跳转</button>
     </span>
     <!-- <ul>
       <li>

@@ -30,12 +30,16 @@
     }
 
     function replay() {
+      if (playStatus === 'play') { return; }
       playTime = new Date();
       $("#imgPlace").attr('src', $("#imgPlace").attr('src'));
       play();
     }
 
+    var playStatus;
+
     function play() {
+      if (playStatus === 'play') { return; }
       sendTo('play');
       setTimeout(function () { sendTo('stop') }, 14000);
     }
@@ -59,6 +63,7 @@
     }
 
     function sendTo(type) {
+      playStatus = type;
       $('#btnScan').attr('disabled', false);
       sendMessage(type);
 
@@ -67,8 +72,29 @@
     }
 
     var playTime = new Date();
+
+    function clickCarScan() {
+        var replaybtn = $("#btnClickMe");
+        replaybtn.css("border-width", "0px").click(function () {
+          $(this).css("border-width", "0px");
+          $("#btnScan").click();
+        });
+        // replaybtn.hover(function () {
+        //   if (playStatus !== 'play') {
+        //     $(this).css("border-width", "1px");
+        //   }
+        // }, function () {
+        //   $(this).css("border-width", "0px");
+        // });
+      }
+
     $(function () {
-      if(isloop){$('#btnScan').hide();}
+      if (isloop) {
+        $('#btnScan').hide();
+      } else {
+        clickCarScan();
+      }
+      $('#btnScan').hide();
       //animationSrc += '?r=' + Math.random();
       $("#imgPlace").attr('src', animationSrc);
 
@@ -83,7 +109,8 @@
 </head>
 
 <body style='overflow: hidden;'>
-  <button id='btnScan' class="btnScene" disabled="disabled" style='position: absolute; right:21px; bottom: 75px;'>扫描</button>
+  <div id='btnClickMe' style="position: absolute;top: 340px;bottom: 240px;left: 750px;right: 350px;z-index: 1;border: 1px rgba(104, 128, 220, 0.33) solid;"></div>
+  <button id='btnScan' class="btnScene" disabled="disabled" style='position: absolute; right:21px; bottom: 75px;'>体检</button>
   <img id='imgPlace' />
 </body>
 

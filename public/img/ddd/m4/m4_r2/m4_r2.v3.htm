@@ -51,11 +51,11 @@
         }
 
         .container-padding {
-            padding: 31px 40px 60px 50px;
+            /* padding: 31px 40px 60px 50px; */
+            padding: 45px 60px 15px 43px;
         }
 
         .page-body {
-
             background-image: url("images/vt_Bottom_Right_Bg.jpg");
         }
 
@@ -65,9 +65,9 @@
 
         .imgCss{
           width: 90px;
-          margin-top: -29px;
-          margin-left: 35px;
-          margin-right: 25px;
+          margin-top: -44px;
+          margin-left: 60px;
+          margin-right: 35px;
         }
     </style>
 
@@ -110,12 +110,12 @@
             transition: width 6s ease-in-out;
         }
         #defening{
-          height: 287px;
-          line-height: 287px;
+          height: 257px;
+          line-height: 257px;
         }
         #defen{
-          height: 287px;
-          line-height: 236px;
+          height: 257px;
+          line-height: 257px;
         }
     </style>
 
@@ -161,7 +161,7 @@
 <!-- Body -->
 
 <body style="overflow: hidden;">
-    <div style="position: absolute;right: 150px;top: 450px;z-index: 1;">
+    <div style="position: absolute;right: 150px;top: 560px;z-index: 1;">
       <div class="teld_testBall_lg">
         <!--动画实现-->
         <div class="mod_info1__logo mod_info1__logoall"></div>
@@ -186,17 +186,17 @@
                                     <div class="yhzc yhzc_bg" style="color: #bff1fe;height: 140px;line-height: 140px;padding-right: 50px;">
                                       <span style="float:left">
                                         <img class="imgCss" src="images/体检.png">
-                                        <span style="font-size:80px">体检得分</span>
+                                        <span style="font-size:85px;">体检得分</span>
                                       </span>
                                     </div>
                                     <div class="yhzc_bottom"></div>
                                 </div>
                             </li>
-                            <li class="col-xs-8 border_css">
+                            <li class="col-xs-12 border_css">
                                 <div class="" style="margin-left: 90px;">
                                     <div id='defening'>您的爱车正在体检中</div>
                                     <div id='defen' style="display: none;">
-                                      <div style="line-height: 100px;padding-top: 50px;">您的爱车本次体检发现一个故障：<span style="color: #ed4300; font-weight: bolder;">电池单体电压过高</span>，请及时检查电池系统。</div>
+                                      <div>您的爱车本次体检发现一个故障：<span style="color: #ed4300; font-weight: bolder;">电池单体电压过高</span>，请及时检查电池系统。</div>
                                       <div style="display: none;">
                                         您的爱车本次体检得
                                         <span id='df_zong' class="tjdf defen" style="font-size: 120px; color:rgb(104,209,80);">98</span>分
@@ -216,17 +216,23 @@
                                     </div>
                                 </div>
                             </li>
+                            <li class="border_css col-xs-4 divNoPadding" style="text-align: center;min-height: 287px;border-bottom-width: 0px;">
+
+                            </li>
                             <li class="col-xs-8">
                                 <div style="background-color: rgba(2, 9, 15, 0.4); line-height:130px;">
                                     <div class="border_css col-xs-6 divNoPadding" style="text-align: center;">
                                         <div class="col-xs-12">电池状态(权重30%)</div>
-                                        <div class="col-xs-12" style="color: rgb(1,168,210);"><span id='df_dianchi' class="defen"  style="font-size: 120px;">60</span></div>
+                                        <div class="col-xs-12" style="color: rgb(1,168,210); height: 155px"><span id='df_dianchi' class="defen"  style="font-size: 120px;">60</span></div>
                                     </div>
                                     <div class="border_css col-xs-6 divNoPadding" style="text-align: center;">
                                         <div class="col-xs-12">故障分析(权重20%)</div>
-                                        <div class="col-xs-12" style="color: rgb(1,168,210);"><span id='df_guzhang' class="defen"  style="font-size: 120px;">90</span></div>
+                                        <div class="col-xs-12" style="color: rgb(1,168,210); height: 155px"><span id='df_guzhang' class="defen"  style="font-size: 120px;">90</span></div>
                                     </div>
                                 </div>
+                            </li>
+                            <li class="border_css col-xs-4 divNoPadding" style="text-align: center;min-height: 287px;border-top-width: 0px;">
+
                             </li>
                         </ul>
                     </div>
@@ -238,8 +244,9 @@
     <script>
 
         var pageCtrl = {
+          interval: 600,
             init: function () {
-              $(".border_css").css({ minHeight: '287px' });
+              //$(".border_css").css({ minHeight: '287px' });
               $("#page-body").height($(window).outerHeight());
             },
             wsEventHandler: {
@@ -264,7 +271,7 @@
                           $('#' + kk).css({ color: '#ed4300' })
                         }
                         $("#df_zong").html(ii.scanVal);
-                      },  index * 1000);
+                      },  index * pageCtrl.interval);
                     };
                   })(key, dfConf[key], i++)();
                 }
@@ -274,16 +281,16 @@
                   $('#df_scan').html($("#df_zong").html()).css({ fontSize: '120px' });
                   $("#defening").hide();
                   $("#defen").show();
-                }, (i) * 1000);
+                }, (i - 1) * pageCtrl.interval);
               }
             }
           };
         var dfConf = {
             //df_zong: { val: 100, scanVal: 100 },
-            df_congdian: { val: 100 , scanVal: 100 },
-            df_jiashi: { val: 100 , scanVal: 100 },
-            df_dianchi: { val: 60, scanVal: 96, error: true },
-            df_guzhang: { val: 70 , scanVal: 82 },
+            df_congdian: { val: 80 , scanVal: 73 },
+            df_jiashi: { val: 85 , scanVal: 73 },
+            df_dianchi: { val: 60, scanVal: 73, error: true },
+            df_guzhang: { val: 70 , scanVal: 73 },
             };
         $(function () {
             pageCtrl.init();
@@ -304,18 +311,7 @@
 
         document.title = "";
     </script>
-
-
     <!--  /Body -->
-
-
-
-
-
-
-
-
-
 </body>
 
 </html>
