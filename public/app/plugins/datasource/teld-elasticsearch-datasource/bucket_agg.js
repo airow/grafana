@@ -29,6 +29,7 @@ function (angular, _, queryDef) {
     $scope.bucketAggTypes = queryDef.bucketAggTypes;
     $scope.orderOptions = queryDef.orderOptions;
     $scope.sizeOptions = queryDef.sizeOptions;
+    $scope.shardSizeOptions = queryDef.shardSizeOptions;
 
     $rootScope.onAppEvent('elastic-query-updated', function() {
       $scope.validateModel();
@@ -82,6 +83,7 @@ function (angular, _, queryDef) {
         case 'terms': {
           settings.order = settings.order || "asc";
           settings.size = settings.size || "10";
+          settings.shard_size = settings.shard_size || "100";
           settings.min_doc_count = settings.min_doc_count || 0;
           settings.orderBy = settings.orderBy || "_term";
 

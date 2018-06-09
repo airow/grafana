@@ -47,6 +47,16 @@ function (_) {
       {text: "20", value: '20' },
     ],
 
+    shardSizeOptions: [
+      { text: "100", value: '100' },
+      { text: "200", value: '200' },
+      { text: "300", value: '300' },
+      { text: "500", value: '500' },
+      { text: "1000", value: '1000' },
+      { text: "1005", value: '1500' },
+      { text: "2000", value: '2000' },
+    ],
+
     extendedStats: [
       {text: 'Avg', value: 'avg'},
       {text: 'Min', value: 'min'},

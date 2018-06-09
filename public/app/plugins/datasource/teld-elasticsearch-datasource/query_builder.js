@@ -29,6 +29,11 @@ function (queryDef) {
     }
 
     queryNode.terms.size = parseInt(aggDef.settings.size, 10) === 0 ? 500 : parseInt(aggDef.settings.size, 10);
+    if (aggDef.settings.shard_size !== "0") {
+      var shard_size = aggDef.settings.shard_size;
+      shard_size = shard_size || queryNode.terms.size * 10;
+      queryNode.terms.shard_size = parseInt(shard_size, 10) === 0 ? shard_size : parseInt(shard_size, 10);
+    }
     if (aggDef.settings.orderBy !== void 0) {
       queryNode.terms.order = {};
       queryNode.terms.order[aggDef.settings.orderBy] = aggDef.settings.order;
