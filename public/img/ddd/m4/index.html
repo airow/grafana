@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+  <meta charset="utf-8" />
+  <link href="./css/button.css?v=2" rel="stylesheet">
+  <script src="lib/jquery-3.2.1.js"></script>
+  <script src="lib/jquery.query-object.js"></script>
+  <script src="lib/socket.js"></script>
+  <script>
+
+    //debugger;
+    var users = $.query.get('users') || ['m4_1', 'm4_2'];
+    var wslogin = $.query.get('wslogin') || 'wslogin' + Math.random();
+    var wsurl = $.query.get('wsurl') || "wss://com2.teld.cn:8080";
+    var animationSrc = $.query.get('imgSrc') || 'http://localhost:8055/4屏_中.gif';
+  	var isloop = ($.query.get('isloop') ==='y');
+
+
+    //消息推送对象
+    var _sk = new socket();
+    _sk.init(wsurl, wslogin, dealMessage);
+
+    //接收到消息后的处理
+    function dealMessage(mes) {
+      console.log(mes);
+      alert(mes);
+    }
+
+    function replay() {
+      if (playStatus === 'play') { return; }
+      playTime = new Date();
+      $("#imgPlace").attr('src', $("#imgPlace").attr('src'));
+      play();
+    }
+
+    var playStatus;
+
+    function play() {
+      //$(".h").show();
+      if (playStatus === 'play') { return; }
+      sendTo('play');
+      setTimeout(function () { sendTo('stop') }, 14000);
+    }
+
+    function sendMessage(type) {
+      for (var index in users) {
+        var user = users[index];
+        var wsUser = [wslogin, user].join('_');
+        var message = {
+          wsUser: wsUser,
+          playTime: playTime,
+          now: new Date(),
+          type: type
+        };
+        console.group(wslogin, 'send Message to', wsUser);
+        var sendMessage = wsUser + "|'" + JSON.stringify(message) + "'";
+        console.log('message=', sendMessage)
+        _sk.send(sendMessage);
+        console.groupEnd();
+      }
+    }
+
+    function sendTo(type) {
+      playStatus = type;
+      $('#btnScan').attr('disabled', false);
+      sendMessage(type);
+
+	  if(isloop && type==='stop'){
+      setTimeout(function () { $('#btnScan').click(); }, 8000);}
+    }
+
+    var playTime = new Date();
+
+    function clickCarScan() {
+        var replaybtn = $("#btnClickMe");
+        replaybtn.css("border-width", "0px").click(function () {
+          $(this).css("border-width", "0px");
+          $("#btnScan").click();
+        });
+        // replaybtn.hover(function () {
+        //   if (playStatus !== 'play') {
+        //     $(this).css("border-width", "1px");
+        //   }
+        // }, function () {
+        //   $(this).css("border-width", "0px");
+        // });
+      }
+  function imgLoad() {
+    alert(3);
+      $(".h").show();
+    }
+    $(function () {
+      if (isloop) {
+        $('#btnScan').hide();
+      } else {
+        clickCarScan();
+      }
+      $('#btnScan').hide();
+      //animationSrc += '?r=' + Math.random();
+      $("#imgPlace").attr('src', animationSrc);
+
+      $('#btnScan').click(function () {
+        $(this).attr('disabled', true);
+        replay();
+      });
+
+      play();
+      setTimeout(function(){$(".h").show();},10);
+    });
+
+  </script>
+  <style>
+    #pile{
+      position: absolute;
+      z-index: 1;
+      border: 0px solid rgba(104, 128, 220, 0.33);
+      color: white;
+      text-align: center;
+      top: 850px;
+      left: 230px;
+      font-size: 26px;
+    }
+    .transform{
+      -moz-transform:rotate(0deg) scale(1.00,1.00) translate(0px,0px) skew(0deg,27deg);
+      -moz-transform-origin:0% 0%;
+      -webkit-transform:rotate(0deg) scale(1.00,1.00) translate(0px,0px) skew(0deg,27deg);
+      -webkit-transform-origin:0% 0%;
+      -o-transform:rotate(0deg) scale(1.00,1.00) translate(0px,0px) skew(0deg,27deg);-o-transform-origin:0% 0%;
+      transform:rotate(0deg) scale(1.00,1.00) translate(0px,0px) skew(0deg,27deg);
+      transform-origin:0% 0%;
+    }
+    .h{
+      display: none;
+    }
+  </style>
+</head>
+
+<body style='overflow: hidden;'>
+  <div class="h" id="pile">特锐德工业园二号充电站<br>103号直流终端</div>
+  <div id="carNo" class="transform h" style="position: absolute;top: 719px;left: 721px;color: white;"></div>
+  <div id='btnClickMe' style="position: absolute;top: 340px;bottom: 240px;left: 680px;right: 350px;z-index: 1;border: 0px solid rgba(104, 128, 220, 0.33);"></div>
+  <button id='btnScan' class="btnScene" disabled="disabled" style='position: absolute; right:21px; bottom: 75px;'>体检</button>
+  <img id='imgPlace' />
+</body>
+
+</html>

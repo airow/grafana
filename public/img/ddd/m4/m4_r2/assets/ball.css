@@ -1,0 +1,56 @@
+.teld_testBallBox {
+  margin-top: 1.50667rem;
+}
+.teld_testBall_lg {
+  position: relative;
+  margin: 0 auto;
+  width: 350px;
+  height: 350px;
+  text-align: center;
+}
+.teld_testBall_lg .teld_testScore {
+  /*width: 5.33333rem; */
+    position: absolute;
+    /* left: 1.33333rem; */
+    /* top: 37%; */
+    text-align: center;
+    color: #fff;
+    /* font-size: 0.84rem; */
+    line-height: 350px;
+    width: 100%;
+}
+
+.mod_info1__logoall {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  top: 0;
+  /* left: 50%; */
+  /* margin-left: -3.6rem; */
+}
+.mod_info1__logo {
+  background-image: url("../images/annimation/bigCircle-blue.png");
+  background-size: 100% !important;
+}
+.mod_info1__logo1 {
+  background-image: url("../images/annimation/bigCircle-2.png");
+  background-size: 100%;
+}
+.mod_info1__logo2 {
+  background-image: url("../images/annimation/bigCircle-1.png");
+  background-size: 100%;
+}
+
+.mod_info1__logo1 {
+  animation:myfirst 2s linear infinite;
+   -moz-animation: myfirst 2s linear infinite;
+   -webkit-animation:myfirst 2s linear infinite;
+   -o-animation: myfirst 2s linear infinite;
+ }
+
+ .mod_info1__logo2 {
+  animation:myfirst2 6s linear infinite;
+  -moz-animation: myfirst2 6s linear infinite;
+  -webkit-animation:myfirst2 6s linear infinite;
+  -o-animation: myfirst2 6s linear infinite;
+}

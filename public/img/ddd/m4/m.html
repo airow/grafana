@@ -1,0 +1,20 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+<img id='d1' src='http://graf.teld.cn:4330/public/img/ddd/扫描状态.gif' style='width:30%'/>
+<img id='d2' src='http://graf.teld.cn:4330/public/img/ddd/问题状态.gif' style='width:30%'/>
+<script> 
+setInterval(function () {
+	if (window.d1) {
+		$("#d2").hide();
+		$("#d1").show  
+	} else {
+		$("#d1").hide();
+		$("#d2").show()
+	}
+	window.d1 = !window.d1;
+
+}, 1500);
+
+
+</script>
+<button onclic='open("s.html");'>open</button>
+<iframe src='s.html'></iframe>
