@@ -1,0 +1,56 @@
+<div class="editor-row">
+  <div class="section">
+    <h5 class="section-heading">Config</h5>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-6">权限字段</label>
+      <input type="text" class="gf-form-input width-10" ng-model="editor.panel.butPermiFiled" spellcheck="false" placeholder="name">
+    </div>
+    <gf-form-switch class="gf-form" label="存储页签" label-class="query-keyword width-6" checked="editor.panel.isSaveTabIndex">
+    </gf-form-switch>
+    <div class="gf-form" ng-if="editor.panel.isSaveTabIndex">
+      <label class="gf-form-label query-keyword width-6">lskey</label>
+      <input type="text" class="gf-form-input width-10" ng-model="editor.panel.localStorageKey" spellcheck="false" placeholder="name">
+    </div>
+  </div>
+  <div class="section">
+    <h5 class="section-heading">Dashboard</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-5">序号</label>
+        <label class="gf-form-label query-keyword width-10">id</label>
+        <label class="gf-form-label query-keyword width-10">名称</label>
+        <label class="gf-form-label query-keyword width-15">dash</label>
+        <label class="gf-form-label query-keyword width-10">权限</label>
+        <label class="gf-form-label">
+          <a ng-click="editor.newDashboard()">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="dash in editor.dashboards">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-5">{{$index+1}}</label>
+        <input type="text" class="gf-form-input width-10" ng-model="dash.id" spellcheck="false" placeholder="">
+        <input type="text" class="gf-form-input width-10" ng-model="dash.name" spellcheck="false" placeholder="名称">
+        <input type="text" class="gf-form-input width-15" ng-model="dash.dash" spellcheck="false" placeholder="dashboard 名称">
+        <input type="text" class="gf-form-input width-10" ng-model="dash.permissions" spellcheck="false" placeholder="权限">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.remove(editor.dashboards, dash)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(editor.dashboards,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(editor.dashboards,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

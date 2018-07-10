@@ -20,8 +20,9 @@ import ring1_dark from './black/terminalPie2';
 import ring2_dark from './black/battery2';
 import pie1_dark from './black/terminalPie1';
 import pie2_dark from './black/battery1';
+import teldBule from '../common/teld_blue';
 
-let theme = { default: pie1, ring1, ring2, pie1, pie2 };
+let theme = { default: pie1, ring1, ring2, pie1, pie2,teldBule };
 auto_color(theme, {
   default_yellow: pie1_yellow, default_light: pie1_light, default_dark: pie1_dark,
   ring1_yellow, ring2_yellow, pie1_yellow, pie2_yellow,

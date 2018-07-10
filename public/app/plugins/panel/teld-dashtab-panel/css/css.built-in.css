@@ -1,0 +1,102 @@
+.buttons-tab {
+  background: white;
+  overflow: auto;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-top-color: #f8f8f8;
+  border-bottom-color: #f8f8f8;
+  z-index: 1;
+  width: 99%;
+  align-self: center;
+  display: -webkit-flex;
+  flex-wrap: nowrap;
+}
+.buttons-tab::-webkit-scrollbar {
+  display: none;
+}
+
+
+.buttons-tab .tabs-item{
+  border-radius: 3px;
+  border-color: rgba(216, 131, 40, 0.77);
+  /* border-bottom: 2px solid #fbfbfb; */
+  border-bottom: 2px solid rgb(244,245,248);
+  border-top-width:0px;
+  color: #555555;
+  position: relative;
+  top: 1px;
+  white-space:nowrap;
+  display: inline-table;
+}
+
+.buttons-tab .tabs-link{
+  padding: 0.6rem 1rem 0.4rem 1rem;
+    margin-right: 0.5rem;
+    border: 1px solid transparent;
+    position: relative;
+    display: block;
+    border-radius: 2px 2px 0 0;
+}
+
+.buttons-tab .tabs-link.active{
+  border-radius: 3px;
+  /* border-color: rgba(216, 131, 40, 0.77); */
+  border-top: 2px solid #00a7cb;
+  /* background-color: #fbfbfb; */
+  background-color:rgb(244,245,248);
+  box-shadow: 0 -2px 2px 0 rgba(0,0,0,.15);
+  border-width: 2px 1px 1px 1px;
+  border-bottom: 2px solid #fbfbfb;
+  color: #555555;
+  position: relative;
+}
+.buttons-tab .button {
+    color: #5f646e;
+    font-size: 14px;
+    height: 30px;
+    line-height:24px;
+    /* -webkit-box-flex: 1;
+    -ms-flex: 1; */
+    border: 0;
+    border-radius: 0;
+}
+.buttons-tab .button.active {
+    color: #000;
+    border-top: 2px solid transparent;
+    border-bottom-width: 0px;
+    border-top-color: #0894ec;
+    border-right-style: initial;
+    border-bottom-style: initial;
+    border-left-style: initial;
+    border-right-color: initial;
+    border-left-color: initial;
+    border-bottom-color: transparent;
+    background-color: #f8f8f8;
+    line-height:18px;
+}
+.button {
+    border: 1px solid #f8f8f8;
+    color: #0894ec;
+    text-decoration: none !important;
+    text-align: center;
+    display: table;
+    border-radius: 3px;
+    line-height: 15px;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    background: none;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0;
+    height: 18px;
+    white-space: nowrap;
+    /*position: relative;*/
+    text-overflow: ellipsis;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+}

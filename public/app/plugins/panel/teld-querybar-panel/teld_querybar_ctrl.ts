@@ -85,6 +85,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   // Set and populate defaults
   panelDefaults = {
     height: 10,
+    isCollapse: false,
     datasource: 'default',
     slideWidth: 250,
     targets: []
@@ -154,6 +155,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+
+    if (this.panel.isCollapse) {
+      this.row.height = 1;
+      this.defineQuery = false;
+    }
   }
 
   addDsQueryVariable(target, dsQueryVariable, nullValue) {

@@ -488,7 +488,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       orgId: config.bootData.user.orgId,
       wshostformat: this.wsAcrossScreen.Conf.wsServerUrl,
       wshost: (this.wsAcrossScreen.Conf.wsServerUrl || "").replace('?user=${login}', ''),
-      timestamp: (new Date()).valueOf()
+      timestamp: (new Date()).valueOf(),
+      dashTime: this.timeSrv.time
     };
     returnValue = compiled(bindSource);
 

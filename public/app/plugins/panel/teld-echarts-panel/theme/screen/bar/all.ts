@@ -9,8 +9,9 @@ import bar_dark from './bar_black';
 import auto_color from '../../auto_color';
 import bar_yellow from './bar_light_yellow';
 import light_yellow from './bar_light_yellow';
+import teldBule from '../common/teld_blue';
 
-let theme = { default: bar, dark, light };
+let theme = { default: bar, dark, light,teldBule };
 
 auto_color(theme, {
   default_yellow: bar_yellow, default_light: bar_light, default_dark: bar_dark,

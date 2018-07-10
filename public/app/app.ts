@@ -16,7 +16,7 @@ import 'angular-websocket';
 // import 'ui-ace';
 import 'jquery.signalR';
 import 'Snap.svg';
-import 'me-pageloading';
+// import 'me-pageloading';
 
 // import 'vendor/angular-swiper-0.4.0/swiper/css/swiper.css!css';
 // import 'vendor/angular-swiper-0.4.0/swiper/js/swiper.js';
@@ -101,7 +101,7 @@ export class GrafanaApp {
       //'ui.ace',
       'ngPostMessage',
       'SignalR',
-      'me-pageloading',
+      //'me-pageloading',
       'ngWebSocket',
       'ksSwiper',
     ];
