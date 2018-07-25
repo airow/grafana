@@ -1,0 +1,143 @@
+<query-editor-row query-ctrl="ctrl" can-collapse="true">
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">Format as</label>
+      <div class="gf-form-select-wrapper width-8">
+        <select class="gf-form-input gf-size-auto" ng-model="ctrl.target.format" ng-options="f.value as f.text for f in ctrl.formats"
+          ng-change="ctrl.refresh()"></select>
+      </div>
+    </div>
+    <div class="gf-form gf-form--grow">
+      <label class="gf-form-label query-keyword width-7">URL</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.url" spellcheck='false' ng-blur="ctrl.refresh()">
+    </div>
+    <div class="gf-form max-width-15">
+      <label class="gf-form-label query-keyword">Alias</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.alias" spellcheck='false' placeholder="alias patterns" ng-blur="ctrl.refresh()">
+    </div>
+  </div>
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">参数</label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-8">类型</label>
+      <label class="gf-form-label query-keyword width-10">键</label>
+      <label class="gf-form-label query-keyword width-15">值</label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target.parameters.push({type:'value',key:'',value:''})">
+          <i class="fa fa-plus">Value</i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-if="false">
+        <a ng-click="ctrl.target.parameters.push({type:'object',key:'',value:{k:1}})">
+          <i class="fa fa-plus">Object</i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-if="false">
+        <a ng-click="ctrl.target.parameters.push({type:'raw',key:'',value:''})">
+          <i class="fa fa-plus">Raw</i>
+        </a>
+      </label>
+    </div>
+  </div>
+
+  <div class="gf-form-inline" ng-repeat="param in ctrl.target.parameters">
+    <div class="gf-form offset-width-7">
+      <label class="gf-form-label width-8" ng-bind="param.type">
+      </label>
+    </div>
+    <div class="gf-form">
+      <input type="text" class="gf-form-input width-10" ng-model="param.key" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+    </div>
+    <div class="gf-form" ng-switch="param.type">
+      <input ng-switch-default type="text" class="gf-form-input width-15" ng-model="param.value" spellcheck='false' placeholder=""
+        ng-blur="ctrl.refresh()">
+      <div class="gf-form-inline" ng-switch-when="object" ng-repeat="(k,v) in param.value">
+        {{k}}
+        <input type="text" class="gf-form-input width-5" ng-model="k" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()"> {{v}}
+        <input type="text" class="gf-form-input width-5" ng-model="param.value[k]" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+      </div>
+      <input ng-switch-when="raw" type="text" class="gf-form-input width-15" ng-model="param.value" spellcheck='false' placeholder=""
+        ng-blur="ctrl.refresh()">
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.removeItem(ctrl.target.parameters, param)">
+          <i class="pointer fa fa-trash"></i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-hide="$last">
+        <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index+1)">
+          <i class="pointer fa fa-arrow-down"></i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-hide="$first">
+        <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index-1)">
+          <i class="pointer fa fa-arrow-up"></i>
+        </a>
+      </label>
+      <label class="gf-form-label">
+        {{ctrl.paramToString(param)}}
+      </label>
+    </div>
+  </div>
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword" ng-click="ctrl.showHelp = !ctrl.showHelp">
+        Show Help
+        <i class="fa fa-caret-down" ng-show="ctrl.showHelp"></i>
+        <i class="fa fa-caret-right" ng-hide="ctrl.showHelp"></i>
+      </label>
+    </div>
+    <div class="gf-form" ng-show="ctrl.lastQueryMeta">
+      <label class="gf-form-label query-keyword" ng-click="ctrl.showLastQuerySQL = !ctrl.showLastQuerySQL">
+        Generated SQL
+        <i class="fa fa-caret-down" ng-show="ctrl.showLastQuerySQL"></i>
+        <i class="fa fa-caret-right" ng-hide="ctrl.showLastQuerySQL"></i>
+      </label>
+    </div>
+    <div class="gf-form gf-form--grow">
+      <div class="gf-form-label gf-form-label--grow"></div>
+    </div>
+  </div>
+
+  <div class="gf-form" ng-show="ctrl.showLastQuerySQL">
+      <pre class="gf-form-pre">{{ctrl.lastQueryMeta.sql}}</pre>
+    </div>
+
+    <div class="gf-form"  ng-show="ctrl.showHelp">
+      <pre class="gf-form-pre alert alert-info">Time series:
+  - return column named time_sec (UTC in seconds), use UNIX_TIMESTAMP(column)
+  - return column named value for the time point value
+  - return column named metric to represent the series name
+
+  Table:
+  - return any set of columns
+
+  Macros:
+  - $__time(column) -&gt; UNIX_TIMESTAMP(column) as time_sec
+  - $__timeFilter(column) -&gt;  UNIX_TIMESTAMP(time_date_time) &ge; 1492750877 AND UNIX_TIMESTAMP(time_date_time) &le; 1492750877
+  - $__unixEpochFilter(column) -&gt;  time_unix_epoch &gt; 1492750877 AND time_unix_epoch &lt; 1492750877
+  - $__timeGroup(column,'5m') -&gt; (extract(epoch from "dateColumn")/extract(epoch from '5m'::interval))::int
+
+  Or build your own conditionals using these macros which just return the values:
+  - $__timeFrom() -&gt;  FROM_UNIXTIME(1492750877)
+  - $__timeTo() -&gt;  FROM_UNIXTIME(1492750877)
+  - $__unixEpochFrom() -&gt;  1492750877
+  - $__unixEpochTo() -&gt;  1492750877
+      </pre>
+    </div>
+
+    </div>
+
+    <div class="gf-form" ng-show="ctrl.lastQueryError">
+      <pre class="gf-form-pre alert alert-error">{{ctrl.lastQueryError}}</pre>
+    </div>
+
+</query-editor-row>

@@ -1,0 +1,20 @@
+{
+  "type": "datasource",
+  "name": "Teld Service Gateway",
+  "id": "teld-servicegateway-datasource",
+
+  "info": {
+    "author": {
+      "name": "Teld BDP",
+      "url": "https://teld.cn"
+    },
+    "logos": {
+      "small": "img/TeldServiceGateway_logo.svg",
+      "large": "img/TeldServiceGateway_logo.svg"
+    }
+  },
+
+  "alerting": true,
+  "annotations": true,
+  "metrics": true
+}
