@@ -4,7 +4,7 @@
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" style="margin-top: 0px;">
         <li class="gf-tabs-item" ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.changeQueryBarTab(target)"
-            ng-class="{active: ctrl.currentTarget.refId === target.refId}">
+            ng-class="{active: ctrl.currentTargetRefId === target.refId}">
             {{target.conf.title}}
             <!-- <i ng-if="target.conf.required" style="color: red;" class="fa fa-asterisk"></i> -->
           </a>
@@ -13,7 +13,7 @@
     </div>
     <div class="-tabbed-view-body">
       <div ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets" style="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;"
-        st2yle="border: 1px red solid;border-top: 0px;padding: 10px;" ng-if="ctrl.currentTarget.refId === target.refId">
+        st2yle="border: 1px red solid;border-top: 0px;padding: 10px;" ng-if="ctrl.currentTargetRefId === target.refId">
         <div class="gf-form-inline">
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
             <input type="text" ng-keyup="ctrl.enterkey(target)"  style="padding-top: 2px; padding-bottom: 2px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
@@ -61,7 +61,7 @@
               </div>
             </div>
           </ks-swiper-slide>
-          <ks-swiper-slide ng-if="ctrl.spin">
+          <ks-swiper-slide ng-if="ctrl.spin && ctrl.currentTarget.refId === target.refId">
             <div>
               <div class="empty">
                 <p>

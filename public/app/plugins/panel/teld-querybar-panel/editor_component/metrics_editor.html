@@ -5,9 +5,11 @@
     </select>
     <gf-form-switch class="gf-form" label="默认收起" label-class="query-keyword width-6" checked="ctrl.panel.isCollapse">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="禁用刷新" label-class="query-keyword width-6" checked="ctrl.panel.stopClickRefresh">
+    <gf-form-switch class="gf-form" label="禁用选中取数" label-class="query-keyword width-8" checked="ctrl.panel.stopClickRefresh">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="刷新" label-class="query-keyword width-6" checked="ctrl.panel.subscribeRefresh">
+    <gf-form-switch ng-show="ctrl.panel.stopClickRefresh" class="gf-form" label="多级联动" label-class="query-keyword width-8" checked="ctrl.panel.multiSyncLinkage">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label="响应面板刷新" label-class="query-keyword width-8" checked="ctrl.panel.subscribeRefresh">
     </gf-form-switch>
     <label class="gf-form-label query-keyword width-6">显示条数</label>
     <input type="text" class="gf-form-input width-5" ng-model="ctrl.panel.displayCount" spellcheck="false" placeholder="displayCount">
@@ -17,6 +19,11 @@
     <input type="number" min="190" class="gf-form-input width-5" ng-model="ctrl.panel.slideWidth" spellcheck="false" placeholder="250">
     <gf-form-switch class="gf-form" label="使用右上角时间" label-class="query-keyword width-8" checked="ctrl.panel.dashboardTime">
     </gf-form-switch>
+  </div>
+  <div class="gf-form">
+    <gf-form-switch class="gf-form" label="保存条件" label-class="query-keyword width-8" checked="ctrl.panel.saveVariable">
+    </gf-form-switch>
+    <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8" ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="displayCount">
   </div>
   <hr>
   <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
@@ -39,8 +46,8 @@
         <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-6" checked="target.conf.required">
         </gf-form-switch>
         <div class="gf-form" ng-if="target.conf.required">
-          <label class="gf-form-label width-7">索引/表达式</label>
-          <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false" placeholder="alias patterns">
+          <label class="gf-form-label width-8">索引/表达式<tip>表达式：通过eachItem引用记录，</tip></label>
+          <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false" placeholder="eachItem._original.xxxx">
         </div>
       </div>
       <div class="gf-form-inline">
@@ -96,6 +103,25 @@
         <div class="gf-form">
           <label class="gf-form-label">
             <a ng-click="target.conf.linkage.push({})">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <h5 class="section-heading">Fetch Linkage</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form" ng-repeat="fetch in target.conf.fetchLinkage">
+          <select class="gf-form-input" ng-model="fetch.refId" ng-options="option.refId as option.conf.title for option in ctrl.getLinkageOptions(target)">
+          </select>
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeVariable(target.conf.fetchLinkage, fetch)">
+              <i class="fa fa-remove"></i>
+            </a>
+          </label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="target.conf.fetchLinkage.push({})">
               <i class="fa fa-plus"></i>
             </a>
           </label>
