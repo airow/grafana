@@ -26,6 +26,7 @@ export class DashboardModel {
   hideControls: any;
   hideDashNavbar: any;
   unsavedChangesCheck: any;
+  dashLocalStorage: any;
   templating: any;
   annotations: any;
   refresh: any;
@@ -59,6 +60,7 @@ export class DashboardModel {
     this.hideControls = data.hideControls || false;
     this.hideDashNavbar = data.hideDashNavbar || false;
     this.unsavedChangesCheck = data.unsavedChangesCheck || false;
+    this.dashLocalStorage = data.dashLocalStorage || '';
     this.time = data.time || { from: 'now-6h', to: 'now' };
     this.timepicker = data.timepicker || {};
     this.templating = this.ensureListExist(data.templating);
