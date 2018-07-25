@@ -1,0 +1,61 @@
+<div class="table-panel-container" ng-style="{'padding-top':((ctrl.panel.teldtemplate!='default')?'0em':'2.2em')}">
+  <div class="table-panel-header-bg" ng-if="ctrl.panel.teldtemplate=='default'" ng-show="ctrl.dataRaw.length>0"></div>
+  <div class="table-panel-scroll" ng-show="ctrl.dataRaw.length>0">
+    <div ng-if="ctrl.panel.teldtemplate!='default'" ng-style="{'font-size':'18px','font-family': 'Microsoft YaHei', 'color':'#1C97D2','text-align': 'center','margin-top':'5px'}">近7日快充桩均日均电量排名</div>
+    <table class="table-panel-table" ng-style="{'white-space':ctrl.panel.nowrap ? 'nowrap' : 'initial'}">
+      <thead ng-if="ctrl.panel.teldtemplate=='default'">
+        <tr>
+          <th style="width: 50px;" ng-show="ctrl.panel.publishVariables.enable"></th>
+          <th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
+            <div class="table-panel-table-header-inner pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
+              {{col.alias||col.text}}
+              <span class="table-panel-table-header-controls" ng-if="col.sort">
+                <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                <i class="fa fa-caret-up" ng-hide="col.desc"></i>
+              </span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="datapoints-warning" ng-show="ctrl.dataRaw.length===0">
+  <span class="small">
+    No datapoints
+    <tip>No datapoints returned from metric query</tip>
+  </span>
+</div>
+<div class="table-panel-footer">
+</div>
+
+<!-- <div class="row rank-item" style="text-align:left;font-size:13px;color:#a1a1a5;font-family: Helvetica,Tahoma,Arial,Microsoft YaHei,SimSun,STXihei,Heiti,sans-serif!important;line-height:26px; margin:0;border-bottom:1px dotted #d2d2d2;">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 sta-name-link" style="padding:0px 5px;line-height:36px;font-size:16px;font-family:SimHei;color:#0ea6d7;text-decoration:underline;cursor:pointer;"
+    value="dc956ed9-af34-4ad8-99f6-35308a0a9152">南京扬子公交西水湾充电站</div>
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:0px 5px;font-size:16px;font-family:SimHei;line-height:36px;color:#666;text-align:right;">
+    <span>单桩日均充电量:1176.22度(快)/0度(慢)</span>
+  </div>
+  <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12" style="padding:0px 5px;">
+    <span>平均评分:5</span>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="padding:0px 5px;">
+    <span>充电单价:0.59元/度</span>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px 5px;text-align:right;">
+    <span>停车免费</span>
+  </div>
+  <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12" style="padding:0px 5px;">
+    <span>站日均电量(度):4704.9</span>
+  </div>
+  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" style="padding:0px 5px;">
+    <span>终端数(个):4(总)/4(快)/0(慢)</span>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding:0px 5px;text-align:right;">
+    <span>桩均功率(kW):217.5(快)/0(慢)</span>
+  </div>
+  <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12" style="padding:0px 5px;">
+    <span>时间利用率(%):40.42(总)/40.42(快)/0(慢)</span>
+  </div>
+</div> -->
