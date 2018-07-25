@@ -33,6 +33,11 @@ declare module 'jquery' {
   export default jquery;
 }
 
+declare module 'async' {
+  var async: any;
+  export default async;
+}
+
 declare module 'app/core/utils/kbn' {
   var kbn: any;
   export default kbn;
