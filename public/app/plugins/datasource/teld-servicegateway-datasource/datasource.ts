@@ -1,6 +1,8 @@
 ///<reference path="../../../headers/common.d.ts" />
 
 import _ from 'lodash';
+import moment from 'moment';
+import config from 'app/core/config';
 import ResponseParser from './response_parser';
 
 export class TeldServiceGatewayDatasource {
@@ -9,7 +11,7 @@ export class TeldServiceGatewayDatasource {
   responseParser: ResponseParser;
 
   /** @ngInject **/
-  constructor(instanceSettings, private backendSrv, private $q, private templateSrv) {
+  constructor(instanceSettings, private backendSrv, private $q, private templateSrv, private contextSrv) {
     this.name = instanceSettings.name;
     this.id = instanceSettings.id;
     this.responseParser = new ResponseParser(this.$q);
@@ -40,27 +42,59 @@ export class TeldServiceGatewayDatasource {
     // return  quotedValues.join(',');
   }
 
-  query(options) {
+  imports = {
+    '_': _,
+    'moment': moment,
+    'contextSrv': this.contextSrv,
+    'config': config
+  };
+
+  getQueries(options) {
+    let templateSettings = { imports: this.imports, variable: 'bindData' };
+    let bindData = {
+      time: options.range,
+      user: config.bootData.user
+    };
+    let toUnix = options.range.to.valueOf();
+    let fromUnix = options.range.from.valueOf();
+    let scopedVars = _.defaults({
+      to: { text: toUnix, value: toUnix },
+      from: { text: fromUnix, value: fromUnix }
+    }, options.scopedVars);
+
     var queries = _.filter(options.targets, item => {
       return item.hide !== true;
     }).map(item => {
 
       let parameters = _.cloneDeep(item.parameters);
       _.each(parameters, param => {
-        param.value = this.templateSrv.replace(param.value, options.scopedVars, this.interpolateVariable);
+        param.originalVal = param.value;
+        param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
+        let compiled = _.template(param.value, templateSettings);
+        param.value = compiled(bindData);
       });
 
+      let url = this.templateSrv.replace(item.url, scopedVars, this.interpolateVariable);
+      url = _.template(url, templateSettings)(bindData);
       return {
         refId: item.refId,
         intervalMs: options.intervalMs,
         maxDataPoints: options.maxDataPoints,
         datasourceId: this.id,
-        url: item.url,
+        url: url,
         parameters: parameters,
-        rawSql: this.templateSrv.replace(item.rawSql, options.scopedVars, this.interpolateVariable),
         format: item.format,
+        time_sec: item.time_sec,
+        time_sec_format: item.time_sec_format,
       };
     });
+
+    return queries;
+  }
+
+  query(options) {
+
+    var queries = this.getQueries(options);
 
     if (queries.length === 0) {
       return this.$q.when({data: []});
@@ -74,7 +108,7 @@ export class TeldServiceGatewayDatasource {
         to: options.range.to.valueOf().toString(),
         queries: queries,
       }
-    }).then(this.responseParser.processQueryResult);
+    }).then(this.responseParser.setQueries(queries).processQueryResult.bind(this.responseParser));
   }
 
   metricFindQuery(query, optionalOptions) {

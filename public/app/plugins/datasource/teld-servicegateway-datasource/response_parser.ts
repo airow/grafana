@@ -4,11 +4,16 @@ import _ from 'lodash';
 import moment from 'moment';
 
 export default class ResponseParser {
+  private queries: any;
   constructor(private $q) { }
+
+  setQueries(queries) {
+    this.queries = queries;
+    return this;
+  }
 
   processQueryResult(res) {
     var data = [];
-
     if (!res.data.results) {
       return { data: data };
     }
@@ -16,10 +21,11 @@ export default class ResponseParser {
     for (let key in res.data.results) {
       let queryRes = res.data.results[key];
 
+      let queryEditor = _.find(this.queries, { refId: queryRes.refId });
       switch (queryRes.format) {
         case "time_series":
-          let time_sec = 'Sj';
-          let time_sec_format = 'YYYYMMDD';
+          let time_sec = queryEditor.time_sec;
+          let time_sec_format = queryEditor.time_sec_format;
           let targets = _.keys(queryRes.dataset[0]);
           targets = _.pull(targets, time_sec);
 
@@ -27,8 +33,7 @@ export default class ResponseParser {
             let serie = {
               target: target,
               datapoints: [],
-              refId: queryRes.refId,
-              meta: queryRes.meta
+              refId: queryRes.refId
             };
             data.push(serie);
             return serie;
@@ -47,7 +52,6 @@ export default class ResponseParser {
           let series = {
             type: 'table',
             refId: queryRes.refId,
-            meta: queryRes.meta,
             columns: _.map(_.keys(queryRes.dataset[0]), function (item) { return { "text": item }; }),
             rows: _.map(queryRes.dataset, function (item) { return _.values(item); })
           };

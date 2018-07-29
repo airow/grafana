@@ -6,9 +6,11 @@ import {QueryCtrl} from 'app/plugins/sdk';
 
 export interface TeldServiceGatewayQuery {
   refId: string;
+  url: string;
   format: string;
+  time_sec: string;
+  time_sec_format: string;
   alias: string;
-  rawSql: string;
   parameters: any[];
 }
 
@@ -21,6 +23,7 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
 
   showLastQuerySQL: boolean;
   formats: any[];
+  dateFormats: any[];
   target: TeldServiceGatewayQuery;
   lastQueryMeta: QueryMeta;
   lastQueryError: string;
@@ -31,25 +34,26 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
     super($scope, $injector);
 
     this.target.format = this.target.format || 'time_series';
+    this.target.time_sec = this.target.time_sec || 'time_sec';
+    this.target.time_sec_format = this.target.time_sec_format || 'x';
     this.target.alias = "";
     this.target.parameters = this.target.parameters || [];
+
     this.formats = [
       {text: 'Time series', value: 'time_series'},
       //{text: 'Time series Objs', value: 'time_series_objs'},
       {text: 'Table', value: 'table'},
       //{text: 'Objects', value: 'object'},
     ];
+    this.dateFormats = [
+      {text: 'Unix ms timestamp',  value: 'x'},
+      {text: 'Unix timestamp',  value: 'X'},
+      {text: 'YYYYMMDD', value: 'YYYYMMDD'},
+      {text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss'},
+      {text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a'},
+      {text: 'MMMM D, YYYY LT',  value: 'MMMM D, YYYY LT'},
+    ];
 
-    if (!this.target.rawSql) {
-
-      // special handling when in table panel
-      if (this.panelCtrl.panel.type === 'table') {
-        this.target.format = 'table';
-        this.target.rawSql = "SELECT 1";
-      } else {
-
-      }
-    }
 
     this.panelCtrl.events.on('data-received', this.onDataReceived.bind(this), $scope);
     this.panelCtrl.events.on('data-error', this.onDataError.bind(this), $scope);
@@ -87,6 +91,13 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
 
   moveItem(itemArray, index, newIndex) {
     _.move(itemArray, index, newIndex);
+  }
+
+  getCollapsedText() {
+    var text = '';
+    var format = _.find(this.formats, { value: this.target.format });
+    text = `${this.target.url} Format as ${format.text}`;
+    return text;
   }
 }
 
