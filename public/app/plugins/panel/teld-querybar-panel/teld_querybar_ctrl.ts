@@ -1029,6 +1029,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   }
 
+  variableIsHide(variable) {
+    return _.includes(['%', ".", "N/A"], variable.current.text);
+  }
+
   alert(s) {
     window.alert(s);
   }
