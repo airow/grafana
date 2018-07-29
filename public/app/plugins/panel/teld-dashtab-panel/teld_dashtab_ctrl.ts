@@ -64,11 +64,41 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
 
     _.defaults(this.panel, this.panelDefaults);
 
-    this.events.on('render', this.onRender.bind(this));
+    this.initLocalStorage();
+
+    //this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+
+    this.events.on('refresh', () => {
+      /*只进行一次数据请求，防止dashboard刷新面板再次请求数据*/
+      this.events.removeAllListeners('refresh');
+    });
+
+
+    if (this.panel.injectDataList) {
+      /*通过 dashtab_switch.js方式加载数据时，通过注入的dataList绑定*/
+      console.log('onDataReceived with injectDataList', this.panel.injectDataList);
+      this.events.removeAllListeners('refresh');
+      this.onDataReceived(this.panel.injectDataList);
+      delete this.panel.injectDataList;
+    }
+  }
+
+  initLocalStorage() {
+    if (this.panel.isSaveTabIndex) {
+      var current = _.find(this.panel.dashboards, item => {
+        return _.toLower(item.dash) === _.toLower(this.dashboard.title);
+      });
+      if (current) {
+        this.setLastDash(current);
+      }
+    } else {
+      let localStorageKey = this.getLocalStorageKey();
+      window.localStorage.removeItem(localStorageKey);
+    }
   }
 
   onInitEditMode() {
@@ -121,20 +151,53 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
     }
   }
 
+  getLocalStorageKey() {
+    let ctrlPanel = this.panel;
+    let search = this.$location.search();
+    let lskey = search.lskey || ctrlPanel.localStorageKey;
+    let dashLocalStorage = this.dashboard.dashLocalStorage;
+    let localStorageKey = _.remove([dashLocalStorage, lskey, "dashtab"]).join("_");
+
+    return localStorageKey;
+  }
+
   setLastDash(target) {
     if (this.panel.isSaveTabIndex) {
-      let ctrlPanel = this.panel;
-      let search = this.$location.search();
-      let lskey = search.lskey || ctrlPanel.localStorageKey;
-      window.localStorage.setItem(`dashTabs.${lskey}.lastDash`, target.dash);
+      let localStorageKey = this.getLocalStorageKey();
+      let storage = window.localStorage.getItem(localStorageKey) || "{}";
+      storage = JSON.parse(storage);
+      storage['lastDash'] = _.omit(target, ['$$hashKey']);
+      window.localStorage.setItem(localStorageKey, JSON.stringify(storage));
     }
+  }
+
+  isActive(target) {
+    var returnValue = _.toLower(this.dashboard.title) === _.toLower(target.dash);
+    // if (returnValue) {
+    //   this.setLastDash(target);
+    // }
+    return returnValue;
   }
 
   getGoto(target) {
     this.setLastDash(target);
-    //let search = this.$location.search();
-    //this.$location.path(`dashboard/db/${target.dash}`).search(search);
-    this.$location.path(`dashboard/db/${target.dash}`);
+    if (window.location.pathname === "/dashboard/script/dashtab_switch.js" ||
+      window.location.pathname === "/dashboard/script/dashtab_switch_link.js") {
+      var search = this.$location.search();
+      search.db = target.dash;
+      //search.tab = this.panel.localStorageKey;
+      // this.$location.search(search);
+      switch (window.location.pathname) {
+        case "/dashboard/script/dashtab_switch.js":
+          this.$location.path(`/dashboard/script/dashtab_switch_link.js`).search(search);
+          break;
+        case "/dashboard/script/dashtab_switch_link.js":
+          this.$location.path(`/dashboard/script/dashtab_switch.js`).search(search);
+          break;
+      }
+    } else {
+      this.$location.path(`dashboard/db/${target.dash}`);
+    }
     return false;
   }
 

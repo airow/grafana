@@ -1,7 +1,7 @@
 <div class="teld-dashtab-panel" ng-style="ctrl.querybarPanelStyle" style="margin: auto -10px;">
   <div class="buttons-tab">
-    <div class="tabs-item" ng-repeat="target in ctrl.tabs" dash-switch>
-      <a class="tabs-link" ng-click="ctrl.getGoto(target)" ng-class="{active: ctrl.dashboard.title === target.dash}" tab-scroll-left>
+    <div class="tabs-item" ng-repeat="target in ctrl.tabs" dash-switch-obsolete>
+      <a class="tabs-link" ng-click="ctrl.getGoto(target)" ng-class="{active: ctrl.isActive(target)}" tab-scroll-left>
         {{target.name}}
       </a>
     </div>
