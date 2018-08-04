@@ -1,9 +1,11 @@
 ///<reference path="../../headers/common.d.ts" />
 
 import config from 'app/core/config';
+import $ from 'jquery';
 import angular from 'angular';
 import moment from 'moment';
 import _ from 'lodash';
+import watermark from 'watermark';
 
 import coreModule from 'app/core/core_module';
 
@@ -180,6 +182,7 @@ export class DashboardCtrl {
         $scope.$on('$destroy', function() {
           angular.element(window).unbind('resize');
           $scope.dashboard.destroy();
+          //watermark.clear();
         });
       };
 
@@ -193,6 +196,38 @@ export class DashboardCtrl {
       this.$scope.onAppEvent('template-variable-value-updated', this.$scope.templateVariableUpdated);
       this.$scope.setupDashboard(dashboard);
       this.$scope.registerWindowResizeEvent();
+
+      this.readerWatermark(dashboard);
+    }
+
+    readerWatermark(dashboard) {
+
+      function reader(watermark_txt, grafanaBootData) {
+        var compiled = _.template(watermark_txt, { imports: { 'moment': moment, '_': _ } });
+        var bindData = _.defaultsDeep({ 'now': moment() }, grafanaBootData);
+        watermark_txt = compiled(bindData);
+        watermark.init({
+          watermark_txt: watermark_txt
+        });
+      }
+
+      var dashwatermark = dashboard.dashboard.watermark;
+      if (dashwatermark && dashwatermark.show) {
+        var watermark_txt = dashwatermark.text || moment().format('LLLL');
+        var grafanaBootData = window["grafanaBootData"];
+
+        if (_.isNil(grafanaBootData['teld']) && watermark_txt.search(/\$\{teld\.\w*\}?/) > -1) {
+          $.ajax({ url: '/TeldUserInfo' })
+            .done((currentUser) => {
+              grafanaBootData.teld = currentUser;
+            })
+            .always(() => {
+              reader(watermark_txt, grafanaBootData);
+            });
+        } else {
+          reader(watermark_txt, grafanaBootData);
+        }
+      } else { watermark.clear(); }
     }
 }
 

@@ -327,6 +327,9 @@ function (_, queryDef) {
         this.nameSeries(tmpSeriesList, target);
 
         for (var y = 0; y < tmpSeriesList.length; y++) {
+          tmpSeriesList[y].targetRefId = target.refId;
+          tmpSeriesList[y].refId = target.refId;
+          tmpSeriesList[y].groupKey = target.refId + '_' + tmpSeriesList[y].metric + '_' + tmpSeriesList[y].field;
           seriesList.push(tmpSeriesList[y]);
         }
 

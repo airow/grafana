@@ -71,6 +71,27 @@
                         checked="dashboard.hideDashNavbar"
                         label-class="width-11">
         </gf-form-switch>
+        <gf-form-switch class="gf-form"
+                        label="Show Watermark"
+                        tooltip="显示水印"
+                        checked="dashboard.watermark.show"
+                        label-class="width-11">
+        </gf-form-switch>
+        <div class="gf-form" ng-if="dashboard.watermark.show">
+          <input type="text" class="gf-form-input" placeholder="水印内容，默认显示时间" ng-model='dashboard.watermark.text'></input>
+        </div>
+        <div class="gf-form" ng-if="dashboard.watermark.show">
+          <label class="gf-form-label width-15">${now} now 为 momentjs对象<tip>时间</tip></label>
+        </div>
+        <div class="gf-form" ng-if="dashboard.watermark.show">
+          <label class="gf-form-label width-15">${user.}<tip>Grafana用户</tip></label>
+        </div>
+        <div class="gf-form" ng-if="dashboard.watermark.show">
+          <label class="gf-form-label width-15">${teld.UserName} ${teld.Mobile}<tip>Teld用户</tip></label>
+        </div>
+        <div class="gf-form" ng-if="dashboard.watermark.show">
+          <label class="gf-form-label width-15">TELD ${teld.UserName} ${teld.Mobile.substring(7,11)} ${now.format('MM-DD')}<tip>看板</tip></label>
+        </div>
         <gf-form-switch ng-hide="true" class="gf-form"
                         label="不进行变化检查"
                         tooltip="选中为不进行检查"

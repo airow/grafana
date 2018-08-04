@@ -36,6 +36,7 @@ export class PanelCtrl {
   containerHeight: any;
   events: Emitter;
   timing: any;
+  calcHide: boolean;
 
   //panelState: boolean;
 
@@ -46,6 +47,7 @@ export class PanelCtrl {
     this.editorTabIndex = 0;
     this.events = new Emitter();
     this.timing = {};
+    this.calcHide = true;
     var plugin = config.panels[this.panel.type];
     if (plugin) {
       this.pluginId = plugin.id;
@@ -79,6 +81,8 @@ export class PanelCtrl {
   }
 
   refresh() {
+    var hide = this.visibility();
+    if (hide) { return; }
     this.events.emit('refresh', null);
   }
 
@@ -370,6 +374,8 @@ export class PanelCtrl {
         this.panel.dyHide = panelHide;
       }
       this.row.hideRow = _.size(_.filter(this.row.panels, eachPanel => { return !eachPanel.dyHide; })) === 0;
+      this.calcHide = panelHide;
+      return panelHide;
     }
   }
 

@@ -230,9 +230,10 @@
         <div class="gf-form">
           <label class="gf-form-label query-keyword width-7">Style</label>
         </div>
+        <gf-form-switch class="gf-form" label="Show" label-class="width-9" checked="ctrl.seriesConf.bar.label.normal.show"
+        on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form">
           <label class="gf-form-label width-7">position</label>
-          <!--<input type="text" class="gf-form-input width-7" ng-model="ctrl.seriesConf.bar.label.normal.position">-->
           <select class="gf-form-input" ng-model="ctrl.seriesConf.bar.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']"></select>
         </div>
       </div>

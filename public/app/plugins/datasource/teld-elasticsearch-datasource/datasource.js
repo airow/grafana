@@ -217,7 +217,7 @@ define([
 
           //var queryString = templateSrv.replace(target.query || '*', options.scopedVars, 'lucene');
           var queryString = target.query || '*';
-          queryString = templateSrv.replaceScopedVars(queryString, scopedExpressionVars);
+          queryString = templateSrv.replaceScopedVars(queryString, Object.assign({}, options.scopedVars, scopedExpressionVars));
           queryString = templateSrv.replaceWithEmpty(queryString, options.scopedVars, 'lucene');
 
           // var whileCount = 0;

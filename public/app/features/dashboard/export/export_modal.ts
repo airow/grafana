@@ -12,9 +12,10 @@ import {DashboardExporter} from './exporter';
 export class DashExportCtrl {
   dash: any;
   exporter: DashboardExporter;
+  dismiss: () => void;
 
   /** @ngInject */
-  constructor(private backendSrv, dashboardSrv, datasourceSrv, $scope) {
+  constructor(private backendSrv, dashboardSrv, datasourceSrv, $scope, private $rootScope) {
     this.exporter = new DashboardExporter(datasourceSrv);
 
     this.exporter.makeExportable(dashboardSrv.getCurrent()).then(dash => {
@@ -30,10 +31,26 @@ export class DashExportCtrl {
     wnd.saveAs(blob, this.dash.title + '-' + new Date().getTime() + '.json');
   }
 
-  saveJson() {
+  saveJson1() {
     var html = angular.toJson(this.dash, true);
     var uri = "data:application/json," + encodeURIComponent(html);
     var newWindow = window.open(uri);
+  }
+
+  saveJson() {
+    var clone = this.dash;
+    let editScope = this.$rootScope.$new();
+    editScope.object = clone;
+    // editScope.canCopy = true;
+    // editScope.canUpdate = true;
+
+
+    this.$rootScope.appEvent('show-modal', {
+      src: 'public/app/partials/edit_json.html',
+      scope: editScope,
+    });
+
+    this.dismiss();
   }
 
 }

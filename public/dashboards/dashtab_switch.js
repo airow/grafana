@@ -49,6 +49,7 @@ return function (callback) {
     if (row) {
       row.height = 1;
       row.showTitle = false;
+      row.collapse = false;
       panel.title = "";
       row.panels = [panel];
     }
@@ -95,6 +96,11 @@ return function (callback) {
           inject(panel, result.dashboard.rows);
         });
         result.dashboard.dashLocalStorage = component.dashboard.dashLocalStorage;
+        result.dashboard.slug = result.meta.slug;
+        var watermark = component.dashboard.watermark;
+        if (watermark && watermark.show) {
+          result.dashboard.watermark = watermark;
+        }
         cb(result.dashboard);
       });
   }

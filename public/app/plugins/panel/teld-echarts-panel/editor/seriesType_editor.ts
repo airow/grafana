@@ -1,10 +1,9 @@
-///<reference path="../../../headers/common.d.ts" />
+///<reference path="../../../../headers/common.d.ts" />
 
 import _ from 'lodash';
 import kbn from 'app/core/utils/kbn';
-import * as graphutils from 'app/core/utils/graphutils';
 
-export class CalcSeriesEditorCtrl {
+export class SeriesTypeEditorCtrl {
   panel: any;
   panelCtrl: any;
   allChecked: boolean;
@@ -13,27 +12,27 @@ export class CalcSeriesEditorCtrl {
   constructor(private $scope, private $q, private templateSrv) {
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
-    this.panel.calcSeriesConf = this.panel.calcSeriesConf || [];
-    this.panel.hideMetrics = this.panel.hideMetrics || [];
+    this.panel.seriesTypeConf = this.panel.seriesTypeConf || [];
+    this.panel.yAxisConf = this.panel.yAxisConf || [];
     $scope.ctrl = this;
-    this.allChecked = _.isEmpty(_.find(this.panel.calcSeriesConf, { enable: false }));
+    this.allChecked = _.isEmpty(_.find(this.panel.seriesTypeConf, { enable: false }));
   }
 
   metricsTarget() {
-    var filterDataList = _.filter(this.panelCtrl.dataList, item => { return true !== item.calcSerie; });
+    var filterDataList = this.panelCtrl.dataList;
     var refId = [] || _.map(this.panel.targets, 'refId');
     var groupKey = _.map(filterDataList, 'groupKey');
     var dataTaget = _.map(filterDataList, 'target');
-    return _.union(refId, groupKey, dataTaget);
+    var calcSeriesTaget = _.map(this.panel.calcSeriesConf, 'target');
+    return _.union(refId, groupKey, dataTaget, calcSeriesTaget);
   }
 
-
-  dashVars() {
-    return graphutils.dashVars(this.templateSrv.variables);
+  yAxisList() {
+    return _.union([''], _.map(_.filter(this.panel.yAxisConf, 'show'), 'name'));
   }
 
-  checkedAll() {
-    _.each(this.panel.calcSeriesConf, item => { item.enable = this.allChecked; });
+  checkedAll(array) {
+    _.each(array, item => { item.enable = this.allChecked; });
     this.refresh();
   }
 
@@ -58,12 +57,12 @@ export class CalcSeriesEditorCtrl {
 }
 
 /** @ngInject **/
-export function calcSeriesEditorComponent() {
+export function seriesTypeEditorComponent() {
   'use strict';
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: 'public/app/plugins/panel/graph/calcSeries_editor.html',
-    controller: CalcSeriesEditorCtrl,
+    templateUrl: 'public/app/plugins/panel/teld-echarts-panel/editor/seriesType_editor.html',
+    controller: SeriesTypeEditorCtrl,
   };
 }

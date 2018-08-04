@@ -15,6 +15,8 @@ function (angular, coreModule) {
       $scope.updateHandler(newObject, $scope.object);
     };
 
+    $scope.getContentForClipboard = function () { return $scope.json; };
+
   });
 
 });

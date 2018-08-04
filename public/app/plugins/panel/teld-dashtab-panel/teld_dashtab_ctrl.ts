@@ -6,12 +6,12 @@ import _ from 'lodash';
 import numeral from 'numeral';
 import angular from 'angular';
 import kbn from 'app/core/utils/kbn';
-import * as dateMath from 'app/core/utils/datemath';
+import * as dateMath from '../../../core/utils/datemath';
 import moment from 'moment';
-import appEvents from 'app/core/app_events';
+import appEvents from '../../../core/app_events';
 import config from 'app/core/config';
 import './directives/all';
-import { MetricsPanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
+import { MetricsPanelCtrl, loadPluginCssPath } from '../../sdk';
 
 System.import('/public/app/plugins/panel/teld-dashtab-panel/css/css.built-in.css!css');
 // loadPluginCssPath({ cssPath: '/public/app/plugins/panel/teld-dashtab-panel/css/swiper.${themeName}.built-in.css' });
@@ -172,7 +172,7 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
   }
 
   isActive(target) {
-    var returnValue = _.toLower(this.dashboard.title) === _.toLower(target.dash);
+    var returnValue = _.toLower(this.dashboard.meta.slug) === _.toLower(target.dash);
     // if (returnValue) {
     //   this.setLastDash(target);
     // }
@@ -181,6 +181,9 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
 
   getGoto(target) {
     this.setLastDash(target);
+    if (target.dash === this.dashboard.meta.slug) {
+      return false;
+    }
     if (window.location.pathname === "/dashboard/script/dashtab_switch.js" ||
       window.location.pathname === "/dashboard/script/dashtab_switch_link.js") {
       var search = this.$location.search();

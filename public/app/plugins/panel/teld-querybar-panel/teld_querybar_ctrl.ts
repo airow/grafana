@@ -91,6 +91,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     datasource: 'default',
     slideWidth: 250,
     targets: [],
+    saveVariable: false,
     saveVariableLocalStoragePrefix: _.uniqueId('def')
   };
 
@@ -954,6 +955,18 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     var scopedVars = Object.assign({}, this.panel.scopedVars, {
       "__interval": { text: this.interval, value: this.interval },
       "__interval_ms": { text: this.intervalMs, value: this.intervalMs },
+    });
+
+    var from = this.range.from.clone();
+    var to = this.range.to.clone();
+    var fromYYYMMDD = moment(from.format("YYYYMMDD"));
+    var toYYYYMMDD = moment(to.format("YYYYMMDD"));
+    Object.assign(scopedVars, {
+      "dash_timeFrom":   { text: from.valueOf(), value: from.valueOf() },
+      "dash_timeTo":     { text: to.valueOf(), value: to.valueOf() },
+
+      "dash_dateFrom":   { text: fromYYYMMDD.valueOf(), value: fromYYYMMDD.valueOf() },
+      "dash_dateTo":     { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
     });
 
     var metricsQuery = {

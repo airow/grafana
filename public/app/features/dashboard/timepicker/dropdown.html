@@ -47,7 +47,7 @@
 
 	</form>
 
-	<div class="gf-timepicker-relative-section">
+	<div class="gf-timepicker-relative-section" ng-hide="ctrl.hideQuick()">
 		<h3>Quick ranges</h3>
 		<ul ng-repeat="group in ctrl.timeOptions">
 			<li bindonce ng-repeat='option in group' ng-class="{active: option.active}">

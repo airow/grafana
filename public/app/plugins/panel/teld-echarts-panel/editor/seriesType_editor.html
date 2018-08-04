@@ -1,0 +1,88 @@
+<div class="editor-row">
+  <h5 class="section-heading">Series</h5>
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label" ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target}}']</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <h5 class="section-heading">Serie Type</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="ALL" label-class="width-4" checked="ctrl.allChecked" on-change="ctrl.checkedAll(ctrl.panel.seriesTypeConf)"></gf-form-switch>
+        <label class="gf-form-label query-keyword width-10">标签</label>
+        <label class="gf-form-label query-keyword width-30">表达式</label>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.panel.seriesTypeConf.push({enable:true,target:''})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="seriesType in ctrl.panel.seriesTypeConf">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-4" checked="seriesType.enable" on-change="ctrl.refresh()"></gf-form-switch>
+        <select class="gf-form-input" ng-model="seriesType.target" ng-options="f for f in ctrl.metricsTarget()">
+        </select>
+        <select class="gf-form-input" ng-model="seriesType.type" ng-options="f for f in ['bar','line']">
+        </select>
+        <select class="gf-form-input" ng-model="seriesType.yAxis" ng-options="f for f in ctrl.yAxisList()">
+        </select>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.seriesTypeConf, option)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(ctrl.panel.seriesTypeConf,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(ctrl.panel.seriesTypeConf,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h5 class="section-heading">yAxis</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-10">标签</label>
+        <label class="gf-form-label query-keyword width-30">表达式</label>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.panel.yAxisConf.push({enable:true,name:''})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="axis in ctrl.panel.yAxisConf">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-4" checked="axis.show" on-change="ctrl.refresh()"></gf-form-switch>
+        <input type="text" class="gf-form-input width-30" ng-model="axis.name" spellcheck="false" placeholder="name">
+        <input type="text" class="gf-form-input width-30" ng-model="axis.offset" spellcheck="false" placeholder="offset">
+        <select class="gf-form-input" ng-model="axis.position" ng-options="f for f in ['right','left']">
+        </select>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.yAxisConf, option)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(ctrl.panel.yAxisConf,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(ctrl.panel.yAxisConf,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

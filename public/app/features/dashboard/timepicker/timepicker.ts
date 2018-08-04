@@ -27,7 +27,7 @@ export class TimePickerCtrl {
   firstDayOfWeek: number;
 
   /** @ngInject */
-  constructor(private $scope, private $rootScope, private timeSrv) {
+  constructor(private $scope, private $rootScope, private timeSrv, private $location) {
     $scope.ctrl = this;
 
     $rootScope.onAppEvent('shift-time-forward', () => this.move(1), $scope);
@@ -150,6 +150,10 @@ export class TimePickerCtrl {
 
     this.timeSrv.setTime(range);
     this.$rootScope.appEvent('hide-dash-editor');
+  }
+
+  hideQuick() {
+    return _.has(this.$location.search(), 'hideQuick');
   }
 
 }

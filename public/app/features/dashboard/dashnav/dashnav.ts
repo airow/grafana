@@ -124,11 +124,19 @@ export class DashNavCtrl {
       return dashboardSrv.saveDashboardAs();
     };
 
-    $scope.viewJson = function () {
+    $scope.viewJson1 = function () {
       var clone = $scope.dashboard.getSaveModelClone();
       var html = angular.toJson(clone, true);
       var uri = "data:application/json;charset=utf-8," + encodeURIComponent(html);
       var newWindow = window.open(uri);
+    };
+
+    $scope.viewJson = function () {
+      var clone = this.dashboard.getSaveModelClone();
+
+      $scope.appEvent('show-json-editor', {
+        object: clone,
+      });
     };
 
     $scope.snapshot = function () {

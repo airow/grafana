@@ -7,15 +7,15 @@ import moment from 'moment';
 
 import kbn from 'app/core/utils/kbn';
 import config from 'app/core/config';
-import appEvents from 'app/core/app_events';
-import TimeSeries from 'app/core/time_series2';
-import { colors } from 'app/core/core';
-import { MetricsPanelCtrl, loadPluginCss } from 'app/plugins/sdk';
+import appEvents from '../../../core/app_events';
+import TimeSeries from '../../../core/time_series2';
+import { colors } from '../../../core/core';
+import { MetricsPanelCtrl, loadPluginCss } from '../../sdk';
 
 import echarts from 'echarts';
 import echartsTheme, { echartsThemeName } from './theme/all';
 
-import * as FileExport from 'app/core/utils/file_export';
+import * as FileExport from '../../../core/utils/file_export';
 import {transformDataToTable} from '../table/transformers';
 import {tablePanelEditor} from '../table/editor';
 import {TableRenderer} from '../table/renderer';
@@ -25,6 +25,9 @@ import { tabStyleEditorComponent } from './tab_style_editor';
 import { seriesEditorComponent } from './series_editor';
 
 import { echartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
+import * as graphutils from '../../../core/utils/graphutils';
+import {calcSeriesEditorComponent} from '../graph/calcSeries_editor';
+import {seriesTypeEditorComponent} from './editor/seriesType_editor';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
@@ -314,6 +317,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Series', seriesEditorComponent);
     this.addEditorTab('Options', tablePanelEditor);
     this.addEditorTab('Events', echartsEventEditorComponent);
+    this.addEditorTab('Calc', calcSeriesEditorComponent);
+    this.addEditorTab('SerieType', seriesTypeEditorComponent);
     this.editorTabIndex = 1;
   }
 
@@ -491,8 +496,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     // }
   }
 
-  onDataReceived(dataList) {
+  calcSeries(calcSeriesConf, data, hideMetrics) {
 
+    var calcSeriesFun = this.isSeriesBar() ? graphutils.calcSeriesBar : graphutils.calcSeries;
+
+    return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
+  }
+  dataList: any = [];
+  onDataReceived(dataList) {
+    this.dataList = dataList;
+    dataList = this.calcSeries(this.panel.calcSeriesConf, dataList, this.panel.hideMetrics);
     this.pieMerge(dataList);
 
     this.renderTable(dataList);
@@ -898,6 +911,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         _.each(value, (s, index) => {
           let serie = this.getDefaultSerie();
           serie = d[index] = d[index] || _.defaultsDeep(serie, {
+            refId: s.refId,
             type: 'bar',
             stack: isStack,
             data: []
@@ -1284,7 +1298,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   baseOption.legend = undefined;
     // }
     //this.ecConfig.theme = this.panel.style.themeName;
-    this.ecOption.baseOption = baseOption;
+    this.ecOption.baseOption = this.f(baseOption);
 
     if (this.ecInstance) {
       //this.ecInstance.setOption({ legend: this.panel.echarts.legend.show ? option.legend : undefined });
@@ -1295,5 +1309,56 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   this.ecOption.baseOption.legend = undefined;
     // }
 
+  }
+
+  f(option) {
+    var isSeriesBar = this.isSeriesBar();
+
+
+    var axis = { axis: 'yAxis', axisIndex: 'yAxisIndex' };
+    if (this.panel.exchangeAxis) {
+      axis = { axis: 'xAxis', axisIndex: 'xAxisIndex' };
+    }
+
+    var yAxis = _.filter(this.panel.yAxisConf, { show: true });
+    if (_.size(yAxis) > 0) {
+      var leftYAxis = option[axis.axis];
+      option[axis.axis] = [leftYAxis];
+      _.each(yAxis, (yAxis, index) => {
+        var y = _.defaultsDeep(yAxis, option[axis.axis]);
+        //y.offset = (index + 1) * -80;
+        option[axis.axis].push(y);
+      });
+    }
+
+    _.each(this.panel.seriesTypeConf, type => {
+      if (type.enable) {
+        var series = _.find(option.series, s => {
+          return s[isSeriesBar ? 'refId' : 'name'] === type.target;
+        });
+        if (series) {
+          series.type = type.type;
+          if (type.yAxis) {
+            var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
+            if (axisIndex > -1) {
+              series[axis.axisIndex] = axisIndex;
+            }
+          }
+        }
+        console.log(type);
+      }
+    });
+
+    // option[axis.axis] = [option[axis.axis], _.defaultsDeep(option[axis.axis])];
+    // option.series[0][axis.axisIndex] = 1;
+    //option['xAxis'].type = 'time';
+
+    //option.series[2].type = 'line';
+    // if (this.panel.groupBarStack && this.panel.groupBarStack) {
+    //   _.each(option.series, (s, index) => {
+    //     s.stack = `stack${index}`;
+    //   });
+    // }
+    return option;
   }
 }

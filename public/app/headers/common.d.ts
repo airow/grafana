@@ -77,3 +77,8 @@ declare module 'remarkable' {
   var config: any;
   export default config;
 }
+
+declare module 'watermark' {
+  var config: any;
+  export default config;
+}
