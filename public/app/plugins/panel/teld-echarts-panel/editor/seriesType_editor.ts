@@ -7,6 +7,7 @@ export class SeriesTypeEditorCtrl {
   panel: any;
   panelCtrl: any;
   allChecked: boolean;
+  unitFormats: any;
 
   /** @ngInject **/
   constructor(private $scope, private $q, private templateSrv) {
@@ -16,6 +17,8 @@ export class SeriesTypeEditorCtrl {
     this.panel.yAxisConf = this.panel.yAxisConf || [];
     $scope.ctrl = this;
     this.allChecked = _.isEmpty(_.find(this.panel.seriesTypeConf, { enable: false }));
+
+    this.unitFormats = kbn.getUnitFormats();
   }
 
   metricsTarget() {
@@ -28,7 +31,30 @@ export class SeriesTypeEditorCtrl {
   }
 
   yAxisList() {
-    return _.union([''], _.map(_.filter(this.panel.yAxisConf, 'show'), 'name'));
+    return _.union([''], _.map(_.filter(this.panel.yAxisConf, 'show'), 'key'));
+  }
+
+  appendAxisConf() {
+    var conf = { show: true, position: 'right', axisLabel: { show: true }, axisTick: { show: true }, offset: 0, name: '' };
+    this.panel.yAxisConf.push(conf);
+  }
+
+  appendSeriesTypeConf() {
+    var conf = {
+      enable: true, target: '', label: { normal: {} },
+      markPoint: { data: [] }, markLine: { data: [] }, markArea: { data: [] }
+    };
+    this.panel.seriesTypeConf.push(conf);
+  }
+
+  setUnitFormat(axis, subItem) {
+    axis.format = subItem.value;
+    this.panelCtrl.render();
+  }
+
+  appendItem(itemArray) {
+    if (_.size(itemArray) === 0) { itemArray = []; }
+    itemArray.push({});
   }
 
   checkedAll(array) {

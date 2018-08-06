@@ -42,3 +42,35 @@ function ecClearValDirective($compile, datasourceSrv, $rootScope, $q, $http, $te
 }
 
 coreModule.directive('ecClearVal', ecClearValDirective);
+
+
+/** @ngInject **/
+function ecValwrapDirective($compile, datasourceSrv, $rootScope, $q, $http, $templateCache) {
+
+  return {
+    restrict: 'A',
+    scope: true,
+    link: function(scope, elem, attrs) {
+      if (attrs.ngModel) {
+        elem.blur(() => {
+          if (_.isEmpty(elem.val())) {
+            _.unset(scope, attrs.ngModel);
+            scope.$apply();
+          } else {
+            var num = _.toNumber(elem.val());
+            if (_.isNumber(num) && _.isNaN(num) === false) {
+              _.set(scope, attrs.ngModel, num);
+              //scope.apply();
+              scope.$apply();
+            }
+          }
+        });
+        elem.on("$destroy", function () {
+          elem.unbind();
+        });
+      }
+    }
+  };
+}
+
+coreModule.directive('ecValwrap', ecValwrapDirective);

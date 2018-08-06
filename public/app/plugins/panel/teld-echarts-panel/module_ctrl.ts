@@ -277,6 +277,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return formater(value, decimals);
   }
 
+  axisLableFormatter2(axis, value, index) {
+    var formatterConf = this.panel.formatter[axis].axisLabel;
+    var decimals = formatterConf.decimals;
+    let formater = this.valueFormats[formatterConf.format];
+    return formater(value, decimals);
+  }
+
   yAxisLableFormatter(value, index) {
     var returnValue = this.axisLableFormatter('yAxis', value, index);
     return returnValue;
@@ -1320,13 +1327,24 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       axis = { axis: 'xAxis', axisIndex: 'xAxisIndex' };
     }
 
-    var yAxis = _.filter(this.panel.yAxisConf, { show: true });
+    var yAxis = _.cloneDeep(_.filter(this.panel.yAxisConf, { show: true }));
     if (_.size(yAxis) > 0) {
       var leftYAxis = option[axis.axis];
       option[axis.axis] = [leftYAxis];
       _.each(yAxis, (yAxis, index) => {
-        var y = _.defaultsDeep(yAxis, option[axis.axis]);
+        var y = _.defaultsDeep(yAxis, leftYAxis);
         //y.offset = (index + 1) * -80;
+        var { format, decimals } = y.axisLabel;
+        //var formatterConf = { format: format, decimals: decimals } = y.axisLabel;
+        var formatterConf = { format: format, decimals: decimals };
+        if (false === _.isUndefined(format)) {
+          y.axisLabel.formatter = (value) => {
+            //debugger;
+            var decimals = formatterConf.decimals;
+            let formater = this.valueFormats[formatterConf.format];
+            return formater(value, decimals);
+          };
+        }
         option[axis.axis].push(y);
       });
     }
@@ -1342,12 +1360,94 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
             if (axisIndex > -1) {
               series[axis.axisIndex] = axisIndex;
+              series.markPoint = _.cloneDeep(type.markPoint);
+              series.markLine = _.cloneDeep(type.markLine);
+              if (_.has(type, 'label.normal')) {
+                _.set(series, 'label.normal', _.cloneDeep(type.label.normal));
+              }
+
+              var y = option[axis.axis][axisIndex];
+              var { format, decimals } = y.axisLabel;
+              var formatterConf = { format: format, decimals: decimals };
+
+              var formatter = (params) => {
+                var {
+                  componentType,
+                  // 系列类型
+                  seriesType,
+                  // 系列在传入的 option.series 中的 index
+                  seriesIndex,
+                  // 系列名称
+                  seriesName,
+                  // 数据名，类目名
+                  name,
+                  // 数据在传入的 data 数组中的 index
+                  dataIndex,
+                  // 传入的原始数据项
+                  data,
+                  // 传入的数据值
+                  value,
+                  // 数据图形的颜色
+                  color
+                } = params;
+                //debugger;
+                console.log(this);
+                var decimals = formatterConf.decimals;
+                let formater = this.valueFormats[formatterConf.format] || function (val) { return val; };
+                return formater(value, decimals);
+              };
+
+              if (false !== _.isUndefined(format)) {
+                series.label.normal.formatter = formatter.bind({ type: 'label' });
+                _.set(series, 'markPoint.label.normal.formatter', formatter.bind({ type: 'markPoint' }));
+                _.set(series, 'markLine.label.normal.formatter', formatter.bind({ type: 'markLine' }));
+              }
             }
           }
         }
         console.log(type);
       }
     });
+
+    if (_.size(this.panel.seriesTypeConf) > 0) {
+      var tooltipFormatter = option.tooltip.formatter;
+      option.tooltip.formatter = (params, ticket, callback) => {
+        debugger;
+
+        var valueFormatter = this.yAxisLableFormatter.bind(this);
+        var returnValue = [];
+        var paramArray = _.isArray(params) ? params : [params];
+        returnValue.push(paramArray[0].name);
+        _.each(paramArray, function (param, index) {
+          var item = [param.marker];
+          switch (param.seriesName) {
+            case "\u0000-":
+              break;
+            default:
+              item.push(param.seriesName + "：");
+              break;
+          }
+
+          var s = option.series[param.seriesIndex];
+          var formatter = s.label.normal.formatter || function (v) { return valueFormatter(v.value); };
+          var tooltipVal = formatter(param);
+          item.push(tooltipVal);
+          returnValue.push(_.join(item, ''));
+        });
+        return _.join(returnValue, '<br/>');
+
+        // var tooltipStr = [];
+        // _.each(params, p => {
+        //   var s = option.series[p.seriesIndex];
+        //   var formatter = s.label.normal.formatter || tooltipFormatter;
+        //   var tooltipVal = formatter(p);
+        //   tooltipStr.push(tooltipVal);
+        //   console.log(tooltipStr);
+        // });
+
+        // return _.join(tooltipStr, "<br/>");
+      };
+    }
 
     // option[axis.axis] = [option[axis.axis], _.defaultsDeep(option[axis.axis])];
     // option.series[0][axis.axisIndex] = 1;
