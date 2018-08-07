@@ -46,14 +46,32 @@ export class TeldServiceGatewayDatasource {
     '_': _,
     'moment': moment,
     'contextSrv': this.contextSrv,
-    'config': config
+    'config': config,
+    'urlHelper': {
+      sghost: function (host) {
+        let { protocol, hostname, port } = window.location;
+        let domain = hostname.split('.');
+        if (_.size(domain) >= 2) {
+          domain = [domain.pop(), domain.pop()].reverse();
+        }
+        return `${protocol}//${host}.${domain.join(".")}/`;
+      }
+    }
   };
 
   getQueries(options) {
+    let { protocol, hostname, port } = window.location;
+    let domain = hostname.split('.');
+    if (_.size(domain) >= 2) {
+      let TLDs = domain.pop();
+      let host = domain.pop();
+      domain = [host, TLDs];
+    }
     let templateSettings = { imports: this.imports, variable: 'bindData' };
     let bindData = {
       time: options.range,
-      user: config.bootData.user
+      user: config.bootData.user,
+      url: { protocol, hostname, port, domain: domain.join(".") }
     };
     let toUnix = options.range.to.valueOf();
     let fromUnix = options.range.from.valueOf();
