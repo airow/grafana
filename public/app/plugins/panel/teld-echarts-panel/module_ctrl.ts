@@ -1349,70 +1349,69 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       });
     }
 
-    _.each(this.panel.seriesTypeConf, type => {
-      if (type.enable) {
-        var series = _.find(option.series, s => {
-          return s[isSeriesBar ? 'refId' : 'name'] === type.target;
-        });
-        if (series) {
-          series.type = type.type;
-          if (type.yAxis) {
-            var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
-            if (axisIndex > -1) {
-              series[axis.axisIndex] = axisIndex;
-              series.markPoint = _.cloneDeep(type.markPoint);
-              series.markLine = _.cloneDeep(type.markLine);
-              if (_.has(type, 'label.normal')) {
-                _.set(series, 'label.normal', _.cloneDeep(type.label.normal));
-              }
+    let seriesTypeConf = _.filter(this.panel.seriesTypeConf, { enable: true });
+    _.each(seriesTypeConf, type => {
+      var series = _.find(option.series, s => {
+        return s[isSeriesBar ? 'refId' : 'name'] === type.target;
+      });
+      if (series) {
+        series.type = type.type;
+        if (type.yAxis) {
+          var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
+          if (axisIndex > -1) {
+            series[axis.axisIndex] = axisIndex;
+            series.markPoint = _.cloneDeep(type.markPoint);
+            series.markLine = _.cloneDeep(type.markLine);
+            if (_.has(type, 'label.normal')) {
+              _.set(series, 'label.normal', _.cloneDeep(type.label.normal));
+            }
 
-              var y = option[axis.axis][axisIndex];
-              var { format, decimals } = y.axisLabel;
-              var formatterConf = { format: format, decimals: decimals };
+            var y = option[axis.axis][axisIndex];
+            var { format, decimals } = y.axisLabel;
+            var formatterConf = { format: format, decimals: decimals };
 
-              var formatter = (params) => {
-                var {
-                  componentType,
-                  // 系列类型
-                  seriesType,
-                  // 系列在传入的 option.series 中的 index
-                  seriesIndex,
-                  // 系列名称
-                  seriesName,
-                  // 数据名，类目名
-                  name,
-                  // 数据在传入的 data 数组中的 index
-                  dataIndex,
-                  // 传入的原始数据项
-                  data,
-                  // 传入的数据值
-                  value,
-                  // 数据图形的颜色
-                  color
-                } = params;
-                //debugger;
-                console.log(this);
-                var decimals = formatterConf.decimals;
-                let formater = this.valueFormats[formatterConf.format] || function (val) { return val; };
-                return formater(value, decimals);
-              };
+            var formatter = (params) => {
+              var {
+                componentType,
+                // 系列类型
+                seriesType,
+                // 系列在传入的 option.series 中的 index
+                seriesIndex,
+                // 系列名称
+                seriesName,
+                // 数据名，类目名
+                name,
+                // 数据在传入的 data 数组中的 index
+                dataIndex,
+                // 传入的原始数据项
+                data,
+                // 传入的数据值
+                value,
+                // 数据图形的颜色
+                color
+              } = params;
+              //debugger;
+              //console.log(this);
+              var decimals = formatterConf.decimals;
+              let formater = this.valueFormats[formatterConf.format] || function (val) { return val; };
+              return formater(value, decimals);
+            };
 
-              if (false !== _.isUndefined(format)) {
-                series.label.normal.formatter = formatter.bind({ type: 'label' });
-                _.set(series, 'markPoint.label.normal.formatter', formatter.bind({ type: 'markPoint' }));
-                _.set(series, 'markLine.label.normal.formatter', formatter.bind({ type: 'markLine' }));
-              }
+            if (false === _.isUndefined(format)) {
+              series.label.normal.formatter = formatter.bind({ type: 'label' });
+              _.set(series, 'markPoint.label.normal.formatter', formatter.bind({ type: 'markPoint' }));
+              _.set(series, 'markLine.label.normal.formatter', formatter.bind({ type: 'markLine' }));
             }
           }
         }
-        console.log(type);
       }
+      console.log(type);
     });
 
-    if (_.size(this.panel.seriesTypeConf) > 0) {
+    if (_.size(seriesTypeConf) > 0) {
       var tooltipFormatter = option.tooltip.formatter;
       option.tooltip.formatter = (params, ticket, callback) => {
-        debugger;
+        //debugger;
 
         var valueFormatter = this.yAxisLableFormatter.bind(this);
         var returnValue = [];
@@ -1429,23 +1428,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
 
           var s = option.series[param.seriesIndex];
-          var formatter = s.label.normal.formatter || function (v) { return valueFormatter(v.value); };
-          var tooltipVal = formatter(param);
+          var yAxisIndex = _.get(s, 'yAxisIndex', 0);
+          var formatter = _.get(option.yAxis[yAxisIndex], 'axisLabel.formatter', valueFormatter);
+          // var formatter = option.yAxis[yAxisIndex].axisLabel.formatter || function (v) { return valueFormatter(v.value); };
+          // var formatter = s.label.normal.formatter || function (v) { return valueFormatter(v.value); };
+          var tooltipVal = formatter(param.value);
           item.push(tooltipVal);
           returnValue.push(_.join(item, ''));
         });
         return _.join(returnValue, '<br/>');
-
-        // var tooltipStr = [];
-        // _.each(params, p => {
-        //   var s = option.series[p.seriesIndex];
-        //   var formatter = s.label.normal.formatter || tooltipFormatter;
-        //   var tooltipVal = formatter(p);
-        //   tooltipStr.push(tooltipVal);
-        //   console.log(tooltipStr);
-        // });
-
-        // return _.join(tooltipStr, "<br/>");
       };
     }
 
