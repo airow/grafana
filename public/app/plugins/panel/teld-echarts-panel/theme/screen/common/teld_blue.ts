@@ -341,7 +341,7 @@ var teld_blue = {
       }
     },
     "axisLabel": {
-      "show": true,
+      // "show": true,
       "textStyle": {
         "color": "#999999"
       }

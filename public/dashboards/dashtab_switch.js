@@ -97,6 +97,9 @@ return function (callback) {
         });
         result.dashboard.dashLocalStorage = component.dashboard.dashLocalStorage;
         result.dashboard.slug = result.meta.slug;
+        if (_.has(component.panels, 'teld-querybar-panel')) {
+          result.dashboard.hasQuerybarPanel = true;
+        }
         var watermark = component.dashboard.watermark;
         if (watermark && watermark.show) {
           result.dashboard.watermark = watermark;
@@ -168,12 +171,22 @@ return function (callback) {
     return component;
   }
 
+  function sghost(host, SID) {
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var domain = hostname.split('.');
+    if (domain.length >= 2) {
+      domain = [domain.pop(), domain.pop()].reverse();
+    }
+    return protocol + '//' + host + '.' + domain.join(".") + '/api/invoke?SID=' + SID;
+  }
+
   function getButton() {
     var data = {
       "queries": [{
         "refId": "TSG",
         "format": "table",
-        "url": "https://ttpsg.teld.cn/api/invoke?SID=WRPFrame-GetButton",
+        "url": sghost('ttpsg', 'WRPFrame-GetButton'),
         "parameters": [{
           "key": "MenuId",
           "type": "value",
@@ -196,11 +209,24 @@ return function (callback) {
     if (result) {
       var button = _.find(result.dataset, { Control_ID: openDash.permissions });
       if (_.isUndefined(button)) {
-        var firstButton = _.first(data.results[0].dataset);
-        if (firstButton) {
+
+        var permissions = _.keys(component.mapping);
+
+        var firstDash = _.find(component.panels['teld-dashtab-panel'].dashboards, function (eachItem) {
+          return _.includes(permissions, eachItem.permissions);
+        });
+
+        if (firstDash) {
           openDash = {
-            dash: component.mapping[firstButton.Control_ID]
+            dash: firstDash.dash
           };
+        } else {
+          var firstButton = _.first(data.results[0].dataset);
+          if (firstButton) {
+            openDash = {
+              dash: component.mapping[firstButton.Control_ID]
+            };
+          }
         }
       }
     }

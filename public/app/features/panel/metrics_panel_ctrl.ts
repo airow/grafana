@@ -100,6 +100,9 @@ class MetricsPanelCtrl extends PanelCtrl {
   }
 
   onMetricsPanelRefresh() {
+    if (this.dashboard.meta.hasQuerybarPanel && this.dashboard.meta.fromScript) {
+      return;
+    }
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
 

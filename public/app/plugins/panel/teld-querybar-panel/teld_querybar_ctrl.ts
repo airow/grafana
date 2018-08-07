@@ -1021,6 +1021,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   query() {
     console.log('query');
     this.triggerRefresh = true;
+    this.dashboard.meta.hasQuerybarPanel = false;
     if (this.panel.subscribeRefresh) {
 
     } else {
