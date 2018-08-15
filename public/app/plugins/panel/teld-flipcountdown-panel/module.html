@@ -5,5 +5,9 @@
     <span ng-show="ctrl.panel.postfix" ng-bind="ctrl.getVal(ctrl.panel.postfix)" ng-style="{ 'font-size': ctrl.panel.postfixFontSize }"></span>
     </span>
     <span style="float:right;" ng-style="{'padding-top':ctrl.panel.valueTop}" class="flipcountdown"></span>
+    <span style="z-index: -1; position: absolute;font-size: 5px;text-align: right; right: 0px;left: 0px;top: -10px;" ng-if="ctrl.panel.showUnit">
+      <span ng-if="ctrl.yi" style="position: relative;right: 350px;">亿</span>
+      <span ng-if="ctrl.wan" style="position: relative;right: 190px;">万</span>
+    </span>
   </div>
 </div>

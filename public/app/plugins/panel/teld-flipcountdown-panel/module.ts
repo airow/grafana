@@ -34,6 +34,8 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
   events: any;
   valueNameOptions: any[] = ['min','max','avg', 'current', 'total', 'name', 'first', 'delta', 'diff', 'range'];
   tableColumnOptions: any;
+  yi: boolean;
+  wan: boolean;
 
   // Set and populate defaults
   panelDefaults = {
@@ -476,6 +478,9 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
       this.variableSrv.variables.push(variable);
       this.variableSrv.templateSrv.variableInitialized(variable);
     }
+
+    this.yi = (+returnVal) > 100000000;
+    this.wan = (+returnVal) > 10000;
 
     return returnVal;
 

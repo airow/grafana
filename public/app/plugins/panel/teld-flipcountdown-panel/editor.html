@@ -54,6 +54,8 @@
         <select class="gf-form-input" ng-model="ctrl.panel.size" ng-options='f.val as f.name for f in [{"val":"teldscreen", "name":"screen"},{"val":"teldorangeyellow", "name":"橘黄"},{"val":"teldorangegold", "name":"橘红金"},{"val":"teldlg", "name":"70px"},{"val":"teld", "name":"50px"},]' ng-change="ctrl.render()"></select>
       </div>
     </div>
+    <gf-form-switch class="gf-form" label="显示万亿单位" label-class="query-keyword" checked="ctrl.panel.showUnit">
+    </gf-form-switch>
   </div>
 
   <div class="section gf-form-group">
