@@ -12,6 +12,8 @@ export interface TeldServiceGatewayQuery {
   time_sec_format: string;
   alias: string;
   parameters: any[];
+  filterWrap: boolean;
+  filterKey: string;
 }
 
 export interface QueryMeta {
@@ -38,6 +40,8 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
     this.target.time_sec_format = this.target.time_sec_format || 'x';
     this.target.alias = "";
     this.target.parameters = this.target.parameters || [];
+    //this.target.filterWrap = _.isBoolean(this.target.filterWrap) ? this.target.filterWrap : false;
+    this.target.filterKey = this.target.filterKey || 'filter';
 
     this.formats = [
       {text: 'Time series', value: 'time_series'},

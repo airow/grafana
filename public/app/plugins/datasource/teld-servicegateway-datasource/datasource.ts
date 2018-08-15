@@ -84,13 +84,48 @@ export class TeldServiceGatewayDatasource {
       return item.hide !== true;
     }).map(item => {
 
+
       let parameters = _.cloneDeep(item.parameters);
-      _.each(parameters, param => {
+
+      parameters = _.transform(parameters, (r, param) => {
         param.originalVal = param.value;
-        param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
-        let compiled = _.template(param.value, templateSettings);
-        param.value = compiled(bindData);
-      });
+        if (param.type === 'object') {
+          param.value = _.transform(param.value, (result, eachitem) => {
+            var originalVal = eachitem.v;
+            var v = eachitem.v || '';
+            v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+            if (originalVal === v && _.includes(v, '$')) { return; }
+            result[eachitem.k] = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+          }, {});
+          if (_.size(param.value) === 0) {
+            return;
+          }
+        } else {
+          param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
+          let compiled = _.template(param.value, templateSettings);
+          param.value = compiled(bindData);
+          if (param.originalVal === param.value && _.includes(param.value, '$')) {
+            return;
+          }
+        }
+        r.push(param);
+      }, []);
+      //let parameters = _.cloneDeep(item.parameters);
+      // _.each(parameters, param => {
+      //   param.originalVal = param.value;
+      //   if (param.type === 'object') {
+      //     param.value = _.transform(param.value, (result, eachitem) => {
+      //       var v = eachitem.v || '';
+      //       v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+      //       if (eachitem.originalVal === v) { return; }
+      //       result[eachitem.k] = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+      //     }, {});
+      //   } else {
+      //     param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
+      //     let compiled = _.template(param.value, templateSettings);
+      //     param.value = compiled(bindData);
+      //   }
+      // });
 
       let url = this.templateSrv.replace(item.url, scopedVars, this.interpolateVariable);
       url = _.template(url, templateSettings)(bindData);
@@ -101,6 +136,8 @@ export class TeldServiceGatewayDatasource {
         datasourceId: this.id,
         url: url,
         parameters: parameters,
+        filterWrap: item.filterWrap,
+        filterKey: item.filterKey,
         format: item.format,
         time_sec: item.time_sec,
         time_sec_format: item.time_sec_format,
