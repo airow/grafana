@@ -17,6 +17,7 @@ import {MetricsPanelCtrl, alertTab} from 'app/plugins/sdk';
 import {DataProcessor} from './data_processor';
 import {axesEditorComponent} from './axes_editor';
 import {calcSeriesEditorComponent} from './calcSeries_editor';
+import { cumulativeEditorComponent, cumulative } from './cumulative_editor';
 
 class GraphCtrl extends MetricsPanelCtrl {
   static template = template;
@@ -134,6 +135,7 @@ class GraphCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Legend', 'public/app/plugins/panel/graph/tab_legend.html', 3);
     this.addEditorTab('Display', 'public/app/plugins/panel/graph/tab_display.html', 4);
     this.addEditorTab('Calc', calcSeriesEditorComponent, 5);
+    this.addEditorTab('Cumulative', cumulativeEditorComponent, 6);
 
     if (config.alertingEnabled) {
       this.addEditorTab('Alert', alertTab, 5);
@@ -184,7 +186,14 @@ class GraphCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     this.dataList = dataList;
+
+    let cumulativeConf = this.panel.cumulativeConf;
+    if (cumulativeConf && cumulativeConf.enable) {
+      cumulative(cumulativeConf, dataList);
+    }
+
     dataList = this.calcSeries(this.panel.calcSeriesConf, dataList, this.panel.hideMetrics);
+
     this.seriesList = this.processor.getSeriesList({dataList: dataList, range: this.range});
 
     this.dataWarning = null;
