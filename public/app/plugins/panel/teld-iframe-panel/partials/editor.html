@@ -2,10 +2,11 @@
 	<div class="section gf-form-group">
 		<h5 class="section-heading">iframe URL</h5>
 		<div class="gf-form">
-      <textarea class="gf-form-input width-25" ng-model="ctrl.panel.src" rows="5" style="width:95%" ng-change="ctrl.render()">
-
+      <textarea class="gf-form-input" ng-model="ctrl.panel.src" rows="5" style="width:95%" ng-change="ctrl.render()">
       </textarea>
     </div>
+    <gf-form-switch class="gf-form" label="解析dashboard变量" label-class="query-keyword" checked="ctrl.panel.parsingDashVars">
+    </gf-form-switch>
     <div class="gf-form">
       【kibana】?_ts=(s:(UserId:'${orgId}_${login}',UserName:'${orgId}_${login}',Account:'${orgId}_${login}'))<br>
       【centermap】?UserId=${wslogin}<br>

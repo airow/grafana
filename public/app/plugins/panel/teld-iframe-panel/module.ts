@@ -493,6 +493,10 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     };
     returnValue = compiled(bindSource);
 
+    if (this.panel.parsingDashVars) {
+      returnValue = this.templateSrv.replace(returnValue);
+    }
+
     return returnValue;
   }
 
