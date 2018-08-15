@@ -1,9 +1,10 @@
 define([
   'angular',
   'lodash',
+  'moment',
   'app/core/utils/kbn',
 ],
-function (angular, _, kbn) {
+function (angular, _, moment, kbn) {
   'use strict';
 
   var module = angular.module('grafana.services');
@@ -294,6 +295,9 @@ function (angular, _, kbn) {
     this.teldExpression2ScopedVars = function (scopedVars, format) {
       var teldExpressionVariables = _.filter(this.variables, { type: 'teldExpression' });
       var that = this;
+      var timeRange = _.transform(scopedVars, function (r, value, key) {
+        r[key] = value.value;
+      }, {});
       var templateOptions = {
         //interpolate: /{{([\s\S]+?)}}/g,
         imports: {
@@ -323,7 +327,18 @@ function (angular, _, kbn) {
               //   return '';
               // }
               return expression;
-            }
+            },
+            moment: moment,
+            timeRange: timeRange,
+            srv: this,
+            hasVariable: function (variable, expression) {
+              variable = _.trim(variable, "'" + '"');
+              var variableExists = this.srv.variableExists(variable);
+              if (false === variableExists) {
+                return '';
+              }
+              return expression;
+            },
           }
         }
       };

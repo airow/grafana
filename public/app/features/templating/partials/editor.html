@@ -271,13 +271,10 @@
           <span class="gf-form-label width-14">说明</span>
         </div>
         <div class="gf-form">
-          <code>[$type => AND 电站类型.keyword:/$type.*/] 当$type有效势，会输出 => 后的内容 </code>
-        </div>
-        <div class="gf-form">
-          <code>${m.has("$type", " AND CityName.keyword:/$type2.*/ ")}</code>
+          <code>1.[$type => AND 电站类型.keyword:/$type.*/] 当$type有效势，会输出 => 后的内容 </code>
         </div>
 
-        <!-- <div class="gf-form">
+        <div class="gf-form">
           ES和sql处理方式冲突这个简单逻辑处理不支持。
           <code>$type出可以使用简单表达式 如$type!='%'，需要注意表达式要为一个整体不可以有空格，像“$type != '%'” 是无效的。 </code>
         </div>
@@ -288,7 +285,22 @@
         <div class="gf-form">
           <span class="gf-form-label width-14">ES 表达式格式</span>
           <code>[ <span style="color: white; background-color:red; ">'</span>$type<span style="color: white; background-color:red; ">'</span>!=='公共' =>AND 电站类型.keyword:/$type.*/] 注意$type前后的引号</code>
-        </div> -->
+        </div> <!-- -->
+
+        <div class="gf-form">
+          <code>2.${m.hasVariable("$type", " AND CityName.keyword:/$type2.*/ ")}</code>
+          <code style="text-decoration: line-through;">${m.has("'$type'", " AND CityName.keyword:/$type2.*/ ")}</code>
+        </div>
+
+        <div class="gf-form">
+          <code>
+            ${m.timeRange.dash_timeFrom} 面板开始时间
+            ${m.timeRange.dash_timeTo} 面板开始时间
+            ${m.timeRange.dash_dateFrom} 面板开始日期
+            ${m.timeRange.dash_dateTo} 面板开始日期
+          </code>
+          <code style="text-decoration: line-through;">${m.has("'$type'", " AND CityName.keyword:/$type2.*/ ")}</code>
+        </div>
       </div>
 
       <div ng-if="current.type === 'teldSqlDataPermissions'" class="gf-form-group">
