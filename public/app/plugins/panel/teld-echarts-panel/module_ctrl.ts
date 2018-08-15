@@ -28,6 +28,7 @@ import { echartsEventEditorComponent } from '../teld-eventhandler-editor/echarts
 import * as graphutils from '../../../core/utils/graphutils';
 import {calcSeriesEditorComponent} from '../graph/calcSeries_editor';
 import {seriesTypeEditorComponent} from './editor/seriesType_editor';
+import { cumulativeEditorComponent, cumulative } from '../graph/cumulative_editor';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
@@ -325,6 +326,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Options', tablePanelEditor);
     this.addEditorTab('Events', echartsEventEditorComponent);
     this.addEditorTab('Calc', calcSeriesEditorComponent);
+    this.addEditorTab('Cumulative', cumulativeEditorComponent);
     this.addEditorTab('SerieType', seriesTypeEditorComponent);
     this.editorTabIndex = 1;
   }
@@ -512,7 +514,21 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   dataList: any = [];
   onDataReceived(dataList) {
     this.dataList = dataList;
-    dataList = this.calcSeries(this.panel.calcSeriesConf, dataList, this.panel.hideMetrics);
+
+    if (this.isSeriesBar() && this.panel.groupBar) {
+      if (this.panel.groupBarByTermValue) {
+        _.each(this.dataList, s => { s.orgTarget = s.target, s.target = s.target.split(' ')[0]; });
+      }
+    }
+
+    var hideMetrics = _.cloneDeep(this.panel.hideMetrics);
+
+    let cumulativeConf = this.panel.cumulativeConf;
+    if (cumulativeConf && cumulativeConf.enable) {
+      cumulative(cumulativeConf, dataList);
+    }
+
+    dataList = this.calcSeries(this.panel.calcSeriesConf, dataList, hideMetrics);
     this.pieMerge(dataList);
 
     this.renderTable(dataList);
@@ -609,10 +625,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       });
 
       let encode: any = {};
-      if (this.panel.exchangeAxis) {
-        encode.x = 1;
-        encode.y = 0;
-      };
+      // if (this.panel.exchangeAxis) {
+      //   encode.x = 1;
+      //   encode.y = 0;
+      // };
 
       let serie = this.getDefaultSerie();
       _.defaultsDeep(serie, {
@@ -811,6 +827,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           if (this.panel.groupBar) {
             axis.data = _.uniq(axis.data);
           }
+          if (this.panel.formatter.xAxis.axisLabel) {
+            axis.axisLabel.formatter = this.xAxisLableFormatter.bind(this);
+          }
         } else {
           axis = this.categoryAxisAdapter(serie);
         }
@@ -914,7 +933,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     var isStack =  this.panel.groupBarStack ? 'stack' : null;
     if (this.ecSeries) {
       var d = {};
-      _.each(_.groupBy(this.ecSeries, t => t.name), (value, key) => {
+      var group = _.groupBy(this.ecSeries, t => t.name);
+      _.each(group, (value, key) => {
         _.each(value, (s, index) => {
           let serie = this.getDefaultSerie();
           serie = d[index] = d[index] || _.defaultsDeep(serie, {
@@ -938,6 +958,40 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         series.push(serie);
       });
     }
+
+    if (this.panel.groupBar && this.panel.groupBarStack) {
+      //var barGroup = _.map(this.panel.groupBarStackGroupConf, 'gName');
+      _.each(this.panel.groupBarStackGroupConf, conf => {
+        _.each(series, s => {
+          if (_.includes(conf.sets, s.name)) {
+            s.stack = conf.gName;
+            s.groupBarStack = true;
+          } else {
+            if (true !== s.groupBarStack) {
+              delete s.stack;
+            }
+          }
+        });
+      });
+    }
+
+    if (this.panel.groupBarStackSumLabel) {
+      _.each(_.groupBy(series, 'stack'), (s, key) => {
+        _.each(s, ss => {
+          ss.label.normal.show = false;
+        });
+        var last = _.last(s);
+        if (last) {
+          last.label.normal.show = true;
+          last.label.normal.formatter = ((val) => {
+            console.log(s);
+            console.log(this);
+            return _.sumBy(s, item => { return item.data[val.dataIndex].value; });
+          }).bind(this);
+        }
+      });
+    }
+
     return series;
   }
 
@@ -1164,6 +1218,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       //legend: legend
     };
 
+    if (this.panel.echarts.yAxis.calcMin) {
+      let min = _.minBy(_.flatten(_.map(option.series, 'data')), 'value').value;
+      if (min > this.panel.echarts.yAxis.min) {
+        yAxis.min = _.toInteger(min / this.panel.echarts.yAxis.min) * this.panel.echarts.yAxis.min;
+      } else {
+        delete yAxis.min;
+      }
+    }
+
     if (_.isEmpty(option.tooltip.formatter)) {
       option.tooltip.formatter = function (params, ticket, callback) {
         var valueFormatter = this.yAxisLableFormatter.bind(this);
@@ -1224,21 +1287,21 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       // option.series.push(lll);
     }
 
-    let cumulativeConf = this.panel.cumulativeConf;
-    if (cumulativeConf && cumulativeConf.enable) {
-      _.each(option.series, function (serie, index) {
-        var cumulative = 0;
-        _.each(serie.data, function (item, dataIndex) {
-          var current = _.get(item, 'value', item);
-          cumulative += (+current);
-          if (_.has(item, 'value')) {
-            item.value = cumulative;
-          } else {
-            item = cumulative;
-          }
-        });
-      });
-    }
+    // let cumulativeConf = this.panel.cumulativeConf;
+    // if (cumulativeConf && cumulativeConf.enable) {
+    //   _.each(option.series, function (serie, index) {
+    //     var cumulative = 0;
+    //     _.each(serie.data, function (item, dataIndex) {
+    //       var current = _.get(item, 'value', item);
+    //       cumulative += (+current);
+    //       if (_.has(item, 'value')) {
+    //         item.value = cumulative;
+    //       } else {
+    //         item = cumulative;
+    //       }
+    //     });
+    //   });
+    // }
 
 
     /** 左右布局legend */
@@ -1273,6 +1336,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         if (this.panel.exchangeAxis) {
           option.yAxis = xAxis;
           option.xAxis = yAxis;
+          option.yAxis.data = option.yAxis.data.reverse();
+          _.each(option.series, series => {
+            series.data = series.data.reverse();
+          });
         }
         break;
     }
@@ -1305,7 +1372,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   baseOption.legend = undefined;
     // }
     //this.ecConfig.theme = this.panel.style.themeName;
-    this.ecOption.baseOption = this.f(baseOption);
+    baseOption = this.useSerieTypeConf(baseOption);
+    this.ecOption.baseOption = baseOption;
 
     if (this.ecInstance) {
       //this.ecInstance.setOption({ legend: this.panel.echarts.legend.show ? option.legend : undefined });
@@ -1318,7 +1386,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   }
 
-  f(option) {
+  useSerieTypeConf(option) {
     var isSeriesBar = this.isSeriesBar();
 
 
@@ -1360,6 +1428,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
           if (axisIndex > -1) {
             series[axis.axisIndex] = axisIndex;
+            if (false === _.isEmpty(type.stack)) {
+              series.stack = type.stack;
+            }
             series.markPoint = _.cloneDeep(type.markPoint);
             series.markLine = _.cloneDeep(type.markLine);
             if (_.has(type, 'label.normal')) {
@@ -1440,16 +1511,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       };
     }
 
-    // option[axis.axis] = [option[axis.axis], _.defaultsDeep(option[axis.axis])];
-    // option.series[0][axis.axisIndex] = 1;
-    //option['xAxis'].type = 'time';
-
-    //option.series[2].type = 'line';
-    // if (this.panel.groupBarStack && this.panel.groupBarStack) {
-    //   _.each(option.series, (s, index) => {
-    //     s.stack = `stack${index}`;
-    //   });
-    // }
     return option;
   }
 }

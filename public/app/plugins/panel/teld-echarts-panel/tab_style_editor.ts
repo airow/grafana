@@ -51,6 +51,13 @@ export class TabStyleEditorCtrl {
   refresh() {
     this.panelCtrl.refresh();
   }
+
+  removeBarStackGroup(arrayItem, item) {
+    _.pull(arrayItem.sets, item);
+    if (_.size(arrayItem.sets) === 0) {
+      _.pull(this.panel.groupBarStackGroupConf, arrayItem);
+    }
+  }
 }
 
 /** @ngInject **/

@@ -74,6 +74,13 @@ export class SeriesEditorCtrl {
     this.panel.marklines = _.without(this.panel.marklines, markline);
   }
 
+  removeInitMapping(initMapping, item) {
+    _.pull(initMapping.sets, item);
+    if (_.size(initMapping.sets) === 0) {
+      _.pull(this.panel.cumulativeConf.initMapping, initMapping);
+    }
+  }
+
   render() {
     this.panelCtrl.render();
   }

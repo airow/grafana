@@ -161,6 +161,12 @@
         </div>
       </div>
       <div class="gf-form">
+        <label class="gf-form-label width-8">type</label>
+        <div class="gf-form-select-wrapper max-width-15">
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.tooltip.axisPointer.type" ng-options="axisPointerType for axisPointerType in ['line','shadow']" ng-change="refresh()"></select>
+        </div>
+      </div>
+      <div class="gf-form">
         <label class="gf-form-label width-8">backgroundColor</label>
         <spectrum-picker ng-model="ctrl.panel.echarts.tooltip.backgroundColor" ng-change="refresh()"></spectrum-picker>
       </div>
@@ -198,8 +204,6 @@
         <div class="gf-form-select-wrapper max-width-8">
           <select class="gf-form-input" ng-model="ctrl.panel.xAxisMode" ng-options="axisMode for axisMode in ctrl.getXAxisMode()" ng-change="ctrl.refresh()"></select>
         </div>
-        <gf-form-switch class="gf-form" label="合并Bar" label-class="width-6" checked="ctrl.panel.groupBar" on-change="ctrl.render()"></gf-form-switch>
-        <gf-form-switch class="gf-form" label="堆叠" label-class="width-4" checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Theme Name</label>
@@ -216,6 +220,49 @@
         <spectrum-picker ng-model="ctrl.panel.echarts.backgroundColor" ng-change="refresh()"></spectrum-picker>
       </div>
 
+    </div>
+    <div class="section gf-form-group" ng-if="ctrl.panel.serieType!=='pie'">
+      <!-- <h5 class="section-heading">Bar</h5> -->
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="合并Bar" label-class="width-8" checked="ctrl.panel.groupBar" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="按TermValue" label-class="width-8" checked="ctrl.panel.groupBarByTermValue" on-change="ctrl.render()"
+          ng-if="ctrl.panel.groupBar"></gf-form-switch>
+      </div>
+      <div class="gf-form-inline" ng-if="ctrl.panel.groupBar">
+        <gf-form-switch class="gf-form" label="堆叠" label-class="width-8" checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="SumLabel" label-class="width-8" checked="ctrl.panel.groupBarStackSumLabel" on-change="ctrl.render()"></gf-form-switch>
+      </div>
+      <div class="gf-form-inline" ng-if="ctrl.panel.groupBarStack">
+        <gf-form-switch class="gf-form" label="堆叠分组" label-class="width-8" checked="ctrl.panel.groupBarStackGroup" on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a class="pointer" ng-click="ctrl.panel.groupBarStackGroupConf=ctrl.panel.groupBarStackGroupConf||[];ctrl.panel.groupBarStackGroupConf.push({gName:'',sets:['']})">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <div class="gf-form-inline" ng-repeat="item in ctrl.panel.groupBarStackGroupConf">
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-8" ng-model="item.gName" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form" ng-repeat="set in item.sets track by $index">
+          <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+          <label class="gf-form-label">
+            <a class="pointer" ng-click="ctrl.removeBarStackGroup(item,set)">
+              <i class="fa fa-trash"></i>
+            </a>
+          </label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a class="pointer" ng-click="item.sets.push('')">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+        </div>
+
+      </div>
     </div>
     <!-- formatter -->
     <div class="section gf-form-group">
@@ -333,15 +380,17 @@
       <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">name</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.name" class="gf-form-input">
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.name" ec-valwrap class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">min</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" class="gf-form-input">
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" ec-valwrap class="gf-form-input">
       </div>
+      <gf-form-switch class="gf-form" label="计算最小值" label-class="query-keyword width-8" checked="ctrl.panel.echarts.yAxis.calcMin">
+      </gf-form-switch>
       <div class="gf-form">
           <label class="gf-form-label width-8">max</label>
-          <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" class="gf-form-input">
+          <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" ec-valwrap class="gf-form-input">
         </div>
     </div>
     <!-- Label -->
