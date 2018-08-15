@@ -78,6 +78,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   device: any;
 
   datasourceNullValue = {
+    "teld-servicegateway-datasource": "",
     "mssql": '%',
     "mysql": '%',
     "teld-elasticsearch-datasource": ".",
@@ -132,7 +133,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
 
     _.defaults(this.panel, this.panelDefaults);
-
+    this.isFirstWithSaveVariable = true;
     this.defineQuery = true;
     this.queryResult = {};
     this.querybarVariable = {};
@@ -240,6 +241,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.variables2LocalStorage();
       return;
     }
+    //this.isFirstWithSaveVariable = true;
 
     var findTargetBy = (valuePath): any => {
       var variablePrefix = _.head(valuePath);
@@ -403,7 +405,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     if (_.size(datapoints) === 0) {
       sortDatapoints = [{ isNil: true, field: '无', fieldValue: 'N/A', _original: {} }];
     } else {
-      if (_.size(targetConf.orderByOptions) === 0) {
+      if (_.size(targetConf.orderByOptions) === 0 && targetConf.defOrder !== true) {
         sortDatapoints = _.orderBy(datapoints, item => { return Number(item.fieldValue); }, targetConf.fieldOrder || 'desc');
       } else {
         sortDatapoints = datapoints;
@@ -414,7 +416,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
 
     let target = this.currentTarget;
-    if (target.conf.required || this.panel.saveVariable) {
+    if (target.conf.required || (this.panel.saveVariable && this.isFirstWithSaveVariable)) {
       let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
       delete tabInfo.selectedIndex;
       if (_.isNil(tabInfo.selectedIndex)) {
@@ -622,6 +624,14 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     return selectedIndex === index ? 'sliderCls-active' : '';
   }
 
+
+  swiperSlide_ClickHandler(target, index, selectedItem) {
+    if (this.panel.saveVariable) {
+      this.isFirstWithSaveVariable = false;
+    }
+    this.setQueryBarVariable(target, index, selectedItem);
+  }
+
   setQueryBarVariable(target, index, selectedItem) {
     let tabInfo = this.currentTabInfo[target.refId] || { swiper: { slideTo: _.noop } };
     let conf = target.conf;
@@ -724,6 +734,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.query();
   }
 
+  isFirstWithSaveVariable = false;
   skipSyncLinkageTarget = false;
   //设置状态
   syncLinkageTarget(target) {

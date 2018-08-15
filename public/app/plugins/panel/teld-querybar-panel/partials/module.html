@@ -35,14 +35,14 @@
           override-parameters="{slideToClickedSlide:true, grabCursor:true, mousewheelControl:true,observer: true, observeParents: true}">
           <ks-swiper-slide slider-cls='{{ctrl.getSliderCls(target,$index)}}' ng-repeat="row in ctrl.getQueryResult(target)">
             <div ng-if="row.isNil">
-              <div ng-click="ctrl.setQueryBarVariable(target, row)">
+              <div ng-click="ctrl.swiperSlide_ClickHandler(target, row)">
                 <div class="empty">
                   <p style="font-weight: bold;">无</p>
                 </div>
               </div>
             </div>
             <div ng-if="!row.isNil">
-              <div ng-click="ctrl.setQueryBarVariable(target, $index, row)" style="padding-right:20px;">
+              <div ng-click="ctrl.swiperSlide_ClickHandler(target, $index, row)" style="padding-right:20px;">
                 <div class="activeflag">
                   <i class="fa fa-check-square-o"></i>
                 </div>
