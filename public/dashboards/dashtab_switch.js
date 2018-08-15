@@ -186,7 +186,7 @@ return function (callback) {
       "queries": [{
         "refId": "TSG",
         "format": "table",
-        "url": sghost('ttpsg', 'WRPFrame-GetButton'),
+        "url": sghost('sgi', 'WRPFrame-GetButton'),
         "parameters": [{
           "key": "MenuId",
           "type": "value",
@@ -242,6 +242,9 @@ return function (callback) {
 
     for (var key in resData.results) {
       var queryRes = resData.results[key];
+      if (_.isUndefined(queryRes.dataset)) {
+        continue;
+      }
       var series = {
         type: 'table',
         refId: queryRes.refId,

@@ -94,7 +94,7 @@ return function (callback) {
       "queries": [{
         "refId": "TSG",
         "format": "table",
-        "url": "https://ttpsg.teld.cn/api/invoke?SID=WRPFrame-GetButton",
+        "url": "https://sgi.teld.cn/api/invoke?SID=WRPFrame-GetButton",
         "parameters": [{
           "key": "MenuId",
           "type": "value",
