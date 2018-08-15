@@ -760,6 +760,19 @@ function($, _, numeral, moment) {
     return value;
   };
 
+  kbn.valueFormats.teldStringbr = function (value, decimals) {
+    decimals = decimals || 4;
+
+    return value.replace(new RegExp(".{" + decimals + "}\x01?", 'g'), "$&\n");
+
+    // if (value.length < decimals) {
+    //   return value;
+    // }
+    // var reg = new RegExp("/.{" + decimals + "}/", 'g'), rs = value.match(reg);
+    // rs.push(value.substring(rs.join('').length));
+    // return rs.join('\n');
+  };
+
   kbn.valueFormats.teldMoment = function (value, format) {
     return moment(value).format(format);
   };
@@ -994,6 +1007,7 @@ function($, _, numeral, moment) {
         text: 'echart',
         submenu: [
           { text: '字符串', value: 'teldString' },
+          { text: '字换行', value: 'teldStringbr' },
           { text: '年-月-日', value: 'teldYYYY_MM_DD' },
           { text: '年-月', value: 'teldYYYY_MM' },
           { text: '年', value: 'teldYYYY' },
@@ -1003,7 +1017,7 @@ function($, _, numeral, moment) {
           { text: '分钟', value: 'teldmm' },
           { text: '时:分', value: 'teldHHmm' },
         ]
-      }
+      },
     ];
   };
 
