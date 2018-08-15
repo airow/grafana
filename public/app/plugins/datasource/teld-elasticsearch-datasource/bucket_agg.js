@@ -56,6 +56,11 @@ function (angular, _, queryDef) {
           $scope.agg.field = 'select field';
           break;
         }
+        case 'terms_script':  {
+          delete $scope.agg.query;
+          $scope.agg.source = '';
+          break;
+        }
         case 'filters': {
           delete $scope.agg.field;
           $scope.agg.query = '*';
@@ -81,6 +86,29 @@ function (angular, _, queryDef) {
 
       switch($scope.agg.type) {
         case 'terms': {
+          settings.order = settings.order || "asc";
+          settings.size = settings.size || "10";
+          settings.shard_size = settings.shard_size || "100";
+          settings.min_doc_count = settings.min_doc_count || 0;
+          settings.orderBy = settings.orderBy || "_term";
+
+          if (settings.size !== '0') {
+            settingsLinkText = queryDef.describeOrder(settings.order) + ' ' + settings.size + ', ';
+          }
+
+          if (settings.min_doc_count > 0) {
+            settingsLinkText += 'Min Doc Count: ' + settings.min_doc_count + ', ';
+          }
+
+          settingsLinkText += 'Order by: ' + queryDef.describeOrderBy(settings.orderBy, $scope.target);
+
+          if (settings.size === '0') {
+            settingsLinkText += ' (' + settings.order + ')';
+          }
+
+          break;
+        }
+        case 'terms_script': {
           settings.order = settings.order || "asc";
           settings.size = settings.size || "10";
           settings.shard_size = settings.shard_size || "100";

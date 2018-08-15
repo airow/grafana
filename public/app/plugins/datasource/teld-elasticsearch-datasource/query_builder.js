@@ -1,7 +1,8 @@
 define([
-  './query_def'
+  './query_def',
+  'lodash'
 ],
-function (queryDef) {
+function (queryDef, _) {
   'use strict';
 
   function ElasticQueryBuilder(options) {
@@ -23,6 +24,54 @@ function (queryDef) {
   ElasticQueryBuilder.prototype.buildTermsAgg = function(aggDef, queryNode, target) {
     var metricRef, metric, y;
     queryNode.terms = { "field": aggDef.field };
+
+    if (!aggDef.settings) {
+      return queryNode;
+    }
+
+    queryNode.terms.size = parseInt(aggDef.settings.size, 10) === 0 ? 500 : parseInt(aggDef.settings.size, 10);
+    if (aggDef.settings.shard_size !== "0") {
+      var shard_size = aggDef.settings.shard_size;
+      shard_size = shard_size || queryNode.terms.size * 10;
+      queryNode.terms.shard_size = parseInt(shard_size, 10) === 0 ? shard_size : parseInt(shard_size, 10);
+    }
+    if (aggDef.settings.orderBy !== void 0) {
+      queryNode.terms.order = {};
+      queryNode.terms.order[aggDef.settings.orderBy] = aggDef.settings.order;
+
+      // if metric ref, look it up and add it to this agg level
+      metricRef = parseInt(aggDef.settings.orderBy, 10);
+      if (!isNaN(metricRef)) {
+        for (y = 0; y < target.metrics.length; y++) {
+          metric = target.metrics[y];
+          if (metric.id === aggDef.settings.orderBy) {
+            queryNode.aggs = {};
+            queryNode.aggs[metric.id] = {};
+            queryNode.aggs[metric.id][metric.type] = {field: metric.field};
+            break;
+          }
+        }
+      }
+    }
+
+    if (aggDef.settings.min_doc_count !== void 0) {
+      queryNode.terms.min_doc_count = parseInt(aggDef.settings.min_doc_count, 10);
+    }
+
+    if (aggDef.settings.missing) {
+      queryNode.terms.missing = aggDef.settings.missing;
+    }
+
+    if (aggDef.settings.script) {
+      queryNode.terms.script = { "lang": "painless", "source": aggDef.settings.script };
+    }
+
+    return queryNode;
+  };
+
+  ElasticQueryBuilder.prototype.buildTermsScriptAgg = function(aggDef, queryNode, target) {
+    var metricRef, metric, y;
+    queryNode.terms = { "script": { "lang": "painless", "source": aggDef.script } };
 
     if (!aggDef.settings) {
       return queryNode;
@@ -136,6 +185,65 @@ function (queryDef) {
     return query;
   };
 
+  ElasticQueryBuilder.prototype.documentQuerySort = function (query, target) {
+    this.documentQuery(query);
+    this.attachScript_fields(query, target);
+    return query;
+  };
+
+  ElasticQueryBuilder.prototype.attachScript_fields = function (query, target) {
+    // var mock = [
+    //   {
+    //     name: "scriptfield1",
+    //     sort: true,
+    //     script: {
+    //       "script": {
+    //         "source": "doc['price'].value * 0.8",
+    //         "lang": "painless"
+    //       },
+    //       "type": "number",
+    //       "order": "asc"
+    //     }
+    //   },
+    //   {
+    //     name: "scriptfield2",
+    //     sort: true,
+    //     script: {
+    //       "script": {
+    //         "source": "doc['price'].value * 0.8",
+    //         "lang": "painless"
+    //       },
+    //       "type": "number",
+    //       "order": "asc"
+    //     }
+    //   }
+    // ];
+
+    var scriptFieldsConf = _.filter(target.scriptFieldsConf, function (field) {
+      return field.hide !== true && false === _.isEmpty(field.script.script.source);
+    });
+
+    if (_.size(scriptFieldsConf) === 0) {
+      return query;
+    }
+
+    var scriptSort = _.filter(scriptFieldsConf, 'sort');
+    scriptSort = _.map(scriptSort, function (item) {
+      return { "_script": item.script };
+    });
+    if (_.size(scriptSort) > 0) {
+      query.sort = scriptSort;
+    }
+
+    _.transform(scriptFieldsConf, function (result, item) {
+      result[item.name] = { script: item.script.script };
+    }, query.script_fields);
+
+    query["_source"] = "*";
+
+    return query;
+  };
+
   ElasticQueryBuilder.prototype.addAdhocFilters = function(query, adhocFilters) {
     if (!adhocFilters) {
       return;
@@ -196,6 +304,12 @@ function (queryDef) {
       }
     };
 
+    if (target.ignoreTimeRange) {
+      _.remove(query.query.bool.filter, function (filter) {
+        return _.has(filter, 'range');
+      });
+    }
+
     this.addAdhocFilters(query, adhocFilters);
 
     // handle document query
@@ -203,6 +317,9 @@ function (queryDef) {
       metric = target.metrics[0];
       if (metric && metric.type !== 'raw_document') {
         throw {message: 'Invalid query'};
+      }
+      if (_.size(target.scriptFieldsConf) > 0) {
+        return this.documentQuerySort(query, target);
       }
       return this.documentQuery(query, target);
     }
@@ -224,6 +341,10 @@ function (queryDef) {
         }
         case 'terms': {
           this.buildTermsAgg(aggDef, esAgg, target);
+          break;
+        }
+        case 'terms_script': {
+          this.buildTermsScriptAgg(aggDef, esAgg, target);
           break;
         }
         case 'geohash_grid': {

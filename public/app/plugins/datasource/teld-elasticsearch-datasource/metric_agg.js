@@ -18,7 +18,8 @@ function (angular, _, queryDef) {
         index: "=",
         onChange: "&",
         getFields: "&",
-        esVersion: '='
+        esVersion: '=',
+        onAddscriptfield: "&"
       }
     };
   });
@@ -189,6 +190,11 @@ function (angular, _, queryDef) {
       if (!$scope.agg.hide) {
         delete $scope.agg.hide;
       }
+      $scope.onChange();
+    };
+
+    $scope.addScriptField = function () {
+      $scope.onAddscriptfield();
       $scope.onChange();
     };
 

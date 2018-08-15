@@ -2,6 +2,7 @@
 
 import './bucket_agg';
 import './metric_agg';
+import './directives/script_fields';
 
 import angular from 'angular';
 import _ from 'lodash';
@@ -121,5 +122,32 @@ export class ElasticQueryCtrl extends QueryCtrl {
   handleQueryError(err) {
     this.error = err.message || 'Failed to issue metric query';
     return [];
+  }
+
+
+  isRawDocument() {
+    return false === _.isUndefined(_.find(this.target.metrics, { type: 'raw_document' }));
+  }
+
+  addScriptField() {
+    var scriptFields = (this.target.scriptFieldsConf = this.target.scriptFieldsConf || []);
+    var addIndex = scriptFields.length;
+
+    var id = _.reduce(this.target.scriptFieldsConf, function (max, val) {
+      return parseInt(val.id) > max ? parseInt(val.id) : max;
+    }, 0);
+
+    scriptFields.splice(addIndex, 0, {
+      name: "script" + (id + 1).toString(),
+      sort: false,
+      script: {
+        script: {
+          "source": "",
+        },
+        type: "number",
+        order: "asc"
+      },
+      id: (id + 1).toString()
+    });
   }
 }

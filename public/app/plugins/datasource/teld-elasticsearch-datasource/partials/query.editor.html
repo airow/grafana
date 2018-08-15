@@ -15,7 +15,8 @@
 		<elastic-metric-agg
 			target="ctrl.target" index="$index"
 			get-fields="ctrl.getFields($fieldType)"
-			on-change="ctrl.queryUpdated()"
+      on-change="ctrl.queryUpdated()"
+      on-addscriptfield="ctrl.addScriptField()"
 			es-version="ctrl.esVersion">
 		</elastic-metric-agg>
 	</div>
@@ -23,10 +24,20 @@
 	<div ng-repeat="agg in ctrl.target.bucketAggs">
 		<elastic-bucket-agg
 			target="ctrl.target" index="$index"
-			get-fields="ctrl.getFields($fieldType)"
+      get-fields="ctrl.getFields($fieldType)"
 			on-change="ctrl.queryUpdated()">
 		</elastic-bucket-agg>
 	</div>
+
+  <div ng-if='ctrl.isRawDocument()' ng-repeat="agg in ctrl.target.scriptFieldsConf">
+    <elastic-script-fields target="ctrl.target" index="$index"
+      on-addscriptfield="ctrl.addScriptField()"
+      on-change="ctrl.queryUpdated()">
+    </elastic-script-fields>
+  </div>
+
+  <!-- <elastic-script-fields target="ctrl.target" on-change="ctrl.queryUpdated()">
+  </elastic-script-fields> -->
 
   <div class="gf-form-inline">
     <div class="gf-form">
@@ -34,6 +45,8 @@
         Time range
       </label>
     </div>
+    <gf-form-switch class="gf-form" label="忽略dash时间" label-class="width-8" checked="ctrl.target.ignoreTimeRange">
+    </gf-form-switch>
     <gf-form-switch class="gf-form"
       label="Override" label-class=""
       checked="ctrl.target.timeRange.enable" switch-class="max-width-6" on-change="ctrl.refresh()">

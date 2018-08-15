@@ -1,0 +1,64 @@
+<div class="gf-form-inline offset-width-7" ng-class="{'gf-form-disabled': current.hide}">
+  <div class="gf-form">
+    <label class="gf-form-label width-10">
+      {{current.name||'Script Field'}} &nbsp;
+      <a ng-click="toggleShow()" bs-tooltip="'Click to toggle show / hide'">
+        <i class="fa fa-eye" ng-hide="current.hide"></i>
+        <i class="fa fa-eye-slash" ng-show="current.hide"></i>
+      </a>
+    </label>
+  </div>
+
+  <div class="gf-form gf-form--grow">
+    <label class="gf-form-label gf-form-label--grow">
+      <a ng-click="toggleOptions()" ng-if="settingsLinkText">
+        <i class="fa fa-caret-down" ng-show="showOptions"></i>
+        <i class="fa fa-caret-right" ng-hide="showOptions"></i>
+        {{settingsLinkText}}
+      </a>
+    </label>
+  </div>
+
+  <div class="gf-form">
+    <label class="gf-form-label" ng-if="isFirst">
+      <a class="pointer" ng-click="addScriptField()"><i class="fa fa-plus"></i></a>
+    </label>
+    <label class="gf-form-label" ng-i1f="isSingle">
+      <a class="pointer" ng-click="removeScriptField()"><i class="fa fa-minus"></i></a>
+    </label>
+  </div>
+</div>
+
+<div class="gf-form-group offset-width-7" ng-if="showOptions">
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Name</label>
+      <input type="text" class="gf-form-input max-width-12" ng-model="current.name" ng-blur="onChangeInternal()"
+      spellcheck='false'>
+    </div>
+
+    <div class="gf-form gf-form-label--grow">
+      <label class="gf-form-label width-10">Script</label>
+      <input type="text" class="gf-form-input" ng-model="current.script.script.source" ng-blur="onChangeInternal()" placeholder="doc['price'].value * 0.8" spellcheck='false'>
+    </div>
+  </div>
+
+  <gf-form-switch class="gf-form" label="排序" label-class="width-10" checked="current.sort" on-change="onChangeInternal()">
+  </gf-form-switch>
+
+  <div ng-if='current.sort' class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label width-10">order</label>
+      <input type="text" class="gf-form-input max-width-12" ng-model="current.script.order" min-length="0" bs-typeahead="['asc','desc']"
+        ng-blur="onChangeInternal()" spellcheck='false'>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label width-10">type</label>
+      <input type="text" class="gf-form-input max-width-12" ng-model="current.script.type" min-length="0" bs-typeahead="['number','string']"
+        ng-blur="onChangeInternal()" spellcheck='false'>
+    </div>
+  </div>
+
+</div>

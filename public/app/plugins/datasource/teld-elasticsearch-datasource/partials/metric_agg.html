@@ -14,8 +14,15 @@
 		<metric-segment-model property="agg.type" options="metricAggTypes" on-change="onTypeChange()" custom="false" css-class="width-10"></metric-segment-model>
 		<metric-segment-model ng-if="aggDef.requiresField" property="agg.field" get-options="getFieldsInternal()" on-change="onChange()" css-class="width-12"></metric-segment-model>
 		<metric-segment-model ng-if="aggDef.isPipelineAgg" property="agg.pipelineAgg" options="pipelineAggOptions" on-change="onChangeInternal()" custom="false" css-class="width-12"></metric-segment-model>
-	</div>
-
+  </div>
+  <div class="gf-form" ng-if="agg.type==='raw_document'">
+    <label class="gf-form-label">
+      ScriptField
+    </label>
+    <label class="gf-form-label">
+      <a class="pointer" ng-click="addScriptField()"><i class="fa fa-plus"></i></a>
+    </label>
+  </div>
 	<div class="gf-form gf-form--grow">
 		<label class="gf-form-label gf-form-label--grow">
 			<a ng-click="toggleOptions()" ng-if="settingsLinkText">
