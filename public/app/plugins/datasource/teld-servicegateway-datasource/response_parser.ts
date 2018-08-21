@@ -23,30 +23,55 @@ export default class ResponseParser {
 
       let queryEditor = _.find(this.queries, { refId: queryRes.refId });
       switch (queryRes.format) {
-        case "time_series":
-          let time_sec = queryEditor.time_sec;
-          let time_sec_format = queryEditor.time_sec_format;
-          let targets = _.keys(queryRes.dataset[0]);
-          targets = _.pull(targets, time_sec);
-
-          let series2 = _.map(targets, target => {
-            let serie = {
-              target: target,
-              datapoints: [],
-              refId: queryRes.refId
-            };
-            data.push(serie);
-            return serie;
-          });
-
-          _.each(queryRes.dataset, set => {
-            _.each(series2, metric => {
-              let value = set[metric.target];
-              let time = set[time_sec];
-              let unix = moment(time, time_sec_format).valueOf();
-              metric.datapoints.push([value, unix]);
+        case "series":
+          {
+            let serie = 'serie';
+            let serieGroup = _.groupBy(queryRes.dataset, serie);
+            _.each(serieGroup, (series, serieName) => {
+              _.each(series, metrics => {
+                _.each(metrics, (value, metric) => {
+                  if (metric === serie) {
+                    return;
+                  }
+                  let item = {
+                    target: serieName,
+                    metric: metric,
+                    datapoints: [[value, 1]],
+                    refId: queryRes.refId
+                  };
+                  data.push(item);
+                });
+              });
             });
-          });
+            console.log(data);
+          }
+          break;
+        case "time_series":
+          {
+            let time_sec = queryEditor.time_sec;
+            let time_sec_format = queryEditor.time_sec_format;
+            let targets = _.keys(queryRes.dataset[0]);
+            targets = _.pull(targets, time_sec);
+
+            let series2 = _.map(targets, target => {
+              let serie = {
+                target: target,
+                datapoints: [],
+                refId: queryRes.refId
+              };
+              data.push(serie);
+              return serie;
+            });
+
+            _.each(queryRes.dataset, set => {
+              _.each(series2, metric => {
+                let value = set[metric.target];
+                let time = set[time_sec];
+                let unix = moment(time, time_sec_format).valueOf();
+                metric.datapoints.push([value, unix]);
+              });
+            });
+          }
           break;
         case "table":
           let series = {

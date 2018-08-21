@@ -24,10 +24,10 @@
     </div>
     <div class="gf-form-inline" ng-repeat="item in ctrl.panel.cumulativeConf.initMapping" ng-if="ctrl.panel.cumulativeConf.enable">
       <div class="gf-form">
-        <input type="text" class="gf-form-input width-8" ng-model="item.initRefId" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        <input type="text" class="gf-form-input width-8" ng-model="item.initRefId" spellcheck="false" placeholder="refId" ng-blur="ctrl.refresh()">
       </div>
       <div class="gf-form" ng-repeat="set in item.sets track by $index">
-        <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false" placeholder="refId" ng-blur="ctrl.refresh()">
         <label class="gf-form-label">
           <a class="pointer" ng-click="ctrl.removeInitMapping(item,set)">
             <i class="fa fa-trash"></i>

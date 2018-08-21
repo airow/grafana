@@ -268,6 +268,11 @@
         </div>
 
         <div class="gf-form">
+          <span class="gf-form-label">适用类型</span>
+          <input type="text" class="gf-form-input" min-length="0" bs-typeahead="['sql']" ng-model='current.filter' ng-blur="runQuery()"></input>
+        </div>
+
+        <div class="gf-form">
           <span class="gf-form-label width-14">说明</span>
         </div>
         <div class="gf-form">

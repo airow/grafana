@@ -18,6 +18,7 @@ export class TeldExpressionVariable implements Variable {
     current: {},
     options: [],
     canSaved: true,
+    filter: ""
   };
 
   /** @ngInject **/

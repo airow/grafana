@@ -1,0 +1,64 @@
+<div ng-if='raw_document'>
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">
+        ScriptFields
+      </label>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">
+        name
+      </label>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">
+        type
+      </label>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">
+        order
+      </label>
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a class="pointer" ng-click="addScriptField()"><i class="fa fa-plus"></i></a>
+      </label>
+    </div>
+
+    <div class="gf-form gf-form--grow">
+      <label class="gf-form-label query-keyword gf-form-label--grow">
+        script
+      </label>
+    </div>
+  </div>
+
+  <div class="gf-form-inline" ng-repeat='field in scriptFields'>
+    <div class="gf-form width-7 offset-width-7">
+      <input type="text" class="gf-form-input" ng-model="field.name" spellcheck="false" placeholder="Name" ng-blur="onChangeInternal">
+    </div>
+
+    <div class="gf-form width-7 ">
+      <input type="text" class="gf-form-input" ng-model="field.script.type" spellcheck="false" placeholder="type" ng-blur="onChangeInternal">
+    </div>
+
+    <div class="gf-form width-7 ">
+      <input type="text" class="gf-form-input" ng-model="field.script.order" spellcheck="false" placeholder="order" ng-blur="onChangeInternal">
+    </div>
+
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a class="pointer" ng-click="removeScriptField(field)"><i class="fa fa-minus"></i></a>
+      </label>
+    </div>
+
+    <div class="gf-form gf-form--grow">
+      <input type="text" class="gf-form-input" ng-model="field.script.script.source" spellcheck="false" placeholder="Script" ng-blur="onChangeInternal">
+    </div>
+  </div>
+</div>

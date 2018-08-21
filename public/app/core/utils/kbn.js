@@ -698,6 +698,19 @@ function($, _, numeral, moment) {
     return kbn.toDuration(size, decimals, 'second');
   };
 
+  kbn.valueFormats.teldGeneralFormat = function (size, conf) {
+    var jConf = JSON.parse(conf || {});
+    var format = jConf.format || 'none';
+    var decimals = jConf.decimals;
+    var prefix = jConf.prefix || "";//前缀
+    var suffix = jConf.suffix || "";//后缀
+    //var correction = +jConf.correction;//修正
+    // if (_.isNumber(size) && _.isNumber(correction)) {
+    //   size = size * correction;
+    // }
+    return prefix + kbn.valueFormats[format](size, decimals) + suffix;
+  };
+
   //千位分割符
   kbn.valueFormats.thousandsSeparator = function (size, decimals) {
     // var d = "";
@@ -774,7 +787,9 @@ function($, _, numeral, moment) {
   };
 
   kbn.valueFormats.teldMoment = function (value, format) {
-    return moment(value).format(format);
+    var valueToNumber = +value;
+    var dateValue = _.isNaN(valueToNumber) ? value : valueToNumber;
+    return moment(dateValue).locale('zh-cn').format(format);
   };
 
   kbn.valueFormats.teldYYYY_MM_DD = function (value) {
@@ -986,6 +1001,7 @@ function($, _, numeral, moment) {
       {
         text: 'teld',
         submenu: [
+          { text: '自定义', value: 'teldGeneralFormat' },
           { text: '千分位', value: 'thousandsSeparator' },
           { text: '千分位-10', value: 'thousandsSeparator10' },
           { text: '千分位-100', value: 'thousandsSeparator100' },
@@ -1008,6 +1024,7 @@ function($, _, numeral, moment) {
         submenu: [
           { text: '字符串', value: 'teldString' },
           { text: '字换行', value: 'teldStringbr' },
+          { text: '日期格式化', value: 'teldMoment' },
           { text: '年-月-日', value: 'teldYYYY_MM_DD' },
           { text: '年-月', value: 'teldYYYY_MM' },
           { text: '年', value: 'teldYYYY' },

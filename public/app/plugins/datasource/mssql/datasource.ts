@@ -53,7 +53,8 @@ export class MssqlDatasource {
 
   query(options) {
 
-    var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVars(options.scopedVars, this.interpolateVariable);
+    var varFilter = { filter: 'sql' };
+    var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVars(options.scopedVars, this.interpolateVariable, varFilter);
     console.log(scopedExpressionVars);
     //debugger;
     var queries = _.filter(options.targets, item => {

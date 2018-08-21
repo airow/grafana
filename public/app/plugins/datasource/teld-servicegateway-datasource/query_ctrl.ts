@@ -47,6 +47,7 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
       {text: 'Time series', value: 'time_series'},
       //{text: 'Time series Objs', value: 'time_series_objs'},
       {text: 'Table', value: 'table'},
+      {text: 'Series', value: 'series'},
       //{text: 'Objects', value: 'object'},
     ];
     this.dateFormats = [

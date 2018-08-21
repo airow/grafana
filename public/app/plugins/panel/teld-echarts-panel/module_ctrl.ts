@@ -69,10 +69,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         // max: 'dataMax',
         axisLabel: {
           //formatter: this.panel.formatter.yAxis.axisLabel.formatter.bind(this)
-          formatter: function(){
-            var f = '' ;
-            var ff = this.axisLableFormatter;
-          }
+          formatter: this.axisLableFormatter
+          // formatter: function(){
+          //   var f = '' ;
+          //   var ff = this.axisLableFormatter;
+          // }
+
         }
       }
     },
@@ -101,6 +103,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       category: { format: 'teldString' },
       xAxis: { axisLabel: { format: 'teldString' } },
       yAxis: { axisLabel: { format: 'teldString' } },
+      tooltip_category: { enable: false, format: 'teldString' },
+      tooltip_value: { enable: false, format: 'teldString' }
     },
     serieType: 'line',
     style: {
@@ -186,6 +190,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.templateSrv = $injector.get('templateSrv');
 
     _.defaultsDeep(this.panel, this.panelDefaults);
+    this.ecConf.axis.value.axisLabel = this.panel.formatter.yAxis.axisLabel;
     //this.panel.title = '';
     //this.panel.hideTimeOverride = true;
 
@@ -278,8 +283,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return formater(value, decimals);
   }
 
-  axisLableFormatter2(axis, value, index) {
-    var formatterConf = this.panel.formatter[axis].axisLabel;
+  // axisLableFormatter2(axis, value, index) {
+  //   var formatterConf = this.panel.formatter[axis].axisLabel;
+  //   var decimals = formatterConf.decimals;
+  //   let formater = this.valueFormats[formatterConf.format];
+  //   return formater(value, decimals);
+  // }
+
+  callFormatter(type, value) {
+    var formatterConf = this.panel.formatter[type];
     var decimals = formatterConf.decimals;
     let formater = this.valueFormats[formatterConf.format];
     return formater(value, decimals);
@@ -380,7 +392,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   categoryFormat(value) {
     let formater = this.valueFormats[this.panel.formatter.category.format];
-    return formater(value);
+    return formater(value, this.panel.formatter.category.formatArgs);
   }
 
   exportCsv() {
@@ -827,11 +839,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           if (this.panel.groupBar) {
             axis.data = _.uniq(axis.data);
           }
-          if (this.panel.formatter.xAxis.axisLabel) {
-            axis.axisLabel.formatter = this.xAxisLableFormatter.bind(this);
-          }
         } else {
           axis = this.categoryAxisAdapter(serie);
+        }
+        if (this.panel.formatter.xAxis.axisLabel) {
+          _.set(axis, 'axisLabel.formatter', this.xAxisLableFormatter.bind(this));
+          //axis.axisLabel.formatter = this.xAxisLableFormatter.bind(this);
         }
         break;
 
@@ -866,7 +879,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       case this.ecConf.series.bar.type:
         axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
         if (this.panel.formatter.xAxis.axisLabel) {
-          axis.axisLabel.formatter = this.xAxisLableFormatter.bind(this);
+          _.set(axis, 'axisLabel.formatter', this.xAxisLableFormatter.bind(this));
+          //axis.axisLabel.formatter = this.xAxisLableFormatter.bind(this);
         }
         break;
       case this.ecConf.series.pie.type:
@@ -883,7 +897,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       case this.ecConf.series.bar.type:
         axis = _.defaultsDeep(this.ecConf.axis.value, this.panel.echarts.yAxis);
         if (this.panel.formatter.yAxis.axisLabel) {
-          axis.axisLabel.formatter = this.yAxisLableFormatter.bind(this);
+          _.set(axis, 'axisLabel.formatter', this.yAxisLableFormatter.bind(this));
+          //axis.axisLabel.formatter = this.yAxisLableFormatter.bind(this);
         }
         break;
       case this.ecConf.series.pie.type:
@@ -976,20 +991,69 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
 
     if (this.panel.groupBarStackSumLabel) {
-      _.each(_.groupBy(series, 'stack'), (s, key) => {
-        _.each(s, ss => {
-          ss.label.normal.show = false;
+
+      _.each(_.groupBy(series, 'stack'), (stackSeries, key) => {
+        _.each(stackSeries, s => {
+          _.set(s, 'label.normal.show', false);
         });
-        var last = _.last(s);
-        if (last) {
-          last.label.normal.show = true;
-          last.label.normal.formatter = ((val) => {
-            console.log(s);
-            console.log(this);
-            return _.sumBy(s, item => { return item.data[val.dataIndex].value; });
-          }).bind(this);
-        }
+
+        var selectStackSeries = _.filter(stackSeries, s => { });
+
+        var sumSerie = {
+          stack: key,
+          type: 'bar',
+          isSumLabel: true,
+          data: _.map(stackSeries[0].data, i => { return { value: 0 }; }),
+          label: {
+            normal: {
+              show: true,
+              position: this.panel.exchangeAxis ? "right" : "top",
+              formatter: function (params) {
+                var ecO = this.ecInstance.getOption();
+                var selectedLegends = _.first(_.map(ecO.legend, 'selected'));
+                selectedLegends = _.transform(selectedLegends, (r, v, k) => { if (v){ r.push(k);} }, []);
+                var sum = _.sumBy(this.stackSeries, item => {
+                  return _.includes(selectedLegends, item.name) ? item.data[params.dataIndex].value : 0;
+                });
+                return sum;
+              }.bind({ stackSeries: stackSeries, ecInstance: this.ecInstance, ctrl: this })
+            }
+          }
+        };
+        //sumSerie.label.normal.formatter.bind({ stackSeries: stackSeries });
+        series.push(sumSerie);
       });
+
+      // _.each(_.groupBy(series, 'stack'), (s, key) => {
+      //   _.each(s, ss => {
+      //     ss.label.normal.show = false;
+      //   });
+      //   var last = _.last(s);
+      //   if (last) {
+      //     last.isSumLabel = true;
+      //     last.label.normal.show = true;
+      //     last.label.normal.formatter = ((val) => {
+      //       console.log(s);
+      //       console.log(this);
+      //       return _.sumBy(s, item => { return item.data[val.dataIndex].value; });
+      //     }).bind(this);
+      //   }
+      // });
+      // _.each(_.groupBy(series, 'stack'), (s, key) => {
+      //   _.each(s, ss => {
+      //     ss.label.normal.show = false;
+      //   });
+      //   var last = _.last(s);
+      //   if (last) {
+      //     last.isSumLabel = true;
+      //     last.label.normal.show = true;
+      //     last.label.normal.formatter = ((val) => {
+      //       console.log(s);
+      //       console.log(this);
+      //       return _.sumBy(s, item => { return item.data[val.dataIndex].value; });
+      //     }).bind(this);
+      //   }
+      // });
     }
 
     return series;
@@ -1218,21 +1282,37 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       //legend: legend
     };
 
-    if (this.panel.echarts.yAxis.calcMin) {
-      let min = _.minBy(_.flatten(_.map(option.series, 'data')), 'value').value;
-      if (min > this.panel.echarts.yAxis.min) {
-        yAxis.min = _.toInteger(min / this.panel.echarts.yAxis.min) * this.panel.echarts.yAxis.min;
-      } else {
-        delete yAxis.min;
-      }
-    }
+    // if (this.panel.echarts.yAxis.calcMin) {
+    //   let min = _.minBy(_.flatten(_.map(option.series, 'data')), 'value').value;
+    //   if (min > this.panel.echarts.yAxis.min) {
+    //     yAxis.min = _.toInteger(min / this.panel.echarts.yAxis.min) * this.panel.echarts.yAxis.min;
+    //   } else {
+    //     delete yAxis.min;
+    //   }
+    // }
+    this.calcMin(yAxis, option.series);
 
-    if (_.isEmpty(option.tooltip.formatter)) {
+    /*
+    if (false && _.isEmpty(option.tooltip.formatter)) {
       option.tooltip.formatter = function (params, ticket, callback) {
         var valueFormatter = this.yAxisLableFormatter.bind(this);
+        var xFormatter = this.xAxisLableFormatter.bind(this);
+
+        if (_.get(this.panel.formatter, 'tooltip_category.enable', false)) {
+          xFormatter = (function (value, index) {
+            var returnValue = this.callFormatter('tooltip_category', value, index);
+            return returnValue;
+          }).bind(this);
+        }
+        if (_.get(this.panel.formatter, 'tooltip_value.enable', false)) {
+          valueFormatter = (function (value, index) {
+            var returnValue = this.callFormatter('tooltip_value', value, index);
+            return returnValue;
+          }).bind(this);
+        }
         var returnValue = [];
         var paramArray = _.isArray(params) ? params : [params];
-        returnValue.push(paramArray[0].name);
+        returnValue.push(xFormatter(paramArray[0].name));
         _.each(paramArray, function (param, index) {
           var item = [param.marker];
           switch (param.seriesName) {
@@ -1249,11 +1329,31 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         return _.join(returnValue, '<br/>');
       }.bind(this);
     }
+    */
 
 
     let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(option.series) };
     legend = _.defaultsDeep(legend, this.panel.echarts.legend);
+    legend.selected = _.zipObject(_.map(legend.data, 'name'), _.map(legend.data, () => { return true; }));
     option.legend = legend;
+
+    if (_.get(this.panel, 'metricsLegend.enable', false)) {
+
+      var legendsConf = _.filter(this.panel.metricsLegend.legends, { 'enable': true });
+
+      option.legend.selected = _.transform(legendsConf, (r, item) => {
+        r[item.legend.name] = item.legend.selected;
+      }, {});
+
+      var keys = _.map(legendsConf, 'key');
+      var mapping = _.zipObject(keys, legendsConf);
+      _.each(option.legend.data, item => {
+        var conf = mapping[item.name];
+        if (conf && false === _.isEmpty(conf.legend.name)) {
+          item.serie.name = item.name = conf.legend.name;
+        }
+      });
+    }
 
     let merge = this.panel.merge;
     if (merge && merge.enable && option.series.length > 1) {
@@ -1387,6 +1487,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   useSerieTypeConf(option) {
+    if (this.panel.serieType === "pie") {
+      return option;
+    }
     var isSeriesBar = this.isSeriesBar();
 
 
@@ -1398,6 +1501,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     var yAxis = _.cloneDeep(_.filter(this.panel.yAxisConf, { show: true }));
     if (_.size(yAxis) > 0) {
       var leftYAxis = option[axis.axis];
+      leftYAxis.axisLabel.formatter = function (value) {
+        return value;
+      };
       option[axis.axis] = [leftYAxis];
       _.each(yAxis, (yAxis, index) => {
         var y = _.defaultsDeep(yAxis, leftYAxis);
@@ -1410,9 +1516,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             //debugger;
             var decimals = formatterConf.decimals;
             let formater = this.valueFormats[formatterConf.format];
-            return formater(value, decimals);
+            //return formater(value, decimals);
+            return value;
           };
         }
+        this.calcMin(y, option.series);
         option[axis.axis].push(y);
       });
     }
@@ -1420,7 +1528,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let seriesTypeConf = _.filter(this.panel.seriesTypeConf, { enable: true });
     _.each(seriesTypeConf, type => {
       var series = _.find(option.series, s => {
-        return s[isSeriesBar ? 'refId' : 'name'] === type.target;
+        var returnValue = (s["name"] === type.target || s["refId"] === type.target);
+        return returnValue;
+        //return s[isSeriesBar ? 'refId' : 'name'] === type.target;
       });
       if (series) {
         series.type = type.type;
@@ -1479,15 +1589,51 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       console.log(type);
     });
 
-    if (_.size(seriesTypeConf) > 0) {
-      var tooltipFormatter = option.tooltip.formatter;
-      option.tooltip.formatter = (params, ticket, callback) => {
-        //debugger;
+    _.each(option.series, serie => {
+      var labelFormatter = _.get(serie, 'label.normal.formatter');
+      if (_.isUndefined(labelFormatter) || true) {
+        var axisIndex = _.get(serie, axis.axisIndex, 0);
+        //var axisIndex = axis.axisIndex;
+        var y = option[axis.axis][axisIndex] || { axisLabel: {} };
+        var { format, decimals } = y.axisLabel;
+        var formatterConf = { format: format, decimals: decimals, valueFormats: this.valueFormats };
 
+        var formatter = function (params) {
+          var { value } = params;
+          //console.log(this);
+          var decimals = this.decimals;
+          let formater = this.valueFormats[this.format] || function (val) { return val; };
+          return formater(value, decimals);
+        };
+
+        if (false === _.isUndefined(format)) {
+          serie.label.normal.formatter = formatter.bind(formatterConf);
+          _.set(serie, 'markPoint.label.normal.formatter', formatter.bind(formatterConf));
+          _.set(serie, 'markLine.label.normal.formatter', formatter.bind(formatterConf));
+        }
+      }
+    });
+
+    if (_.isEmpty(option.tooltip.formatter)) {
+      option.tooltip.formatter = (params, ticket, callback) => {
         var valueFormatter = this.yAxisLableFormatter.bind(this);
+        var xFormatter = this.xAxisLableFormatter.bind(this);
+
+        if (_.get(this.panel.formatter, 'tooltip_category.enable', false)) {
+          xFormatter = (function (value, index) {
+          var returnValue = this.callFormatter('tooltip_category', value, index);
+          return returnValue;
+          }).bind(this);
+        }
+        if (_.get(this.panel.formatter, 'tooltip_value.enable', false)) {
+          valueFormatter = (function (value, index) {
+          var returnValue = this.callFormatter('tooltip_value', value, index);
+          return returnValue;
+          }).bind(this);
+        }
         var returnValue = [];
         var paramArray = _.isArray(params) ? params : [params];
-        returnValue.push(paramArray[0].name);
+        returnValue.push(xFormatter(paramArray[0].name));
         _.each(paramArray, function (param, index) {
           var item = [param.marker];
           switch (param.seriesName) {
@@ -1499,11 +1645,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
 
           var s = option.series[param.seriesIndex];
-          var yAxisIndex = _.get(s, 'yAxisIndex', 0);
-          var formatter = _.get(option.yAxis[yAxisIndex], 'axisLabel.formatter', valueFormatter);
-          // var formatter = option.yAxis[yAxisIndex].axisLabel.formatter || function (v) { return valueFormatter(v.value); };
-          // var formatter = s.label.normal.formatter || function (v) { return valueFormatter(v.value); };
-          var tooltipVal = formatter(param.value);
+          if (s.isSumLabel) { return; }
+          var tooltipVal = param.value;
+          var formatter = _.get(s, 'label.normal.formatter');
+          if (_.isNil(formatter)) {
+            var yAxisIndex = _.get(s, axis.axisIndex, 0);
+            //option[axis.axis] 为了处理轴切换 this.panel.exchangeAxis==true
+            formatter = _.get(option[axis.axis][yAxisIndex], 'axisLabel.formatter', valueFormatter);
+            tooltipVal = formatter(param.value);
+          } else {
+            tooltipVal = formatter(param);
+          }
           item.push(tooltipVal);
           returnValue.push(_.join(item, ''));
         });
@@ -1512,5 +1664,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
 
     return option;
+  }
+
+  calcMin(yAxis, series) {
+    if (yAxis && yAxis.calcMin) {
+      let min = _.minBy(_.flatten(_.map(series, 'data')), 'value').value;
+      if (min > yAxis.min) {
+        yAxis.min = _.toInteger(min / yAxis.min) * yAxis.min;
+      } else {
+        delete yAxis.min;
+      }
+    }
   }
 }

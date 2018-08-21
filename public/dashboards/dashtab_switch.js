@@ -171,6 +171,11 @@ return function (callback) {
     return component;
   }
 
+  function hostBySID(sid){
+    var mapping = { "WRPFrame-GetButton": "ttpsg" };
+    return mapping[sid] || 'sgi';
+  }
+
   function sghost(host, SID) {
     var protocol = window.location.protocol;
     var hostname = window.location.hostname;
@@ -178,6 +183,11 @@ return function (callback) {
     if (domain.length >= 2) {
       domain = [domain.pop(), domain.pop()].reverse();
     }
+
+    if (domain !== "teld.cn") {
+      host = hostBySID(SID);
+    }
+
     return protocol + '//' + host + '.' + domain.join(".") + '/api/invoke?SID=' + SID;
   }
 

@@ -292,8 +292,12 @@ function (angular, _, moment, kbn) {
       });
     };
 
-    this.teldExpression2ScopedVars = function (scopedVars, format) {
-      var teldExpressionVariables = _.filter(this.variables, { type: 'teldExpression' });
+    this.teldExpression2ScopedVars = function (scopedVars, format, varFilter) {
+      varFilter = varFilter || {};
+      if (_.isPlainObject(varFilter)) {
+        varFilter = _.assign({ type: 'teldExpression' }, varFilter);
+      }
+      var teldExpressionVariables = _.filter(this.variables, varFilter);
       var that = this;
       var timeRange = _.transform(scopedVars, function (r, value, key) {
         r[key] = value.value;

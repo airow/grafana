@@ -22,7 +22,6 @@ export class TabStyleEditorCtrl {
 
   getThemeName: Function;
 
-
   /** @ngInject **/
   constructor(private $scope, private $q) {
     this.panelCtrl = $scope.ctrl;
@@ -37,6 +36,8 @@ export class TabStyleEditorCtrl {
       let serieType = this.panel.serieType || 'line';
       return _.get(this.panelCtrl.echartsThemeName, `${serieType}Theme`);
     };
+
+    this.panel.metricsLegend = this.panel.metricsLegend || { enable: false, legends: [] };
   }
 
   setUnitFormat(axis, subItem) {
@@ -57,6 +58,26 @@ export class TabStyleEditorCtrl {
     if (_.size(arrayItem.sets) === 0) {
       _.pull(this.panel.groupBarStackGroupConf, arrayItem);
     }
+  }
+
+  metricsLegendFun() {
+
+    var filterDataList = this.panelCtrl.dataList;
+    var legends = this.panel.metricsLegend.legends;
+    var dataTaget = _.map(filterDataList, (item, index) => {
+      if (_.get(legends[index], 'key') === item.target) {
+        return legends[index];
+      } else {
+        return { key: item.target, enable: false, legend: { name: item.target, selected: true } };
+      }
+    });
+
+    this.panel.metricsLegend.legends = dataTaget;
+  }
+
+  move(itemArray, index, newIndex) {
+    _.move(itemArray, index, newIndex);
+    this.refresh();
   }
 }
 

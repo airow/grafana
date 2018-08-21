@@ -146,9 +146,47 @@
           <input type="text" ng-model="ctrl.panel.groupBarLegends" min-length="0" class="gf-form-input" placeholder="groupBarLegends">
         </div>
     </div>
+
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="legendMapping" label-class="query-keyword width-8" checked="ctrl.panel.metricsLegend.enable">
+      </gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click='ctrl.metricsLegendFun()'>
+            <i class="pointer fa fa-refresh"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="section gf-form-group" ng-repeat="item in ctrl.panel.metricsLegend.legends">
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="{{item.key}}" label-class="width-8" checked="item.enable">
+        </gf-form-switch>
+        <div class="gf-form" ng-if="false">
+          <label class="gf-form-label" ng-hide="$last">
+            <a ng-click="ctrl.move(ctrl.panel.metricsLegend.legends,$index,$index+1)">
+              <i class="pointer fa fa-arrow-right"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$first">
+            <a ng-click="ctrl.move(ctrl.panel.metricsLegend.legends,$index,$index-1)">
+              <i class="pointer fa fa-arrow-left"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <div ng-if="item.enable">
+        <div class="gf-form">
+          <label class="gf-form-label width-8">name</label>
+          <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="item.legend.name" class="gf-form-input">
+        </div>
+        <gf-form-switch class="gf-form" label="选中" label-class="width-8" checked="item.legend.selected">
+        </gf-form-switch>
+      </div>
+    </div>
+
   </div>
   <!-- end legend -->
-
   <!-- tooltip -->
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'tooltip'">
     <div class="section gf-form-group">
@@ -180,6 +218,30 @@
   <br/>地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
   <br/>饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）</tip>
           </label>
+      </div>
+      <gf-form-switch class="gf-form" label="tooltip_category" label-class="width-8" checked="ctrl.panel.formatter.tooltip_category.enable">
+      </gf-form-switch>
+      <div ng-if='ctrl.panel.formatter.tooltip_category.enable'>
+        <div class="gf-form">
+          <label class="gf-form-label width-8">format</label>
+          <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.tooltip_category.format" dropdown-typeahead2="ctrl.unitFormats"
+            dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.tooltip_category, $subItem)"></div>
+        </div>
+        <div class="gf-form offset-width-8">
+          <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.tooltip_category.decimals" class="gf-form-input">
+        </div>
+      </div>
+      <gf-form-switch class="gf-form" label="tooltip_value" label-class="width-8" checked="ctrl.panel.formatter.tooltip_value.enable">
+      </gf-form-switch>
+      <div ng-if='ctrl.panel.formatter.tooltip_value.enable'>
+        <div class="gf-form">
+          <label class="gf-form-label width-8">format</label>
+          <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.tooltip_value.format" dropdown-typeahead2="ctrl.unitFormats"
+            dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.tooltip_value, $subItem)"></div>
+        </div>
+        <div class="gf-form offset-width-8">
+          <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.tooltip_value.decimals" class="gf-form-input">
+        </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -267,10 +329,15 @@
     <!-- formatter -->
     <div class="section gf-form-group">
       <h5 class="section-heading">formatter</h5>
-      <div class="gf-form">
-        <label class="gf-form-label width-8">Category</label>
-        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.category.format" dropdown-typeahead2="ctrl.unitFormats"
-          dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.category, $subItem)"></div>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label width-8">Category</label>
+          <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.category.format" dropdown-typeahead2="ctrl.unitFormats"
+            dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.category, $subItem)"></div>
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-18" placeholder="auto" data-placement="right" ng-model="ctrl.panel.formatter.category.formatArgs" ng-change="ctrl.refresh()" ng-model-onblur>
+        </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Value</label>
@@ -306,8 +373,11 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">format</label>
-        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.xAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+        <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.xAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.xAxis.axisLabel, $subItem)"></div>
+      </div>
+      <div class="gf-form offset-width-8">
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.xAxis.axisLabel.decimals" class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -386,7 +456,7 @@
         <label class="gf-form-label width-8">min</label>
         <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" ec-valwrap class="gf-form-input">
       </div>
-      <gf-form-switch class="gf-form" label="计算最小值" label-class="query-keyword width-8" checked="ctrl.panel.echarts.yAxis.calcMin">
+      <gf-form-switch class="gf-form" label="计算最小值" label-class="width-8" checked="ctrl.panel.echarts.yAxis.calcMin">
       </gf-form-switch>
       <div class="gf-form">
           <label class="gf-form-label width-8">max</label>
@@ -407,9 +477,11 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">format</label>
-        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.yAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+        <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.yAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.yAxis.axisLabel, $subItem)"></div>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.yAxis.axisLabel.decimals" class="gf-form-input width-3">
+      </div>
+      <div class="gf-form offset-width-8">
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.yAxis.axisLabel.decimals" class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>

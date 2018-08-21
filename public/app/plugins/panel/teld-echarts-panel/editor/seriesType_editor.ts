@@ -27,7 +27,8 @@ export class SeriesTypeEditorCtrl {
     var groupKey = _.map(filterDataList, 'groupKey');
     var dataTaget = _.map(filterDataList, 'target');
     var calcSeriesTaget = _.map(this.panel.calcSeriesConf, 'target');
-    return _.union(refId, groupKey, dataTaget, calcSeriesTaget);
+    var seriesName = _.map(this.panelCtrl.ecOption.baseOption.series, 'name');
+    return _.union(refId, groupKey, dataTaget, calcSeriesTaget, seriesName);
   }
 
   yAxisList() {
