@@ -37,6 +37,9 @@ const (
 )
 
 var (
+    // Teld App settings.
+    TeldRunEnv   string
+
 	// App settings.
 	Env          string = DEV
 	AppUrl       string
@@ -458,6 +461,10 @@ func validateStaticRootPath() error {
 func NewConfigContext(args *CommandLineArgs) error {
 	setHomePath(args)
 	loadConfiguration(args)
+
+	// 增加Teld专属配置项  2018-08-26 02:24:50 
+ 	teldConf := Cfg.Section("teld")
+	TeldRunEnv = teldConf.Key("run_env").MustString("") //运行环境 mls表示大屏，缓存boot.js文件为第二天8点
 
 	Env = Cfg.Section("").Key("app_mode").MustString("development")
 	InstanceName = Cfg.Section("").Key("instance_name").MustString("unknown_instance_name")
