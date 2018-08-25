@@ -182,6 +182,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   $parse: any;
   cache: any;
+  dataListMetric: any[];
 
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
@@ -516,10 +517,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   }
     // }
   }
-
   calcSeries(calcSeriesConf, data, hideMetrics) {
 
-    var calcSeriesFun = this.isSeriesBar() ? graphutils.calcSeriesBar : graphutils.calcSeries;
+    var calcSeriesFun = this.isSeriesBar() ?
+      (this.panel.groupBar ? graphutils.calcSeriesGropuBar : graphutils.calcSeriesBar)
+      : graphutils.calcSeries;
 
     return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
   }
@@ -551,6 +553,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
      * datapoints[0]: [31016.81, 1483200000000]
      */
 
+    this.dataListMetric = _.groupBy(dataList, item => { return item.metric || item.target; });
     let series = this.dataList2Serie(dataList);
 
     this.ecSeries = series;
@@ -942,6 +945,52 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return legendData;
   }
 
+  stackSumLabel(series){
+
+    if (this.panel.groupBarStackSumLabel) {
+      var barSeries = _.filter(series, { type: 'bar' });
+      _.each(_.groupBy(barSeries, 'stack'), (stackSeries, key) => {
+        _.each(stackSeries, s => {
+          _.set(s, 'label.normal.show', false);
+        });
+
+        var defaultSerie = _.first(stackSeries);
+
+        var sumSerie = {
+          stack: key,
+          type: 'bar',
+          yAxisIndex: defaultSerie.yAxisIndex,
+          xAxisIndex: defaultSerie.xAxisIndex,
+          isSumLabel: true,
+          data: _.map(stackSeries[0].data, i => { return { value: 0 }; }),
+          label: {
+            normal: {
+              show: true,
+              position: this.panel.exchangeAxis ? "right" : "top",
+              formatter: function (params) {
+                var filter = (item) => {
+                  return item.data[params.dataIndex].value;
+                };
+                if (this.ctrl && this.ctrl.ecInstance) {
+                  var ecO = this.ctrl.ecInstance.getOption();
+                  var selectedLegends = _.first(_.map(ecO.legend, 'selected'));
+                  selectedLegends = _.transform(selectedLegends, (r, v, k) => { if (v) { r.push(k); } }, []);
+                  filter = item => {
+                    return _.includes(selectedLegends, item.name) ? item.data[params.dataIndex].value : 0;
+                  };
+                }
+
+                var sum = _.sumBy(this.stackSeries, filter);
+                return sum;
+              }.bind({ stackSeries: stackSeries, ctrl: this })
+            }
+          }
+        };
+        series.push(sumSerie);
+      });
+    }
+  }
+
   getGroupBarSerieMode() {
 
     var series = [];
@@ -966,6 +1015,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         });
       });
 
+      if (_.get(this.panel, 'groupBarLegendsConf.enable', false)) {
+        var legends = _.filter(this.panel.groupBarLegendsConf.legends, { enable: true });
+        this.panel.groupBarLegends = _.map(legends, 'legend.name').join(",");
+      }
       var groupBarLegends = (this.panel.groupBarLegends || "").split(',');
       _.each(d, (serie, index) => {
         serie.itemStyle = _.first(serie.data).itemStyle;
@@ -988,72 +1041,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
         });
       });
-    }
-
-    if (this.panel.groupBarStackSumLabel) {
-
-      _.each(_.groupBy(series, 'stack'), (stackSeries, key) => {
-        _.each(stackSeries, s => {
-          _.set(s, 'label.normal.show', false);
-        });
-
-        var selectStackSeries = _.filter(stackSeries, s => { });
-
-        var sumSerie = {
-          stack: key,
-          type: 'bar',
-          isSumLabel: true,
-          data: _.map(stackSeries[0].data, i => { return { value: 0 }; }),
-          label: {
-            normal: {
-              show: true,
-              position: this.panel.exchangeAxis ? "right" : "top",
-              formatter: function (params) {
-                var ecO = this.ecInstance.getOption();
-                var selectedLegends = _.first(_.map(ecO.legend, 'selected'));
-                selectedLegends = _.transform(selectedLegends, (r, v, k) => { if (v){ r.push(k);} }, []);
-                var sum = _.sumBy(this.stackSeries, item => {
-                  return _.includes(selectedLegends, item.name) ? item.data[params.dataIndex].value : 0;
-                });
-                return sum;
-              }.bind({ stackSeries: stackSeries, ecInstance: this.ecInstance, ctrl: this })
-            }
-          }
-        };
-        //sumSerie.label.normal.formatter.bind({ stackSeries: stackSeries });
-        series.push(sumSerie);
-      });
-
-      // _.each(_.groupBy(series, 'stack'), (s, key) => {
-      //   _.each(s, ss => {
-      //     ss.label.normal.show = false;
-      //   });
-      //   var last = _.last(s);
-      //   if (last) {
-      //     last.isSumLabel = true;
-      //     last.label.normal.show = true;
-      //     last.label.normal.formatter = ((val) => {
-      //       console.log(s);
-      //       console.log(this);
-      //       return _.sumBy(s, item => { return item.data[val.dataIndex].value; });
-      //     }).bind(this);
-      //   }
-      // });
-      // _.each(_.groupBy(series, 'stack'), (s, key) => {
-      //   _.each(s, ss => {
-      //     ss.label.normal.show = false;
-      //   });
-      //   var last = _.last(s);
-      //   if (last) {
-      //     last.isSumLabel = true;
-      //     last.label.normal.show = true;
-      //     last.label.normal.formatter = ((val) => {
-      //       console.log(s);
-      //       console.log(this);
-      //       return _.sumBy(s, item => { return item.data[val.dataIndex].value; });
-      //     }).bind(this);
-      //   }
-      // });
     }
 
     return series;
@@ -1219,13 +1206,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       this.onMetricsPanelRefresh();
       return;
     }
-
+    if (_.isNil(this.ecSeries)) {
+      return;
+    }
     let xAxis, categoryAxis;
     //if (this.isSeriesBar()) {
     if (this.panel.xAxisMode === 'series') {
       xAxis = categoryAxis = this.axisAdapter(this.ecSeries, this.ecConf.axis.category);
     } else {
-      xAxis = categoryAxis = this.axisAdapter(this.ecSeries[0], this.ecConf.axis.category);
+      let firstSeries = _.first(this.ecSeries) || {};
+      xAxis = categoryAxis = this.axisAdapter(firstSeries, this.ecConf.axis.category);
     }
 
     let yAxis, valueAxis;
@@ -1282,55 +1272,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       //legend: legend
     };
 
-    // if (this.panel.echarts.yAxis.calcMin) {
-    //   let min = _.minBy(_.flatten(_.map(option.series, 'data')), 'value').value;
-    //   if (min > this.panel.echarts.yAxis.min) {
-    //     yAxis.min = _.toInteger(min / this.panel.echarts.yAxis.min) * this.panel.echarts.yAxis.min;
-    //   } else {
-    //     delete yAxis.min;
-    //   }
-    // }
     this.calcMin(yAxis, option.series);
-
-    /*
-    if (false && _.isEmpty(option.tooltip.formatter)) {
-      option.tooltip.formatter = function (params, ticket, callback) {
-        var valueFormatter = this.yAxisLableFormatter.bind(this);
-        var xFormatter = this.xAxisLableFormatter.bind(this);
-
-        if (_.get(this.panel.formatter, 'tooltip_category.enable', false)) {
-          xFormatter = (function (value, index) {
-            var returnValue = this.callFormatter('tooltip_category', value, index);
-            return returnValue;
-          }).bind(this);
-        }
-        if (_.get(this.panel.formatter, 'tooltip_value.enable', false)) {
-          valueFormatter = (function (value, index) {
-            var returnValue = this.callFormatter('tooltip_value', value, index);
-            return returnValue;
-          }).bind(this);
-        }
-        var returnValue = [];
-        var paramArray = _.isArray(params) ? params : [params];
-        returnValue.push(xFormatter(paramArray[0].name));
-        _.each(paramArray, function (param, index) {
-          var item = [param.marker];
-          switch (param.seriesName) {
-            case "\u0000-":
-              break;
-            default:
-              item.push(param.seriesName + "：");
-              break;
-          }
-          param.value = valueFormatter(param.value);
-          item.push(param.value);
-          returnValue.push(_.join(item, ''));
-        });
-        return _.join(returnValue, '<br/>');
-      }.bind(this);
-    }
-    */
-
 
     let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(option.series) };
     legend = _.defaultsDeep(legend, this.panel.echarts.legend);
@@ -1338,21 +1280,19 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     option.legend = legend;
 
     if (_.get(this.panel, 'metricsLegend.enable', false)) {
-
       var legendsConf = _.filter(this.panel.metricsLegend.legends, { 'enable': true });
+      this.setLegendsConf(option, legendsConf);
+    }
 
-      option.legend.selected = _.transform(legendsConf, (r, item) => {
-        r[item.legend.name] = item.legend.selected;
-      }, {});
-
-      var keys = _.map(legendsConf, 'key');
-      var mapping = _.zipObject(keys, legendsConf);
-      _.each(option.legend.data, item => {
-        var conf = mapping[item.name];
-        if (conf && false === _.isEmpty(conf.legend.name)) {
-          item.serie.name = item.name = conf.legend.name;
+    if (_.get(this.panel, 'groupBarLegendsConf.enable', false)) {
+      var legendsConf = _.cloneDeep(this.panel.groupBarLegendsConf.legends);
+      legendsConf = _.filter(legendsConf, l => {
+        if (l.enable) {
+          l.key = l.legend.name;
+          return l;
         }
       });
+      this.setLegendsConf(option, legendsConf);
     }
 
     let merge = this.panel.merge;
@@ -1486,13 +1426,27 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   }
 
+  setLegendsConf(option, legendsConf) {
+    option.legend.selected = _.transform(legendsConf, (r, item) => {
+      r[item.legend.name] = item.legend.selected;
+    }, {});
+
+    var keys = _.map(legendsConf, 'key');
+    var mapping = _.zipObject(keys, legendsConf);
+    _.each(option.legend.data, item => {
+      var conf = mapping[item.name];
+      if (conf && false === _.isEmpty(conf.legend.name)) {
+        item.name = conf.legend.name;
+        if (item.serie) { item.serie.name = conf.legend.name; }
+      }
+    });
+  }
+
   useSerieTypeConf(option) {
     if (this.panel.serieType === "pie") {
       return option;
     }
     var isSeriesBar = this.isSeriesBar();
-
-
     var axis = { axis: 'yAxis', axisIndex: 'yAxisIndex' };
     if (this.panel.exchangeAxis) {
       axis = { axis: 'xAxis', axisIndex: 'xAxisIndex' };
@@ -1505,8 +1459,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         return value;
       };
       option[axis.axis] = [leftYAxis];
+      var defaultAxis = _.cloneDeep(leftYAxis);
+      _.unset(defaultAxis, 'max');/** 处理最大值 */
       _.each(yAxis, (yAxis, index) => {
-        var y = _.defaultsDeep(yAxis, leftYAxis);
+        var y = _.defaultsDeep(yAxis, defaultAxis);
         //y.offset = (index + 1) * -80;
         var { format, decimals } = y.axisLabel;
         //var formatterConf = { format: format, decimals: decimals } = y.axisLabel;
@@ -1534,6 +1490,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       });
       if (series) {
         series.type = type.type;
+        series.areaStyle = type.areaStyle;
+        series.areaStyle = type.areaStyle;
+        series.smooth = type.smooth;
+        series.smooth = type.smooth;
+        _.each(type[type.type] || {}, (value, key) => {
+          series[key] = value;
+        });
+        //series = _.defaultsDeep(_.cloneDeep(type), series);
         if (type.yAxis) {
           var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
           if (axisIndex > -1) {
@@ -1586,7 +1550,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
         }
       }
-      console.log(type);
+      //console.log(type);
     });
 
     _.each(option.series, serie => {
@@ -1662,13 +1626,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         return _.join(returnValue, '<br/>');
       };
     }
-
+    this.stackSumLabel(option.series);
     return option;
   }
 
   calcMin(yAxis, series) {
     if (yAxis && yAxis.calcMin) {
-      let min = _.minBy(_.flatten(_.map(series, 'data')), 'value').value;
+      let min = _.minBy(_.map(series, data => { return data.value || 0; })).value || 0;
       if (min > yAxis.min) {
         yAxis.min = _.toInteger(min / yAxis.min) * yAxis.min;
       } else {

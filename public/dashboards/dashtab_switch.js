@@ -91,7 +91,11 @@ return function (callback) {
         cbfail();
       })
       .done(function (result) {
-
+        if (_.size(component.dashboard.templating.list) > 0) {
+          //var templatingList = _.flatten([result.dashboard.templating.list, component.dashboard.templating.list]);
+          var templatingList = _.concat(result.dashboard.templating.list, component.dashboard.templating.list);
+          result.dashboard.templating.list = _.uniqBy(templatingList, 'name');
+        }
         _.each(component.panels, function (panel) {
           inject(panel, result.dashboard.rows);
         });

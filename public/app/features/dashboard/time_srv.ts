@@ -128,6 +128,7 @@ class TimeSrv {
   }
 
   refreshDashboard() {
+    delete window['teldExpression2ScopedVars'];
     this.$rootScope.$broadcast('refresh');
     // todo:Signalr
     // this.$rootScope.$emit('signalr_screen', 'parent');

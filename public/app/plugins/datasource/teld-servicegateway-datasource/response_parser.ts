@@ -43,7 +43,6 @@ export default class ResponseParser {
                 });
               });
             });
-            console.log(data);
           }
           break;
         case "time_series":

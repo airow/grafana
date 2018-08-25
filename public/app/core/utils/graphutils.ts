@@ -29,21 +29,6 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables) 
     imports: {
       vars: variables,
       '_': _
-      // //'kbn': kbn,
-      // 'valueFormats': (function (kbn) {
-      //   let bindContext = {
-      //     // kbn,
-      //     // valueFormats: kbn.valueFormats,
-      //     // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
-      //     valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
-      //       result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
-      //     }, {})
-      //   };
-
-      //   return function (unitFormatName, size, decimals) {
-      //     return this.valueFormats[unitFormatName](size, decimals);
-      //   }.bind(bindContext);
-      // })(kbn)
     }
   };
 
@@ -80,7 +65,7 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables) 
 
       //var contextData = { target: contextData1 };
 
-      var expressionData = _.defaultsDeep({ target: g, calcSerie: true, datapoints: [] }, item);
+      var expressionData = _.defaultsDeep({ target: g, sort: item.sort, calcSerie: true, datapoints: [] }, item);
       expression.push(expressionData);
 
       var value = 0;
@@ -103,12 +88,115 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables) 
   if (_.size(hideMetrics) > 0) {
     var remove = _.map(hideMetrics, 'target');
     _.remove(dataList, item => {
-      return _.includes(remove, item.groupKey);
+      return _.includes(remove, item.groupKey || item.target);
     });
   }
 
   //var returnValue = _.concat(dataList, expression);
   var returnValue = _.concat(dataList, expression);
+  return returnValue;
+}
+
+function calcSeriesGropuBarItem(calcSeriesConf, data, hideMetrics, dashVariables) {
+  if (_.size(data) === 0) {
+    return data;
+  }
+
+  var dataList = _.cloneDeep(data);
+
+  calcSeriesConf = calcSeriesConf || [];
+  calcSeriesConf = _.filter(calcSeriesConf, 'enable');
+  var master = _.maxBy(dataList, function (o) { return o.datapoints.length; });
+  var expression = [];
+
+  // _.map(dashVariables,variable=>{return  });
+
+  var variables = _.transform(dashVariables, (result, n) => {
+    var value = _.toNumber(n.current.value);
+    if (_.isNumber(value)) {
+      result[n.name] = value;
+    }
+  }, {});
+
+  var templateSettings = {
+    'variable': ['series'],
+    imports: {
+      vars: variables,
+      '_': _
+    }
+  };
+
+  var dataSource = _.transform(dataList, (result, n) => {
+    var values = n.datapoints.map(item => { return item[0]; });
+    result[n.target] = _.sum(values);
+  }, {});
+
+  _.each(calcSeriesConf, (item) => {
+    var compiled = _.template("${" + item.expression + "}", templateSettings);
+    var expressionData = _.defaultsDeep({ target: item.target, sort: item.sort, calcSerie: true, datapoints: [] }, item);
+    expression.push(expressionData);
+
+    var value = 0;
+    try {
+      value = compiled(dataSource);
+      value = _.toNumber(value);
+      if (_.isNaN(value) || false === _.isNumber(value)) {
+        value = 0;
+      }
+    } catch (error) {
+      console.error(error);
+      value = 0;
+    }
+    expressionData.datapoints.push([_.toNumber(value), 1]);
+    expressionData.refId = item.target;
+    expressionData.groupKey = item.target;
+  });
+
+  if (_.size(hideMetrics) > 0) {
+    var remove = _.map(hideMetrics, 'target');
+    _.remove(dataList, item => {
+      return _.includes(remove, item.groupKey || item.target);
+    });
+  }
+
+
+  _.each(expression, item => {
+    dataList.splice(item.sort || _.size(dataList), 0, item);
+  });
+
+  //var returnValue = _.concat(dataList, expression);
+  var returnValue = dataList;
+  //var returnValue = _.concat(expression, dataList);
+  return returnValue;
+}
+
+export function calcSeriesGropuBar(calcSeriesConf, data, hideMetrics, dashVariables) {
+  if (_.size(data) === 0 || _.size(calcSeriesConf) === 0) {
+    return data;
+  }
+
+  var groupBy = _.groupBy(data, 'target');
+  var returnValue = [];
+  _.each(groupBy, (groupItem, key) => {
+    _.each(groupItem, item => {
+      item._target = item.target;
+      item._metric = item.metric;
+
+      item.target = item._metric;
+      item.metric = item._target;
+    });
+    var calcItem = calcSeriesGropuBarItem(calcSeriesConf, groupItem, hideMetrics, dashVariables);
+    _.each(calcItem, item => {
+      if (item.calcSerie) {
+        item.metric = item.target;
+        item.target = key;
+      } else {
+        item.target = item._target;
+        item.metric = item._metric;
+      }
+    });
+    returnValue = _.concat(returnValue, calcItem);
+  });
   return returnValue;
 }
 

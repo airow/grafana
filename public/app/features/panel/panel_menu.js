@@ -16,15 +16,18 @@ function (angular, $, _, Tether) {
             '<span class="panel-title-text drag-handle" '+
                 ' ng-class="{true:\'fa fa-eye-slash text-warning\',false:\'\'}[ctrl.panel.editorHide]">' +
               '<span ng-show="(!ctrl.timeInfo || ctrl.isPlotClick) && ctrl.panel.showTimeRange">' +
-                '{{ctrl.rangeStringPanel}} &nbsp;'+
+                '<span ng-bind="ctrl.rangeStringPanel"></span> &nbsp;'+
               '</span>' +
-              '{{ctrl.panel.title | interpolateTemplateVars:this}}' +
+              '<span ng-bind="ctrl.panel.title | interpolateTemplateVars:this"></span>' +
+              //'{{ctrl.panel.title | interpolateTemplateVars:this}}' +
             '</span>' +
             '<span style="padding-left:10px;" ng-show="ctrl.panel.panelState">' +
               '<i class="fa" ng-class="{true:\'fa-window-restore\',false:\'fa-window-minimize\'}[ctrl.action_panelstate.isMin]" ' +
                 ' ng-click="ctrl.changePanelState($event);"></i>' +
             '</span>' +
-            '<span class="panel-time-info" ng-show="ctrl.timeInfo"><i class="fa fa-clock-o"></i> {{ctrl.timeInfo}}</span>' +
+            '<span class="panel-time-info" ng-show="ctrl.timeInfo"><i class="fa fa-clock-o"></i> '+
+              '<span ng-bind="ctrl.timeInfo"></span>' +
+            '</span>' +
           '</span>';
 
       function createMenuTemplate(ctrl) {

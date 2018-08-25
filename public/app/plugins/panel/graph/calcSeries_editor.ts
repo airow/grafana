@@ -24,7 +24,8 @@ export class CalcSeriesEditorCtrl {
     var refId = [] || _.map(this.panel.targets, 'refId');
     var groupKey = _.map(filterDataList, 'groupKey');
     var dataTaget = _.map(filterDataList, 'target');
-    return _.union(refId, groupKey, dataTaget);
+    var dataMetric = _.map(filterDataList, 'metric');
+    return _.union(refId, groupKey, dataTaget, dataMetric);
   }
 
 

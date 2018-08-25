@@ -275,7 +275,11 @@ export class TableRenderer {
       } else if (this.panel.teldtemplate === "teldboard") {
         try {
           let compiled = _.template(this.panel.teldtemplatetext);
-          cellHtml = compiled(this.rowObj);
+          var rowsObj = this.rowObj.JSON;
+          if (this.rowObj.hasOwnProperty("JSON")) {
+            rowsObj = JSON.parse(this.rowObj.JSON);
+          }
+          cellHtml = compiled(rowsObj);
         } catch (error) {
           cellHtml = this.panel.teldtemplatetextdemo;
         }

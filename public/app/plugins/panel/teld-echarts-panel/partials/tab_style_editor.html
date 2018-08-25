@@ -138,25 +138,77 @@
       </div>
       <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.legend' />
     </div>
-    <div class="section gf-form-group" ng-if='ctrl.panel.groupBar'>
-        <div class="gf-form">
-          <label class="gf-form-label">groupBarLegends
-              <tip>groupBar模式，自定义legend。数量顺序与Metrics的query一致</tip>
+
+    <!-- groupBarLegendsAdvConf start -->
+    <div class="gf-form-inline">
+      <div class="section" ng-if='ctrl.panel.groupBar'>
+        <div class="gf-form" ng-hide='ctrl.panel.groupBarLegendsConf.enable'>
+          <label class="gf-form-label width-11">groupBarLegends
+            <tip>groupBar模式，自定义legend。数量顺序与Metrics的query一致</tip>
           </label>
           <input type="text" ng-model="ctrl.panel.groupBarLegends" min-length="0" class="gf-form-input" placeholder="groupBarLegends">
         </div>
+        <div class="gf-form-inline">
+          <gf-form-switch class="gf-form" label="高级" checked="ctrl.panel.groupBarLegendsConf.enable" label-class="query-keyword width-11">
+          </gf-form-switch>
+          <div class="gf-form" ng-if='ctrl.panel.groupBarLegendsConf.enable'>
+            <label class="gf-form-label">
+              <a ng-click='ctrl.refreshMetricsLegendFun(ctrl.panel.groupBarLegendsConf)'>
+                <i class="pointer fa fa-refresh"></i>
+              </a>
+            </label>
+          </div>
+          <div class="gf-form" ng-if='ctrl.panel.groupBarLegendsConf.enable'>
+            <label class="gf-form-label">
+              <a ng-click="ctrl.addGroupBarLegend()">
+                <i class="fa fa-plus"></i>
+              </a>
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
+    <div ng-if='ctrl.panel.groupBarLegendsConf.enable' class="section gf-form-group" ng-repeat="item in ctrl.panel.groupBarLegendsConf.legends">
+      <gf-form-switch class="gf-form" label="enable" label-class="width-8" checked="item.enable">
+      </gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">name</label>
+        <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="item.legend.name" class="gf-form-input">
+      </div>
+      <gf-form-switch class="gf-form" label="选中" label-class="width-8" checked="item.legend.selected">
+      </gf-form-switch>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeItem(ctrl.panel.groupBarLegendsConf.legends, item)">
+              <i class="pointer fa fa-remove"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$last">
+            <a ng-click="ctrl.move(ctrl.panel.groupBarLegendsConf.legends,$index,$index+1)">
+              <i class="pointer fa fa-arrow-right"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$first">
+            <a ng-click="ctrl.move(ctrl.panel.groupBarLegendsConf.legends,$index,$index-1)">
+              <i class="pointer fa fa-arrow-left"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- groupBarLegendsAdvConf end -->
 
     <div class="gf-form-inline">
       <gf-form-switch class="gf-form" label="legendMapping" label-class="query-keyword width-8" checked="ctrl.panel.metricsLegend.enable">
       </gf-form-switch>
-      <div class="gf-form">
-        <label class="gf-form-label">
-          <a ng-click='ctrl.metricsLegendFun()'>
-            <i class="pointer fa fa-refresh"></i>
-          </a>
-        </label>
-      </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click='ctrl.metricsLegendFun()'>
+              <i class="pointer fa fa-refresh"></i>
+            </a>
+          </label>
+        </div>
     </div>
     <div class="section gf-form-group" ng-repeat="item in ctrl.panel.metricsLegend.legends">
       <div class="gf-form-inline">
@@ -290,8 +342,8 @@
         <gf-form-switch class="gf-form" label="按TermValue" label-class="width-8" checked="ctrl.panel.groupBarByTermValue" on-change="ctrl.render()"
           ng-if="ctrl.panel.groupBar"></gf-form-switch>
       </div>
-      <div class="gf-form-inline" ng-if="ctrl.panel.groupBar">
-        <gf-form-switch class="gf-form" label="堆叠" label-class="width-8" checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" ng-if="ctrl.panel.groupBar" label="堆叠" label-class="width-8" checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
         <gf-form-switch class="gf-form" label="SumLabel" label-class="width-8" checked="ctrl.panel.groupBarStackSumLabel" on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form-inline" ng-if="ctrl.panel.groupBarStack">
@@ -459,9 +511,16 @@
       <gf-form-switch class="gf-form" label="计算最小值" label-class="width-8" checked="ctrl.panel.echarts.yAxis.calcMin">
       </gf-form-switch>
       <div class="gf-form">
-          <label class="gf-form-label width-8">max</label>
-          <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" ec-valwrap class="gf-form-input">
-        </div>
+        <label class="gf-form-label width-8">max</label>
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" ec-valwrap class="gf-form-input">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">position</label>
+        <!-- <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.position" ng-options="f for f in ['left','right']">
+        </select> -->
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.position" ng-options="f for f in ctrl.panel.exchangeAxis?['top','bottom']:['left','right']">
+        </select>
+      </div>
     </div>
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">

@@ -292,6 +292,16 @@ function (angular, _, moment, kbn) {
       });
     };
 
+    this.teldExpression2ScopedVarsFormCache = function (cacheSuffix, scopedVars, format, varFilter) {
+      var cacheKey = 'teldExpression2ScopedVars.' + cacheSuffix;
+      var cache = _.get(window, cacheKey);
+      if (_.isNil(cache)) {
+        cache = this.teldExpression2ScopedVars(scopedVars, format, varFilter);
+        _.set(window, cacheKey, cache);
+      }
+      return cache;
+    };
+
     this.teldExpression2ScopedVars = function (scopedVars, format, varFilter) {
       varFilter = varFilter || {};
       if (_.isPlainObject(varFilter)) {
@@ -343,6 +353,19 @@ function (angular, _, moment, kbn) {
               }
               return expression;
             },
+            hasVariableFiled: function (variable, expression, filed) {
+              var params = { name: filed, filed: filed };
+              return this.hasVariableFormat(variable, expression, params);
+            },
+            hasVariableFormat: function (variable, expression, params) {
+              //expression = _.template(expression, { interpolate: /\[@([\s\S]+?)\]/g })(params);
+              expression = _.template(expression, { interpolate: /{:([\s\S]+?)}/g })(params);
+              // _.each(params, function (value, name) {
+              //   var regExp = new RegExp("{:" + name + "}", 'ig');
+              //   expression = expression.replace(regExp, value);
+              // });
+              return this.hasVariable(variable, expression);
+            }
           }
         }
       };

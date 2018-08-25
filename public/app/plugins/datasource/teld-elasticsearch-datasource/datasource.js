@@ -212,7 +212,7 @@ define([
           return item.type === 'teldExpression' && "es" === (item.filter || "es");
         };
 
-        var scopedExpressionVars = templateSrv.teldExpression2ScopedVars(options.scopedVars, 'lucene', filterFun);
+        var scopedExpressionVars = templateSrv.teldExpression2ScopedVarsFormCache('elasticsearch', options.scopedVars, 'lucene', filterFun);
         console.log(scopedExpressionVars);
 
         for (var i = 0; i < options.targets.length; i++) {

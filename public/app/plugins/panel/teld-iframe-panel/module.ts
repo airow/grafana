@@ -476,9 +476,29 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     return viewState.fullscreen && editMode;
   }
 
+  imports = {
+    '_': _,
+    'moment': moment,
+    //'contextSrv': this.contextSrv,
+    'config': config,
+    'helper': {
+      get: function (value, name) {
+        return value === name ? "" : value;
+      },
+      templateSrv: this.templateSrv,
+      dashVariables: {},
+      getDashVar: function (name, field) {
+        //debugger;
+        field = field || 'value';
+        return (this.dashVariables[name] || { value: "", text: "" })[field];
+      }
+    }
+  };
+
   formatSrc(src) {
     let returnValue = src;
-    let compiled = _.template(src);
+    this.imports.helper.dashVariables = _.transform(this.templateSrv.variables, (r, v) => { r[v.name] = v.current; }, {});
+    let compiled = _.template(src, { imports: this.imports });
 
     let bindSource = {
       name: config.bootData.user.name,

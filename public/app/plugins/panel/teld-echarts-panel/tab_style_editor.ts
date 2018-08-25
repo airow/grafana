@@ -38,6 +38,11 @@ export class TabStyleEditorCtrl {
     };
 
     this.panel.metricsLegend = this.panel.metricsLegend || { enable: false, legends: [] };
+    this.panel.groupBarLegendsConf = this.panel.groupBarLegendsConf || { enable: false, legends: [] };
+  }
+
+  addGroupBarLegend() {
+    this.panel.groupBarLegendsConf.legends.push({ enable: true, legend: { selected: true } });
   }
 
   setUnitFormat(axis, subItem) {
@@ -61,6 +66,34 @@ export class TabStyleEditorCtrl {
   }
 
   metricsLegendFun() {
+    var metrics = _.keys(this.panelCtrl.dataListMetric);
+    var legends = this.panel.metricsLegend.legends;
+    var dataTaget = _.map(metrics, (value, index) => {
+      if (_.get(legends[index], 'key') === value) {
+        return legends[index];
+      } else {
+        return { key: value, enable: false, legend: { name: value, selected: true } };
+      }
+    });
+
+    this.panel.metricsLegend.legends = dataTaget;
+  }
+
+  refreshMetricsLegendFun(metricsLegend) {
+    var metrics = _.keys(this.panelCtrl.dataListMetric);
+    var legends = metricsLegend.legends;
+    var dataTaget = _.map(metrics, (value, index) => {
+      if (_.get(legends[index], 'key') === value) {
+        return legends[index];
+      } else {
+        return { key: value, enable: true, legend: { name: value, selected: true } };
+      }
+    });
+
+    metricsLegend.legends = dataTaget;
+  }
+
+  metricsLegendFun2() {
 
     var filterDataList = this.panelCtrl.dataList;
     var legends = this.panel.metricsLegend.legends;
@@ -73,6 +106,12 @@ export class TabStyleEditorCtrl {
     });
 
     this.panel.metricsLegend.legends = dataTaget;
+  }
+
+  removeItem(itemArray, item) {
+    var index = _.indexOf(itemArray, item);
+    itemArray.splice(index, 1);
+    this.refresh();
   }
 
   move(itemArray, index, newIndex) {

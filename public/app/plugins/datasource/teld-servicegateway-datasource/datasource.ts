@@ -49,12 +49,13 @@ export class TeldServiceGatewayDatasource {
     'config': config,
     'urlHelper': {
       sghost: function (host) {
+        host = host || 'sgi';
         let { protocol, hostname, port } = window.location;
         let domain = hostname.split('.');
         if (_.size(domain) >= 2) {
           domain = [domain.pop(), domain.pop()].reverse();
         }
-        return `${protocol}//${host}.${domain.join(".")}/`;
+        return `${protocol}//${host}.${domain.join(".")}`;
       }
     }
   };
@@ -94,8 +95,10 @@ export class TeldServiceGatewayDatasource {
             var originalVal = eachitem.v;
             var v = eachitem.v || '';
             v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+            let compiled = _.template(v, templateSettings);
+            v = compiled(bindData);
             if (originalVal === v && _.includes(v, '$')) { return; }
-            result[eachitem.k] = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+            result[eachitem.k] = v;
           }, {});
           if (_.size(param.value) === 0) {
             return;

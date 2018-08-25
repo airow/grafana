@@ -746,8 +746,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         delete tabInfo.dsQuery;
         delete tabInfo.selectedIndex;
       }
-
       let itemTarget = _.find(this.panel.targets, { refId });
+      if (_.isNil(itemTarget)) {
+        return;
+      }
       let itemTargetConf = itemTarget.conf;
       let variablePrefix = `${itemTargetConf.variablePrefix}_ds_`;
       let nullValue = itemTargetConf.meta.datasource.nullValue;
@@ -881,6 +883,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.updateTimeRange();
     // load datasource service
     this.setTimeQueryStart();
+    if (_.isNil(this.currentTarget) || _.isNil(this.currentTarget.datasource)) {
+      return Promise.resolve();
+    }
     return this.datasourceSrv.get(this.currentTarget.datasource)
       .then(this.issueQueries.bind(this))
       .then(this.handleQueryResult.bind(this))
@@ -1056,6 +1061,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   variableIsHide(variable) {
     return _.includes(['%', ".", "N/A"], variable.current.text);
+  }
+
+  defineQuerySwitch() {
+    this.row.height = 1;
+    this.defineQuery = !this.defineQuery;
   }
 
   alert(s) {

@@ -12,7 +12,6 @@
       <label class="gf-form-label" ng-repeat="var in ctrl.dashVars() track by $index">vars['{{var}}']</label>
     </div>
   </div>
-
   <div class="section">
     <h5 class="section-heading">Calc Serie</h5>
     <div class="gf-form-inline">
@@ -20,6 +19,7 @@
         <gf-form-switch class="gf-form" label="ALL" label-class="width-4" checked="ctrl.allChecked" on-change="ctrl.checkedAll()"></gf-form-switch>
         <label class="gf-form-label query-keyword width-10">标签</label>
         <label class="gf-form-label query-keyword width-30">表达式</label>
+        <label class="gf-form-label query-keyword width-5">位置</label>
         <label class="gf-form-label">
           <a ng-click="ctrl.panel.calcSeriesConf.push({enable:true,target:''})">
             <i class="fa fa-plus"></i>
@@ -32,6 +32,7 @@
         <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-4" checked="calcSerie.enable" on-change="ctrl.refresh()"></gf-form-switch>
         <input type="text" class="gf-form-input width-10" ng-model="calcSerie.target" spellcheck="false" placeholder="target">
         <input type="text" class="gf-form-input width-30" ng-model="calcSerie.expression" spellcheck="false" placeholder="value">
+        <input type="text" class="gf-form-input width-5" ng-model="calcSerie.sort" spellcheck="false" placeholder="value">
         <label class="gf-form-label">
           <a ng-click="ctrl.removeItem(ctrl.panel.calcSeriesConf, option)">
             <i class="pointer fa fa-remove"></i>

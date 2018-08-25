@@ -258,8 +258,9 @@
           <span class="gf-form-label width-14">Values separated by comma</span>
           <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" placeholder="1, 10, 20, myvalue" required></input>
         </div>
+        <gf-form-switch class="gf-form" label="canSaved" label-class="" checked="current.canSaved">
+        </gf-form-switch>
       </div>
-
       <div ng-if="current.type === 'teldExpression'" class="gf-form-group">
         <h5 class="section-heading">options</h5>
         <div class="gf-form">

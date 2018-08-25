@@ -38,9 +38,9 @@
         <label class="gf-form-label width-7">offset</label>
         <input type="text" class="gf-form-input width-8" ec-valwrap ng-model="yAxis.offset">
       </div>
-      <div class="gf-form" ng-if="false">
+      <div class="gf-form">
         <label class="gf-form-label width-7">position</label>
-        <select class="gf-form-input width-8" ng-model="yAxis.position" ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
+        <select class="gf-form-input width-8" ng-model="yAxis.position" ng-options="f for f in ctrl.panel.exchangeAxis?['top','bottom']:['left','right']">
         </select>
       </div>
     </div>
@@ -193,6 +193,8 @@
         <select class="gf-form-input width-7" ng-model="seriesType.type" ng-options="f for f in ['bar','line']">
         </select>
       </div>
+      <gf-form-switch ng-if='seriesType.type=="line"' class="gf-form" label="smooth" label-class="query-keyword width-7" checked="seriesType.smooth">
+      </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">yAxis</label>
         <select class="gf-form-input width-7" ng-model="seriesType.yAxis" ng-options="f for f in ctrl.yAxisList()">
@@ -228,18 +230,51 @@
         </gf-form-switch>
         <div class="gf-form">
           <label class="gf-form-label width-7">position</label>
-          <select class="gf-form-input width-8" ng-model="seriesType.label.normal.position" ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
+          <select class="gf-form-input width-7" ng-model="seriesType.label.normal.position" ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
           </select>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-7">rotate
             <tip>标签旋转。从 -90 度到 90 度。正值是逆时针</tip>
           </label>
-          <input type="number" class="gf-form-input width-8" ng-model="seriesType.label.normal.rotate">
+          <input type="number" class="gf-form-input width-7" ng-model="seriesType.label.normal.rotate">
         </div>
       </div>
+      <!-- areaStyle start -->
+      <div ng-if='seriesType.type=="line"'>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-14">areaStyle</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">opacity
+            <tip>图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。</tip>
+          </label>
+          <input type="number" min='0' step='0.1' max='1' class="gf-form-input width-7" bs-typeahead="[0,0.7]" min-length="0" ng-model="seriesType.areaStyle.normal.opacity">
+        </div>
+      </div>
+      <!-- areaStyle end -->
     </div>
     <!-- label end -->
+
+    <!-- bar start -->
+    <div class="section gf-form-group" ng-if='seriesType.type=="bar"'>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-14">base</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">stack</label>
+        <input type="text" class="gf-form-input width-7" ec-valwrap ng-model="seriesType.stack">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">barWidth</label>
+        <input type="text" class="gf-form-input width-7" ec-valwrap ng-model="seriesType.bar.barWidth">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">barGap</label>
+        <input type="text" class="gf-form-input width-7" ec-valwrap ng-model="seriesType.bar.barGap">
+      </div>
+    </div>
+    <!-- bar end -->
 
     <!-- markPoint start-->
     <div class="section gf-form-group">
@@ -271,7 +306,7 @@
     </div>
     <!-- markPoint end -->
 
-    <!-- markPoint start-->
+    <!-- markLine start-->
     <div class="section gf-form-group">
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-16">markLine</label>
@@ -304,6 +339,7 @@
       </div>
     </div>
     <!-- markLine end -->
+
   </div>
   <!-- END SeriesTypeConf -->
 </div>

@@ -1,5 +1,20 @@
 <div ng-switch="ctrl.panel.serieType">
   <div class="editor-row" ng-switch-when="line">
+    <!-- areaStyle start -->
+    <div class="section gf-form-group">
+        <gf-form-switch class="gf-form" label="smooth" label-class="query-keyword width-7" checked="ctrl.panel.echarts.series.line.smooth">
+        </gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-14">areaStyle</label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">opacity
+            <tip>图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。</tip>
+          </label>
+          <input type="number" min='0' step='0.1' max='1' class="gf-form-input width-7" bs-typeahead="[0,0.7]" min-length="0" ng-model="ctrl.panel.echarts.series.line.areaStyle.normal.opacity">
+        </div>
+    </div>
+    <!-- areaStyle end -->
     <div class="section gf-form-group">
       <h5 class="section-heading">Label</h5>
       <div class="gf-form-inline">

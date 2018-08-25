@@ -27,7 +27,8 @@ export class SeriesTypeEditorCtrl {
     var groupKey = _.map(filterDataList, 'groupKey');
     var dataTaget = _.map(filterDataList, 'target');
     var calcSeriesTaget = _.map(this.panel.calcSeriesConf, 'target');
-    var seriesName = _.map(this.panelCtrl.ecOption.baseOption.series, 'name');
+    var ecOptionSeries = _.get(this.panelCtrl, 'ecOption.baseOption.series', []);
+    var seriesName = _.map(ecOptionSeries, 'name');
     return _.union(refId, groupKey, dataTaget, calcSeriesTaget, seriesName);
   }
 
