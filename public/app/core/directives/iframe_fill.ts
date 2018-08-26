@@ -27,7 +27,15 @@ function iframeFill($animate) {
         scope.$on('$destroy', function () {
           elem.unbind('load', fill);
         });
+
+        scope.$root.onAppEvent('querybar-queryswitch', function (e, data) {
+          console.log(elem);
+          //fill();
+          setTimeout(fill,100);
+          console.log('scope.$root.onAppEvent("querybar-queryswitch"');
+        });
       }
+
 
       /* 框架不支持大小变化调整iframe大小
       function resize() {
