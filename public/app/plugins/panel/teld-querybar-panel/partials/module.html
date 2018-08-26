@@ -1,9 +1,9 @@
 <div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
-      <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" style="margin-top: 0px;">
+      <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }" style="margin-top: 0px;">
         <li class="gf-tabs-item" ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets">
-          <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.changeQueryBarTab(target)"
+          <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.manualChangeQueryBarTab(target)"
             ng-class="{active: ctrl.currentTargetRefId === target.refId}">
             {{target.conf.title}}
             <!-- <i ng-if="target.conf.required" style="color: red;" class="fa fa-asterisk"></i> -->

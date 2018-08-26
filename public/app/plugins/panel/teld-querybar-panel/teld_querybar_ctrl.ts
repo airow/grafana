@@ -43,7 +43,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   };
 
-  isQuerybar: true;
+  isFetchDatabar: true;
   //currentTab: string;
   datasource: string;
   metricSources: any[];
@@ -416,7 +416,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
 
     let target = this.currentTarget;
-    if (target.conf.required || (this.panel.saveVariable && this.isFirstWithSaveVariable)) {
+    //if (target.conf.required || (this.panel.saveVariable && this.isFirstWithSaveVariable)) {
+    if (target.conf.required) {
       let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
       delete tabInfo.selectedIndex;
       if (_.isNil(tabInfo.selectedIndex)) {
@@ -446,8 +447,15 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         //this.query();
       }
     } else {
-      let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
-      this.setQueryBarVariable(target, tabInfo.selectedIndex, {});
+      if (this.panel.saveVariable) {
+        if (target.conf.required) {
+          let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
+          this.setQueryBarVariable(target, tabInfo.selectedIndex, {});
+        }
+      } else {
+        let tabInfo = _.get(this.currentTabInfo, this.currentTarget.refId, {});
+        this.setQueryBarVariable(target, tabInfo.selectedIndex, {});
+      }
     }
 
     this.render();
@@ -457,10 +465,18 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     console.log('onRender');
     this.renderingCompleted();
     if (this.device.ios) {
-      this.$timeout(() => { this.spin = false; }, 2000);
+      this.$timeout(() => {
+        this.spin = false;
+        this.isFetchData = false;
+      }, 2000);
     } else {
       this.spin = false;
+      this.isFetchData = false;
     }
+  }
+
+  isLoading() {
+    return this.isFetchData || this.spin;
   }
 
   targetSelectedIndex(target) {
@@ -526,6 +542,17 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     return options;
   }
 
+  manualChangeQueryBarTab(target) {
+    if (this.panel.multiSyncLinkage /*&& _.size(target.conf.linkage) > 0*/) {
+      if (this.isFetchData || this.spin) {
+        this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000);
+        return;
+      }
+    }
+
+    this.changeQueryBarTab(target);
+  }
+
   changeQueryBarTab(target) {
     //this.currentTab = refId;
     if (target) {
@@ -582,7 +609,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     return exprVariables;
   }
 
+  isFetchData = false;
   toggleQuery(target) {
+    this.isFetchData = true;
     this.setQuerybarDs(target);
     if (_.isNil(this.currentTarget)) {
       this.currentTarget = target;
@@ -781,11 +810,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   multistageSyncLinkage(target) {
+    this.isFetchData = true;
     let linkages = [];
     this.linkageMap(linkages, target);
 
     async.mapSeries(linkages, (item, cb) => {
       this.skipSyncLinkageTarget = true;
+      this.isFetchData = true;
       let refId = item.refId;
       let linkTarget = _.find(this.panel.targets, { refId: refId });
 
@@ -797,6 +828,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }, (err, r) => {
       this.currentTarget = target;
       this.skipSyncLinkageTarget = false;
+      this.isFetchData = false;
       this.query();
       this.changeQueryBarTab(target);
     });
@@ -1044,6 +1076,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.timeSrv.refreshDashboard();
     }
     this.variables2LocalStorage();
+    //this.isFetchData = false;
     return true;
   }
 
@@ -1066,6 +1099,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   defineQuerySwitch() {
     this.row.height = 1;
     this.defineQuery = !this.defineQuery;
+    if (false === this.defineQuery) {
+      this.$scope.$root.appEvent("querybar-queryswitch", this);
+    }
   }
 
   alert(s) {
