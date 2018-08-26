@@ -1632,7 +1632,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   calcMin(yAxis, series) {
     if (yAxis && yAxis.calcMin) {
-      let min = _.minBy(_.map(series, data => { return data.value || 0; })).value || 0;
+      let min = _.minBy(_.map(series, data => { return data.value || { value: 0 }; })).value || 0;
       if (min > yAxis.min) {
         yAxis.min = _.toInteger(min / yAxis.min) * yAxis.min;
       } else {
