@@ -1,0 +1,133 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+<div class="row" style="position: relative;">
+  <div class="OrerationTitleHeightKH">
+    <span>&nbsp;&nbsp;</span>
+    <span ng-repeat="QueryOptions in ctrl._panle.QueryList">
+      <span ng-if="QueryOptions.Querytype!='date' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow" style="color:black" class="">
+        {{QueryOptions.QueryTitle}}:<span class="OrerationTitleHeightKHSpan">{{QueryOptions.QueryClickName}}</span>
+      </span>
+      <span ng-if="QueryOptions.Querytype!='date' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickVal!=''" style="color:black" class="">
+        {{QueryOptions.QueryTitle}}:
+        <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.isClick"><span class="OrerationTitleHeightKHSpan">{{QueryOption.OptionName}}</span>
+          <span ng-if="!$last">;</span>
+        </span>
+      </span>
+      <span ng-if="QueryOptions.Querytype=='date' && QueryOptions.isViewShow" style="color:black" class="">
+        {{QueryOptions.QueryTitle}}:
+        <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.ClickValue!=''"><span class="OrerationTitleHeightKHSpan">{{QueryOption.ClickValue | date:'yyyy-MM-dd'}}</span>
+          <span ng-if="!$last">~</span>
+        </span>
+      </span>
+    </span>
+  </div>
+  <div ng-click="ctrl.divOperationFilter()" class="btnFilterKH" style="margin-right: 11px;">筛选
+    <span class="btnFilterKHRed"></span>
+  </div>
+  <div class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-8 col-md-offset-4" ng-show="ctrl.KwHuTuCaoDropDown">
+    <div style="display:inline-block;width:100%" ng-repeat="QueryOptions in ctrl._panle.QueryList">
+      <div id="YunMonthOffTitle" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanal" style="line-height:30px !important;"
+        ng-if="QueryOptions.QueryTitle">
+        <span class="yunClass">{{QueryOptions.QueryTitle}}：</span>
+      </div>
+      <div id="YunMonthOff" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanalKH">
+        <input type="button" class="btnKeHuTuCaoScreen termRight" ng-if="QueryOptions.Querytype=='button' && !QueryOptions.MultiClick"
+          ng-class="{searchCondBtnActive:QueryOptions.QueryClickName==QueryOption.OptionName}" value="{{QueryOption.OptionName}}"
+          ng-click="ctrl.selectVariable(QueryOptions,QueryOption.OptionName,QueryOption.ClickValue); " onfocus=" this.blur(); "
+          ng-repeat="QueryOption in QueryOptions.QueryOptions" />
+
+        <input type="button" class="btnKeHuTuCaoScreen termRight" ng-if="QueryOptions.Querytype=='button' && QueryOptions.MultiClick"
+          ng-class="{searchCondBtnActive:QueryOption.isClick}" value="{{QueryOption.OptionName}}" ng-click="ctrl.selectVariableMulti(QueryOption); "
+          onfocus=" this.blur(); " ng-repeat="QueryOption in QueryOptions.QueryOptions" />
+
+        <div class="col-lg-4 gf-timepicker-component-v" ng-if="QueryOptions.Querytype=='date'" ng-repeat="QueryOption in QueryOptions.QueryOptions">
+          <input type="text" class="form-control date-pack" datepicker-popup="{{ctrl.myDefaultDateFormat}}" ng-model="QueryOption.ClickValue"
+            is-open="QueryOption.opened" datepicker-options="ctrl.dateOptions" custom-class="ctrl.getDayClass(date, mode)"  ng-required="true" show-weeks="false" clear-text="清空" current-text="今天" close-text="确定" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default date-pack-button" ng-click="ctrl.open(QueryOption,$event)">
+              <i class="fa fa-calendar"></i>
+            </button>
+          </span>
+        </div>
+      </div>
+      <hr class="SplitLineKH">
+    </div>
+    <div style="display:inline-block;width:100%;">
+      <div id="YunBtn" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="padding:10px 0;line-height:36px !important;">
+        <input type="button" class="btnKeHuTuCaoScreen" ng-style="{'background-color':ctrl._panle.ButtonResetColor,'border-color':ctrl._panle.ButtonResetColor}"
+          ng-click="ctrl.Filterreset();" value="重置" onfocus="this.blur()" />
+        <input type="button" class="btnKeHuTuCaoScreen" ng-style="{'background-color':ctrl._panle.ButtonCancelColor,'border-color':ctrl._panle.ButtonCancelColor}"
+          ng-click="ctrl.FilterC();" value="取消" onfocus="this.blur()" />
+        <input type="button" class="btnKeHuTuCaoScreen btnMapSubmit" ng-style="{'background-color':ctrl._panle.ButtonOkColor,'border-color':ctrl._panle.ButtonOkColor}"
+          value="确认" onfocus="this.blur()" ng-click="ctrl.setDashboardVariables();ctrl.divOperationFilter();" />
+      </div>
+      {{ctrl.ButtonOkColor}}
+    </div>
+  </div>
+  <div ng-show="ctrl.KwHuTuCaoDropDown" style="position: fixed;width: 100%;height: 1000000px;margin-top: -200px;" ng-click="ctrl.FilterC();"></div>
+</div>

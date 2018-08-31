@@ -1,0 +1,184 @@
+td{
+  border: 1px solid #EDEDED;
+}
+/* .full button span {
+  background-color: limegreen;
+  border-radius: 32px;
+  color: black;
+}
+.partially button span {
+  background-color: orange;
+  border-radius: 32px;
+  color: black;
+} */
+.btnFilterKH {
+  height: 27px;
+  line-height: 25px;
+  width: 50px;
+  background-color: #fff;
+  border: 1px solid #d7d9db;
+  border-radius: 4px;
+  color: #3e3e3e;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 5px;
+  float: right;
+  cursor: pointer;
+  position: relative;
+  margin-top: -25px;
+}
+.btnFilterKHRed {
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 10px;
+  position: absolute;
+  margin-left: 40px;
+  top: -3px;
+  right: -3px;
+}
+    .KwHuTuCaoDropDownPanal {
+      padding: 10px 0;
+      border-left: 1px solid #d2d6db;
+      position: absolute;
+      top: 100%;
+      z-index: 51;
+      background-color: #fff;
+      height: 400px;
+      line-height: 41px;
+      overflow-y: auto;
+      margin-top: 6px;
+      margin-right: -39px;
+      border-bottom: 1px solid #d2d6db;
+      right:43px;
+  }
+  .searchCondBtnActiveKH {
+      background-color: #e7f4ff !important;
+      border: 1px solid #4ea9f1 !important;
+      color: #4ea9f1 !important;
+  }
+  .searchCondBtnActive {
+    background-color: #e7f4ff!important;
+    border: 1px solid #4ea9f1!important;
+    color: #4ea9f1!important;
+  }
+  .OrerationTitleHeightKH{
+      line-height: 27px;
+      font-size: .875rem;
+  }
+  .OrerationTitleHeightKHSpan{
+      color: blue;
+  }
+  @media (max-width: 768px){
+    .OrerationTitleHeightKH{
+      display: none;
+    }
+    .btnFilterKH{
+      margin-top: 0px;
+    }
+  }
+  .btnKeHuTuCaoScreen {
+      height: 35px;
+      line-height: 31px;
+      width: 32.5%;
+      background-color: #fff;
+      border: 1px solid #d7d9db;
+      border-radius: 5px;
+      color: #3e3e3e;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 5px;
+      margin-right: 3px;
+      margin-left: 3px;
+      padding: 0px 10px;
+  }
+  .SplitLineKH {
+      margin: 0px;
+      border-top: 1px solid #d7d9db;
+      width: 100%
+  }
+  .btnMapSubmit {
+    background-color: #4ea9f1;
+    border: 1px solid #4ea9f1;
+    color: #fff;
+  }
+  .date-pack{
+    border: 1px solid #dedede;
+    width: 70%;
+    height: 30px;
+  }
+  .date-pack-button{
+    border: 1px solid #dedede;
+    padding: .3rem .6rem;
+    margin-top: -5px;
+  }
+.gf-timepicker-component-v{
+  padding: .5rem 0 1rem;
+}
+.gf-timepicker-component-v thead button.btn-default {
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  background-color: #e7e7e7;
+  background-image: linear-gradient(to bottom,#ECECEC,#dfdfdf);
+  background-repeat: repeat-x;
+  border-color: #ECECEC;
+}
+.gf-timepicker-component-v thead button.btn-sm {
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  background-color: #FFFFFF;
+  background-repeat: repeat-x;
+  font-size: .875rem;
+  background-image: none;
+  border: none;
+  padding: 5px 11px;
+  color: #555;
+}
+
+.gf-timepicker-component-v thead button.btn-default.active, .gf-timepicker-component-v thead button.btn-default.disabled, .gf-timepicker-component-v thead button.btn-default:active, .gf-timepicker-component-v thead button.btn-default:focus, .gf-timepicker-component-v thead button.btn-default:hover, .gf-timepicker-component-v thead button.btn-default[disabled] {
+  color: #555;
+  background-image: none;
+  background-color: #FFFFFF;
+}
+.gf-timepicker-component-v thead button.btn-sm.active, .gf-timepicker-component-v thead button.btn-sm.disabled, .gf-timepicker-component-v thead button.btn-sm:active, .gf-timepicker-component-v thead button.btn-sm:focus, .gf-timepicker-component-v thead button.btn-sm:hover, .gf-timepicker-component-v thead button.btn-sm[disabled] {
+  color: #555;
+  background-image: none;
+  background-color: #FFFFFF;
+}
+
+.gf-timepicker-component-v tbody button.btn-default {
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  background-color: #e7e7e7;
+  background-image: linear-gradient(to bottom,#ECECEC,#dfdfdf);
+  background-repeat: repeat-x;
+  border-color: #ECECEC;
+}
+.gf-timepicker-component-v tbody button.btn-sm {
+  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+  background-color: #E2E2EC;
+  background-repeat: repeat-x;
+  font-size: .875rem;
+  background-image: none;
+  border: none;
+  padding: 5px 11px;
+  color: #555;
+}
+
+.gf-timepicker-component-v tbody button.btn-default.active, .gf-timepicker-component-v tbody button.btn-default.disabled, .gf-timepicker-component-v tbody button.btn-default:active, .gf-timepicker-component-v tbody button.btn-default:focus, .gf-timepicker-component-v tbody button.btn-default:hover, .gf-timepicker-component-v tbody button.btn-default[disabled] {
+  color: #555;
+  background-image: none;
+  background-color: #FFFFFF;
+}
+.gf-timepicker-component-v tbody button.btn-sm.active, .gf-timepicker-component-v tbody button.btn-sm.disabled, .gf-timepicker-component-v tbody button.btn-sm:active, .gf-timepicker-component-v tbody button.btn-sm:focus, .gf-timepicker-component-v tbody button.btn-sm:hover, .gf-timepicker-component-v tbody button.btn-sm[disabled] {
+  color: #555;
+  background-image: none;
+  background-color: #FFFFFF;
+}
+.gf-timepicker-component-v button.btn-sm.active span {
+  color: #2AB2E4;
+  font-weight: 700;
+}
+
+.text-muted {
+  color: #b3b3b3;
+}

@@ -1,0 +1,186 @@
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <h5 class="section-heading">teldfilter options</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">FilterTitle</label>
+      <input class="input-small gf-form-input" placeholder="查询名称" ng-model="ctrl.panel.FilterTitle" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">versions</label>
+      <input class="input-small gf-form-input" placeholder="版本号" ng-model="ctrl.panel.versions" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">ButtonOk Color</label>
+      <span class="max-width-10">
+        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.ButtonOkColor" ng-change="ctrl.render()"></spectrum-picker>
+      </span>
+      <input class="input-small gf-form-input" placeholder="输入色值" ng-model="ctrl.panel.ButtonOkColor" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">ButtonCancel Colors</label>
+      <span class="max-width-10">
+        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.ButtonCancelColor"></spectrum-picker>
+      </span>
+      <input class="input-small gf-form-input" placeholder="输入色值" ng-model="ctrl.panel.ButtonCancelColor" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">ButtonReset Color</label>
+      <span class="max-width-10">
+        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.ButtonResetColor"></spectrum-picker>
+      </span>
+      <input class="input-small gf-form-input" placeholder="输入色值" ng-model="ctrl.panel.ButtonResetColor" />
+    </div>
+    <div class="gf-form">
+      <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8" checked="ctrl.panel.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading"></h5>
+    <!-- <label class="gf-form-label">
+
+          </label> -->
+    <!-- <gf-form-switch class="gf-form" label="IsDataSource" label-class="width-8" checked="ctrl.panel.IsDataSource" on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+            <label class="gf-form-label width-9">IsShow</label>
+            <input type="number" class="input-small gf-form-input width-9" ng-model="ctrl.panel.IsShow" ng-model-onblur />
+        </div> -->
+    <div ng-repeat="QueryOptions in ctrl.panel.QueryList">
+      <div class="gf-form">
+        <label class="gf-form-label width-9">QueryTitle{{$index+1}}</label>
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入名称" ng-model="QueryOptions.QueryTitle" ng-change="ctrl.render()"
+          ng-model-onblur />
+        <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9" placeholder="请输入默认选项名称"
+          ng-model="QueryOptions.QueryClickName" ng-change="ctrl.render()" ng-model-onblur />
+        <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9" placeholder="请输入默认值"
+          ng-model="QueryOptions.QueryClickVal" ng-change="ctrl.render()" ng-model-onblur />
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入全局变量名称"
+          ng-model="QueryOptions.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
+        <gf-form-switch ng-if="QueryOptions.Querytype!='date'" class="gf-form" label="MultiClick" label-class="width-8" checked="QueryOptions.MultiClick"
+          on-change="ctrl.render()"></gf-form-switch>
+          <gf-form-switch class="gf-form" label="aloneRelease" ng-if="QueryOptions.MultiClick" label-class="width-8" checked="QueryOptions.aloneReleaseAttribute"
+          on-change="ctrl.render()"></gf-form-switch>
+        <label class="gf-form-label width-9">type</label>
+        <!-- <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','input','select','date']"></select> -->
+        <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','date']"></select>
+        <gf-form-switch class="gf-form" label="isViewShow" label-class="width-8" checked="QueryOptions.isViewShow" on-change="ctrl.render()"></gf-form-switch>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(ctrl.panel.QueryList,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(ctrl.panel.QueryList,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-if="$index!=0">
+          <a ng-click="ctrl.removeVariable(ctrl.panel.QueryList, QueryOptions)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-if="$index==0">
+          <a ng-click="ctrl.panel.QueryList.push({
+          QueryTitle:'',
+          QueryClickName:'',
+          QueryClickVal:'',
+          QueryAttributeName:'',
+          QueryOptions:false,
+          Querytype: 'button',
+          MultiClick: false,
+          aloneReleaseAttribute: true,
+          isViewShow: true,
+          QueryOptions:[{
+            OptionName:'',
+            ClickValue:'',
+            TimeClickValue: '',
+            QueryAttributeName: '',
+            CheckoutTimeAttribute:'',
+            Checkoutwhere:'',
+            isClick:false,
+            opened: false
+          }]
+        })">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+      <label class="gf-form-label width-9">QueryOption{{$index+1}}</label>
+      <div class="gf-form" ng-repeat="QueryOption in QueryOptions.QueryOptions">
+        <input ng-if="QueryOptions.Querytype=='button' || QueryOptions.Querytype=='select' " type="text" class="input-small gf-form-input max-width-9"
+          placeholder="请输入名称" ng-model="QueryOption.OptionName" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype!='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="请输入查询值"
+          ng-model="QueryOption.ClickValue" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="请输入查询值"
+          ng-model="QueryOption.TimeClickValue" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.MultiClick || QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="请输入变量" ng-model="QueryOption.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="校验时间变量" ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
+        <select  ng-if="QueryOptions.Querytype=='date'"  class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于']"></select>
+        <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form" label="isClick" label-class="width-8"
+          checked="QueryOption.isClick" on-change="ctrl.render()"></gf-form-switch>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(QueryOptions.QueryOptions,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(QueryOptions.QueryOptions,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-if="$index!=0">
+          <a ng-click="ctrl.removeVariable(QueryOptions.QueryOptions, QueryOption)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-if="$index==0">
+          <a ng-click="QueryOptions.QueryOptions.push({
+            OptionName:'',
+            ClickValue:'',
+            TimeClickValue: '',
+            QueryAttributeName: '',
+            CheckoutTimeAttribute:'',
+            Checkoutwhere:'',
+            isClick:false,
+            opened: false
+          })">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+      <hr>
+    </div>
+    <!-- <h5 class="section-heading">Variable</h5>
+    <div class="gf-form"  ng-repeat="Variable in ctrl.panel.VariableList">
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入变量名称" ng-model="Variable.VariableName" ng-change="ctrl.render()"
+          ng-model-onblur />
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入变量公式"
+          ng-model="Variable.VariableValue" ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label" ng-hide="$last">
+              <a ng-click="ctrl.move(ctrl.panel.VariableList,$index,$index+1)">
+                <i class="pointer fa fa-arrow-down"></i>
+              </a>
+            </label>
+            <label class="gf-form-label" ng-hide="$first">
+              <a ng-click="ctrl.move(ctrl.panel.VariableList,$index,$index-1)">
+                <i class="pointer fa fa-arrow-up"></i>
+              </a>
+            </label>
+            <label class="gf-form-label" ng-if="$index!=0">
+              <a ng-click="ctrl.removeVariable(ctrl.panel.VariableList, Variable)">
+                <i class="fa fa-remove"></i>
+              </a>
+            </label>
+            <label class="gf-form-label" ng-if="$index==0">
+              <a ng-click="ctrl.panel.VariableList.push({
+                VariableName: '',
+                VariableValue: ''
+              })">
+                <i class="fa fa-plus"></i>
+              </a>
+            </label>
+      </div> -->
+  </div>
+</div>
