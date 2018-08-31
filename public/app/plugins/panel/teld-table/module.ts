@@ -250,7 +250,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     }
     this.isFirstRender = false;
     this.table = transformDataToTable(this.dataRaw, this.panel);
-    if (this.panel.jsonr2c !== true) {
+    if (this.panel.teldtemplate !== "teldboard" && this.panel.jsonr2c !== true) {
       this.table.sort(this.panel.sort);
     }
     return super.render(this.table);
