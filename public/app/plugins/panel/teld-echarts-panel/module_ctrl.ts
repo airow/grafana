@@ -29,6 +29,7 @@ import * as graphutils from '../../../core/utils/graphutils';
 import {calcSeriesEditorComponent} from '../graph/calcSeries_editor';
 import {seriesTypeEditorComponent} from './editor/seriesType_editor';
 import { cumulativeEditorComponent, cumulative } from '../graph/cumulative_editor';
+import empty_option from './theme/empty_option';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
@@ -520,7 +521,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   calcSeries(calcSeriesConf, data, hideMetrics) {
 
     var calcSeriesFun = this.isSeriesBar() ?
-      (this.panel.groupBar ? graphutils.calcSeriesGropuBar : graphutils.calcSeriesBar)
+      (this.panel.calcSeriesGropuBar ? graphutils.calcSeriesGropuBar : graphutils.calcSeriesBar)
       : graphutils.calcSeries;
 
     return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
@@ -1201,6 +1202,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   onRender() {
 
+    if (_.size(_.flatten(_.map(this.dataList, 'datapoints'))) === 0) {
+      //this.ecOption.baseOption = empty_option;
+      if (this.ecInstance) {
+        this.ecInstance.clear();
+        return;
+      }
+    }
+
     if (this.enablePanelRefresh && (!this.ecSeries || this.ecSeries.length === 0)) {
       /**处理面板自刷新，取不到数无法显示的问题 */
       this.onMetricsPanelRefresh();
@@ -1264,15 +1273,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       title: _.cloneDeep(this.panel.echarts.title),
       tooltip: _.cloneDeep(this.panel.echarts.tooltip),
       xAxis,
-      yAxis,
+      yAxis: _.cloneDeep(yAxis),
       grid,
       //series: this.ecSeries,
       series: this.getSeries()
       //legend: [legend]
       //legend: legend
     };
-
-    this.calcMin(yAxis, option.series);
 
     let legend: any = { name: 'legend', formatter: formatter.bind(this), data: this.legend(option.series) };
     legend = _.defaultsDeep(legend, this.panel.echarts.legend);
@@ -1462,7 +1469,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       var defaultAxis = _.cloneDeep(leftYAxis);
       _.unset(defaultAxis, 'max');/** 处理最大值 */
       _.each(yAxis, (yAxis, index) => {
-        var y = _.defaultsDeep(yAxis, defaultAxis);
+        var y = _.cloneDeep(_.defaultsDeep(yAxis, defaultAxis));
         //y.offset = (index + 1) * -80;
         var { format, decimals } = y.axisLabel;
         //var formatterConf = { format: format, decimals: decimals } = y.axisLabel;
@@ -1476,7 +1483,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             return value;
           };
         }
-        this.calcMin(y, option.series);
         option[axis.axis].push(y);
       });
     }
@@ -1627,17 +1633,40 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       };
     }
     this.stackSumLabel(option.series);
+
+    this.calcMin(option, axis);
     return option;
   }
 
-  calcMin(yAxis, series) {
+  calcMinseries(yAxis, series) {
     if (yAxis && yAxis.calcMin) {
-      let min = _.minBy(_.map(series, data => { return data.value || { value: 0 }; })).value || 0;
-      if (min > yAxis.min) {
-        yAxis.min = _.toInteger(min / yAxis.min) * yAxis.min;
+      //let min = _.min(_.map(_.map(series, 'data'), dataItem => { return dataItem.value || 0; }));
+      let min = _.min(_.map(series.data, dataItem => { return dataItem.value || 0; }));
+      let c = _.toNumber("1" + _.repeat(0, ("" + _.toInteger(min)).length - 2));
+      c = yAxis.min;
+      if (min > c) {
+        yAxis.min = _.toInteger(min / c) * c;
       } else {
         delete yAxis.min;
       }
     }
+  }
+
+  calcMin(option, axis) {
+    if (this.panel.serieType === "pie") {
+      return option;
+    }
+    if (_.isUndefined(axis)) {
+      var isSeriesBar = this.isSeriesBar();
+      axis = { axis: 'yAxis', axisIndex: 'yAxisIndex' };
+      if (this.panel.exchangeAxis) {
+        axis = { axis: 'xAxis', axisIndex: 'xAxisIndex' };
+      }
+    }
+    _.each(option.series, series => {
+      var axisIndex = series[axis.axisIndex] || 0;
+      var yAxis = option[axis.axis][axisIndex] || option[axis.axis];
+      this.calcMinseries(yAxis, series);
+    });
   }
 }
