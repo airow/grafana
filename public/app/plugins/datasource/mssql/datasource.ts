@@ -56,7 +56,7 @@ export class MssqlDatasource {
     var varFilter = { filter: 'sql' };
     var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVarsFormCache('mssql', options.scopedVars,
       this.interpolateVariable, varFilter);
-    console.log(scopedExpressionVars);
+    //console.log(scopedExpressionVars);
     //debugger;
     var queries = _.filter(options.targets, item => {
       return item.hide !== true;

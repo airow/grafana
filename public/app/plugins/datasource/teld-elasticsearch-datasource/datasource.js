@@ -189,7 +189,7 @@ define([
       };
 
       this.query = function (options) {
-        console.log(options);
+        //console.log(options);
         var vSrc = variableSrv;
         vSrc;
         var payload = "";
@@ -213,7 +213,7 @@ define([
         };
 
         var scopedExpressionVars = templateSrv.teldExpression2ScopedVarsFormCache('elasticsearch', options.scopedVars, 'lucene', filterFun);
-        console.log(scopedExpressionVars);
+        //console.log(scopedExpressionVars);
 
         for (var i = 0; i < options.targets.length; i++) {
           target = options.targets[i];
