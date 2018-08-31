@@ -249,3 +249,13 @@
   color: rgb(85, 85, 85);
 }
 
+panel-plugin-teld-querybar-panel .panel-title-container{
+  min-height: 1px !important;
+  padding-top: 0px !important;
+}
+
+@media screen and (max-width: 475px) {
+  .queryBtnHide{
+    display: none;
+  }
+}

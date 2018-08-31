@@ -18,6 +18,11 @@
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
             <input type="text" ng-keyup="ctrl.enterkey(target)"  style="padding-top: 2px; padding-bottom: 2px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
               spellcheck="false" placeholder="{{dsQueryVariable.label}}">
+            <!-- <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
+              <a ng-click="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value=''">
+                <i class="fa fa-remove"></i>
+              </a>
+            </label> -->
           </div>
           <div class="gf-form" ng-if='target.conf.orderByOptions.length'>
             <select style="padding-top: 2px; padding-bottom: 2px; height: 24px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].orderBy" ng-options="option.text for option in target.conf.orderByOptions">
@@ -25,8 +30,15 @@
           </div>
           <div class="gf-form" ng-if="target.conf.dsQueryVariables.length>0">
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
+              <a ng-click="ctrl.undoQuery(target)">
+                <i class="fa fa-undo"></i>
+                <span class="queryBtnHide">重置</span>
+              </a>
+            </label>
+            <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
               <a ng-click="ctrl.toggleQuery(target)">
                 <i class="fa fa-filter"></i>
+                <span class="queryBtnHide">过滤</span>
               </a>
             </label>
           </div>
@@ -71,22 +83,15 @@
             </div>
           </ks-swiper-slide>
         </ks-swiper-container>
-        <!-- <div class="myslides">
-              <ks-swiper-container autoplay="false" swiper="ctrl.swiper" on-ready="ctrl.onReadySwiper(swiper)">
-                  <ks-swiper-slide ng-repeat="s in [1,2,3,4,5,6,7,8,9,10,11,12,13,14]">
-                      <img ng-click="ctrl.alert(s);" ng-src="http://api.randomuser.me/portraits/thumb/men/{{s}}.jpg">
-                  </ks-swiper-slide>
-              </ks-swiper-container>
-              <button ng-click="ctrl.next()">Next</button>
-          </div> -->
       </div>
     </div>
   </div>
   <div>
     <div class="gf-form-inline">
-      <div class="gf-form filter" ng-repeat="(key,variable) in ctrl.getExprVariables()">
-        <label ng-hide="ctrl.variableIsHide(variable)" class="gf-form-label">{{key}}：
-          <span class="filter-value">{{variable.current.text}}</span>
+      <div class="gf-form filter" ng-repeat="(key,item) in ctrl.exprVariables">
+        <label ng-hide="ctrl.variableIsHide(item.variable)" class="gf-form-label">{{key}}：
+          <span class="filter-value" ng-bind="item.variable.current.text"></span>
+          <a ng-if="!item.target.conf.required" ng-click="ctrl.clearBindVariables(item.target)"><i class="fa fa-remove"></i></a>
         </label>
       </div>
       <div class="gf-form filter-button">
