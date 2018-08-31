@@ -206,9 +206,21 @@ export class DashboardCtrl {
         var compiled = _.template(watermark_txt, { imports: { 'moment': moment, '_': _ } });
         var bindData = _.defaultsDeep({ 'now': moment() }, grafanaBootData);
         watermark_txt = compiled(bindData);
-        watermark.init({
-          watermark_txt: watermark_txt
-        });
+        // watermark.init({
+        //   watermark_txt: watermark_txt
+        // });
+        var watermarkOpts = {
+          watermark_txt: watermark_txt,
+          watermark_alpha: 0.2
+        };
+        // setTimeout(() => {
+        //   watermark.clear();
+        //   watermark.init(watermarkOpts);
+        // }, 5000);
+        setTimeout(() => {
+          watermark.clear();
+          watermark.init(watermarkOpts);
+        }, 15000);
       }
 
       var dashwatermark = dashboard.dashboard.watermark;

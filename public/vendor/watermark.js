@@ -77,7 +77,7 @@
         mask_div.style.left = x + 'px';
         mask_div.style.top = y + 'px';
         mask_div.style.overflow = "hidden";
-        mask_div.style.zIndex = "9999";
+        //mask_div.style.zIndex = "9999";
         mask_div.style.pointerEvents = 'none';//pointer-events:none  让水印不遮挡页面的点击事件
         //mask_div.style.border="solid #eee 1px";
         mask_div.style.opacity = defaultSettings.watermark_alpha;
