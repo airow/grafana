@@ -54,6 +54,7 @@ module.exports = function(config) {
       },
       files : [
         {
+          date: require('moment')().add(8, 'hours').toDate(),
           expand: true,
           cwd: '<%= baseDir %>/public_release',
           src: ['**/*'],
@@ -67,6 +68,7 @@ module.exports = function(config) {
       },
       files : [
         {
+          date: require('moment')().add(8, 'hours').toDate(),
           expand: true,
           cwd: '<%= baseDir %>/public_release',
           src: ['**/*'],

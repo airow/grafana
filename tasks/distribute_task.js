@@ -13,8 +13,8 @@ module.exports = function(grunt) {
     'copy:public_to_gen']);
 
   grunt.registerTask('teld:dist_post', ['exec:tscompile',
-    'karma:test',
-    'phantomjs',
+    /*'karma:test',
+    'phantomjs',*/
     'css',
     'htmlmin:build',
     'ngtemplates',
@@ -27,7 +27,24 @@ module.exports = function(grunt) {
     'usemin',
     'uglify:genDir',
     'clean:tmpteldconf',
-    'build-post-process', 'compress:release']);
+    'build-post-process'/*, 'compress:release'*/]);
+
+  grunt.registerTask('teld:dist_post_debug', ['exec:tscompile',
+    /*'karma:test',
+    'phantomjs',*/
+    'css',
+    'htmlmin:build',
+    'ngtemplates',
+    'cssmin:build',
+    'ngAnnotate:build',
+    'systemjs:build',
+    'concat:js',
+    'filerev',
+    'remapFilerev',
+    'usemin',
+    //'uglify:genDir',
+    'clean:tmpteldconf',
+    'build-post-process'/*, 'compress:release'*/]);
 
   grunt.registerTask('teld:dist_finally', [
       'clean:teldrelease',
@@ -47,6 +64,21 @@ module.exports = function(grunt) {
     'teld:dist_start',
     'copy:dist3420',
     'teld:dist_post',
+    'teld:dist_finally',
+    'compress:public_dist3420'
+  ]);
+
+  grunt.registerTask('teld:dist4330_debug', [
+    'teld:dist_start',
+    'copy:dist4330',
+    'teld:dist_post_debug',
+    'teld:dist_finally',
+    'compress:public_dist4330'
+  ]);
+  grunt.registerTask('teld:dist3420_debug', [
+    'teld:dist_start',
+    'copy:dist3420',
+    'teld:dist_post_debug',
     'teld:dist_finally',
     'compress:public_dist3420'
   ]);
