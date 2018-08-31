@@ -208,6 +208,7 @@ class GraphCtrl extends MetricsPanelCtrl {
       };
     } else {
 
+      /** 取消数据点超过时间面板时间范围的提示
       for (let series of this.seriesList) {
         if (series.isOutsideRange) {
           this.dataWarning = {
@@ -217,6 +218,7 @@ class GraphCtrl extends MetricsPanelCtrl {
           break;
         }
       }
+      */
     }
 
     this.annotationsPromise.then(result => {
