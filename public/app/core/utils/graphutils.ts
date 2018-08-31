@@ -72,7 +72,7 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables) 
       try {
         value = compiled(contextData);
         value = _.toNumber(value);
-        if (_.isNaN(value) || false === _.isNumber(value)) {
+        if (_.isNaN(value) || value === Infinity || false === _.isNumber(value)) {
           value = 0;
         }
       } catch (error) {
@@ -140,7 +140,7 @@ function calcSeriesGropuBarItem(calcSeriesConf, data, hideMetrics, dashVariables
     try {
       value = compiled(dataSource);
       value = _.toNumber(value);
-      if (_.isNaN(value) || false === _.isNumber(value)) {
+      if (_.isNaN(value) || value === Infinity || false === _.isNumber(value)) {
         value = 0;
       }
     } catch (error) {
@@ -270,7 +270,7 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
       try {
         value = compiled(contextData);
         value = _.toNumber(value);
-        if (_.isNaN(value) || false === _.isNumber(value)) {
+        if (_.isNaN(value) || value === Infinity || false === _.isNumber(value)) {
           value = 0;
         }
       } catch (error) {
