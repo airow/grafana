@@ -13,7 +13,7 @@ const EMPTY_TITLE_HEIGHT = 9;
 const PANEL_PADDING = 5;
 const PANEL_BORDER = 2;
 
-import {Emitter} from 'app/core/core';
+import {Emitter, contextSrv} from 'app/core/core';
 
 export class PanelCtrl {
   panel: any;
@@ -82,7 +82,7 @@ export class PanelCtrl {
 
   refresh() {
     var hide = this.visibility();
-    if (hide) { return; }
+    if (hide && contextSrv.isEditor === false) { return; }
     this.events.emit('refresh', null);
   }
 
