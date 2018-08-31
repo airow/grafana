@@ -34,16 +34,6 @@ function (angular, moment, _, $, kbn, dateMath, impressionStore) {
       //alert(1);debugger;
       if (type === 'script') {
         promise = this._loadScriptedDashboard(slug);
-        promise.then(function (dash) {
-          // if (_.includes(_.map(_.flatten(_.map(dash.dashboard.rows, 'panels')), 'type'), 'teld-filter-panel')) {
-          //   return System.import("plugins/teld-filter-panel/module").then(function () {
-          //     return dash;
-          //   });
-          // } else { return dash; }
-          return System.import("plugins/teld-filter-panel/module").then(function () {
-            return dash;
-          });
-        });
       } else if (type === 'snapshot') {
         promise = backendSrv.get('/api/snapshots/' + $routeParams.slug)
           .catch(function() {
