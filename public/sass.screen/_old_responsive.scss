@@ -6,6 +6,15 @@
 // Media queries
 // ---------------------
 
+div.panel {
+
+  &.responsive {
+    @media screen and (min-width: 475px) and (max-width: 1024px) {
+      width: 50% !important;
+    }
+  }
+}
+
 @include media-breakpoint-down(sm) {
 
   // singlestat 垂直布局在制定colx后
@@ -29,6 +38,8 @@
     &.col2 {
       width: 50% !important;
       padding: 0px 1px !important;
+
+      @media screen and (max-width: 800px) { float: none; width: auto; }
 
       div.panel-container{
         @extend %singlestat-layout-vertical;

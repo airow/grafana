@@ -38,15 +38,22 @@
 		</div>
   </div>
   <div class="section gf-form-group">
-		<h5 class="section-heading">条件隐藏</h5>
-		<div class="gf-form">
-			<span class="gf-form-label width-8">hideexpress</span>
-			<input type="text" class="gf-form-input width-25" ng-model='ctrl.panel.hideexpress'></input>
+    <h5 class="section-heading">条件隐藏</h5>
+    <div class="gf-form">
+      <span class="gf-form-label width-8">hideexpress</span>
+      <input type="text" class="gf-form-input width-25" ng-model='ctrl.panel.hideexpress'></input>
     </div>
     <div class="gf-form">
-			<span class="gf-form-label">条件满足面板将隐藏,通过vars来引用变量</span>
-		</div>
-	</div>
+      <span class="gf-form-label">条件满足面板将隐藏,通过vars来引用变量</span>
+    </div>
+    <h5 class="section-heading">Layout</h5>
+    <div class="gf-form">
+      <span class="gf-form-label width-15">@media (max-width: 767px)<tip>小屏比例,col2=1/2,col3=1/3</tip></span>
+      <select class="gf-form-input" ng-model="ctrl.panel.colx" ng-options="f for f in ['responsive','col1','col2','col3']">
+        <option value=""></option>
+      </select>
+    </div>
+  </div>
 	</div>
 
 	<panel-links-editor panel="ctrl.panel"></panel-links-editor>
