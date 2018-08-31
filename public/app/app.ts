@@ -3,6 +3,7 @@
 import 'bootstrap';
 import 'vendor/filesaver';
 import 'lodash-src';
+import 'angular-locale';
 import 'angular-strap';
 import 'angular-route';
 import 'angular-sanitize';

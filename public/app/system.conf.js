@@ -13,6 +13,7 @@ System.config({
     'lodash-src': 'vendor/lodash/dist/lodash.js',
     "lodash": 'app/core/lodash_extended.js',
     "angular": "vendor/angular/angular.js",
+    "angular-locale": "vendor/angular/angular-locale_zh-cn.js",
     "bootstrap": "vendor/bootstrap/bootstrap.js",
     'angular-route':          'vendor/angular-route/angular-route.js',
     'angular-sanitize':       'vendor/angular-sanitize/angular-sanitize.js',
