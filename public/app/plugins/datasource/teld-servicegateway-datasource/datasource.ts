@@ -18,15 +18,16 @@ export class TeldServiceGatewayDatasource {
   }
 
   interpolateVariable(value) {
-    return value;
-    // if (typeof value === 'string') {
-    //   let regExp = new RegExp("<orderby='(.+?)'/>");
-    //   let matches = regExp.exec(value);
-    //   if (matches) {
-    //     return matches[1];
-    //   }
-    //   return '\'' + value + '\'';
-    // }
+    if (typeof value === 'string') {
+      let regExp = new RegExp("<orderby='(.+?)'/>");
+      let matches = regExp.exec(value);
+      if (matches) {
+        return matches[1];
+      }
+      return value;
+    } else {
+      value;
+    }
 
     // if (typeof value === 'number') {
     //   return value;
