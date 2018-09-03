@@ -42,6 +42,8 @@
               </a>
             </label>
           </div>
+          <gf-form-switch ng-if="ctrl.panel.showClickQueryBtn2Fetch" class="gf-form" label="点击查询取数" label-class="width-8" checked="ctrl.rtClickQueryBtn2Fetch">
+          </gf-form-switch>
         </div>
         <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="true" on-ready="ctrl.onReadySwiper(swiper)"
           override-parameters="{slideToClickedSlide:true, grabCursor:true, mousewheelControl:true,observer: true, observeParents: true}">
@@ -91,11 +93,11 @@
       <div class="gf-form filter" ng-repeat="(key,item) in ctrl.exprVariables">
         <label ng-hide="ctrl.variableIsHide(item.variable)" class="gf-form-label">{{key}}：
           <span class="filter-value" ng-bind="item.variable.current.text"></span>
-          <a ng-if="!item.target.conf.required" ng-click="ctrl.clearBindVariables(item.target)"><i class="fa fa-remove"></i></a>
+          <a ng-if="!item.target.conf.required" ng-click="ctrl.eh_clearBindVariables(item.target)"><i class="fa fa-remove"></i></a>
         </label>
       </div>
       <div class="gf-form filter-button">
-        <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.query();">
+        <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.eh_query();">
           <i class="fa fa-search"></i>
         </button>
         <button type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuerySwitch()">

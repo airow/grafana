@@ -23,10 +23,10 @@
   <div class="gf-form">
     <gf-form-switch class="gf-form" label="保存条件" label-class="query-keyword width-8" checked="ctrl.panel.saveVariable">
     </gf-form-switch>
-    <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8" ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="displayCount">
-    <gf-form-switch ng-if="ctrl.panel.saveVariable" class="gf-form" label="ddd" label-class="query-keyword width-8" checked="ctrl.panel.saveVariableSetLastSelectIndex">
+    <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8" ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="">
+    <gf-form-switch class="gf-form" label="点击查询取数" label-class="query-keyword width-8" checked="ctrl.panel.clickQueryBtn2Fetch">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="点击查询取数" label-class="query-keyword width-8" checked="ctrl.panel.toggleToQuery">
+    <gf-form-switch ng-if="ctrl.panel.clickQueryBtn2Fetch" class="gf-form" label="界面显示" label-class="query-keyword width-8" checked="ctrl.panel.showClickQueryBtn2Fetch">
     </gf-form-switch>
   </div>
   <hr>

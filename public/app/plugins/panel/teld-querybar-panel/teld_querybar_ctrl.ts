@@ -76,6 +76,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   querybarPanelStyle: any;
   originalWidth: any;
   device: any;
+  rtClickQueryBtn2Fetch: boolean;
 
   datasourceNullValue = {
     "teld-servicegateway-datasource": "",
@@ -141,6 +142,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.querybarDsVariable = {};
     this.currentTabInfo = {};
     //this.currentTarget = _.head(this.panel.targets);
+    this.rtClickQueryBtn2Fetch = this.panel.clickQueryBtn2Fetch;
 
     this.currentTarget = _.find(this.panel.targets, { refId: this.panel.selectTab }) || this.panel.targets[0];
     this.setCurrentTargetRefId(this.currentTarget);
@@ -431,7 +433,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
           index = index === -1 ? 0 : index;
         }
         let itemIndex = (index >= sortDatapoints.length ? sortDatapoints.length - 1 : index);
-        if (this.panel.saveVariable) {
+        if (this.panel.saveVariable && this.queryCount === 0) {
           let lsIndex = this.targetSelectedIndex(target);
           if (lsIndex > -1) {
             index = lsIndex;
@@ -549,7 +551,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   manualChangeQueryBarTab(target) {
-    if (this.panel.multiSyncLinkage /*&& _.size(target.conf.linkage) > 0*/) {
+    if (this.isMultiSyncLinkageModel()) {
       if (this.isFetchData || this.spin) {
         this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000);
         return;
@@ -598,7 +600,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   }
 
-  clearBindVariables(target) {
+  eh_clearBindVariables(target) {
     if (target.conf.required) {
       this.alertSrv.set("警告", `${target.conf.title}为必选项`, "warning", 2000);
       return;
@@ -606,8 +608,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let tabInfo = this.currentTabInfo[target.refId] || { swiper: { slideTo: _.noop } };
     delete tabInfo.selectedIndex;
     tabInfo.swiper.slideTo(0, 1000, false);
-    this.clearTargetBindVariables(target);
+    this.resetTargetBindVariables(target);
+    this.query();
   }
+
   exprVariables = {};
   getExprVariables() {
     let exprVariables = _.transform(this.panel.targets, (result, target, index) => {
@@ -641,8 +645,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     _.each(this.currentTabInfo[target.refId].dsQuery, item => {
       item.value = '';
     });
-    //this.toggleQuery(target);
-    //this.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value=''
+    this.toggleQuery(target);
   }
 
   setQuerybarDs(target) {
@@ -776,7 +779,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   }
 
-  clearTargetBindVariables(target) {
+  resetTargetBindVariables(target) {
     let conf = target.conf;
     _.each(conf.bindVariables, bindVariable => {
       let variablePath = `${conf.variablePrefix}_${bindVariable.name}`;
@@ -785,9 +788,19 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       variable.current = { text: bindVariable.nullText || this.ALL_TEXT, value: nullValue };
     });
     this.templateSrv.updateTemplateData();
-    //this.variables2LocalStorage();
-    this.query();
-    //this.getExprVariables();
+  }
+
+  isMultiSyncLinkageModel() {
+    return this.panel.stopClickRefresh && this.panel.multiSyncLinkage;
+  }
+
+  clearTargetBindVariables(target) {
+    this.resetTargetBindVariables(target);
+    if (this.isMultiSyncLinkageModel()) {
+      this.getExprVariables();
+    } else {
+      this.query();
+    }
   }
 
   isFirstWithSaveVariable = false;
@@ -831,7 +844,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.templateSrv.updateTemplateData();
     //this.variables2LocalStorage();
 
-    if (this.panel.stopClickRefresh && this.panel.multiSyncLinkage) {
+    if (this.isMultiSyncLinkageModel()) {
       this.multistageSyncLinkage(target);
     }
   }
@@ -923,14 +936,6 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       item.conf.bottomStyle = (new Function('return ' + target.conf.bottomStyle))();
       return item;
     });
-
-
-    // let tabInfo = this.currentTabInfo[target.refId];
-    // delete tabInfo.selectedIndex;
-    // this.clearTargetBindVariables(target);
-    if (target.conf.required) {
-      //this.setQueryBarVariable(target, target.conf.predicateValue, _.first(returnValue));
-    }
 
     return returnValue;
   }
@@ -1100,6 +1105,14 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   queryCount = 0;
   query() {
+    if (this.queryCount === 0 || true !== this.rtClickQueryBtn2Fetch) {
+      this.eh_query();
+    } else {
+      this.getExprVariables();
+    }
+  }
+
+  eh_query() {
     this.queryCount++;
     console.log('query');
     this.triggerRefresh = true;
