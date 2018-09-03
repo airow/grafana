@@ -5,9 +5,9 @@
       <gf-form-switch class="gf-form" label="计算累计" label-class="width-8" checked="ctrl.panel.cumulativeConf.enable" on-change="ctrl.render()"></gf-form-switch>
       <label class="gf-form-label"><tip>累计seres值</tip></label>
     </div>
-    <gf-form-switch ng-if="ctrl.panel.cumulativeConf.enable" class="gf-form" label="label" label-class="query-keyword width-" checked="ctrl.panel.cumulativeConf.enableInit">
+    <gf-form-switch ng-if="ctrl.panel.cumulativeConf.enable" class="width-8" label="映射" label-class="query-keyword width-" checked="ctrl.panel.cumulativeConf.enableInit">
     </gf-form-switch>
-    <div class="gf-form-inline" ng-if="ctrl.panel.cumulativeConf.enable" >
+    <div class="gf-form-inline" ng-if="ctrl.panel.cumulativeConf.enableInit" >
       <div class="gf-form">
         <label class="gf-form-label width-8">初始值</label>
       </div>

@@ -44,9 +44,14 @@ System.config({
     "jquery.flot.gauge": "vendor/flot/jquery.flot.gauge",
     "jquery.flot.categories": "vendor/flot/jquery.flot.categories",
     "numeral": "vendor/numeral/numeral.js",
+    /* echarts-3.6.2
     'echarts': 'vendor/npm/echarts/dist/echarts.min.js',
-    'echarts.china': 'vendor/npm/echarts/map/js/china.js',
     'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js',
+    'echarts.china': 'vendor/npm/echarts/map/js/china.js',
+    */
+    'echarts': 'vendor/echarts-3.8.5/dist/echarts.min.js',
+    'echarts.bmap': 'vendor/echarts-3.8.5/dist/extension/bmap.min.js',
+    'echarts.china': 'vendor/echarts-3.8.5/map/js/china.js',
     'swiper': 'vendor/angular-swiper-0.4.0/swiper/js/swiper.js',
     'angular-swiper': 'vendor/angular-swiper-0.4.0/angular-swiper.js',
     'async': 'vendor/async-2.6.1/async.js',

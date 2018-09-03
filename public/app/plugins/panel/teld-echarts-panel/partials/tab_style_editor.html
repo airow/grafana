@@ -502,8 +502,8 @@
       <h5 class="section-heading">Base</h5>
       <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
-        <label class="gf-form-label width-8">name</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.name" ec-valwrap class="gf-form-input">
+        <textarea placeholder="显示名称" class="gf-form-input width-15" ng-model="ctrl.panel.echarts.yAxis.name" rows="3" ng-model-onblur>
+        </textarea>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">min</label>
@@ -523,6 +523,14 @@
         </select>
       </div>
     </div>
+    <!-- nameTextStyle start-->
+    <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-8">padding</label>
+      </div>
+      <ec-opt-padding ctrl='ctrl' padding="ctrl.panel.echarts.yAxis.nameTextStyle.padding"></ec-opt-padding>
+    </div>
+    <!-- nameTextStyle end-->
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
       <h5 class="section-heading">Label</h5>

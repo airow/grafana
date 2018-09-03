@@ -37,6 +37,9 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables) 
     var times = n.datapoints.map(item => { return item[1]; });
     result[n.target] = _.zipObject(['values', 'time'], [values, times]);
     result[n.target].datapoints = n.datapoints;
+    if (n.groupKey) {
+      result[n.groupKey] = result[n.target];
+    }
   }, {});
 
   //dataSource.target = _.groupBy(dataList, 'refId');
@@ -226,21 +229,6 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
     imports: {
       vars: variables,
       '_': _
-      // //'kbn': kbn,
-      // 'valueFormats': (function (kbn) {
-      //   let bindContext = {
-      //     // kbn,
-      //     // valueFormats: kbn.valueFormats,
-      //     // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
-      //     valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
-      //       result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
-      //     }, {})
-      //   };
-
-      //   return function (unitFormatName, size, decimals) {
-      //     return this.valueFormats[unitFormatName](size, decimals);
-      //   }.bind(bindContext);
-      // })(kbn)
     }
   };
 
@@ -249,6 +237,9 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
     var times = n.datapoints.map(item => { return item[1]; });
     result[n.target] = _.zipObject(['values', 'time'], [values, times]);
     result[n.target].datapoints = n.datapoints;
+    if (n.groupKey) {
+      result[n.groupKey] = result[n.target];
+    }
   }, {});
 
   _.each(calcSeriesConf, (item) => {

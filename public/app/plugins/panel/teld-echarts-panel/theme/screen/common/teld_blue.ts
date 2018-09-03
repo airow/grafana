@@ -503,8 +503,8 @@ var teld_blue = {
   },
   "grid": {
     "top": "50",
-    "left": "14",
-    "right": "14",
+    "left": "30",
+    "right": "30",
     "bottom": "18",
     "containLabel": true
   }

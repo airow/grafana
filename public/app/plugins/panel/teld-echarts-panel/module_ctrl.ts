@@ -497,26 +497,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         }
       }
     }
-
-    // if (dataList.length > 1) {
-    //   let timeseries = dataList[0].data[0][1];
-    //   _.each(mergeItem, eachItme => {
-    //     dataList.push({ target: eachItme.target, data: [[eachItme.val, timeseries]] });
-    //   });
-    // } else {
-    //   if (dataList.length === 1) {
-    //     let data = dataList[0];
-    //     if (data.type === "docs" && data.datapoints && data.datapoints.length > 0) {
-
-    //       _.each(mergeItem, eachItme => {
-    //         let temp = {};
-    //         temp["OperType.keyword"] = eachItme.target;
-    //         temp["Count"] = eachItme.val;
-    //         data.datapoints.push(temp);
-    //       });
-    //     }
-    //   }
-    // }
   }
   calcSeries(calcSeriesConf, data, hideMetrics) {
 
@@ -1505,7 +1485,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         });
         //series = _.defaultsDeep(_.cloneDeep(type), series);
         if (type.yAxis) {
-          var axisIndex = _.findIndex(option[axis.axis], { name: type.yAxis });
+          var axisIndex = _.findIndex(option[axis.axis], { key: type.yAxis });
           if (axisIndex > -1) {
             series[axis.axisIndex] = axisIndex;
             if (false === _.isEmpty(type.stack)) {
