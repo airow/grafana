@@ -333,6 +333,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   setCurrentTargetRefId(currentTarget) {
+    currentTarget = currentTarget || {};
     this.currentTargetRefId = currentTarget.refId;
   }
 
