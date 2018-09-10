@@ -8,17 +8,21 @@ define([
     //alert($("#ddd"));
     $("#ddd").text("deviceInfo");
 
-    function readCookie(a) {
-      for (var b, c = a + "=", d = document.cookie.split(";"), e = 0; e < d.length; e++) {
-        for (b = d[e]; " " == b.charAt(0);)
-          b = b.substring(1, b.length);
-        if (0 == b.indexOf(c))
-          return b.substring(c.length, b.length)
+    function readCookie(n) {
+      var i, t, r = n + "=", u = document.cookie.split(";");
+      for (i = 0; i < u.length; i += 1) {
+        for (t = u[i]; t.charAt(0) === " ";) { t = t.substring(1, t.length); }
+        if (t.indexOf(r) === 0) { return t.substring(r.length, t.length); }
       }
       return null;
     }
 
     function _createCookie(n, t, i) {
+      var r, u;
+      i ? (r = new Date, r.setTime(r.getTime() + i * 1000), u = "; expires=" + r.toGMTString()) : u = "";
+      var tempList = document.domain.split(".");
+      var domain;
+      var len = tempList.length;
 
       function getDomain(domain) {
         var ares = domain.split(':')[0].split('.');
@@ -27,38 +31,35 @@ define([
         return ares.join('.');
       }
 
-      var r, u;
-      i ? (r = new Date, r.setTime(r.getTime() + i * 1000), u = "; expires=" + r.toGMTString()) : u = "";
-      var tempList = document.domain.split(".");
-      var domain;
-      var len = tempList.length;
-
       if (len === 1) {
         document.cookie = n + "=" + t + u + "; path=/";
       } else {
         domain = getDomain(document.domain);
+
         document.cookie = n + "=" + t + u + "; path=/;domain=" + domain;
       }
     }
 
     function iosAskForDeviceInfo() {
-      alert('iosAskForDeviceInfo');
+      //alert('iosAskForDeviceInfo');
       var a = document.createElement("iframe");
       a.id = "IOSDeviceInfoFrame";
       a.src = '//jsoc///{"action":"askForDeviceInfo"}';
       a.width = 100;
       a.height = 100;
       document.body.appendChild(a);
+      a.remove();
     }
 
     function iosTokenTimeout() {
-      alert('iosTokenTimeout');
+      //alert('iosTokenTimeout');
       var a = document.createElement("iframe");
       a.id = "IOSNotifyFrame";
       a.src = '//jsoc///{"action":"askForToken"}';
       a.width = 100;
       a.height = 100;
       document.body.appendChild(a);
+      a.remove();
     }
 
     function androidTokenTimeout() {
@@ -73,7 +74,7 @@ define([
       var deviceInfo = "";
       if (window.navigator.userAgent.indexOf("TeldIosWebView") !== -1) {
         iosAskForDeviceInfo();
-        alert("askForDeviceInfo" + window.deviceInfo);
+        //alert("askForDeviceInfo" + window.deviceInfo);
         deviceInfo = window.deviceInfo;
         window.deviceInfo = "";
       }
@@ -111,7 +112,7 @@ define([
     }
 
     window.sendToken = function (a, b) {
-      alert('sendToken');
+      //alert('sendToken');
       window._createCookie("telda", a, 1e3);
       window._createCookie("teldb", b, 1e3);
       var iosifr = document.getElementById("IOSNotifyFrame");

@@ -252,19 +252,21 @@ export class TeldServiceGatewayDatasource {
       if (v !== "" || i > 10) {
         clearInterval(o);
         //embed_teldapp._createCookie('DeviceInfoForIframe', '');
-        alert('iosDev' + v);
+        //alert('iosDev' + v);
+        v = window['decodeURIComponent'](v);
+        //alert(window.sessionStorage.getItem('DeviceInfoForIframe'));
         resolve(v);
       }
-    }, 500);
+    }, 1500);
   }
 
   query(options) {
-    debugger;
-    alert(embed_teldapp.inIOS);
+    //debugger;
+    //alert(embed_teldapp.inIOS);
     if (embed_teldapp.inIOS) {
       embed_teldapp.askForDeviceInfoIOS(embed_teldapp);
       var promise = new Promise(this.iosDev).then(deviceInfo => {
-        alert('deviceInfo=' + deviceInfo);
+        //alert('deviceInfo=' + deviceInfo);
         return this.getQuery(options, deviceInfo);
       });
       return promise;
