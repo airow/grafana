@@ -4,10 +4,18 @@
 import echarts from 'echarts';
 
 var teld_blue = {
+  // "color": [
+  //   "#87a9fc",
+  //   "#6be6c1",
+  //   "#626c91",
+  //   "#a0a7e6",
+  //   "#c4ebad",
+  //   "#96dee8"
+  // ],
   "color": [
-    "#87a9fc",
-    "#6be6c1",
-    "#626c91",
+    "#00a5ca",
+    "#3caf36",
+    "#f3b802",
     "#a0a7e6",
     "#c4ebad",
     "#96dee8"
@@ -24,10 +32,29 @@ var teld_blue = {
     "left": 'center',
     "top": "18",
     "subtextStyle": {
-      "color":  "#999999"
+      "color": "#999999"
     }
   },
   "line": {
+    // "color": [new echarts.graphic.LinearGradient(0.5, 1, 0.5, 0.5, [{
+    //   offset: 0,
+    //   color: '#FFF'
+    // }, {
+    //   offset: 1,
+    //   color: '#00a5ca'
+    // }]), new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+    //   offset: 0,
+    //   color: '#FFF'
+    // }, {
+    //   offset: 1,
+    //   color: '#3caf36'
+    // }]), new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+    //   offset: 0,
+    //   color: '#FFF'
+    // }, {
+    //   offset: 1,
+    //   color: '#f3b802'
+    // }])],
     "itemStyle": {
       "normal": {
         "borderWidth": "2"
@@ -43,7 +70,7 @@ var teld_blue = {
     "smooth": false,
     "areaStyle": {
       "normal": {
-        "opacity": 0.4
+        "opacity": 0.2
       }
     }
   },
@@ -185,14 +212,14 @@ var teld_blue = {
     "symbolSize": "8",
     "symbol": "emptyCircle",
     "smooth": false,
-    "color": [
-      "#87a9fc",
-      "#6be6c1",
-      "#626c91",
-      "#a0a7e6",
-      "#c4ebad",
-      "#96dee8"
-    ],
+    // "color": [
+    //   "#87a9fc",
+    //   "#6be6c1",
+    //   "#626c91",
+    //   "#a0a7e6",
+    //   "#c4ebad",
+    //   "#96dee8"
+    // ],
     "label": {
       "normal": {
         "textStyle": {
@@ -503,8 +530,8 @@ var teld_blue = {
   },
   "grid": {
     "top": "50",
-    "left": "30",
-    "right": "30",
+    "left": "14",
+    "right": "14",
     "bottom": "18",
     "containLabel": true
   }

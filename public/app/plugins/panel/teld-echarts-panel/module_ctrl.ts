@@ -9,11 +9,11 @@ import kbn from 'app/core/utils/kbn';
 import config from 'app/core/config';
 import appEvents from '../../../core/app_events';
 import TimeSeries from '../../../core/time_series2';
-import { colors } from '../../../core/core';
+import { colors as gfColors } from '../../../core/core';
 import { MetricsPanelCtrl, loadPluginCss } from '../../sdk';
 
 import echarts from 'echarts';
-import echartsTheme, { echartsThemeName } from './theme/all';
+import echartsTheme, { echartsThemeName, echartsThemeMap } from './theme/all';
 
 import * as FileExport from '../../../core/utils/file_export';
 import {transformDataToTable} from '../table/transformers';
@@ -35,6 +35,7 @@ loadPluginCss({
   dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
   light: '/public/app/plugins/panel/teld-chargingbill-panel/css/light.built-in.css'
 });
+let colors: any[];
 export class ModuleCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
 
@@ -369,7 +370,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   initEcharts() {
 
     let theme = `${this.panel.serieType}Theme-${this.panel.style.themeName}`;
-
+    colors = _.concat(echartsThemeMap[theme].color, gfColors);
     this.ecConfig = {
       theme: theme,
       //theme: config.bootData.user.lightTheme ? 'light' : 'drak',

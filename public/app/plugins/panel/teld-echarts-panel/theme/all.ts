@@ -7,13 +7,15 @@ import pieTheme from './screen/pie/all';
 let echartsTheme = { lineTheme, barTheme, pieTheme };
 
 let echartsThemeName = {};
+let echartsThemeMap = {};
 
 _.forEach(echartsTheme, function (value, serieType) {
   echartsThemeName[serieType] = _.keys(value);
   _.forEach(value, function (theme, themeName) {
     echarts.registerTheme(`${serieType}-${themeName}`, theme);
+    echartsThemeMap[`${serieType}-${themeName}`] = theme;
   });
 });
 
 export default echartsTheme;
-export { echartsThemeName };
+export { echartsThemeName, echartsThemeMap };
