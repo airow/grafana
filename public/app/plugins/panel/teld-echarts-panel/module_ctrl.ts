@@ -979,8 +979,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     var isStack =  this.panel.groupBarStack ? 'stack' : null;
     if (this.ecSeries) {
       var d = {};
+      var groupName = _.union(_.map(this.ecSeries, 'name'));
       var group = _.groupBy(this.ecSeries, t => t.name);
-      _.each(group, (value, key) => {
+      var groupArray = _.transform(groupName, function (result, value, key) {
+        result.push(group[value]);
+      }, []);
+
+      _.each(groupArray, (value, groupIndex) => {
         _.each(value, (s, index) => {
           let serie = this.getDefaultSerie();
           serie = d[index] = d[index] || _.defaultsDeep(serie, {
