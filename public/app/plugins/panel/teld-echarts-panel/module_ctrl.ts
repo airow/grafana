@@ -1186,6 +1186,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     if (_.size(_.flatten(_.map(this.dataList, 'datapoints'))) === 0) {
       //this.ecOption.baseOption = empty_option;
       if (this.ecInstance) {
+        this.ecOption.baseOption = {};
         this.ecInstance.clear();
         return;
       }
