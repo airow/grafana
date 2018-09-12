@@ -54,16 +54,17 @@
           ng-model="QueryOptions.QueryClickName" ng-change="ctrl.render()" ng-model-onblur />
         <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9" placeholder="请输入默认值"
           ng-model="QueryOptions.QueryClickVal" ng-change="ctrl.render()" ng-model-onblur />
-        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入全局变量名称"
-          ng-model="QueryOptions.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入全局变量名称" ng-model="QueryOptions.QueryAttributeName"
+          ng-change="ctrl.render()" ng-model-onblur />
         <gf-form-switch ng-if="QueryOptions.Querytype!='date'" class="gf-form" label="MultiClick" label-class="width-8" checked="QueryOptions.MultiClick"
           on-change="ctrl.render()"></gf-form-switch>
-          <gf-form-switch class="gf-form" label="aloneRelease" ng-if="QueryOptions.MultiClick" label-class="width-8" checked="QueryOptions.aloneReleaseAttribute"
+        <gf-form-switch class="gf-form" label="aloneRelease" ng-if="QueryOptions.MultiClick" label-class="width-8" checked="QueryOptions.aloneReleaseAttribute"
           on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label width-9">type</label>
         <!-- <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','input','select','date']"></select> -->
         <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','date']"></select>
         <gf-form-switch class="gf-form" label="isViewShow" label-class="width-8" checked="QueryOptions.isViewShow" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8" checked="QueryOptions.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(ctrl.panel.QueryList,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>
@@ -90,6 +91,7 @@
           MultiClick: false,
           aloneReleaseAttribute: true,
           isViewShow: true,
+          IsLocalStorage: false,
           QueryOptions:[{
             OptionName:'',
             ClickValue:'',
@@ -115,9 +117,9 @@
           ng-model="QueryOption.TimeClickValue" ng-change="ctrl.render()" ng-model-onblur />
         <input ng-if="QueryOptions.MultiClick || QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
           placeholder="请输入变量" ng-model="QueryOption.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
-        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
-          placeholder="校验时间变量" ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
-        <select  ng-if="QueryOptions.Querytype=='date'"  class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于']"></select>
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="校验时间变量"
+          ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
+        <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于']"></select>
         <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form" label="isClick" label-class="width-8"
           checked="QueryOption.isClick" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">

@@ -2,27 +2,27 @@
   <div class="OrerationTitleHeightKH">
     <span>&nbsp;&nbsp;</span>
     <span ng-repeat="QueryOptions in ctrl._panle.QueryList">
-      <span ng-if="QueryOptions.Querytype!='date' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow" style="color:black" class="">
+      <span ng-if="QueryOptions.Querytype!='date' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow" style="color:black" ng-class="{teldfilterbuiltinpanelIsLocalStorage:QueryOptions.IsLocalStorage}">
         {{QueryOptions.QueryTitle}}:<span class="OrerationTitleHeightKHSpan">{{QueryOptions.QueryClickName}}</span>
       </span>
-      <span ng-if="QueryOptions.Querytype!='date' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickVal!=''" style="color:black" class="">
+      <span ng-if="QueryOptions.Querytype!='date' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickName!=''" style="color:black">
         {{QueryOptions.QueryTitle}}:
-        <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.isClick"><span class="OrerationTitleHeightKHSpan">{{QueryOption.OptionName}}</span>
+        <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.isClick" ng-class="{teldfilterbuiltinpanelIsLocalStorage:QueryOptions.IsLocalStorage}"><span class="OrerationTitleHeightKHSpan">{{QueryOption.OptionName}}</span>
           <span ng-if="!$last">;</span>
         </span>
       </span>
-      <span ng-if="QueryOptions.Querytype=='date' && QueryOptions.isViewShow" style="color:black" class="">
+      <span ng-if="QueryOptions.Querytype=='date' && QueryOptions.isViewShow" style="color:black">
         {{QueryOptions.QueryTitle}}:
-        <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.ClickValue!=''"><span class="OrerationTitleHeightKHSpan">{{QueryOption.ClickValue | date:'yyyy-MM-dd'}}</span>
+        <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.ClickValue!=''" ng-class="{teldfilterbuiltinpanelIsLocalStorage:QueryOptions.IsLocalStorage}"><span class="OrerationTitleHeightKHSpan">{{QueryOption.ClickValue | date:'yyyy-MM-dd'}}</span>
           <span ng-if="!$last">~</span>
         </span>
       </span>
     </span>
   </div>
   <div ng-click="ctrl.divOperationFilter()" class="btnFilterKH" style="margin-right: 11px;">筛选
-    <span class="btnFilterKHRed"></span>
+    <span ng-if="ctrl.btnFilterKHRed" class="btnFilterKHRed"></span>
   </div>
-  <div class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-8 col-md-offset-4" ng-show="ctrl.KwHuTuCaoDropDown">
+  <div class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-6 col-md-offset-4" ng-show="ctrl.KwHuTuCaoDropDown">
     <div style="display:inline-block;width:100%" ng-repeat="QueryOptions in ctrl._panle.QueryList">
       <div id="YunMonthOffTitle" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanal" style="line-height:30px !important;"
         ng-if="QueryOptions.QueryTitle">
@@ -35,7 +35,7 @@
           ng-repeat="QueryOption in QueryOptions.QueryOptions" />
 
         <input type="button" class="btnKeHuTuCaoScreen termRight" ng-if="QueryOptions.Querytype=='button' && QueryOptions.MultiClick"
-          ng-class="{searchCondBtnActive:QueryOption.isClick}" value="{{QueryOption.OptionName}}" ng-click="ctrl.selectVariableMulti(QueryOption); "
+          ng-class="{searchCondBtnActive:QueryOption.isClick}" value="{{QueryOption.OptionName}}" ng-click="ctrl.selectVariableMulti(QueryOption,QueryOptions); "
           onfocus=" this.blur(); " ng-repeat="QueryOption in QueryOptions.QueryOptions" />
 
         <div class="col-lg-4 gf-timepicker-component-v" ng-if="QueryOptions.Querytype=='date'" ng-repeat="QueryOption in QueryOptions.QueryOptions">

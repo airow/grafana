@@ -2,7 +2,6 @@
 import { PanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
 import moment from 'moment';
 import _ from 'lodash';
-
 loadPluginCssPath({
   cssPath: '/public/app/plugins/panel/teld-filter-builtin-panel/css/teld-filter.built-in.css'
 });
@@ -26,6 +25,7 @@ export class TeldfilterCtrl extends PanelCtrl {
       MultiClick: false,
       aloneReleaseAttribute: true,
       isViewShow: true,
+      IsLocalStorage: false,
       QueryOptions: [{
         OptionName: "",
         ClickValue: "",
@@ -56,6 +56,7 @@ export class TeldfilterCtrl extends PanelCtrl {
   querybarDsVariable: any;
   tomorrow: any;
   afterTomorrow: any;
+  btnFilterKHRed: any;
   constructor($scope, $injector) {
     super($scope, $injector);
     _.defaultsDeep(this.panel, this.panelDefaults);
@@ -69,6 +70,7 @@ export class TeldfilterCtrl extends PanelCtrl {
     this.variableSrv = $injector.get('variableSrv');
     this.timeSrv = $injector.get('timeSrv');
     this.alertSrv = $injector.get('alertSrv');
+    this.btnFilterKHRed = false;
     this.datemoment = {
       moment: moment
     };
@@ -105,14 +107,16 @@ export class TeldfilterCtrl extends PanelCtrl {
       if (QueryListCookieversions === this._panle.versions) {
         var _that = this;
         _.forEach(QueryListlocal, (item) => {
-          if (item.MultiClick) {
-            item.QueryClickVal = "";
-          }
-          delete (item["$$hashvalue"]);
-          var selectdata = { "QueryAttributeName": item.QueryAttributeName };
-          var findeindex = _.findIndex(_that._panle.QueryList, selectdata);
-          if (findeindex > -1) {
-            _.fill(_that._panle.QueryList, item, findeindex, findeindex + 1);
+          if (item.IsLocalStorage) {
+            if (item.MultiClick) {
+              item.QueryClickVal = "";
+            }
+            delete (item["$$hashvalue"]);
+            var selectdata = { "QueryAttributeName": item.QueryAttributeName };
+            var findeindex = _.findIndex(_that._panle.QueryList, selectdata);
+            if (findeindex > -1) {
+              _.fill(_that._panle.QueryList, item, findeindex, findeindex + 1);
+            }
           }
         });
       } else {
@@ -143,6 +147,14 @@ export class TeldfilterCtrl extends PanelCtrl {
     this.tomorrow.setDate(this.tomorrow.getDate() + 1);
     this.afterTomorrow = new Date();
     this.afterTomorrow.setDate(this.tomorrow.getDate() + 2);
+    let that = this;
+    setTimeout(() => {
+      if (document.getElementsByClassName("teldfilterbuiltinpanelIsLocalStorage").length > 0) {
+        this.btnFilterKHRed = true;
+      } else {
+        this.btnFilterKHRed = false;
+      }
+    }, 500);
   }
 
   onInitEditMode() {
@@ -193,11 +205,13 @@ export class TeldfilterCtrl extends PanelCtrl {
     variableArray.QueryClickName = Name;
     variableArray.QueryClickVal = Value;
   }
-  selectVariableMulti(variableArray) {
+  selectVariableMulti(variableArray, QueryOptions) {
     if (variableArray.isClick) {
       variableArray.isClick = false;
+      QueryOptions.QueryClickName = QueryOptions.QueryClickName.replace("," + variableArray.OptionName, "");
     } else {
       variableArray.isClick = true;
+      QueryOptions.QueryClickName += "," + variableArray.OptionName;
     }
   }
   initDashboardVariables() {
@@ -238,7 +252,7 @@ export class TeldfilterCtrl extends PanelCtrl {
                 }
                 value = this.formatDate(Variables.ClickValue);
 
-                let text = "时间";
+                let text = value;
                 //let variablePaths = `${bindVariable.QueryAttributeName}`;
                 variable = this.variableSrv.templateSrv.getVariable('$' + Variables.QueryAttributeName, 'teldCustom');
                 // this.variableSrv.templateSrv.removeVariable('$' + bindVariable.QueryAttributeName);
@@ -327,6 +341,11 @@ export class TeldfilterCtrl extends PanelCtrl {
         }
       });
       this.variableSrv.templateSrv.updateTemplateData();
+      if (document.getElementsByClassName("teldfilterbuiltinpanelIsLocalStorage").length > 0) {
+        this.btnFilterKHRed = true;
+      } else {
+        this.btnFilterKHRed = false;
+      }
     }
   }
   //向dashboard添加变量
@@ -354,6 +373,11 @@ export class TeldfilterCtrl extends PanelCtrl {
         }
       }
     }
+    if (document.getElementsByClassName("teldfilterbuiltinpanelIsLocalStorage").length > 0) {
+      this.btnFilterKHRed = true;
+    } else {
+      this.btnFilterKHRed = false;
+    }
   }
   returnCheckoutTime(Attribute, value, Checkoutwhere) {
     for (var i = 0; i < this._panle.QueryList.length; i++) {
@@ -377,6 +401,11 @@ export class TeldfilterCtrl extends PanelCtrl {
     if (that.KwHuTuCaoDropDown) {
       that.KwHuTuCaoDropDown = false;
       this._panle.QueryList = this._panleQueryList;
+    }
+    if (document.getElementsByClassName("teldfilterbuiltinpanelIsLocalStorage").length > 0) {
+      this.btnFilterKHRed = true;
+    } else {
+      this.btnFilterKHRed = false;
     }
   }
   formatDate(now) {
@@ -417,7 +446,7 @@ export class TeldfilterCtrl extends PanelCtrl {
     // this.render();
   }
   getDayClass(date, mode) {
-   var events =
+    var events =
       [
         {
           date: this.tomorrow,
