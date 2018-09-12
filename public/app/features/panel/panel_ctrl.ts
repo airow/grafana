@@ -488,6 +488,18 @@ export class PanelCtrl {
     return html + '</div>';
   }
 
+  getHelpTooltipContent() {
+    var markdown = _.get(this.panel, 'helpTooltip.description', this.panel.description);
+
+    var templateSrv = this.$injector.get('templateSrv');
+    var interpolatedMarkdown = templateSrv.replace(markdown, this.panel.scopedVars);
+    var html = '<div class="markdown-html">';
+
+    html += new Remarkable().render(interpolatedMarkdown);
+
+    return html + '</div>';
+  }
+
   openInspector() {
     var modalScope = this.$scope.$new();
     modalScope.panel = this.panel;

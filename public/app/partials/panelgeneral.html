@@ -8,7 +8,21 @@
 		<div class="gf-form gf-form--v-stretch">
 			<span class="gf-form-label width-7">Description</span>
 			<textarea class="gf-form-input width-25" rows="3" ng-model="ctrl.panel.description"  placeholder="Panel description, supports markdown & links"></textarea>
+    </div>
+
+    <gf-form-switch class="gf-form" label="Help Tooltip" label-class="width-7" checked="ctrl.panel.helpTooltip.show">
+    </gf-form-switch>
+
+    <div class="gf-form gf-form--v-stretch" ng-if='ctrl.panel.helpTooltip.show'>
+			<span class="gf-form-label width-7">Description</span>
+			<textarea class="gf-form-input width-25" rows="3" ng-model="ctrl.panel.helpTooltip.description"  placeholder="supports markdown & links"></textarea>
+    </div>
+
+    <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
+			<span class="gf-form-label width-7">placement</span>
+			<input type="text" class="gf-form-input width-25" bs-typeahead="['left','right','bottom']" min-length="0" ng-model='ctrl.panel.helpTooltip.placement'></input>
 		</div>
+
 	</div>
 
 	<div class="section gf-form-group">

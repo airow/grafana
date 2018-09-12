@@ -19,6 +19,12 @@ var panelTemplate = `
         <i class="fa fa-spinner fa-spin"></i>
       </span>
 
+      <span class="panel-loading" ng-show="ctrl.panel.helpTooltip.show && !ctrl.loading">
+        <i class="grafana-tip fa fa-question-circle"
+          -data-placement="{{ctrl.panel.helpTooltip.placement}}"
+          bs-tooltip="ctrl.getHelpTooltipContent()"></i>
+      </span>
+
       <div class="panel-title-container drag-handle" panel-menu></div>
     </div>
 
