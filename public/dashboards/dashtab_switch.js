@@ -175,7 +175,7 @@ return function (callback) {
     return component;
   }
 
-  function hostBySID(sid){
+  function hostBySID(sid) {
     var mapping = { "WRPFrame-GetButton": "ttpsg" };
     return mapping[sid] || 'sgi';
   }
@@ -218,6 +218,7 @@ return function (callback) {
   }
 
   function switchDash(component, data) {
+    var emptyDash = ARGS.empty || 'kb-empty';
     var openDash = component.openDash;
     var result = _.first(data.results);
     if (result) {
@@ -234,8 +235,11 @@ return function (callback) {
           openDash = {
             dash: firstDash.dash
           };
+          if (_.size(result.dataset) === 0 && firstDash.permissions) {
+            openDash.dash = emptyDash;
+          }
         } else {
-          var firstButton = _.first(data.results[0].dataset);
+          var firstButton = _.first(result.dataset);
           if (firstButton) {
             openDash = {
               dash: component.mapping[firstButton.Control_ID]
