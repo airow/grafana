@@ -21,7 +21,8 @@ var panelTemplate = `
 
       <span class="panel-loading" ng-show="ctrl.panel.helpTooltip.show && !ctrl.loading">
         <i class="grafana-tip fa fa-question-circle"
-          -data-placement="{{ctrl.panel.helpTooltip.placement}}"
+          data-placement="bottom"
+          ng-style="ctrl.panel.helpTooltip.style"
           bs-tooltip="ctrl.getHelpTooltipContent()"></i>
       </span>
 

@@ -19,9 +19,25 @@
     </div>
 
     <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
-			<span class="gf-form-label width-7">placement</span>
-			<input type="text" class="gf-form-input width-25" bs-typeahead="['left','right','bottom']" min-length="0" ng-model='ctrl.panel.helpTooltip.placement'></input>
-		</div>
+			<span class="gf-form-label width-7">Size</span>
+			<input type="text" class="gf-form-input width-25" ng-model='ctrl.panel.helpTooltip.style.fontSize'></input>
+    </div>
+
+    <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
+			<span class="gf-form-label width-7">top</span>
+			<input type="text" class="gf-form-input width-25" ng-model='ctrl.panel.helpTooltip.style.marginTop'></input>
+    </div>
+
+    <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
+			<span class="gf-form-label width-7">right</span>
+			<input type="text" class="gf-form-input width-25" ng-model='ctrl.panel.helpTooltip.style.marginRight'></input>
+    </div>
+
+    <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
+      <span class="gf-form-label width-7">color</span>
+      <spectrum-picker ng-model="ctrl.panel.helpTooltip.style.color"></spectrum-picker>
+      <input type="text" class="gf-form-input" bs-typeahead="['white','black']" min-length="0"  ng-model='ctrl.panel.helpTooltip.style.color'></input>
+    </div>
 
 	</div>
 

@@ -43,3 +43,23 @@
   }
 }
 
+// overwrite tooltip content
+.tooltip-inner{
+  color: white;
+  background-color: black;
+}
+
+.tooltip {
+  &.top .tooltip-arrow {
+    border-top-color: black;
+  }
+  &.right .tooltip-arrow {
+    border-right-color: black;
+  }
+  &.left .tooltip-arrow {
+    border-left-color: black;
+  }
+  &.bottom .tooltip-arrow {
+    border-bottom-color: black;
+  }
+}

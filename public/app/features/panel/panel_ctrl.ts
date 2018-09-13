@@ -493,7 +493,7 @@ export class PanelCtrl {
 
     var templateSrv = this.$injector.get('templateSrv');
     var interpolatedMarkdown = templateSrv.replace(markdown, this.panel.scopedVars);
-    var html = '<div class="markdown-html">';
+    var html = '<div class="markdown-tooltip">';
 
     html += new Remarkable().render(interpolatedMarkdown);
 
