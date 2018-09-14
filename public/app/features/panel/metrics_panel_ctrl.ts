@@ -99,10 +99,31 @@ class MetricsPanelCtrl extends PanelCtrl {
     this.addEditorTab('Time range', 'public/app/features/panel/partials/panelTime.html');
   }
 
+
+  dashboardHasQuerybarPanel;
+  waitQuerybarInitFinish() {
+    var returnValue = false;
+
+    if (_.isUndefined(this.dashboardHasQuerybarPanel)) {
+      this.dashboardHasQuerybarPanel = _.findIndex(_.flatten(_.map(this.dashboard.rows, 'panels')), { type: "teld-querybar-panel" }) !== -1;
+    }
+
+    if (this.dashboardHasQuerybarPanel) {
+      returnValue = this.dashboard.querybarInitFinish !== true;
+    }
+    return returnValue;
+  }
+
+
   onMetricsPanelRefresh() {
     if (this.dashboard.meta.hasQuerybarPanel && this.dashboard.meta.fromScript) {
       return;
     }
+
+    if (this.waitQuerybarInitFinish()) {
+      return;
+    }
+
     // ignore fetching data if another panel is in fullscreen
     if (this.otherPanelInFullscreenMode()) { return; }
 

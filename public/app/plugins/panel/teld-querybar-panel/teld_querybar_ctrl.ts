@@ -1110,6 +1110,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   queryCount = 0;
   query() {
+    /*查看面板Json是虽然包含querybarInitFinish属性，但不会影响程序逻辑，在为执行到这里是，querybarInitFinish为undefined*/
+    this.dashboard.querybarInitFinish = true;
     if (this.queryCount === 0 || true !== this.rtClickQueryBtn2Fetch) {
       this.eh_query();
     } else {
