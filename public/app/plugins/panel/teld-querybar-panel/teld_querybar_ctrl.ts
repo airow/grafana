@@ -407,7 +407,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
     let sortDatapoints;
     if (_.size(datapoints) === 0) {
-      sortDatapoints = [{ isNil: true, field: '无', fieldValue: 'N/A', _original: {} }];
+      sortDatapoints = [{ isNil: true, field: '无', fieldValue: 'NA', _original: {} }];
     } else {
       if (_.size(targetConf.orderByOptions) === 0 && targetConf.defOrder !== true) {
         sortDatapoints = _.orderBy(datapoints, item => { return Number(item.fieldValue); }, targetConf.fieldOrder || 'desc');
@@ -693,7 +693,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let tabInfo = this.currentTabInfo[target.refId] || { swiper: { slideTo: _.noop } };
     let conf = target.conf;
     let selectedIndex = tabInfo.selectedIndex;
-    if (selectedIndex === index) {
+    if (selectedIndex === index || (index.isNil)) {
       if (target.conf.required) {
         this.alertSrv.set("警告", `${target.conf.title}为必选项`, "warning", 2000);
         return;
@@ -713,6 +713,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
         if (_.isNil(variable)) {
           variable = this.addBindVariable(target, bindVariable, nullValue);
+        }
+        if (selectedItem && selectedItem.isNil) {
+          variable.current = { text: selectedItem.field, value: selectedItem.fieldValue };
+          return;
         }
         let value = _.get(selectedItem, bindVariable.field);
         let text = value;
@@ -1142,7 +1146,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   variableIsHide(variable) {
-    return _.includes(['%', ".", "N/A"], variable.current.text);
+    return _.includes(['%', ".", "N/A", "NA"], variable.current.text);
   }
 
   defineQuerySwitch() {
