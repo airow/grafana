@@ -156,22 +156,6 @@ return function (callback) {
       }
     }, component.panels);
 
-    // if (component.panels["teld-dashtab-panel"]) {
-    //   component.mapping = _.transform(component.panels["teld-dashtab-panel"].dashboards,
-    //     function (m, item) {
-    //       if (!_.isEmpty(item.permissions)) {
-    //         m[item.permissions] = item.dash;
-    //       }
-    //     }, {});
-    // }
-
-    // var group = component.dashboard.dashLocalStorage;
-    // var tab = component.panels["teld-dashtab-panel"].localStorageKey;
-    // var localStorageKey = _.remove([group, tab, "dashtab"]).join("_");
-    // var storage = window.localStorage.getItem(localStorageKey) || "{}";
-    // component.storage = JSON.parse(storage);
-    // component.openDash = component.storage.lastDash || { dash: ARGS.db };
-
     return component;
   }
 
@@ -219,38 +203,32 @@ return function (callback) {
 
   function switchDash(component, data) {
     var emptyDash = ARGS.empty || 'kb-empty';
-    var openDash = component.openDash;
+    var lastDash = component.openDash.dash;
+
+    var dashtabPanel = component.panels["teld-dashtab-panel"];
+
+    var filter = [];
     var result = _.first(data.results);
-    if (result) {
-      var button = _.find(result.dataset, { Control_ID: openDash.permissions });
-      if (_.isUndefined(button)) {
-
-        var permissions = _.keys(component.mapping);
-
-        var firstDash = _.find(component.panels['teld-dashtab-panel'].dashboards, function (eachItem) {
-          return _.includes(permissions, eachItem.permissions);
-        });
-
-        if (firstDash) {
-          openDash = {
-            dash: firstDash.dash
-          };
-          if (_.size(result.dataset) === 0 && firstDash.permissions) {
-            openDash.dash = emptyDash;
-          }
-        } else {
-          var firstButton = _.first(result.dataset);
-          if (firstButton) {
-            openDash = {
-              dash: component.mapping[firstButton.Control_ID]
-            };
-          }
-        }
-      }
+    if (result && _.size(result.dataset) > 0) {
+      filter = _.map(result.dataset, dashtabPanel.butPermiFiled);
     }
+
+    var dashboards = dashtabPanel.dashboards;
+    var dashs = _.filter(dashboards, function (dash) {
+      return _.isEmpty(dash.permissions) || _.includes(filter, dash.permissions);
+    });
+
+    var openDash = { dash: emptyDash };
+    if (_.size(dashs) === 0) {
+      return openDash;
+    }
+    var findDash = _.find(dashs, function (item) {
+      return item.dash === lastDash;
+    });
+
+    openDash.dash = findDash ? findDash.dash : _.first(dashs).dash;
     return openDash;
   }
-
 
   function processQueryResult(resData) {
     var data = [];
@@ -299,11 +277,8 @@ return function (callback) {
     })
     .done(function (getComponentRes, getButtonRes) {
       var component = parseComponent.apply(this, getComponentRes);
-      if (_.isUndefined(component.openDash.dash) || _.includes(_.values(component.mapping), component.openDash.dash)) {
-        if (_.isUndefined(component.openDash.dash) || component.panels["teld-dashtab-panel"].isSaveTabIndex) {
-          component.openDash = switchDash.apply(this, _.flatten([component, getButtonRes]));
-        }
-      }
+      //选择页签
+      component.openDash = switchDash.apply(this, _.flatten([component, getButtonRes]));
 
       /*注入按钮权限*/
       injectDataList(component, getButtonRes);
