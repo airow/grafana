@@ -30,16 +30,18 @@
           </div>
           <div class="gf-form" ng-if="target.conf.dsQueryVariables.length>0">
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
-              <a ng-click="ctrl.undoQuery(target)">
+              <button ng-click="ctrl.undoQuery(target)" style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
+                ng-disabled="ctrl.isLoading()">
                 <i class="fa fa-undo"></i>
                 <span class="queryBtnHide-">重置</span>
-              </a>
+              </button>
             </label>
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
-              <a ng-click="ctrl.toggleQuery(target)">
+              <button ng-click="ctrl.toggleQuery(target)" style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
+                ng-disabled="ctrl.isLoading()">
                 <i class="fa fa-filter"></i>
                 <span class="queryBtnHide-">过滤</span>
-              </a>
+              </button>
             </label>
           </div>
           <gf-form-switch ng-if="ctrl.panel.showClickQueryBtn2Fetch" class="gf-form" label="点击查询取数" label-class="width-8" checked="ctrl.rtClickQueryBtn2Fetch">

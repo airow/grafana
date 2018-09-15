@@ -631,7 +631,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   isFetchData = false;
+  queryDelay = false;
   toggleQuery(target) {
+    if (this.isLoading() || this.queryDelay) { return; }
+    this.queryDelay = true;
+    this.$timeout(() => { this.queryDelay = false; }, 1000);
     this.isFetchData = true;
     this.setQuerybarDs(target);
     if (_.isNil(this.currentTarget)) {
