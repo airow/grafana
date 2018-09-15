@@ -104,6 +104,11 @@ class MetricsPanelCtrl extends PanelCtrl {
   waitQuerybarInitFinish() {
     var returnValue = false;
 
+    //配置为“忽略querybar延时查询”直接返回，执行后续的取数
+    if (this.panel.ignoreQueryBarDelayQuery) {
+      return returnValue;
+    }
+
     if (_.isUndefined(this.dashboardHasQuerybarPanel)) {
       this.dashboardHasQuerybarPanel = _.findIndex(_.flatten(_.map(this.dashboard.rows, 'panels')), { type: "teld-querybar-panel" }) !== -1;
     }
