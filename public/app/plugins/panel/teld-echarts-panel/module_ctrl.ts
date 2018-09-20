@@ -35,7 +35,7 @@ loadPluginCss({
   dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
   light: '/public/app/plugins/panel/teld-chargingbill-panel/css/light.built-in.css'
 });
-let colors: any[];
+
 export class ModuleCtrl extends MetricsPanelCtrl {
   static templateUrl = `partials/module.html`;
 
@@ -46,6 +46,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   ecSeries: any[];
 
   seriesLabel = {};
+  echartColors: any[];
 
   valueFormats = kbn.valueFormats;
 
@@ -370,7 +371,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   initEcharts() {
 
     let theme = `${this.panel.serieType}Theme-${this.panel.style.themeName}`;
-    colors = _.concat(echartsThemeMap[theme].color, gfColors);
+    this.echartColors = _.concat(echartsThemeMap[theme].color, gfColors);
+    if (this.panel.customColor) {
+      this.echartColors = _.concat(this.panel.echarts.color, this.echartColors);
+    }
     this.ecConfig = {
       theme: theme,
       //theme: config.bootData.user.lightTheme ? 'light' : 'drak',
@@ -915,8 +919,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     } else {
       legendData = series.map((serie, index) => {
 
-        var colorIndex = index % colors.length;
-        var color = colors[colorIndex];
+        var colorIndex = index % this.echartColors.length;
+        var color = this.echartColors[colorIndex];
 
         return {
           //name: serie.name, textStyle: _.first(serie.data).itemStyle.normal
@@ -995,8 +999,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             data: []
           });
 
-          var colorIndex = index % colors.length;
-          var color = colors[colorIndex];
+          var colorIndex = index % this.echartColors.length;
+          var color = this.echartColors[colorIndex];
           var itemStyle = { normal: { color } };
           serie.data.push({ value: s.data[0], itemStyle });
         });
@@ -1041,8 +1045,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     serie = _.defaultsDeep(serie, {
       type: 'bar',
       data: (this.ecSeries || []).map((s, index) => {
-        var colorIndex = index % colors.length;
-        var color = colors[colorIndex];
+        var colorIndex = index % this.echartColors.length;
+        var color = this.echartColors[colorIndex];
         var itemStyle = { normal: { color } };
         return { value: s.data[0], itemStyle };
       })
@@ -1111,8 +1115,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         markLine: { data: markLineData },
         markPoint: _.first(s).markPoint,
         data: s.map((s, index) => {
-          var colorIndex = index % colors.length;
-          var color = colors[colorIndex];
+          var colorIndex = index % this.echartColors.length;
+          var color = this.echartColors[colorIndex];
           var itemStyle = {};
           if (s.data.length > 0 && s.data[0].value) {
             return { value: s.data[0].value[1], itemStyle };
@@ -1123,23 +1127,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       });
 
       series.push(serie);
-      // series.push({
-      //   type: 'line',
-      //   name: metric,
-      //   markLine: { data: markLineData },
-      //   markPoint: _.first(s).markPoint,
-      //   label: { show: false },
-      //   data: s.map((s, index) => {
-      //     var colorIndex = index % colors.length;
-      //     var color = colors[colorIndex];
-      //     var itemStyle = {  };
-      //     if (s.data.length > 0 && s.data[0].value) {
-      //       return { value: s.data[0].value[1], itemStyle };
-      //     } else {
-      //       return { value: 0, itemStyle };
-      //     }
-      //   })
-      // });
     }
 
     return series;
@@ -1406,10 +1393,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   baseOption.legend = undefined;
     // }
     //this.ecConfig.theme = this.panel.style.themeName;
-    if (this.panel.customColor) {
-      baseOption.color = this.panel.echarts.color;
-    }
     baseOption = this.useSerieTypeConf(baseOption);
+    baseOption.color = this.echartColors;
     this.ecOption.baseOption = baseOption;
 
     if (this.ecInstance) {
