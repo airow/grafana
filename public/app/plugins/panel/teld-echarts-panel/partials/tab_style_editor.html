@@ -22,6 +22,9 @@
       <li ng-class="{active: ctrl.subTab === 'grid'}" ng-hide="ctrl.panel.serieType==='pie'">
         <a ng-click="ctrl.subTab = 'grid'">grid</a>
       </li>
+      <li ng-class="{active: ctrl.subTab === 'color'}">
+        <a ng-click="ctrl.subTab = 'color'">color</a>
+      </li>
     </ul>
   </aside>
 
@@ -628,5 +631,41 @@
     </div>
   </div>
   <!-- end grid -->
+
+  <!-- color -->
+  <div class="edit-tab-content" ng-if="ctrl.subTab === 'color'">
+
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="color" label-class="width-7" checked="ctrl.panel.customColor" on-change="ctrl.render()"></gf-form-switch>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.appendColor()">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    <div class="gf-form-group">
+      <div class="gf-form" ng-repeat="(key, val) in ctrl.panel.echarts.color track by $index">
+        <label class="gf-form-label width-7" ng-bind='$index+1'></label>
+        <spectrum-picker ng-model="ctrl.panel.echarts.color[key]" ng-change="refresh()"></spectrum-picker>
+        <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.echarts.color[key]" spellcheck="false">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.echarts.color, ctrl.panel.echarts.color[key])">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(ctrl.panel.echarts.color,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(ctrl.panel.echarts.color,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+  <!-- color -->
 
 </div>

@@ -118,6 +118,11 @@ export class TabStyleEditorCtrl {
     _.move(itemArray, index, newIndex);
     this.refresh();
   }
+
+  appendColor() {
+    var color = this.panel.echarts.color || (this.panel.echarts.color = [], this.panel.echarts.color);
+    color.push("");
+  }
 }
 
 /** @ngInject **/

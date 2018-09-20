@@ -1406,6 +1406,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   baseOption.legend = undefined;
     // }
     //this.ecConfig.theme = this.panel.style.themeName;
+    if (this.panel.customColor) {
+      baseOption.color = this.panel.echarts.color;
+    }
     baseOption = this.useSerieTypeConf(baseOption);
     this.ecOption.baseOption = baseOption;
 
