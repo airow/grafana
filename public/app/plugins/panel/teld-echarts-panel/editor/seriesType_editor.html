@@ -285,6 +285,30 @@
     </div>
     <!-- bar end -->
 
+    <!-- line start -->
+    <div class="section gf-form-group" ng-if='seriesType.type=="line"'>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-14">base</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">symbol</label>
+        <input type="text" class="gf-form-input width-7" ng-model="seriesType.line.symbol" bs-typeahead="['circle', 'rect', 'none']"
+          min-length="0" ec-valwrap>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-14">lineStyle</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">width</label>
+        <input type="text" class="gf-form-input width-7" ec-valwrap ng-model="seriesType.line.lineStyle.normal.width" ec-valwrap>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">type</label>
+        <input type="text" class="gf-form-input width-7" ng-model="seriesType.line.lineStyle.normal.type" bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
+      </div>
+    </div>
+    <!-- line end -->
+
     <!-- markPoint start-->
     <div class="section gf-form-group">
       <div class="gf-form">
@@ -326,6 +350,8 @@
         <label class="gf-form-label width-8">symbolSize</label>
         <label class="gf-form-label width-8">symbolRotate</label>
         <label class="gf-form-label width-8">position</label>
+        <label class="gf-form-label width-8">lineType</label>
+        <label class="gf-form-label width-8">lineWidth</label>
         <label class="gf-form-label">
           <a ng-click="seriesType.markLine.data.push({})">
             <i class="pointer fa fa-plus"></i>
@@ -340,6 +366,8 @@
         <input type="text" class="gf-form-input width-8" ng-model="markLine.symbolSize" ec-valwrap>
         <input type="number" class="gf-form-input width-8" ng-model="markLine.symbolRotate" ec-valwrap>
         <input type="text" class="gf-form-input width-8" ng-model="markLine.label.normal.position" bs-typeahead="['start', 'middle', 'end']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.type" bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
+        <input type="number" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.width" ec-valwrap>
         <label class="gf-form-label">
             <a ng-click="ctrl.removeItem(seriesType.markLine.data, markLine)">
             <i class="pointer fa fa-remove"></i>

@@ -33,7 +33,7 @@ export class SeriesTypeEditorCtrl {
   }
 
   yAxisList() {
-    return _.union([''], _.map(_.filter(this.panel.yAxisConf, 'show'), 'key'));
+    return _.union(['', 'yAxis'], _.map(_.filter(this.panel.yAxisConf, 'show'), 'key'));
   }
 
   appendAxisConf() {

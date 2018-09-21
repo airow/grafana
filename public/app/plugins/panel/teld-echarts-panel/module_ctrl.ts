@@ -1480,11 +1480,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         });
         //series = _.defaultsDeep(_.cloneDeep(type), series);
         if (type.yAxis) {
-          var axisIndex = _.findIndex(option[axis.axis], { key: type.yAxis });
+          var axisIndex = 0;
+          if (type.yAxis !== "yAxis") {
+            axisIndex = _.findIndex(option[axis.axis], { key: type.yAxis });
+          }
           if (axisIndex > -1) {
             series[axis.axisIndex] = axisIndex;
             if (false === _.isEmpty(type.stack)) {
               series.stack = type.stack;
+            }
+            if (series.type === "line") {
+              delete series.stack;
             }
             series.markPoint = _.cloneDeep(type.markPoint);
             series.markLine = _.cloneDeep(type.markLine);
@@ -1492,7 +1498,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
               _.set(series, 'label.normal', _.cloneDeep(type.label.normal));
             }
 
-            var y = option[axis.axis][axisIndex];
+            var y = option[axis.axis][axisIndex] || option[axis.axis];
             var { format, decimals } = y.axisLabel;
             var formatterConf = { format: format, decimals: decimals };
 
@@ -1579,10 +1585,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         var returnValue = [];
         var paramArray = _.isArray(params) ? params : [params];
         returnValue.push(xFormatter(paramArray[0].name));
+        var ctrl = this;
         _.each(paramArray, function (param, index) {
           var item = [param.marker];
           switch (param.seriesName) {
             case "\u0000-":
+              if (ctrl.panel.emptySerieNameNoDisplayTooltip) {
+                return;
+              }
               break;
             default:
               item.push(param.seriesName + "：");
