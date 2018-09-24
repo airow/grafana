@@ -305,6 +305,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       enabled: false,
       cardinal: '基数',
       increment: '增量',
+      outerCardina: "",
       interval: 1000,
       publish: false,
       varName: `currentVal${this.panel.id}`
@@ -400,9 +401,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   currentVal = { initVal: 0, val: 0, step: 0, totalStep: 0 };
 
   stepValModel(mapSeries) {
-    let { cardinal, increment } = this.panel.stepVal;
+    let { cardinal, increment, outerCardina } = this.panel.stepVal;
     let cardinalSeries = _.filter(mapSeries, ['alias', cardinal]);
     let incrementSeries = _.filter(mapSeries, ['alias', increment]);
+    let outerCardinalSeries = _.filter(mapSeries, ['alias', outerCardina]);
 
 
     this.series = incrementSeries;
@@ -411,11 +413,20 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
     this.currentVal.step = _.round(incrementData.value / 60, 2);
 
+    this.series = outerCardinalSeries;
+    var outerCardinaData: any = {};
+    this.setValues(outerCardinaData);
+    var hasOuterCardinal = outerCardinalSeries && _.size(outerCardinalSeries) > 0 && outerCardinaData.value;
+
     this.series = cardinalSeries;
     var data: any = {};
     this.setValues(data);
 
     this.currentVal.initVal = this.currentVal.val = data.value;
+    if (hasOuterCardinal) {
+      this.currentVal.initVal = this.currentVal.val = outerCardinaData.value;
+    }
+
 
     this.data = data;
 
