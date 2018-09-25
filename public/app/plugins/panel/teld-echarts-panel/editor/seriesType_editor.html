@@ -243,10 +243,30 @@
           </select>
         </div>
         <div class="gf-form">
+          <label class="gf-form-label width-7">position</label>
+          <select class="gf-form-input width-7" ng-model="seriesType.label.normal.position" ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
+          </select>
+        </div>
+        <div class="gf-form">
           <label class="gf-form-label width-7">rotate
             <tip>标签旋转。从 -90 度到 90 度。正值是逆时针</tip>
           </label>
           <input type="number" class="gf-form-input width-7" ng-model="seriesType.label.normal.rotate">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontStyle</label>
+          <select class="gf-form-input" ng-model="seriesType.label.normal.textStyle.fontStyle" ng-options="serie for serie in ['normal','italic','oblique']"
+            ng-change="ctrl.refresh()"></select>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontWeight
+            <tip>'normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300'</tip>
+          </label>
+          <input type="text" class="gf-form-input width-7" ng-model="seriesType.label.normal.textStyle.fontWeight">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">fontSize</label>
+          <input type="text" class="gf-form-input width-7" ng-model="seriesType.label.normal.textStyle.fontSize">
         </div>
       </div>
       <!-- areaStyle start -->

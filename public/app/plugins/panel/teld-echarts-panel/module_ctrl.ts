@@ -542,9 +542,37 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.dataListMetric = _.groupBy(dataList, item => { return item.metric || item.target; });
     let series = this.dataList2Serie(dataList);
 
+    series = this.seriesSort(series);
+
     this.ecSeries = series;
 
     this.render();
+  }
+
+  seriesSort(series) {
+    if (true !== _.get(this.panel, 'seriesSort.enable', false)) {
+      return series;
+    }
+    let sortSeries = _.groupBy(series, 'refId');
+    let sortKey = this.panel.seriesSort.serieName || "占比";
+
+    let index = 0;
+    let sorted = _.orderBy(sortSeries[sortKey], (o, i) => { o._index = index++; return o.data[0]; }, 'desc');
+
+    let sordMapping = _.map(sorted, '_index');
+    _.each(sortSeries, (value, keyd) => {
+      _.each(sordMapping, (index, _index) => {
+        value[index]._index = _index;
+      });
+      value = _.sortBy(value, '_index');
+      sortSeries[keyd] = value;
+    });
+    series = _.flatten(_.map(sortSeries));
+    let returnValue = sortSeries[sortKey];
+    let other = _.omit(sortSeries, sortKey);
+    returnValue = _.concat(returnValue, _.flatten(_.map(other)));
+
+    return returnValue;
   }
 
   dataList2Serie(dataList) {

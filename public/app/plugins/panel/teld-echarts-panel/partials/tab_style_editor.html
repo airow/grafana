@@ -386,6 +386,12 @@
         </div>
 
       </div>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="排序" label-class=" width-8" checked="ctrl.panel.seriesSort.enable" on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.seriesSort.serieName" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+      </div>
     </div>
     <!-- formatter -->
     <div class="section gf-form-group">
