@@ -708,7 +708,7 @@ function($, _, numeral, moment) {
     // if (_.isNumber(size) && _.isNumber(correction)) {
     //   size = size * correction;
     // }
-    return prefix + kbn.valueFormats[format](size, decimals) + suffix;
+    return prefix + kbn.valueFormats[format](size, decimals, jConf.args3) + suffix;
   };
 
   //千位分割符
@@ -786,10 +786,10 @@ function($, _, numeral, moment) {
     // return rs.join('\n');
   };
 
-  kbn.valueFormats.teldMoment = function (value, format) {
+  kbn.valueFormats.teldMoment = function (value, format, momentFormat) {
     var valueToNumber = +value;
     var dateValue = _.isNaN(valueToNumber) ? value : valueToNumber;
-    return moment(dateValue).locale('zh-cn').format(format);
+    return moment(dateValue, momentFormat).locale('zh-cn').format(format);
   };
 
   kbn.valueFormats.teldYYYY_MM_DD = function (value) {
