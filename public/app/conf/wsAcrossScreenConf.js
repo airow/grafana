@@ -193,7 +193,7 @@ define([
                 console.log("loadConf fail, but eval");
               } else {
                 //alert('载入配置信息异常');
-                alertSrv.set("载入配置信息异常", err, "warning", 4000);
+                alertSrv.set("载入ws配置信息异常", err, "warning", 4000);
                 console.error("loadConf err", err);
               }
             }).always(function () {
