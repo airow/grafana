@@ -5,8 +5,8 @@ define([
   function (_, $) {
     "use strict";
     //alert(_);
-    //alert($("#ddd"));
-    $("#ddd").text("deviceInfo");
+    //alert($("#debugAppDeviceInfo"));
+    $("#debugAppDeviceInfo").text("deviceInfo");
 
     function readCookie(n) {
       var i, t, r = n + "=", u = document.cookie.split(";");
@@ -41,7 +41,6 @@ define([
     }
 
     function iosAskForDeviceInfo() {
-      //alert('iosAskForDeviceInfo');
       var a = document.createElement("iframe");
       a.id = "IOSDeviceInfoFrame";
       a.src = '//jsoc///{"action":"askForDeviceInfo"}';
@@ -81,25 +80,18 @@ define([
       if (window.navigator.userAgent.indexOf("TeldAndroidWebView") !== -1) {
         deviceInfo = androidAskForDeviceInfo();
       }
-      //alert(`AskForDeviceInfo=${deviceInfo}`);
-      //document.getElementById('ddd').innerText = deviceInfo;
-
-      // while (deviceInfo.indexOf('+') !== -1) {
-      //   alert('生成了+');
-      //   deviceInfo = askForDeviceInfo();
-      // }
-      // if (deviceInfo.indexOf('+') !== -1) {
-      //   alert('生成了+');
-      // }
-      $("#ddd").html(deviceInfo.replace(/,/g, "<br>"));
+      $("#debugAppDeviceInfo").html(deviceInfo.replace(/,/g, "<br>"));
 
       return deviceInfo;
     }
 
     function askForDeviceInfoIOS(self) {
-      if (self.ddd) { return; }
-      iosAskForDeviceInfo();
-      self.ddd = true;
+      var msdelay = 1000 * 50; //50秒
+      var ts = Date.now();
+      if (ts - (self._ts || ts - msdelay) >= msdelay) {
+        iosAskForDeviceInfo();
+        self._ts = ts;
+      }
     }
 
     function TokenTimeout() {

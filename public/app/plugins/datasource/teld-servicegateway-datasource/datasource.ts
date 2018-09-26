@@ -83,19 +83,6 @@ export class TeldServiceGatewayDatasource {
       from: { text: fromUnix, value: fromUnix }
     }, options.scopedVars);
 
-
-    // alert(_.has(window, 'teld.askForDeviceInfo'));
-    // let askForDeviceInfo = _.get(window, 'teld.askForDeviceInfo', function () { return "no"; });
-    //let deviceInfo = window['teld']['askForDeviceInfo']();
-
-    // let deviceInfo = "";
-    // if (_.has(window, 'teld.askForDeviceInfo')) {
-    //   deviceInfo = window['teld']['askForDeviceInfo']();
-    // }
-    // alert(deviceInfo);
-    // alert("askForDeviceInfo()");
-
-
     let deviceInfo = embed_teldapp.askForDeviceInfo();
 
     var queries = _.filter(options.targets, item => {
@@ -246,32 +233,53 @@ export class TeldServiceGatewayDatasource {
 
   iosDev(resolve, reject) {
     var i = 0;
-    var o = setInterval(function () {
+    var intervalHandle = setInterval(function () {
       i++;
-      var v = embed_teldapp.readCookie('DeviceInfoForIframe');
-      if (v !== "" || i > 10) {
-        clearInterval(o);
-        //embed_teldapp._createCookie('DeviceInfoForIframe', '');
-        //alert('iosDev' + v);
-        v = window['decodeURIComponent'](v);
-        //alert(window.sessionStorage.getItem('DeviceInfoForIframe'));
-        resolve(v);
+      var deviceInfo = embed_teldapp.readCookie('DeviceInfoForIframe');
+      if (deviceInfo !== "" || i > 10) {
+        clearInterval(intervalHandle);
+        deviceInfo = window['decodeURIComponent'](deviceInfo);
+        resolve(deviceInfo);
       }
-    }, 1500);
+    }, 0);
+  }
+
+
+  iosDevTimeout(resolve, reject) {
+    var i = 0;
+    console.log('iosDevTimeout');
+    function getDeviceInfoFromCookie() {
+      var deviceInfo = embed_teldapp.readCookie('DeviceInfoForIframe');
+      if (deviceInfo !== "" || i > 10) {
+        deviceInfo = window['decodeURIComponent'](deviceInfo);
+        window['document']['getElementById']['innerHTML'] = deviceInfo.replace(/,/g, "<br>");
+        resolve(deviceInfo);
+      } else {
+        setTimeout(getDeviceInfoFromCookie, 1000);
+      }
+    }
+
+    setTimeout(getDeviceInfoFromCookie, 0);
   }
 
   query(options) {
     //debugger;
     //alert(embed_teldapp.inIOS);
-    if (embed_teldapp.inIOS) {
-      embed_teldapp.askForDeviceInfoIOS(embed_teldapp);
-      var promise = new Promise(this.iosDev).then(deviceInfo => {
-        //alert('deviceInfo=' + deviceInfo);
-        return this.getQuery(options, deviceInfo);
-      });
-      return promise;
+    var deviceInfo = "";
+    if (embed_teldapp.isInApp) {
+      if (embed_teldapp.inIOS) {
+        embed_teldapp.askForDeviceInfoIOS(embed_teldapp);
+        var promise = new Promise(this.iosDevTimeout).then(deviceInfo => {
+          //alert('deviceInfo=' + deviceInfo);
+          embed_teldapp.ddd = false;
+          return this.getQuery(options, deviceInfo);
+        });
+        return promise;
+      } else {
+        deviceInfo = embed_teldapp.askForDeviceInfo();
+      }
     }
-    return this.getQuery(options, '');
+    return this.getQuery(options, deviceInfo);
   }
 
   getQuery(options, deviceInfo) {
