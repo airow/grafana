@@ -82,3 +82,8 @@ declare module 'watermark' {
   var config: any;
   export default config;
 }
+
+declare module 'app/core/embed_teldapp' {
+  var config: any;
+  export default config;
+}

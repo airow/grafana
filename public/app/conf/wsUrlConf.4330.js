@@ -19,6 +19,11 @@ define([], function () {
    * 生产用户管理界面（生产DW库）：http://com.teld.cn/SocketUser/Index?FullName=通讯用户管理
    *
    */
+  function domain(host) {
+    var d = window.location.hostname.split('.');
+    d[0] = host;
+    return d.join(".");
+  }
 
   var conf = {
     //账号模式，true为多屏单户，false单屏单户
@@ -29,9 +34,9 @@ define([], function () {
      * */
     //wsServerUrl: 'ws://rp1.teld.cn/api/WebSocket?user=${login}',/** WebSocket host IIS */
     //wsServerUrl: 'ws://139.219.10.100:8080?user=${login}',
-    wsServerUrl: 'wss://com2.teld.cn:8080?user=${login}',
-    remoteConfUrl_v1: "https://mvcone.teld.cn:5443/BigScreen/GetThemeUsers",
-    remoteConfUrl: "https://mvcone.teld.cn:5443/BigScreenSet/GetUserTheme"
+    wsServerUrl: 'wss://' + domain('com2') + ':8080?user=${login}',
+    remoteConfUrl_v1: "https://" + domain('mvcone') + ":5443/BigScreen/GetThemeUsers",
+    remoteConfUrl: "https://" + domain('mvcone') + ":5443/BigScreenSet/GetUserTheme"
   };
 
   return conf;
