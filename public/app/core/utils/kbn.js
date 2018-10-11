@@ -711,6 +711,40 @@ function($, _, numeral, moment) {
     return prefix + kbn.valueFormats[format](size, decimals, jConf.args3) + suffix;
   };
 
+  kbn.valueFormats.teldScaleUnit = function (size, decimals, segment) {
+    var val = size;
+    var unit = '';
+    var eachSegment = _.transform(segment, function (result, value, key) {
+      result.push({ key: key, value: value });
+    }, []);
+    eachSegment = _.orderBy(eachSegment, ['key'], ['desc']);
+    _.each(eachSegment, function (eachItem) {
+      var calc = size / +eachItem.key;
+      if (calc > +Math.pow(0.1, decimals).toFixed(decimals)) {
+        unit = eachItem.value;
+        val = calc;
+        return false;
+      }
+    });
+
+    return kbn.toFixed(val, decimals) + unit;
+  };
+
+  kbn.valueFormats.teldGeneralExpression = function (size, conf) {
+    var jConf = JSON.parse(conf || {});
+    var function_body = jConf.function_body;
+    var returnValue;
+    if (function_body) {
+      var prefix = jConf.prefix || "";//前缀
+      var suffix = jConf.suffix || "";//后缀
+      var fun = new Function('kbn', '_', 'value', 'jConf', function_body); // jshint ignore:line
+      returnValue = prefix + fun(kbn, _, size, jConf) + suffix;
+    } else {
+      returnValue = kbn.valueFormats.teldGeneralFormat(size, conf);
+    }
+    return returnValue;
+  };
+
   //千位分割符
   kbn.valueFormats.thousandsSeparator = function (size, decimals) {
     // var d = "";
@@ -1002,6 +1036,7 @@ function($, _, numeral, moment) {
         text: 'teld',
         submenu: [
           { text: '自定义', value: 'teldGeneralFormat' },
+          { text: '表达式', value: 'teldGeneralExpression' },
           { text: '千分位', value: 'thousandsSeparator' },
           { text: '千分位-10', value: 'thousandsSeparator10' },
           { text: '千分位-100', value: 'thousandsSeparator100' },
