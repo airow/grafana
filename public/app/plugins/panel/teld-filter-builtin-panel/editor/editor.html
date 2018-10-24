@@ -119,7 +119,7 @@
           placeholder="请输入变量" ng-model="QueryOption.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
         <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="校验时间变量"
           ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
-        <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于']"></select>
+        <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于','大于','小于']"></select>
         <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form" label="isClick" label-class="width-8"
           checked="QueryOption.isClick" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">

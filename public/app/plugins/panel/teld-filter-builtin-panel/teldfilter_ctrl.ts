@@ -388,6 +388,10 @@ export class TeldfilterCtrl extends PanelCtrl {
               return value <= this._panle.QueryList[i].QueryOptions[j].ClickValue;
             } else if (Checkoutwhere === '小于等于') {
               return value >= this._panle.QueryList[i].QueryOptions[j].ClickValue;
+            } else if (Checkoutwhere === '小于') {
+              return value > this._panle.QueryList[i].QueryOptions[j].ClickValue;
+            } else if (Checkoutwhere === '大于') {
+              return value < this._panle.QueryList[i].QueryOptions[j].ClickValue;
             } else {
               return false;
             }
