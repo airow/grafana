@@ -1,7 +1,11 @@
 $font-size32: 32px;
 $font-size36: 36px;
 $font-size16: 16px;
-
+span.panel-loading.teld-panel-close{
+  font-size:15px;
+  z-index:1000;
+  cursor: pointer;
+}
 .teld_panel{
   position: absolute;
   margin: 25px 0px 0px;
@@ -33,7 +37,8 @@ $font-size16: 16px;
     i{
       width: 30px;
       height: 30px;
-      display: inline-block;
+      // display: inline-block;
+      display:none;
       background: url("/public/img/ddd/closeBack.png")no-repeat top right;
     }
   }

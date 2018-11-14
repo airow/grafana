@@ -1,6 +1,8 @@
 $font-size32: 32px;
 $font-size36: 36px;
-
+span.panel-loading.teld-panel-close{
+  display: none !important;
+}
 .teld_panel{
   position: absolute;
   margin: 10px 0px 0px;

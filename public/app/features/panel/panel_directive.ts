@@ -19,6 +19,12 @@ var panelTemplate = `
         <i class="fa fa-spinner fa-spin"></i>
       </span>
 
+      <span class="panel-loading teld-panel-close"
+        ng-show="!ctrl.loading && ctrl.dashboard.meta.fullscreen"
+        ng-click="ctrl.exitFullscreen()">
+        <i class="fa fa-close"></i>
+      </span>
+
       <span class="panel-loading" ng-show="ctrl.panel.helpTooltip.show && !ctrl.loading">
         <i class="grafana-tip fa fa-question-circle"
           data-placement="bottom"
