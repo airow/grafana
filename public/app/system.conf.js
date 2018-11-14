@@ -44,6 +44,7 @@ System.config({
     "jquery.flot.gauge": "vendor/flot/jquery.flot.gauge",
     "jquery.flot.categories": "vendor/flot/jquery.flot.categories",
     "numeral": "vendor/numeral/numeral.js",
+    "rison": "vendor/rison.js",
     /* echarts-3.6.2
     'echarts': 'vendor/npm/echarts/dist/echarts.min.js',
     'echarts.bmap': 'vendor/npm/echarts/dist/extension/bmap.min.js',

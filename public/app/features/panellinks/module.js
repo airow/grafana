@@ -19,7 +19,7 @@ function (angular, _) {
         link: function() {
         }
       };
-    }).controller('PanelLinksEditorCtrl', function($scope, backendSrv) {
+    }).controller('PanelLinksEditorCtrl', function ($scope, backendSrv, templateSrv) {
 
       $scope.panel.links = $scope.panel.links || [];
 
@@ -28,6 +28,12 @@ function (angular, _) {
           type: 'dashboard',
         });
       };
+
+      // $scope.searchVars = function (queryStr, callback) {
+      //   callback(_.map(templateSrv.variables, 'name'));
+      // };
+
+      $scope.searchVars = _.map(templateSrv.variables, 'name');
 
       $scope.searchDashboards = function(queryStr, callback) {
         backendSrv.search({query: queryStr}).then(function(hits) {
@@ -47,6 +53,16 @@ function (angular, _) {
             link.title = dashboard.title;
           }
         });
+      };
+
+      $scope.add = function (link) {
+        var varsMapping = link.varsMapping || [];
+        varsMapping.push({});
+        link.varsMapping = varsMapping;
+      };
+
+      $scope.remove = function (link, map) {
+        link.varsMapping = _.without(link.varsMapping, map);
       };
 
       $scope.deleteLink = function(link) {

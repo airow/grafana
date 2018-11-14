@@ -1,0 +1,31 @@
+<div class="modal-body" ng-controller="DrilldownModalCtrl" ng-init="init()" ng-cloak>
+
+	<div class="modal-header">
+		<h2 class="modal-header-title">
+			{{modalTitle}}
+		</h2>
+
+		<a class="modal-header-close" ng-click="dismiss();">
+			<i class="fa fa-remove"></i>
+		</a>
+	</div>
+
+	<div class="modal-content">
+		<div ng-include src="'shareLink.html'" class="share-modal-body"></div>
+	</div>
+
+</div>
+
+<script type="text/ng-template" id="shareLink.html">
+	<div class="share-modal-header">
+		<!-- <div class="share-modal-big-icon">
+			<i class="fa fa-link"></i>
+		</div> -->
+		<div class="share-modal-content">
+      <div class="gf-form-inline">
+        <div class="section gf-form" ng-repeat="link in links">
+          <a ng-href="{{link.href}}" ng-click='dismiss();' style="font-size: 1.5rem;" target="{{link.target}}"><i class="fa" ng-class="{true:'fa-external-link-square',false:'fa-link'}[link.target=='_blank']"></i> {{link.title}}</a>
+        </div>
+      </div>
+		</div>
+</script>

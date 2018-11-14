@@ -18,6 +18,11 @@ declare module 'numeral' {
   export default numeral;
 }
 
+declare module 'rison' {
+  var rison: any;
+  export default rison;
+}
+
 declare module 'moment' {
   var moment: any;
   export default moment;

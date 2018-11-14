@@ -103,6 +103,19 @@ function (angular, _, kbn) {
           templateSrv.fillVariableValuesForUrl(params, scopedVars);
         }
 
+        if (_.size(link.varsMapping)) {
+          var varParams = {};
+          templateSrv.fillVariableValuesForUrl(varParams, scopedVars);
+          _.each(link.varsMapping, function (mapping) {
+            delete params["var-" + mapping.var];
+            var varValue = varParams["var-" + mapping.var];
+            if (mapping.ignore && _.includes(_.split(mapping.ignore, '|'), varValue)) {
+              return;
+            }
+            params[mapping.map] = varValue || "";
+          });
+        }
+
         info.href = this.addParamsToUrl(info.href, params);
 
         if (link.params) {

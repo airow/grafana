@@ -3,9 +3,11 @@
 import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
+import rison from 'rison';
 import { PanelCtrl , loadPluginCssPath } from 'app/plugins/sdk';
 import { kibanaEditor } from './editor/kibana';
 import { WebsocketEditor } from './editor/websocket';
+import { SaikuEditor } from './editor/saiku';
 import appEvents from 'app/core/app_events';
 import config from 'app/core/config';
 
@@ -450,6 +452,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.addEditorTab('KibanaConf', kibanaEditor);
     this.addEditorTab('Variables', 'public/app/plugins/panel/teld-iframe-panel/partials/variables.html');
     this.addEditorTab('Websocket', WebsocketEditor);
+    this.addEditorTab('Saiku', SaikuEditor);
     this.editorTabIndex = 1;
   }
 
@@ -515,6 +518,47 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
     if (this.panel.parsingDashVars) {
       returnValue = this.templateSrv.replace(returnValue);
+    }
+
+    // var varParams = {};
+    // this.templateSrv.fillVariableValuesForUrl(varParams, {});
+
+    var saikuConf = this.panel.saikuConf || {};
+    var saikuFilter = saikuConf.filters || [];
+    if (_.size(saikuFilter) > 0 && _.size(this.imports.helper.dashVariables) > 0) {
+      var tempFilter = _.transform(saikuFilter, (r, v) => {
+        var current = this.imports.helper.dashVariables[v.dashVar];
+        if (current) {
+          if (false === _.isNil(current.value) && false === _.includes(v.ignoreList, current.value)) {
+            var filter = _.pick(v, ['data_Field', 'data_Level']);
+            filter.val = current.value;
+            r.push(filter);
+          }
+        }
+      }, []);
+      if (_.size(tempFilter)) {
+        var filter = rison.encode_object({ Filter: tempFilter });
+        if (returnValue.indexOf("?") === -1) {
+          returnValue += '?&filter=' + filter;
+        } else {
+          returnValue += '&filter=' + filter;
+        }
+      }
+    }
+
+    var saikuDateFilter = saikuConf.dateFilter || {};
+    if (saikuDateFilter.enable) {
+      var varFrom = bindSource.dashTime.from;
+      var varTo = bindSource.dashTime.to;
+      var dateFilterQs = `&from=${varFrom}&to=${varTo}&dateField=${saikuDateFilter.field}&dateLevel=${saikuDateFilter.level}`;
+      if (false === _.isEmpty(saikuDateFilter.dateFormat)) {
+        dateFilterQs += `&dateFormat=${saikuDateFilter.dateFormat}`;
+      }
+      if (returnValue.indexOf("?") === -1) {
+        returnValue += '?' + dateFilterQs;
+      } else {
+        returnValue += dateFilterQs;
+      }
     }
 
     return returnValue;

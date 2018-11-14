@@ -1,5 +1,5 @@
-///<reference path="../../headers/common.d.ts" />
 
+///<reference path="../../headers/common.d.ts" />
 import config from 'app/core/config';
 import _ from 'lodash';
 import moment from 'moment';
@@ -48,6 +48,7 @@ export class PanelCtrl {
     this.events = new Emitter();
     this.timing = {};
     this.calcHide = true;
+    this.panel.drillConf = this.panel.drillConf || {};
     var plugin = config.panels[this.panel.type];
     if (plugin) {
       this.pluginId = plugin.id;
@@ -125,6 +126,7 @@ export class PanelCtrl {
     this.addEditorTab('General', 'public/app/partials/panelgeneral.html');
     this.editModeInitiated = true;
     this.events.emit('init-edit-mode', null);
+    this.addEditorTab('Drilldown', 'public/app/partials/drilldownconf.html');
 
     var urlTab = (this.$injector.get('$routeParams').tab || '').toLowerCase();
     if (urlTab) {
@@ -166,6 +168,9 @@ export class PanelCtrl {
       menu.push({ text: 'Duplicate', click: 'ctrl.duplicate()', role: 'Editor' });
     }
     menu.push({ text: 'Share', click: 'ctrl.sharePanel(); dismiss();', role: 'Editor' });
+    if (this.panel.drillConf && _.size(this.panel.drillConf.links) > 0) {
+      menu.push({ text: '联查', click: 'ctrl.drilldown(); dismiss();' });
+    }
     return menu;
   }
 
@@ -446,6 +451,32 @@ export class PanelCtrl {
     this.publishAppEvent('show-modal', {
       src: 'public/app/features/dashboard/partials/shareModal.html',
       scope: shareScope
+    });
+  }
+
+  drilldown() {
+
+    if (_.size(this.panel.drillConf.links) === 1) {
+      var linkSrv = this.$injector.get('linkSrv');
+      var link = linkSrv.getPanelLinkAnchorInfo(_.first(this.panel.drillConf.links), this.panel.scopedVars);
+      var goHref = $("<a>").attr('href', link.href).attr('target', link.target);
+      goHref[0].click();
+      goHref.remove();
+      return;
+    }
+
+    var modalScope = this.$scope.$new();
+    modalScope.panel = this.panel;
+
+    modalScope.dismiss = function() {
+      this.publishAppEvent('hide-modal');
+      modalScope.$destroy();
+    };
+
+    this.publishAppEvent('show-modal', {
+      src: 'public/app/features/dashboard/partials/drilldown.html',
+      scope: modalScope,
+      backdrop: 'static'
     });
   }
 
