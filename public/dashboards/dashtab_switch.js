@@ -193,12 +193,19 @@ return function (callback) {
       }]
     };
 
-    return $.ajax({
+    debugger;
+    if (isInApp()) {
+      var dtd = $.Deferred();
+      dtd.resolve(false);
+      return dtd;
+    }
+    var callAjax = $.ajax({
       method: 'POST', url: 'callteldsg/_sg',
       dataType: 'json',
       contentType: 'application/json',
       data: JSON.stringify(data)
     });
+    return callAjax;
   }
 
   function switchDash(component, data) {
@@ -253,6 +260,19 @@ return function (callback) {
     return { data: data };
   }
 
+  function isInApp() {
+    return window.navigator.userAgent.indexOf("TeldIosWebView") !== -1
+      || window.navigator.userAgent.indexOf("TeldAndroidWebView") !== -1;
+  }
+
+  function mockApp(component, getButtonRes) {
+    if (getButtonRes === false) {
+      var dataset = _.map(component.panels["teld-dashtab-panel"].dashboards, function (d) { return { Control_ID: d.permissions }; });
+      getButtonRes = [{ results: [{ dataset: dataset }], error: [] }];
+    }
+    return getButtonRes;
+  }
+
   function injectDataList(component, getButtonRes) {
     if (component.panels["teld-dashtab-panel"]) {
       var dataList = processQueryResult.apply(this, getButtonRes);
@@ -277,6 +297,11 @@ return function (callback) {
     })
     .done(function (getComponentRes, getButtonRes) {
       var component = parseComponent.apply(this, getComponentRes);
+
+      if (isInApp() && getButtonRes === false) {
+        getButtonRes = mockApp(component, getButtonRes);
+      }
+
       //选择页签
       component.openDash = switchDash.apply(this, _.flatten([component, getButtonRes]));
 

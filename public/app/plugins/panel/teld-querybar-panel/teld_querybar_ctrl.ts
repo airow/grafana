@@ -27,7 +27,7 @@ loadPluginCss({
 });
 
 export class TeldQuerybarCtrl extends PanelCtrl {
-  static templateUrl = `partials/module.html`;
+  static templateUrl = window.navigator.userAgent.indexOf("TeldIosWebView") !== -1 ? 'partials/module.ios.html' : `partials/module.html`;
 
   //time = { from: moment("2013-01-01"), to: "now" };
   ALL_TEXT = '-全部-';
@@ -127,10 +127,12 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     if (this.device.ios) {
       this.querybarPanelStyle.width = this.originalWidth - 33.187;
       //panelsWrapper.width = this.originalWidth - 11.187;
-      this.$scope.$watch('$viewContentLoaded', (event) => {
-        $("div.main-view .dash-row .panels-wrapper").width(this.originalWidth - 11.187);
-        //alert($("div.main-view .dash-row .panels-wrapper").length);
-      });
+      if (window.navigator.userAgent.indexOf("TeldIosWebView") === -1) {
+        this.$scope.$watch('$viewContentLoaded', (event) => {
+          $("div.main-view .dash-row .panels-wrapper").width(this.originalWidth - 11.187);
+          //alert($("div.main-view .dash-row .panels-wrapper").length);
+        });
+      }
     }
 
     _.defaults(this.panel, this.panelDefaults);
