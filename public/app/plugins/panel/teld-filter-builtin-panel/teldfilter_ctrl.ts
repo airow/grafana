@@ -233,7 +233,7 @@ export class TeldfilterCtrl extends PanelCtrl {
               this._panle.QueryList[i].QueryOptions[j].Checkoutwhere
             );
             if (reusts) {
-              this.alertSrv.set("警告", "请检查时间选择", "warning", 2000);
+              this.alertSrv.set("警告", "开始时间不能大于结束时间", "warning", 2000);
             }
           }
         }
