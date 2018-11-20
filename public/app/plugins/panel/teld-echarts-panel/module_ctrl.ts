@@ -621,40 +621,6 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
   dataList: any = [];
 
-  get_moment_zhCn(key, format?) {
-    return moment.apply(null, arguments).locale('zh-cn', { week: { dow: 1 } });
-  }
-
-  groupTime(dataList) {
-    if (false === _.isNil(this.currentCycle)) {
-      if (this.panel.cycleEnableVar) {
-        return;
-      }
-      var moment_zhCn = this.get_moment_zhCn;
-      _.each(dataList, dl => {
-        var dp = dl.datapoints;
-        var dddd = _.groupBy(dp, item => {
-          var time = _.isArray(item) ? item[1] : _.values(item)[0];
-          var m = moment_zhCn(time);
-          if (this.currentCycle.startOf) {
-            m.startOf(this.currentCycle.startOf);
-          }
-          return m.format('x');
-        });
-
-        var ndp = _.transform(dddd, (r, value, timeGroup) => {
-          var sum = _.sumBy(value, vv => {
-            return _.isArray(vv) ? vv[0] : _.values(vv)[1];
-          });
-          //var time = moment_zhCn(key, format).format('x');
-          //var time = timeGroup;
-          r.push([sum, timeGroup]);
-        }, []);
-        dl.datapoints = ndp;
-      });
-    }
-  }
-
   onDataReceived(dataList) {
 
     if (_.size(dataList) === 1 && dataList[0].type === 'docs') {
@@ -738,6 +704,40 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         break;
     }
     return series;
+  }
+
+  get_moment_zhCn(key, format?) {
+    return moment.apply(null, arguments).locale('zh-cn', { week: { dow: 1 } });
+  }
+
+  groupTime(dataList) {
+    if (false === _.isNil(this.currentCycle)) {
+      if (this.panel.cycleEnableVar) {
+        return;
+      }
+      var moment_zhCn = this.get_moment_zhCn;
+      _.each(dataList, dl => {
+        var dp = dl.datapoints;
+        var dddd = _.groupBy(dp, item => {
+          var time = _.isArray(item) ? item[1] : _.values(item)[0];
+          var m = moment_zhCn(time);
+          if (this.currentCycle.startOf) {
+            m.startOf(this.currentCycle.startOf);
+          }
+          return m.format('x');
+        });
+
+        var ndp = _.transform(dddd, (r, value, timeGroup) => {
+          var sum = _.sumBy(value, vv => {
+            return _.isArray(vv) ? vv[0] : _.values(vv)[1];
+          });
+          //var time = moment_zhCn(key, format).format('x');
+          //var time = timeGroup;
+          r.push([sum, timeGroup]);
+        }, []);
+        dl.datapoints = ndp;
+      });
+    }
   }
 
   fillingDataList(dataList) {
