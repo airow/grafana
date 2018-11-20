@@ -90,7 +90,7 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
   }
 
   removeItem(itemArray, item) {
-    var index = _.indexOf(itemArray, itemArray);
+    var index = _.indexOf(itemArray, item);
     itemArray.splice(index, 1);
   }
 

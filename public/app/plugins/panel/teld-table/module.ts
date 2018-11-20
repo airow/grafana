@@ -128,6 +128,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     fontSize: '100%',
     sort: { col: 0, desc: true },
     filterNull: false,
+    scrollDisplay: false,
     publishVariables: { variablesConf: [] }
   };
 
@@ -375,8 +376,30 @@ class TablePanelCtrl extends MetricsPanelCtrl {
 
     function switchPage(e) {
       var el = $(e.currentTarget);
-      ctrl.pageIndex = (parseInt(el.text(), 10) - 1);
-      renderPanel();
+      var isload = true;
+      if (el.text() === "首页") {
+        ctrl.pageIndex = 0;
+      } else if (el.text() === "末页") {
+        ctrl.pageIndex = (parseInt(el.attr("pageCount"), 10) - 1);
+      } else if (el.text() === "上一页") {
+        if (ctrl.pageIndex > 0) {
+          ctrl.pageIndex = ctrl.pageIndex - 1;
+        } else {
+          isload = false;
+        }
+      } else if (el.text() === "下一页") {
+        var pageCount = parseInt(el.attr("pageCount"), 10) - 1;
+        if (ctrl.pageIndex < pageCount) {
+          ctrl.pageIndex = ctrl.pageIndex + 1;
+        } else {
+          isload = false;
+        }
+      } else {
+        ctrl.pageIndex = (parseInt(el.text(), 10) - 1);
+      }
+      if (isload) {
+        renderPanel();
+      }
     }
 
     function appendPaginationControls(footerElem) {
@@ -387,15 +410,38 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       if (pageCount === 1) {
         return;
       }
-
-      var startPage = Math.max(ctrl.pageIndex - 3, 0);
-      var endPage = Math.min(pageCount, startPage + 9);
+      var endPageaddnum = 9;
+      var startPageaddnum = 3;
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        endPageaddnum = 3;
+        startPageaddnum = 1;
+      }
+      var startPage = Math.max(ctrl.pageIndex - startPageaddnum, 0);
+      var endPage = Math.min(pageCount, startPage + endPageaddnum);
 
       var paginationList = $('<ul></ul>');
-
+      var pageLinkElem = $('<li><a pageCount="' + pageCount + '" class="table-panel-page-link pointer">首页</a></li>');
+      if (endPage > 0) {
+        paginationList.append(pageLinkElem);
+      }
+      pageLinkElem = $('<li><a pageIndex="' + ctrl.pageIndex
+      + '" pageCount="' + pageCount + '" class="table-panel-page-link pointer">上一页</a></li>');
+      if (endPage > 0) {
+        paginationList.append(pageLinkElem);
+      }
       for (var i = startPage; i < endPage; i++) {
         var activeClass = i === ctrl.pageIndex ? 'active' : '';
-        var pageLinkElem = $('<li><a class="table-panel-page-link pointer ' + activeClass + '">' + (i + 1) + '</a></li>');
+        pageLinkElem = $('<li><a pageCount="' + pageCount
+          + '" class="table-panel-page-link pointer ' + activeClass + '">' + (i + 1) + '</a></li>');
+        paginationList.append(pageLinkElem);
+      }
+      pageLinkElem = $('<li><a  pageIndex="' + ctrl.pageIndex
+      + '"  pageCount="' + pageCount + '" class="table-panel-page-link pointer">下一页</a></li>');
+      if (endPage > 0) {
+        paginationList.append(pageLinkElem);
+      }
+      pageLinkElem = $('<li><a pageCount="' + pageCount + '" class="table-panel-page-link pointer">末页</a></li>');
+      if (endPage > 0) {
         paginationList.append(pageLinkElem);
       }
 

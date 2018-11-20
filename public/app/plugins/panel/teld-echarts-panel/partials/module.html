@@ -1,34 +1,41 @@
 <!--teld_panel_popup弹窗框的样式加上此类-->
 <div class="teld_panel" style="/*z-index: 2;*/" ng-dblclick="ctrl.dblclick();" ng-class="{'teld_panel_popup':ctrl.isfullscreen()}">
+  <div class='cycle-btn-group'>
+    <div ng-mouseleave='ctrl.mouseleave()' ng-mouseover="ctrl.mouseover();" class="btn-group btn-group-sm" style="border:#43add7 1px solid; border-radius:4px;" role="group">
+      <button type="button" ng-class="{'btn-currentCycle':ctrl.currentCycle==x,'mobileSelect':ctrl.mouseEventState}" ng-click='ctrl.setCurrentCycle_handler(x)'
+        class="btn cycle-btn" ng-repeat="x in ctrl.getTimeButton()">{{x.customName||x.name}}</button>
+    </div>
+  </div>
   <div class="teld_close" ng-click="ctrl.exitFullscreen()"><a><i class="closeIcon"></i></a></div>
-    <div class="teld_head">
-      <div class="head_right">
-        <!-- {{ctrl.currentMode}} -->
-        <a ng-hide="ctrl.currentMode==='chart'" ng-click="ctrl.changeCurrentMode()" class="chart"><i></i>图表</a>
-        <a ng-if="ctrl.panel.showTable" ng-hide="ctrl.currentMode==='list'" ng-click="ctrl.changeCurrentMode()" class="list"><i></i>列表</a>
-      </div>
-      <div class="head_name">{{ctrl.echartsPanelArgs.title}}&nbsp;</div>
+  <div class="teld_head">
+    <div class="head_right">
+      <!-- {{ctrl.currentMode}} -->
+      <a ng-hide="ctrl.currentMode==='chart'" ng-click="ctrl.changeCurrentMode()" class="chart"><i></i>图表</a>
+      <a ng-if="ctrl.panel.showTable" ng-hide="ctrl.currentMode==='list'" ng-click="ctrl.changeCurrentMode()" class="list"><i></i>列表</a>
     </div>
-    <teld-echarts ng-show="ctrl.currentMode==='chart'" class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption" ec-instance="ctrl.ecInstance">
-    </teld-echarts>
-    <div ng-show="ctrl.currentMode==='list'" class="teld_box">
-      <table class="teld_table">
-        <thead>
-          <tr>
-            <th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
-              <div class="pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
-                {{col.alias||col.text}}
-                <span class="table-panel-table-header-controls" ng-if="col.sort">
-                    <i class="fa fa-caret-down" ng-show="col.desc"></i>
-                    <i class="fa fa-caret-up" ng-hide="col.desc"></i>
-                  </span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody ng-bind-html="ctrl.tbodyHtml">
-        </tbody>
-      </table>
-    </div>
+    <div class="head_name">{{ctrl.echartsPanelArgs.title}}&nbsp;</div>
+  </div>
+  <teld-echarts ng-show="ctrl.currentMode==='chart'" class="teld_echarts" ec-config="ctrl.ecConfig" ec-option="ctrl.ecOption"
+    ec-instance="ctrl.ecInstance">
+  </teld-echarts>
+  <div ng-show="ctrl.currentMode==='list'" class="teld_box">
+    <table class="teld_table">
+      <thead>
+        <tr>
+          <th ng-repeat="col in ctrl.table.columns" ng-hide="col.hidden">
+            <div class="pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
+              {{col.alias||col.text}}
+              <span class="table-panel-table-header-controls" ng-if="col.sort">
+                <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                <i class="fa fa-caret-up" ng-hide="col.desc"></i>
+              </span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody ng-bind-html="ctrl.tbodyHtml">
+      </tbody>
+    </table>
+  </div>
   <div class="bottom_img"><img ng-show="ctrl.currentMode==='chart'" src="public/img/ddd/tiao.png"></div>
 </div>

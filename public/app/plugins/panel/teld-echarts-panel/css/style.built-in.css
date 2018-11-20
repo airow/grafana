@@ -1,0 +1,39 @@
+.teld_panel .cycle-btn-group{
+  position: absolute;
+  z-index: 9;
+  right: 0px;
+  margin: 0 15px;
+  top:-22px;
+}
+
+.teld_panel .cycle-btn-group button.btn.cycle-btn
+{
+  padding-top:3px;
+  padding-bottom:3px;
+  border-radius:0px;
+  border:#43add7 1px solid;
+  background-color: rgb(244, 245, 248);
+}
+
+@media (max-width: 768px){
+  .teld_panel .cycle-btn-group button.btn.cycle-btn{
+    display: none;
+  }
+  .mobileSelect{
+    display: initial !important;
+  }
+}
+
+.teld_panel .cycle-btn-group button.btn.cycle-btn.btn-currentCycle
+{
+  color: white;
+  display: initial;
+  background-color: #43add7;
+}
+
+.currentCycle{
+  color: #43add7;
+}
+.not-allowed{
+  cursor: not-allowed;
+}

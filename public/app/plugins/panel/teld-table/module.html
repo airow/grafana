@@ -1,6 +1,6 @@
-<div class="table-panel-container" ng-style="{'padding-top':((ctrl.panel.teldtemplate!='default')?'0em':'2.2em')}">
-  <div class="table-panel-header-bg" ng-if="ctrl.panel.teldtemplate=='default'" ng-show="ctrl.dataRaw.length>0"></div>
-  <div class="table-panel-scroll" ng-show="ctrl.dataRaw.length>0">
+<div class="table-panel-container" ng-style="{'padding-top':((ctrl.panel.teldtemplate!='default')?'0em':'2.2em')}" style="overflow-x: auto;background-color: #ECECEC;">
+  <div class="table-panel-header-bg" ng-if="ctrl.panel.teldtemplate=='default'" ng-show="ctrl.dataRaw.length>0" style="position: fixed;margin-top: -2em;display:none;"></div>
+  <div class="table-panel-scroll"  ng-style="{'display':(ctrl.panel.scrollDisplay?'inline-block':'block')}" ng-show="ctrl.dataRaw.length>0" style="margin-bottom: -5px;">
     <div ng-if="ctrl.panel.teldtemplate!='default'" ng-style="{'font-size':'18px','font-family': 'Microsoft YaHei', 'color':'#1C97D2','text-align': 'center','margin-top':'5px'}">近7日快充桩均日均电量排名</div>
     <table class="table-panel-table" ng-style="{'white-space':ctrl.panel.nowrap ? 'nowrap' : 'initial'}">
       <thead ng-if="ctrl.panel.teldtemplate=='default'">
@@ -17,7 +17,7 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody style="background-color: #FBFBFB;">
       </tbody>
     </table>
   </div>

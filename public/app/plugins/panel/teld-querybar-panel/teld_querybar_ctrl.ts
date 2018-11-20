@@ -1141,6 +1141,18 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     return true;
   }
 
+  eh_clearCycle() {
+    this.$scope.$root.appEvent("emit-clearCycle");
+  }
+
+  eh_queryWithCycle(cycle) {
+    this.$scope.$root.appEvent("emit-cycle", { cycle: cycle.key });
+  }
+
+  getTimeButton() {
+    return _.filter(this.panel.cycleConf, 'enable');
+  }
+
   onRefresh() {
     //this.render();
     //this.changeQueryBarTab(this.currentTarget);

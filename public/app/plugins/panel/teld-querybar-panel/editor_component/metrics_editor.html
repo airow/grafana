@@ -29,6 +29,28 @@
     <gf-form-switch ng-if="ctrl.panel.clickQueryBtn2Fetch" class="gf-form" label="界面显示" label-class="query-keyword width-8" checked="ctrl.panel.showClickQueryBtn2Fetch">
     </gf-form-switch>
   </div>
+  <div class="gf-form">
+    <label class="gf-form-label query-keyword width-6">Cycle</label>
+    <div class="section" ng-repeat="cycle in ctrl.panel.cycleConf">
+      <div class="gf-form">
+        <label class="gf-form-label" ng-hide='$first'>
+          <a ng-click="ctrl.move(ctrl.panel.cycleConf,$index,$index-1)">
+            <i class="fa fa-arrow-left"></i>
+          </a>
+        </label>
+        <label class="gf-form-label">
+          <a ng-click="cycle.enable=!cycle.enable" ng-class="{'currentCycle':cycle.enable}">
+            <i class="pointer fa"></i>&nbsp;{{cycle.name}}
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide='$last'>
+          <a ng-click="ctrl.move(ctrl.panel.cycleConf,$index,$index+1)">
+            <i class="fa fa-arrow-right"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
   <hr>
   <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
     <h5 class="section-heading" style="font-size:24px; font-style: italic;">{{target.conf.title}} &nbsp;<i class="fa fa-refresh" ng-click="ctrl.toggleQuery(target)"></i></h5>

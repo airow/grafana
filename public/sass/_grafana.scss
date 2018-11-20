@@ -94,4 +94,7 @@
 // Teld components
 @import "../sass.teld/components/all";
 
-panel-plugin-teld-echarts-panel .panel-title{z-index: 1}
+panel-plugin-teld-echarts-panel .panel-title{
+  z-index: 1;
+  position: static;
+}
