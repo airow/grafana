@@ -628,9 +628,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
     }
 
-
-
+	this.timesAlignment(dataList);
     this.groupTime(dataList);
+    
     this.dataList = dataList;
 
     if (this.isSeriesBar() && this.panel.groupBar) {
@@ -665,6 +665,32 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.ecSeries = series;
 
     this.render();
+  }
+
+  //补全缺少的日期
+  timesAlignment(dl) {
+    var dataList = dl;
+    let cumulativeConf = this.panel.cumulativeConf;
+    if (cumulativeConf && cumulativeConf.enable) {
+      //去掉累计值的初始字段
+      var initRefIds = _.map(cumulativeConf.initMapping, 'initRefId');
+      dataList = _.filter(dataList, item => { return !_.includes(initRefIds, item.refId); });
+    }
+    if (_.size(dataList) > 1) {
+      var datapoints = _.map(dataList, 'datapoints');
+      var flatten_DP = _.flatten(datapoints);
+      var time = _.union(_.map(flatten_DP, '1'));
+      //var time = _.union(_.transform(flatten_DP, (r, v, k) => { r.push(v[1]); }, []));
+
+      _.each(datapoints, (dp, index) => {
+        var itemTime = _.map(dp, '1');
+        var diffTime = _.difference(time, itemTime);
+        if (_.size(diffTime) > 0) {
+          var newDP = _.map(diffTime, dt => { return [0, dt]; });
+          dataList[index].datapoints = _.sortBy(_.concat(dp, newDP), '1');
+        }
+      });
+    }
   }
 
   seriesSort(series) {
