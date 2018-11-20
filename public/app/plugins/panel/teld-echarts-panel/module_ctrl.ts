@@ -656,10 +656,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    //debugger;
+
     if (_.size(dataList) === 1 && dataList[0].type === 'docs') {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
     }
+
 
     this.groupTime(dataList);
 
