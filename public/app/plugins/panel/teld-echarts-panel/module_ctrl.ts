@@ -635,6 +635,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
     this.groupTime(dataList);
 
     this.dataList = dataList;
