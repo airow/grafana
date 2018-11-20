@@ -512,11 +512,33 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
   }
   dataList: any = [];
+
+  //补全缺少的日期
+  timesAlignment(dataList) {
+    if (_.size(dataList) > 1) {
+      var datapoints = _.map(dataList, 'datapoints');
+      var flatten_DP = _.flatten(datapoints);
+      var time = _.union(_.map(flatten_DP, '1'));
+      //var time = _.union(_.transform(flatten_DP, (r, v, k) => { r.push(v[1]); }, []));
+
+      _.each(datapoints, (dp, index) => {
+        var itemTime = _.map(dp, '1');
+        var diffTime = _.difference(time, itemTime);
+        if (_.size(diffTime) > 0) {
+          var newDP = _.map(diffTime, dt => { return [0, dt]; });
+          dataList[index].datapoints = _.sortBy(_.concat(dp, newDP), '1');
+        }
+      });
+    }
+  }
+
   onDataReceived(dataList) {
 
     if (_.size(dataList) === 1 && dataList[0].type === 'docs') {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
     }
+
+    this.timesAlignment(dataList);
 
     this.dataList = dataList;
 
