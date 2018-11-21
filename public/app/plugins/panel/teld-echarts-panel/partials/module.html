@@ -2,8 +2,12 @@
 <div class="teld_panel" style="/*z-index: 2;*/" ng-dblclick="ctrl.dblclick();" ng-class="{'teld_panel_popup':ctrl.isfullscreen()}">
   <div class='cycle-btn-group'>
     <div ng-mouseleave='ctrl.mouseleave()' ng-mouseover="ctrl.mouseover();" class="btn-group btn-group-sm" style="border:#43add7 1px solid; border-radius:4px;" role="group">
-      <button type="button" ng-class="{'btn-currentCycle':ctrl.currentCycle==x,'mobileSelect':ctrl.mouseEventState || (ctrl.currentCycle===undefined && $index===0) }" ng-click='ctrl.setCurrentCycle_handler(x)'
+      <!-- <button type="button" ng-class="{'btn-currentCycle':ctrl.currentCycle==x,'mobileSelect':ctrl.mouseEventState || (ctrl.currentCycle===undefined && $index===0) }" ng-click='ctrl.setCurrentCycle_handler(x)'
+        class="btn cycle-btn" ng-repeat="x in ctrl.getTimeButton()">{{x.customName||x.name}}</button> -->
+      <button type="button" ng-class="{'btn-currentCycle':ctrl.currentCycle==x,'mobileSelect':ctrl.mouseEventState}" ng-click='ctrl.setCurrentCycle_handler(x)'
         class="btn cycle-btn" ng-repeat="x in ctrl.getTimeButton()">{{x.customName||x.name}}</button>
+      <button type="button" ng-if='ctrl.enableCycleConf.length>0 && ctrl.currentCycle==undefined && ctrl.mouseEventState!==true'
+        class="btn cycle-btn mobileEmptySelect"><i class="fa fa-tag" aria-hidden="true"></i></button>
     </div>
   </div>
   <div class="teld_close" ng-click="ctrl.exitFullscreen()"><a><i class="closeIcon"></i></a></div>

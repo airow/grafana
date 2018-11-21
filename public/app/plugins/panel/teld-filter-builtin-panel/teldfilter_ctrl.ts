@@ -73,6 +73,7 @@ export class TeldfilterCtrl extends PanelCtrl {
     this.panel.cycleConf = this.panel.cycleConf || [];
     var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
     _.defaults(this.panel.cycleConf, filterCycle);
+    this.currentCycle = _.find(this.panel.cycleConf, { key: this.panel.initCycle });
     //end 年、月、日等切换按钮
 
     this.variableSrv = $injector.get('variableSrv');
@@ -177,10 +178,15 @@ export class TeldfilterCtrl extends PanelCtrl {
       this.$scope.$root.appEvent("emit-clearCycle");
     } else {
       this.currentCycle = cycle;
-      this.$scope.$root.appEvent("emit-cycle", { cycle: cycle.key });
+
+      this.panel.cycleRefreshDashboard !== true;
+
+      this.$scope.$root.appEvent("emit-cycle", { cycle: cycle.key, refresh: this.panel.cycleRefreshDashboard !== true });
     }
     this.setDashboardVariables();
-    this.timeSrv.refreshDashboard();
+    if (this.panel.cycleRefreshDashboard) {
+      this.timeSrv.refreshDashboard();
+    }
   }
 
   onInitEditMode() {

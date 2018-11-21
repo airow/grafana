@@ -316,11 +316,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   emitCycle(e, data) {
-    var { cycle } = data;
+    var { cycle, refresh } = data;
     var selectCycle = _.find(this.getTimeButton(), { key: cycle });
     if (selectCycle) {
       this.currentCycle = selectCycle;
       this.setIntervalVariable(this.currentCycle);
+
+      if (refresh) {
+        this.onMetricsPanelRefresh();
+      }
     }
   }
 
@@ -560,8 +564,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.tbodyHtml = this.$sce.trustAsHtml(renderer.render(0));
   }
 
+  enableCycleConf: any[];
   getTimeButton() {
-    return _.filter(this.panel.cycleConf, 'enable');
+    this.enableCycleConf = _.filter(this.panel.cycleConf, 'enable');
+    return this.enableCycleConf;
   }
 
   pieMerge(dataList) {

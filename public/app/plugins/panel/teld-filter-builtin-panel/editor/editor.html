@@ -51,6 +51,11 @@
               <i class="pointer fa"></i>&nbsp;{{cycle.name}}
             </a>
           </label>
+          <label class="gf-form-label" ng-if='cycle.enable' ng-class='{"not-allowed":!cycle.enable}'>
+            <a ng-click="ctrl.panel.initCycle === cycle.key ? ctrl.panel.initCycle = '' : ctrl.panel.initCycle = cycle.key; ctrl.currentCycle=ctrl.panel.initCycle != '' ? cycle : undefined ; " ng-disabled='!cycle.enable'>
+              <i class="pointer fa" ng-class="{true:'fa-check-circle-o currentCycle',false:'fa-circle-o'}[ctrl.panel.initCycle==cycle.key]"></i>
+            </a>
+          </label>
           <label class="gf-form-label" ng-hide='$last'>
             <a ng-click="ctrl.move(ctrl.panel.cycleConf,$index,$index+1)">
               <i class="fa fa-arrow-right"></i>
@@ -59,6 +64,8 @@
         </div>
       </div>
     </div>
+    <gf-form-switch class="gf-form" label="Refresh Dash" label-class="width-9" checked="ctrl.panel.cycleRefreshDashboard"
+          on-change="ctrl.render()"></gf-form-switch>
   </div>
 
   <div class="section gf-form-group">

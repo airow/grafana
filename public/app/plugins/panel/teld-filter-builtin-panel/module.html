@@ -22,7 +22,7 @@
   <div ng-click="ctrl.divOperationFilter()" class="btnFilterKH" style="margin-right: 11px;">筛选
     <span ng-if="ctrl.btnFilterKHRed" class="btnFilterKHRed"></span>
   </div>
-  <div style="" class="cycle-filter">
+  <div class="cycle-filter">
     <div ng-class='{"currentCycle-filter":ctrl.currentCycle===cycle}' style="height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;" ng-click="ctrl.eh_emitCycle(cycle)" class="btnFilterKH" ng-repeat="cycle in ctrl.getTimeButton()">
       {{cycle.name}}
     </div>
