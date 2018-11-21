@@ -28,12 +28,13 @@ import { echartsEventEditorComponent } from '../teld-eventhandler-editor/echarts
 import * as graphutils from '../../../core/utils/graphutils';
 import {calcSeriesEditorComponent} from '../graph/calcSeries_editor';
 import {seriesTypeEditorComponent} from './editor/seriesType_editor';
+import {cycleEditorComponent} from './editor/cycle_editor';
 import { cumulativeEditorComponent, cumulative } from '../graph/cumulative_editor';
 import empty_option from './theme/empty_option';
 
 loadPluginCss({
-  dark: '/public/app/plugins/panel/teld-chargingbill-panel/css/dark.built-in.css',
-  light: '/public/app/plugins/panel/teld-chargingbill-panel/css/light.built-in.css'
+  dark: '/public/app/plugins/panel/teld-echarts-panel/css/style.built-in.css',
+  light: '/public/app/plugins/panel/teld-echarts-panel/css/style.built-in.css'
 });
 
 export class ModuleCtrl extends MetricsPanelCtrl {
@@ -186,12 +187,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   $parse: any;
   cache: any;
   dataListMetric: any[];
+  alertSrv: any;
 
   /** @ngInject **/
   constructor($scope, $injector, private $sce, private $rootScope, private variableSrv,
     private dashboardSrv, private uiSegmentSrv, private $http, private $location, private $interval, private $sanitize, private $window) {
     super($scope, $injector);
     this.templateSrv = $injector.get('templateSrv');
+    this.alertSrv = $injector.get('alertSrv');
 
     _.defaultsDeep(this.panel, this.panelDefaults);
     this.ecConf.axis.value.axisLabel = this.panel.formatter.yAxis.axisLabel;
@@ -202,6 +205,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.echartsThemeName = echartsThemeName;
 
     this.$parse = this.$injector.get('$parse');
+
+    this.currentCycle = _.find(this.panel.cycleConf, { key: this.panel.initCycle });
+    this.currentCycle = this.setIntervalVariable(this.currentCycle);
 
     //this.ecConf.axis.category.axisLabel.formatter = this.formatter.bind(this);
 
@@ -219,6 +225,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     // this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
     this.$rootScope.onAppEvent('panel-fullscreen-exit', () => { this.currentMode = 'chart'; });
     this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
+
+    this.$rootScope.onAppEvent('emit-cycle', this.emitCycle.bind(this));
+    this.$rootScope.onAppEvent('emit-clearCycle', function () {
+      this.initCycle(this.currentCycle);
+    }.bind(this));
 
     if (this.panel.eventSubscribe.enable) {
       this.dashboard.events.on('teld-singlestat-panel-click', this.onTeldSinglestatClick.bind(this));
@@ -240,6 +251,89 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.currentMode = (this.currentMode === 'list' ? 'chart' : 'list');
     //this.refreshDashboard();
     this.onMetricsPanelRefresh();
+  }
+  currentCycle: any;
+  mouseEventState: boolean;
+  clickEventState: any;
+  setCurrentCycle_handler(cycle) {
+    if (this.editMode) {
+      this.alertSrv.set("警告", "编辑模式下不支持切换", "warning", 2000);
+      return;
+    }
+    if (window.innerWidth < 768) {
+      console.log('setCurrentCycle_handler');
+      if (this.clickEventState !== true) {
+        this.clickEventState = true;
+        return;
+      }
+    }
+    this.setCurrentCycle(cycle);
+  }
+
+  mouseover() {
+    if (window.innerWidth < 768) {
+      console.log('mouseover');
+      this.mouseEventState = true;
+    }
+  }
+
+  mouseleave() {
+    if (window.innerWidth < 768) {
+      console.log('mouseleave');
+      this.mouseEventState = false;
+      this.clickEventState = false;
+    }
+  }
+
+  panelGenVars = {};
+  setCurrentCycle(cycle) {
+    this.initCycle(cycle);
+    this.onMetricsPanelRefresh();
+  }
+
+  setIntervalVariable(cycle) {
+    if (this.panel.cycleEnableVar) {
+      if (_.isNil(cycle)) {
+        cycle = _.first(this.getTimeButton());
+      }
+      var intervalVariable = _.get(this.panelGenVars, `interval_${name}`);
+      var intervalVariableValue = { text: cycle.name, value: cycle.interval };
+      if (intervalVariable) {
+        var current = intervalVariable.current;
+        current.text = intervalVariableValue.text;
+        current.value = intervalVariableValue.value;
+      } else {
+        this.addGeneralVariable(this.panel.cycleVarSuffix, intervalVariableValue);
+      }
+      this.variableSrv.templateSrv.updateTemplateData();
+    }
+    return cycle;
+  }
+
+  initCycle(cycle) {
+    this.currentCycle = this.currentCycle === cycle && _.isEmpty(this.panel.initCycle) ? undefined : cycle;
+    this.setIntervalVariable(cycle);
+  }
+
+  emitCycle(e, data) {
+    var { cycle } = data;
+    var selectCycle = _.find(this.getTimeButton(), { key: cycle });
+    if (selectCycle) {
+      this.currentCycle = selectCycle;
+      this.setIntervalVariable(this.currentCycle);
+    }
+  }
+
+  addGeneralVariable(name, value) {
+    let variable = this.variableSrv.addVariable({
+      hide: 2,
+      type: 'teldCustom',
+      name: `interval_${name}`,
+      query: '',
+      current: value
+    });
+    _.set(this.panelGenVars, variable.name, variable);
+    return variable;
   }
 
   echartsPanelArgs: any;
@@ -296,6 +390,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   callFormatter(type, value) {
     var formatterConf = this.panel.formatter[type];
+    if (type === 'tooltip_category' && this.currentCycle) {
+      formatterConf = { format: "teldMoment", decimals: this.currentCycle.format || this.currentCycle.defaultFormat };
+    }
     var decimals = formatterConf.decimals;
     let formater = this.valueFormats[formatterConf.format];
     return formater(value, decimals);
@@ -307,6 +404,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   xAxisLableFormatter(value, index) {
+    if (this.currentCycle) {
+      var formatterConf = { format: "teldMoment", decimals: this.currentCycle.format||this.currentCycle.defaultFormat };
+      var decimals = formatterConf.decimals;
+      let formater = this.valueFormats[formatterConf.format];
+      return formater(value, decimals);
+    }
     var returnValue = this.axisLableFormatter('xAxis', value, index);
     return returnValue;
   }
@@ -337,6 +440,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
+    this.addEditorTab('Time cycle', cycleEditorComponent);
     this.addEditorTab('Style', tabStyleEditorComponent);
     this.addEditorTab('Series', seriesEditorComponent);
     this.addEditorTab('Options', tablePanelEditor);
@@ -456,6 +560,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.tbodyHtml = this.$sce.trustAsHtml(renderer.render(0));
   }
 
+  getTimeButton() {
+    return _.filter(this.panel.cycleConf, 'enable');
+  }
+
   pieMerge(dataList) {
 
     if (this.panel.pieExt.dataExt.enable !== true) {
@@ -512,11 +620,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
   }
   dataList: any = [];
+
+
   onDataReceived(dataList) {
 
     if (_.size(dataList) === 1 && dataList[0].type === 'docs') {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
     }
+
+    this.timesAlignment(dataList);
+
+    this.groupTime(dataList);
 
     this.dataList = dataList;
 
@@ -552,6 +666,32 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.ecSeries = series;
 
     this.render();
+  }
+
+  //补全缺少的日期
+  timesAlignment(dl) {
+    var dataList = dl;
+    let cumulativeConf = this.panel.cumulativeConf;
+    if (cumulativeConf && cumulativeConf.enable) {
+      //去掉累计值的初始字段
+      var initRefIds = _.map(cumulativeConf.initMapping, 'initRefId');
+      dataList = _.filter(dataList, item => { return !_.includes(initRefIds, item.refId); });
+    }
+    if (_.size(dataList) > 1) {
+      var datapoints = _.map(dataList, 'datapoints');
+      var flatten_DP = _.flatten(datapoints);
+      var time = _.union(_.map(flatten_DP, '1'));
+      //var time = _.union(_.transform(flatten_DP, (r, v, k) => { r.push(v[1]); }, []));
+
+      _.each(datapoints, (dp, index) => {
+        var itemTime = _.map(dp, '1');
+        var diffTime = _.difference(time, itemTime);
+        if (_.size(diffTime) > 0) {
+          var newDP = _.map(diffTime, dt => { return [0, dt]; });
+          dataList[index].datapoints = _.sortBy(_.concat(dp, newDP), '1');
+        }
+      });
+    }
   }
 
   seriesSort(series) {
@@ -592,6 +732,40 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         break;
     }
     return series;
+  }
+
+  get_moment_zhCn(key, format?) {
+    return moment.apply(null, arguments).locale('zh-cn', { week: { dow: 1 } });
+  }
+
+  groupTime(dataList) {
+    if (false === _.isNil(this.currentCycle)) {
+      if (this.panel.cycleEnableVar) {
+        return;
+      }
+      var moment_zhCn = this.get_moment_zhCn;
+      _.each(dataList, dl => {
+        var dp = dl.datapoints;
+        var dddd = _.groupBy(dp, item => {
+          var time = _.isArray(item) ? item[1] : _.values(item)[0];
+          var m = moment_zhCn(time);
+          if (this.currentCycle.startOf) {
+            m.startOf(this.currentCycle.startOf);
+          }
+          return m.format('x');
+        });
+
+        var ndp = _.transform(dddd, (r, value, timeGroup) => {
+          var sum = _.sumBy(value, vv => {
+            return _.isArray(vv) ? vv[0] : _.values(vv)[1];
+          });
+          //var time = moment_zhCn(key, format).format('x');
+          //var time = timeGroup;
+          r.push([sum, timeGroup]);
+        }, []);
+        dl.datapoints = ndp;
+      });
+    }
   }
 
   fillingDataList(dataList) {

@@ -1,0 +1,61 @@
+<div class="editor-row">
+  <div class="gf-form-inline gf-form-group">
+    <gf-form-switch class="gf-form" label="启用变量" label-class="width-7" checked="ctrl.panel.cycleEnableVar" on-change="ctrl.refresh()"></gf-form-switch>
+    <div class="gf-form" ng-if='ctrl.panel.cycleEnableVar'>
+      <label class="gf-form-label width-5">Suffix</label>
+      <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.cycleVarSuffix" min-length="0" ec-valwrap>
+      <label class="gf-form-label">$interval_{{ctrl.panel.cycleVarSuffix}}</label>
+    </div>
+  </div>
+  <!-- cycleConf -->
+
+  <div class="gf-form-inline" ng-repeat="cycle in ctrl.panel.cycleConf">
+    <!-- base start-->
+    <div class="section">
+      <gf-form-switch class="gf-form" label="{{cycle.name}}" label-class="width-7" checked="cycle.enable" on-change="ctrl.refresh()"></gf-form-switch>
+    </div>
+    <!-- base end -->
+
+    <!-- markPoint start-->
+    <div class="section">
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="!$last && cycle.enable && ctrl.move(ctrl.panel.cycleConf,$index,$index+1)">
+              <i class="fa fa-arrow-down" ng-class="{'not-allowed':$last || !cycle.enable}"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a ng-click="!$first && cycle.enable && ctrl.move(ctrl.panel.cycleConf,$index,$index-1)">
+              <i class="fa fa-arrow-up" ng-class="{'not-allowed':$first || !cycle.enable}"></i>
+            </a>
+          </label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label" ng-class='{"not-allowed":!cycle.enable}'>
+            <a ng-click="ctrl.setInitCycle(cycle)" ng-disabled='!cycle.enable'>
+              <i class="pointer fa" ng-class="{true:'fa-check-circle-o currentCycle',false:'fa-circle-o'}[ctrl.panel.initCycle==cycle.key]"></i>
+            </a>
+          </label>
+        </div>
+        <div class="gf-form">
+            <input type="text" class="gf-form-input width-4" placeholder="{{cycle.name}}" ng-model="cycle.customName" min-length="0" ec-valwrap>
+          <label class="gf-form-label width-5">Format</label>
+          <input type="text" class="gf-form-input width-8" placeholder="{{cycle.defaultFormat}}" ng-model="cycle.format" min-length="0" ec-valwrap>
+          <label class="gf-form-label">
+            <a ng-click="cycle.format=cycle.defaultFormat">
+              <i class="pointer fa fa-copy"></i>
+            </a>
+          </label>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-5">Interval</label>
+            <label class="gf-form-label width-3">{{cycle.interval}}</label>
+        </div>
+      </div>
+    </div>
+    <!-- markPoint end -->
+
+  </div>
+  <!-- END cycleConf -->
+</div>

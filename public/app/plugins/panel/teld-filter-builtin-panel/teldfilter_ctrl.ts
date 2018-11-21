@@ -2,6 +2,8 @@
 import { PanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
 import moment from 'moment';
 import _ from 'lodash';
+import timeCycleConf from 'app/features/panel/timeCycleConf';
+
 loadPluginCssPath({
   cssPath: '/public/app/plugins/panel/teld-filter-builtin-panel/css/teld-filter.built-in.css'
 });
@@ -66,6 +68,12 @@ export class TeldfilterCtrl extends PanelCtrl {
     // script.type = "text/javascript";
     // script.src = "./src/angular-locale_zh-cn.js";
     // document.body.appendChild(script);
+
+    //start 年、月、日等切换按钮 初始化
+    this.panel.cycleConf = this.panel.cycleConf || [];
+    var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
+    _.defaults(this.panel.cycleConf, filterCycle);
+    //end 年、月、日等切换按钮
 
     this.variableSrv = $injector.get('variableSrv');
     this.timeSrv = $injector.get('timeSrv');
@@ -155,6 +163,24 @@ export class TeldfilterCtrl extends PanelCtrl {
         this.btnFilterKHRed = false;
       }
     }, 500);
+  }
+
+  //获取配置的年、月、日等按钮
+  getTimeButton() {
+    return _.filter(this.panel.cycleConf, 'enable');
+  }
+
+  currentCycle: any;
+  eh_emitCycle(cycle) {
+    if (this.currentCycle === cycle) {
+      this.currentCycle = undefined;
+      this.$scope.$root.appEvent("emit-clearCycle");
+    } else {
+      this.currentCycle = cycle;
+      this.$scope.$root.appEvent("emit-cycle", { cycle: cycle.key });
+    }
+    this.setDashboardVariables();
+    this.timeSrv.refreshDashboard();
   }
 
   onInitEditMode() {

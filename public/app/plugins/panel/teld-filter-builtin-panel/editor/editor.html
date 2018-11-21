@@ -36,6 +36,32 @@
   </div>
 
   <div class="section gf-form-group">
+    <h5 class="section-heading">Cycle</h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">Cycle</label>
+      <div class="section" ng-repeat="cycle in ctrl.panel.cycleConf">
+        <div class="gf-form">
+          <label class="gf-form-label" ng-hide='$first'>
+            <a ng-click="ctrl.move(ctrl.panel.cycleConf,$index,$index-1)">
+              <i class="fa fa-arrow-left"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a ng-click="cycle.enable=!cycle.enable" ng-class="{'currentCycle':cycle.enable}">
+              <i class="pointer fa"></i>&nbsp;{{cycle.name}}
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide='$last'>
+            <a ng-click="ctrl.move(ctrl.panel.cycleConf,$index,$index+1)">
+              <i class="fa fa-arrow-right"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
     <h5 class="section-heading"></h5>
     <!-- <label class="gf-form-label">
 

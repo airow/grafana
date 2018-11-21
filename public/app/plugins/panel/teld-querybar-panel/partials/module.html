@@ -1,4 +1,4 @@
-<div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
+ <div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }" style="margin-top: 0px;">
@@ -99,8 +99,11 @@
         </label>
       </div>
       <div class="gf-form filter-button">
-        <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.eh_query();">
+        <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.eh_clearCycle();ctrl.eh_query();">
           <i class="fa fa-search"></i>
+        </button>
+        <button type="button" class="btn gf-form-btn btn-secondary" ng-repeat="cycle in ctrl.getTimeButton()" ng-click="ctrl.eh_queryWithCycle(cycle);">
+            {{cycle.name}}
         </button>
         <button type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuerySwitch()">
           <i class="fa" ng-class="{true:'fa-angle-double-up',false:'fa-angle-double-down'}[ctrl.defineQuery]"></i>

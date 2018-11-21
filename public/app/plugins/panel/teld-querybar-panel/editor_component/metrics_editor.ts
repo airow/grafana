@@ -6,6 +6,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import angular from 'angular';
 import config from 'app/core/config';
+import timeCycleConf from 'app/features/panel/timeCycleConf';
 
 import kbn from 'app/core/utils/kbn';
 
@@ -22,6 +23,10 @@ export class MetricsEditorCtrl {
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
+
+    this.panel.cycleConf = this.panel.cycleConf || [];
+    var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
+    _.defaults(this.panel.cycleConf, filterCycle);
 
     this.datasourceSrv = $injector.get('datasourceSrv');
     this.timeSrv = $injector.get('timeSrv');

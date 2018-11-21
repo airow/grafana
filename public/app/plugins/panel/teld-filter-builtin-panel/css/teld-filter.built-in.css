@@ -69,14 +69,6 @@ td{
   .OrerationTitleHeightKHSpan{
       color: blue;
   }
-  @media (max-width: 768px){
-    .OrerationTitleHeightKH{
-      display: none;
-    }
-    .btnFilterKH{
-      margin-top: 0px;
-    }
-  }
   .btnKeHuTuCaoScreen {
     height: 40px;
     line-height: 40px;
@@ -181,4 +173,29 @@ td{
 
 .text-muted {
   color: #b3b3b3;
+}
+
+.currentCycle-filter{
+ color: white;
+ background-color: #43add7;
+}
+
+.cycle-filter{
+  border-radius:4px;
+  margin-top: -25px;
+  border: #43add7 1px solid;
+  float: right;
+  margin-right: 11px;
+}
+
+@media (max-width: 768px){
+  .OrerationTitleHeightKH{
+    display: none;
+  }
+  .btnFilterKH{
+    margin-top: 0px;
+  }
+  .cycle-filter{
+    margin-top: 0px;
+  }
 }
