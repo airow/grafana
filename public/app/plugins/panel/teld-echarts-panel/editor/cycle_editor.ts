@@ -12,12 +12,11 @@ export class CycleEditorCtrl {
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.panel.cycleConf = this.panel.cycleConf || [];
-    var filterCycle = _.filter(this.timeCycleConf, item => { return item.disable !== true; });
+
+    var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
     _.defaults(this.panel.cycleConf, filterCycle);
     $scope.ctrl = this;
   }
-
-  timeCycleConf = _.clone(timeCycleConf);
 
   render() {
     this.panelCtrl.render();

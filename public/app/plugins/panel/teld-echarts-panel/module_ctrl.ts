@@ -628,9 +628,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
     }
 
-	this.timesAlignment(dataList);
+    this.timesAlignment(dataList);
+
     this.groupTime(dataList);
-    
+
     this.dataList = dataList;
 
     if (this.isSeriesBar() && this.panel.groupBar) {

@@ -25,7 +25,7 @@ export class MetricsEditorCtrl {
     this.panel = this.panelCtrl.panel;
 
     this.panel.cycleConf = this.panel.cycleConf || [];
-    var filterCycle = _.filter(_.clone(timeCycleConf), item => { return item.disable !== true; });
+    var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
     _.defaults(this.panel.cycleConf, filterCycle);
 
     this.datasourceSrv = $injector.get('datasourceSrv');

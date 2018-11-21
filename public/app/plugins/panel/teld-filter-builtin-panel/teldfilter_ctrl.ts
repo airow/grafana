@@ -71,7 +71,7 @@ export class TeldfilterCtrl extends PanelCtrl {
 
     //start 年、月、日等切换按钮 初始化
     this.panel.cycleConf = this.panel.cycleConf || [];
-    var filterCycle = _.filter(_.clone(timeCycleConf), item => { return item.disable !== true; });
+    var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
     _.defaults(this.panel.cycleConf, filterCycle);
     //end 年、月、日等切换按钮
 
