@@ -36,7 +36,8 @@ export class TeldfilterCtrl extends PanelCtrl {
         CheckoutTimeAttribute: "",
         Checkoutwhere: '',
         isClick: false,
-        opened: false
+        opened: false,
+        IsLocalStorage: false
       }]
     }],
     // VariableList: [{
@@ -125,6 +126,22 @@ export class TeldfilterCtrl extends PanelCtrl {
             var findeindex = _.findIndex(_that._panle.QueryList, selectdata);
             if (findeindex > -1) {
               _.fill(_that._panle.QueryList, item, findeindex, findeindex + 1);
+            }
+          }
+          if (item.Querytype==="date" && !item.IsLocalStorage){
+            delete (item["$$hashvalue"]);
+            var selectdata = { "QueryAttributeName": item.QueryAttributeName };
+            var findeindex = _.findIndex(_that._panle.QueryList, selectdata);
+            if (findeindex > -1) {
+              var dataobj = _.find(_that._panle.QueryList, selectdata);
+              _.forEach(item.QueryOptions,(itemvalue)=>{
+                if (itemvalue.IsLocalStorage){
+                  var selectdatavalue = { "QueryAttributeName": itemvalue.QueryAttributeName };
+                  var findeindexvalue = _.findIndex(dataobj.QueryOptions, selectdatavalue);
+                  _.fill(dataobj.QueryOptions, itemvalue, findeindexvalue, findeindexvalue + 1);
+                }
+              });
+              _.fill(_that._panle.QueryList, dataobj, findeindex, findeindex + 1);
             }
           }
         });
