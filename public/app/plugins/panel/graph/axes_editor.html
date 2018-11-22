@@ -48,6 +48,12 @@
 			</div>
 		</div>
 
+    <!-- Time mode -->
+		<div class="gf-form" ng-if="ctrl.panel.xaxis.mode === 'time'">
+      <label class="gf-form-label width-7"><a target="_blank" href="http://momentjs.cn/docs/#/displaying/format/"><i style="text-decoration: line-through;" class="fa fa-external-link" aria-hidden="true">Format</i></a></label>
+      <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.xaxis.timeFormatStr" bs-typeahead="['YYYY-MM-DD HH:mm:ss.SSS', 'YYYY-MM-DD dddd']" min-length="0" ec-valwrap>
+		</div>
+
     <!-- Table mode -->
 		<div class="gf-form" ng-if="ctrl.panel.xaxis.mode === 'field'">
 			<label class="gf-form-label width-5">Name</label>

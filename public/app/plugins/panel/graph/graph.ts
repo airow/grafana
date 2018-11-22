@@ -459,6 +459,53 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv, contextSrv) {
           ticks: ticks,
           timeformat: time_format(ticks, min, max),
         };
+
+        if (false === _.isEmpty(panel.xaxis.timeFormatStr)) {
+
+          // if (min && max && ticks) {
+
+          //   if (secPerTick <= 45) {
+          //     return "%H:%M:%S";
+          //   }
+          //   if (secPerTick <= 7200 || range <= oneDay) {
+          //     return "%H:%M";
+          //   }
+          //   if (secPerTick <= 80000) {
+          //     return "%m/%d %H:%M";
+          //   }
+          //   if (secPerTick <= 2419200 || range <= oneYear) {
+          //     return "%m/%d";
+          //   }
+          //   return "%Y-%m";
+          // }
+
+          // return "%H:%M";
+
+          options.xaxis.tickFormatter = function (val, axis) {
+
+            var timeformat = panel.xaxis.timeFormatStr;
+
+            if (min && max && ticks) {
+              var range = max - min;
+              var secPerTick = (range/ticks) / 1000;
+              var oneDay = 86400000;
+              var oneYear = 31536000000;
+
+              if (secPerTick <= 45) {
+                timeformat = "HH:mm:ss";
+              } else if (secPerTick <= 7200 || range <= oneDay) {
+                timeformat = "HH:mm";
+              } else if (secPerTick <= 80000) {
+                timeformat = "MM-DD HH:mm";
+              } else if (secPerTick <= 2419200 || range <= oneYear) {
+                timeformat = "MM-DD";
+              }
+            }
+
+            var t = kbn.valueFormats['teldMoment'](val, timeformat);
+            return t;
+          };
+        }
       }
 
       function addXSeriesAxis(options) {

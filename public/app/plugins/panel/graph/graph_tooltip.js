@@ -295,7 +295,7 @@ function ($, core, _) {
 
         seriesHtml = '';
 
-        absoluteTime = dashboard.formatDate(seriesHoverInfo.time, tooltipFormat);
+        absoluteTime = dashboard.formatDate(seriesHoverInfo.time, panel.tooltip.timeFormatStr || tooltipFormat);
 
         // Dynamically reorder the hovercard for the current time point if the
         // option is enabled.

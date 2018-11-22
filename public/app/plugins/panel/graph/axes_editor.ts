@@ -9,6 +9,7 @@ export class AxesEditorCtrl {
   logScales: any;
   xAxisModes: any;
   xAxisStatOptions: any;
+  xAxisTimeFormatOptions: any;
   xNameSegment: any;
 
   /** @ngInject **/
@@ -40,6 +41,12 @@ export class AxesEditorCtrl {
       {text: 'Total', value: 'total'},
       {text: 'Count', value: 'count'},
       {text: 'Current', value: 'current'},
+    ];
+
+    this.xAxisTimeFormatOptions =  [
+      'YYYY-MM-DD',
+      'YYYY-MM',
+      'YYYY dddd',
     ];
 
     if (this.panel.xaxis.mode === 'custom') {

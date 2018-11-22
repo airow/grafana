@@ -65,7 +65,11 @@
 				<div class="gf-form-select-wrapper max-width-8">
 					<select class="gf-form-input" ng-model="ctrl.panel.tooltip.sort" ng-options="f.value as f.text for f in [{text: 'None', value: 0}, {text: 'Increasing', value: 1}, {text: 'Decreasing', value: 2}]" ng-change="ctrl.render()"></select>
 				</div>
-			</div>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9"><a target="_blank" href="http://momentjs.cn/docs/#/displaying/format/"><i class="fa fa-external-link" aria-hidden="true"></i>Time format</a></label>
+        <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.tooltip.timeFormatStr" bs-typeahead="['YYYY-MM-DD HH:mm:ss.SSS', 'YYYY-MM-DD dddd']" min-length="0" ec-valwrap>
+      </div>
 			<div class="gf-form" ng-show="ctrl.panel.stack">
 				<label class="gf-form-label width-9">Stacked value</label>
 				<div class="gf-form-select-wrapper max-width-8">
