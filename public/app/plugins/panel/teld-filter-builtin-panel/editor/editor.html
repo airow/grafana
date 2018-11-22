@@ -133,7 +133,8 @@
             CheckoutTimeAttribute:'',
             Checkoutwhere:'',
             isClick:false,
-            opened: false
+            opened: false,
+            IsLocalStorage: false
           }]
         })">
             <i class="fa fa-plus"></i>
@@ -155,6 +156,7 @@
         <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于','大于','小于']"></select>
         <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form" label="isClick" label-class="width-8"
           checked="QueryOption.isClick" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch ng-if="QueryOptions.Querytype=='date'"  class="gf-form" label="IsLocalStorage" label-class="width-8" checked="QueryOption.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(QueryOptions.QueryOptions,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>
@@ -179,7 +181,8 @@
             CheckoutTimeAttribute:'',
             Checkoutwhere:'',
             isClick:false,
-            opened: false
+            opened: false,
+            IsLocalStorage: false
           })">
             <i class="fa fa-plus"></i>
           </a>
