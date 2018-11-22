@@ -3,6 +3,7 @@ import { PanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
 import moment from 'moment';
 import _ from 'lodash';
 import timeCycleConf from 'app/features/panel/timeCycleConf';
+import appEvents from 'app/core/app_events';
 
 loadPluginCssPath({
   cssPath: '/public/app/plugins/panel/teld-filter-builtin-panel/css/teld-filter.built-in.css'
@@ -70,16 +71,37 @@ export class TeldfilterCtrl extends PanelCtrl {
     // script.src = "./src/angular-locale_zh-cn.js";
     // document.body.appendChild(script);
 
+    this.variableSrv = $injector.get('variableSrv');
+    this.timeSrv = $injector.get('timeSrv');
+    this.alertSrv = $injector.get('alertSrv');
+
     //start 年、月、日等切换按钮 初始化
     this.panel.cycleConf = this.panel.cycleConf || [];
     var filterCycle = _.filter(_.cloneDeep(timeCycleConf), item => { return item.disable !== true; });
     _.defaults(this.panel.cycleConf, filterCycle);
-    this.currentCycle = _.find(this.panel.cycleConf, { key: this.panel.initCycle });
+    var initCycleKey = this.panel.initCycle;
+    if (this.panel.cycleSaveToLocalStorage) {
+      if (_.isEmpty(this._panle.FilterTitle)) {
+        this.alertSrv.set("警告", "启用的周期切换为配置LocalStorage Key", "warning", 2000);
+      } else {
+        var cycleLSKey = `${this._panle.FilterTitle}_cycle_SelectedKey`;
+        var cycleLSValue = window.localStorage.getItem(cycleLSKey);
+        if (false === _.isEmpty(cycleLSValue)) {
+          initCycleKey = window.localStorage.getItem(cycleLSKey);
+        }
+      }
+    } else {
+      var cycleLSKey = `${this._panle.FilterTitle}_cycle_SelectedKey`;
+      window.localStorage.removeItem(cycleLSKey);
+    }
+    this.currentCycle = _.find(this.panel.cycleConf, { key: initCycleKey });
+    appEvents.on('emit-cycleLoad', function (data) {
+      console.log('emit-cycleLoad');
+      data.cb(this.currentCycle.key);
+    }.bind(this));
+
     //end 年、月、日等切换按钮
 
-    this.variableSrv = $injector.get('variableSrv');
-    this.timeSrv = $injector.get('timeSrv');
-    this.alertSrv = $injector.get('alertSrv');
     this.btnFilterKHRed = false;
     this.datemoment = {
       moment: moment
@@ -184,25 +206,41 @@ export class TeldfilterCtrl extends PanelCtrl {
   }
 
   //获取配置的年、月、日等按钮
+  enableCycleConf: any[];
   getTimeButton() {
-    return _.filter(this.panel.cycleConf, 'enable');
+    this.enableCycleConf = _.filter(this.panel.cycleConf, 'enable');
+    return this.enableCycleConf;
   }
 
   currentCycle: any;
-  eh_emitCycle(cycle) {
+  emitCycle(cycle, refresh) {
+    var returnCycle = undefined;
     if (this.currentCycle === cycle) {
-      this.currentCycle = undefined;
       this.$scope.$root.appEvent("emit-clearCycle");
     } else {
-      this.currentCycle = cycle;
-
-      this.panel.cycleRefreshDashboard !== true;
-
-      this.$scope.$root.appEvent("emit-cycle", { cycle: cycle.key, refresh: this.panel.cycleRefreshDashboard !== true });
+      returnCycle = cycle;
+      this.$scope.$root.appEvent("emit-cycle", { cycle: cycle.key, refresh });
     }
+    return returnCycle;
+  }
+
+  eh_emitCycle(cycle) {
+    this.currentCycle = this.emitCycle(cycle, this.panel.cycleRefreshDashboard !== true);
     this.setDashboardVariables();
     if (this.panel.cycleRefreshDashboard) {
       this.timeSrv.refreshDashboard();
+    }
+    if (this.panel.cycleSaveToLocalStorage) {
+      if (_.isEmpty(this._panle.FilterTitle)) {
+        this.alertSrv.set("警告", "启用的周期切换为配置LocalStorage Key", "warning", 2000);
+      } else {
+        var cycleLSKey = `${this._panle.FilterTitle}_cycle_SelectedKey`;
+        if (_.isNil(this.currentCycle)) {
+          window.localStorage.removeItem(cycleLSKey);
+        } else {
+          window.localStorage.setItem(cycleLSKey, this.currentCycle.key);
+        }
+      }
     }
   }
 

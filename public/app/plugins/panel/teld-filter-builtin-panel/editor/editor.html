@@ -64,8 +64,12 @@
         </div>
       </div>
     </div>
-    <gf-form-switch class="gf-form" label="Refresh Dash" label-class="width-9" checked="ctrl.panel.cycleRefreshDashboard"
-          on-change="ctrl.render()"></gf-form-switch>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="Refresh Dash" label-class="width-9" checked="ctrl.panel.cycleRefreshDashboard"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="保存状态" label-class="width-9" checked="ctrl.panel.cycleSaveToLocalStorage"
+        on-change="ctrl.render()"></gf-form-switch>
+    </div>
   </div>
 
   <div class="section gf-form-group">
