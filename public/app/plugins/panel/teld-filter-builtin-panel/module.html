@@ -24,7 +24,7 @@
   </div>
   <div class="cycle-filter" ng-if='ctrl.getTimeButton().length>0'>
     <div ng-class='{"currentCycle-filter":ctrl.currentCycle===cycle}' style="height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;"
-      ng-click="ctrl.eh_emitCycle(cycle)" class="btnFilterKH" ng-repeat="cycle in ctrl.enableCycleConf">
+      ng-click="ctrl.eh_emitCycle(cycle)" class="btnFilterKH" ng-repeat="cycle in ctrl.enableCycleConf;">
       {{cycle.name}}
     </div>
   </div>

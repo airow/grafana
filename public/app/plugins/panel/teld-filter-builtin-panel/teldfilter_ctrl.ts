@@ -87,18 +87,20 @@ export class TeldfilterCtrl extends PanelCtrl {
         var cycleLSKey = `${this._panle.FilterTitle}_cycle_SelectedKey`;
         var cycleLSValue = window.localStorage.getItem(cycleLSKey);
         if (false === _.isEmpty(cycleLSValue)) {
-          initCycleKey = window.localStorage.getItem(cycleLSKey);
+          initCycleKey = cycleLSValue;
         }
       }
     } else {
       var cycleLSKey = `${this._panle.FilterTitle}_cycle_SelectedKey`;
       window.localStorage.removeItem(cycleLSKey);
     }
-    this.currentCycle = _.find(this.panel.cycleConf, { key: initCycleKey });
+    this.currentCycle = _.find(this.panel.cycleConf, { key: initCycleKey, enable: true });
     appEvents.on('emit-cycleLoad', function (data) {
       console.log('emit-cycleLoad');
-      data.cb(this.currentCycle.key);
-    }.bind(this));
+      if (false === _.isNil(this.currentCycle)) {
+        data.cb(this.currentCycle.key);
+      }
+    }.bind(this), this.$scope);
 
     //end 年、月、日等切换按钮
 
@@ -209,6 +211,9 @@ export class TeldfilterCtrl extends PanelCtrl {
   enableCycleConf: any[];
   getTimeButton() {
     this.enableCycleConf = _.filter(this.panel.cycleConf, 'enable');
+    if (!this.panel.cycleReverseDisplay) {
+      this.enableCycleConf.reverse();
+    }
     return this.enableCycleConf;
   }
 

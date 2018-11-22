@@ -206,7 +206,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     this.$parse = this.$injector.get('$parse');
 
-    this.currentCycle = _.find(this.panel.cycleConf, { key: this.panel.initCycle });
+    this.currentCycle = _.find(this.panel.cycleConf, { key: this.panel.initCycle, enable: true });
     this.currentCycle = this.setIntervalVariable(this.currentCycle);
 
     //this.ecConf.axis.category.axisLabel.formatter = this.formatter.bind(this);
@@ -229,7 +229,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     appEvents.emit('emit-cycleLoad', {
       cb: function (lsCycleValue) {
         //this.initCycle(this.currentCycle);
-        this.currentCycle = _.find(this.panel.cycleConf, { key: lsCycleValue });
+        this.currentCycle = _.find(this.panel.cycleConf, { key: lsCycleValue, enable: true });
         this.currentCycle = this.setIntervalVariable(this.currentCycle);
       }.bind(this)
     });
@@ -575,6 +575,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   enableCycleConf: any[];
   getTimeButton() {
     this.enableCycleConf = _.filter(this.panel.cycleConf, 'enable');
+    if (this.panel.cycleReverseDisplay) {
+      this.enableCycleConf.reverse();
+    }
     return this.enableCycleConf;
   }
 
