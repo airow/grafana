@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import kbn from 'app/core/utils/kbn';
 import config from 'app/core/config';
-import appEvents from '../../../core/app_events';
+import appEvents from 'app/core/app_events';
 import TimeSeries from '../../../core/time_series2';
 import { colors as gfColors } from '../../../core/core';
 import { MetricsPanelCtrl, loadPluginCss } from '../../sdk';
@@ -223,13 +223,21 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     // this.$rootScope.onAppEvent('panel-change-view', this.ecInstanceResizeWithSeft.bind(this));
     // this.$rootScope.onAppEvent('panel-fullscreen-exit', this.ecInstanceResizeWithSeft.bind(this));
-    this.$rootScope.onAppEvent('panel-fullscreen-exit', () => { this.currentMode = 'chart'; });
-    this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this));
+    this.$rootScope.onAppEvent('panel-fullscreen-exit', () => { this.currentMode = 'chart'; }, this.$rootScope);
+    this.$rootScope.onAppEvent('panel-teld-changePanelState', this.ecInstanceResize.bind(this), this.$rootScope);
 
-    this.$rootScope.onAppEvent('emit-cycle', this.emitCycle.bind(this));
+    appEvents.emit('emit-cycleLoad', {
+      cb: function (lsCycleValue) {
+        //this.initCycle(this.currentCycle);
+        this.currentCycle = _.find(this.panel.cycleConf, { key: lsCycleValue });
+        this.currentCycle = this.setIntervalVariable(this.currentCycle);
+      }.bind(this)
+    });
+
+    this.$rootScope.onAppEvent('emit-cycle', this.emitCycle.bind(this), this.$rootScope);
     this.$rootScope.onAppEvent('emit-clearCycle', function () {
       this.initCycle(this.currentCycle);
-    }.bind(this));
+    }.bind(this), this.$rootScope);
 
     if (this.panel.eventSubscribe.enable) {
       this.dashboard.events.on('teld-singlestat-panel-click', this.onTeldSinglestatClick.bind(this));
