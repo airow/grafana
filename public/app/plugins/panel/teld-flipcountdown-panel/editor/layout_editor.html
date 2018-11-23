@@ -1,0 +1,69 @@
+<div class="editor-row">
+  <div class="gf-form-inline gf-form-group">
+    <gf-form-switch class="gf-form" label="数字单位" label-class="width-6" checked="ctrl.panel.LayoutConf.innerUnit"
+      on-change="ctrl.render()"></gf-form-switch>
+    <label ng-click='ctrl.setPrecastSolutions(precastSln)' ng-repeat='precastSln in ctrl.precastSolutions' class="gf-form-label">
+      <a>
+          {{precastSln.sln}}
+      </a>
+    </label>
+  </div>
+
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Left Style</h5>
+    <div class="gf-form-inline">
+        <div class="gf-form" ng-if='false'>
+        <label class="gf-form-label width-5">padding-top</label>
+        <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.leftStyle['padding-top']"
+          min-length="0" ec-valwrap>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-5">position</label>
+        <input type="text" ng-model="ctrl.panel.LayoutConf.leftStyle['position']" bs-typeahead="['relative','absolute']" class="gf-form-input width-8"
+          min-length="0" ec-valwrap>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-5">float</label>
+        <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.leftStyle['float']" bs-typeahead="['left','right','none']"
+          min-length="0" ec-valwrap>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-5">left</label>
+        <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.leftStyle['left']" min-length="0"
+          ec-valwrap>
+      </div>
+    </div>
+  </div>
+
+  <div class="section gf-form-group">
+      <h5 class="section-heading">Right Style</h5>
+      <div class="gf-form-inline">
+        <div class="gf-form" ng-if='false'>
+          <label class="gf-form-label width-5">padding-top</label>
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.rightStyle['padding-top']"
+            min-length="0" ec-valwrap>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-5">position</label>
+          <input type="text" ng-model="ctrl.panel.LayoutConf.rightStyle['position']" bs-typeahead="['relative','absolute']" class="gf-form-input width-8"
+            min-length="0" ec-valwrap>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-5">float</label>
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.rightStyle['float']" bs-typeahead="['left','right','none']"
+            min-length="0" ec-valwrap>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-5">left</label>
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.rightStyle['left']" min-length="0"
+            ec-valwrap>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-5">height</label>
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.LayoutConf.rightStyle['height']" min-length="0"
+            ec-valwrap>
+        </div>
+      </div>
+    </div>
+
+</div>

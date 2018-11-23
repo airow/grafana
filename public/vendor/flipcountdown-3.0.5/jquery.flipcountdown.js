@@ -108,6 +108,8 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
 									case '.':blocks[i].addClass('xdsoft_dot');break;
                   case ' ':blocks[i].addClass('xdsoft_space');break;
                   case '#':blocks[i].addClass('xdsoft_empty');break;
+                  case '万':blocks[i].addClass('xdsoft_10thousand');break;
+                  case '亿':blocks[i].addClass('xdsoft_million');break;
 								}
 							}
 							if( !isNaN(chars[i]) ){
@@ -163,8 +165,9 @@ jQuery.fn.flipCountDown = jQuery.fn.flipcountdown = function( _options ){
 									chars.push(value.getSeconds() % 10);
 								}
 							break;
-							case String:
-								chars = value.replace(/[^0-9\#\:\.\s]/g,'').split('');
+              case String:
+                chars = value.replace(/[^0-9\亿\万\#\:\.\s]/g, '').split('');
+                //chars = value.replace(/[^0-9\#\:\.\s]/g,'').split('');
 							break;
 							case Number:
 								chars = value.toString().split('');

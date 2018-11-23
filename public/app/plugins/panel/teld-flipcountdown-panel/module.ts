@@ -14,6 +14,7 @@ import TimeSeries from 'app/core/time_series2';
 import {MetricsPanelCtrl, loadPluginCssPath} from 'app/plugins/sdk';
 
 import { flipcountdownEchartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
+import { LayoutEditorComponent } from './editor/layout_editor';
 
 loadPluginCssPath({
   //cssPath: '/public/app/plugins/panel/teld-flipcountdown-panel/css/singlestat.css',
@@ -91,7 +92,8 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     publishVal: {
       enable: false,
       varName: '',
-    }
+    },
+    LayoutConf: {}
   };
 
   /** @ngInject */
@@ -104,6 +106,14 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+  }
+
+  leftStyle() {
+    return _.defaultsDeep({}, { 'padding-top': this.panel.leftTop }, this.panel.LayoutConf.leftStyle || {});
+  }
+
+  rightStyle() {
+    return _.defaultsDeep({}, { 'padding-top': this.panel.valueTop }, this.panel.LayoutConf.rightStyle || {});
   }
 
   onTearDown() {
@@ -119,6 +129,7 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     this.fontSizes = ['20%', '30%','50%','70%','80%','100%', '110%', '120%', '150%', '170%', '200%'];
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-flipcountdown-panel/editor.html', 2);
     this.addEditorTab('Echarts Events', flipcountdownEchartsEventEditorComponent);
+    this.addEditorTab('Layout', LayoutEditorComponent);
     // this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-flipcountdown-panel/mappings.html', 3);
     this.unitFormats = kbn.getUnitFormats();
   }
@@ -482,9 +493,40 @@ class FlipCountdownCtrl extends MetricsPanelCtrl {
     this.yi = (+returnVal) > 100000000;
     this.wan = (+returnVal) > 10000;
 
+    if (this.panel.LayoutConf.innerUnit) {
+      var str = this.decorative(returnVal);
+      return str;
+    }
     return returnVal;
-
     //return "1023456789.0"
+  }
+
+  decorative(value) {
+    var d = {
+      '万': 10000,
+      '亿': 100000000
+    };
+
+    var p = [];
+
+    for (var k in d) {
+      //alert(k);
+      var item = d[k];
+      if (value >= item) {
+        p.push({ name: k, index: ("" + item).length - 1 });
+      }
+    }
+
+    var strArray = ("" + value).split("");
+    strArray.reverse();
+    p.sort(function (a, b) { return b.index - a.index; });
+    for (var i in p) {
+      var unti = p[i];
+      strArray.splice(unti.index, 0, unti.name);
+    }
+
+    strArray.reverse();
+    return strArray.join("");
   }
 
   genCalcExpressionContext(context) {

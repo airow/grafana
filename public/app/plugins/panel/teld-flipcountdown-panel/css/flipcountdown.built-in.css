@@ -135,7 +135,8 @@
 	width:44px;
 	height:71px;
   /* background-image:url(./img/teld-screen.png); */
-  background-image:url(./img/teld-orange-yellow.png);
+  /* background-image:url(./img/teld-orange-yellow.png); */
+  background-image:url(./img/teld-orange-yellow-million.png);
 }
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_space,
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_separator,
@@ -148,6 +149,16 @@
 }
 .xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_space{
 	background-position:-100px -4766px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_10thousand{
+  width: 20px;
+  /* background-position: -13px -4967px; */
+  background-position: -13px -4978px;
+}
+.xdsoft_flipcountdown.xdsoft_size_teldscreen >.xdsoft_digit.xdsoft_million{
+  width: 20px;
+  /* background-position: -13px -4897px; */
+  background-position: -13px -4909px;
 }
 
 .xdsoft_flipcountdown.xdsoft_size_teldorangegold >.xdsoft_digit{
