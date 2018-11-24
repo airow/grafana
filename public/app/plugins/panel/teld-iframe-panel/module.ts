@@ -85,6 +85,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       this.currentScene = _.first(this.panel.websocketConf.scene);
       this.gotoScene(this.currentScene);
     } else {
+      this.currentScene = _.first(this.panel.websocketConf.scene);
       this.events.on('render', this.onRender.bind(this));
     }
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
