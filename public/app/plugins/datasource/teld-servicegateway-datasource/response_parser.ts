@@ -73,11 +73,12 @@ export default class ResponseParser {
           }
           break;
         case "table":
+          var ds = _.isArray(queryRes.dataset) ? queryRes.dataset : [queryRes.dataset];
           let series = {
             type: 'table',
             refId: queryRes.refId,
-            columns: _.map(_.keys(queryRes.dataset[0]), function (item) { return { "text": item }; }),
-            rows: _.map(queryRes.dataset, function (item) { return _.values(item); })
+            columns: _.map(_.keys(ds[0]), function (item) { return { "text": item }; }),
+            rows: _.map(ds, function (item) { return _.values(item); })
           };
           data.push(series);
           break;
