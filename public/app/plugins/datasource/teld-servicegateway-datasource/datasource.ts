@@ -50,7 +50,7 @@ export class TeldServiceGatewayDatasource {
     'contextSrv': this.contextSrv,
     'config': config,
     'urlHelper': {
-      sghost: function (host) {
+      sghost_bak: function (host) {
         host = host || 'sgi';
         let { protocol, hostname, port } = window.location;
         let domain = hostname.split('.');
@@ -58,85 +58,20 @@ export class TeldServiceGatewayDatasource {
           domain = [domain.pop(), domain.pop()].reverse();
         }
         return `${protocol}//${host}.${domain.join(".")}`;
+      },
+      sghost: function (host) {
+        host = host || 'sgi';
+        let { protocol, hostname, port } = window.location;
+        let domain = document.domain || hostname;
+        var ares = domain.split(':')[0].split('.');
+        ares.shift();
+        ares.unshift("");
+        domain = ares.join('.');
+        if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
+        return `${protocol}//${host}${domain}`;
       }
     }
   };
-
-  getQueries_bak(options) {
-    let { protocol, hostname, port } = window.location;
-    let domain = hostname.split('.');
-    if (_.size(domain) >= 2) {
-      let TLDs = domain.pop();
-      let host = domain.pop();
-      domain = [host, TLDs];
-    }
-    let templateSettings = { imports: this.imports, variable: 'bindData' };
-    let bindData = {
-      time: options.range,
-      user: config.bootData.user,
-      url: { protocol, hostname, port, domain: domain.join(".") }
-    };
-    let toUnix = options.range.to.valueOf();
-    let fromUnix = options.range.from.valueOf();
-    let scopedVars = _.defaults({
-      to: { text: toUnix, value: toUnix },
-      from: { text: fromUnix, value: fromUnix }
-    }, options.scopedVars);
-
-    let deviceInfo = embed_teldapp.askForDeviceInfo();
-
-    var queries = _.filter(options.targets, item => {
-      return item.hide !== true;
-    }).map(item => {
-
-      let parameters = _.cloneDeep(item.parameters);
-
-      parameters = _.transform(parameters, (r, param) => {
-        param.originalVal = param.value;
-        if (param.type === 'object') {
-          param.value = _.transform(param.value, (result, eachitem) => {
-            var originalVal = eachitem.v;
-            var v = eachitem.v || '';
-            v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
-            let compiled = _.template(v, templateSettings);
-            v = compiled(bindData);
-            if (originalVal === v && _.includes(v, '$')) { return; }
-            result[eachitem.k] = v;
-          }, {});
-          if (_.size(param.value) === 0) {
-            return;
-          }
-        } else {
-          param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
-          let compiled = _.template(param.value, templateSettings);
-          param.value = compiled(bindData);
-          if (param.originalVal === param.value && _.includes(param.value, '$')) {
-            return;
-          }
-        }
-        r.push(param);
-      }, []);
-
-      let url = this.templateSrv.replace(item.url, scopedVars, this.interpolateVariable);
-      url = _.template(url, templateSettings)(bindData);
-      return {
-        refId: item.refId,
-        intervalMs: options.intervalMs,
-        maxDataPoints: options.maxDataPoints,
-        datasourceId: this.id,
-        url: url,
-        deviceInfo: deviceInfo,
-        parameters: parameters,
-        filterWrap: item.filterWrap,
-        filterKey: item.filterKey,
-        format: item.format,
-        time_sec: item.time_sec,
-        time_sec_format: item.time_sec_format,
-      };
-    });
-
-    return queries;
-  }
 
   getQueries(options, deviceInfo) {
     let { protocol, hostname, port } = window.location;
@@ -174,7 +109,12 @@ export class TeldServiceGatewayDatasource {
             v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
             let compiled = _.template(v, templateSettings);
             v = compiled(bindData);
-            if (originalVal === v && _.includes(v, '$')) { return; }
+            if (originalVal === v && _.includes(v, '$')) {
+              if (true !== eachitem.enableDefValue) {
+                return;
+              }
+              v = eachitem.defValue || "";
+            }
             result[eachitem.k] = v;
           }, {});
           if (_.size(param.value) === 0) {
@@ -185,7 +125,10 @@ export class TeldServiceGatewayDatasource {
           let compiled = _.template(param.value, templateSettings);
           param.value = compiled(bindData);
           if (param.originalVal === param.value && _.includes(param.value, '$')) {
-            return;
+            if (true !== param.enableDefValue) {
+              return;
+            }
+            param.value = param.defValue || "";
           }
         }
         r.push(param);
@@ -210,25 +153,6 @@ export class TeldServiceGatewayDatasource {
     });
 
     return queries;
-  }
-
-  query_bak(options) {
-
-    var queries = this.getQueries_bak(options);
-
-    if (queries.length === 0) {
-      return this.$q.when({data: []});
-    }
-
-    return this.backendSrv.datasourceRequest({
-      url: '/callteldsg/_sg',
-      method: 'POST',
-      data: {
-        from: options.range.from.valueOf().toString(),
-        to: options.range.to.valueOf().toString(),
-        queries: queries,
-      }
-    }).then(this.responseParser.setQueries(queries).processQueryResult.bind(this.responseParser));
   }
 
   iosDev(resolve, reject) {

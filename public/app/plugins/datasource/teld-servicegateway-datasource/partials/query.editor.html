@@ -73,6 +73,11 @@
         <div class="gf-form">
           <input type="text" class="gf-form-input width-15" ng-model="param.value" spellcheck='false' ng-blur="ctrl.refresh()">
         </div>
+        <gf-form-switch class="gf-form" label="启用缺省值" label-class="width-7" checked="param.enableDefValue">
+        </gf-form-switch>
+        <div class="gf-form">
+          <input type="text" ng-disabled="!param.enableDefValue" class="gf-form-input width-7" placeholder="缺省值" ng-model="param.defValue" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        </div>
         <div class="gf-form">
           <label class="gf-form-label">
             <a ng-click="ctrl.removeItem(ctrl.target.parameters, param)">
@@ -166,6 +171,11 @@
         </div>
         <div class="gf-form">
           <input type="text" class="gf-form-input width-15" ng-model="item.v" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <gf-form-switch class="gf-form" label="启用缺省值" label-class="width-7" checked="item.enableDefValue">
+        </gf-form-switch>
+        <div class="gf-form">
+          <input type="text" ng-disabled="!item.enableDefValue" class="gf-form-input width-7" placeholder="缺省值" ng-model="item.defValue" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
         </div>
         <div class="gf-form">
           <label class="gf-form-label">
