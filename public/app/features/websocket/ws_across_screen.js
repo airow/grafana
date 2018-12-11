@@ -90,6 +90,10 @@ define([
 
         console.log(wsServerUrl);
 
+        if (_.isEmpty(wsServerUrl)) {
+          return;
+        }
+
         ws = $websocket(wsServerUrl);
 
         ws.onMessage(function (event) {
