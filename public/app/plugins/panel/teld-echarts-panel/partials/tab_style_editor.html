@@ -341,7 +341,7 @@
         <label class="gf-form-label width-8">backgroundColor</label>
         <spectrum-picker ng-model="ctrl.panel.echarts.backgroundColor" ng-change="refresh()"></spectrum-picker>
       </div>
-
+      <gf-form-switch class="gf-form" label="显示暂无图片" label-class="width-8" checked="ctrl.panel.showNoDataBg" on-change="ctrl.render()"></gf-form-switch>
     </div>
     <div class="section gf-form-group" ng-if="ctrl.panel.serieType!=='pie'">
       <!-- <h5 class="section-heading">Bar</h5> -->

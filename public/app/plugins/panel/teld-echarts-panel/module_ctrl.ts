@@ -1861,6 +1861,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
   }
 
+  ecIsEmpty() {
+    return this.panel.showNoDataBg && _.size(_.flatten(_.map(this.ecOption.baseOption.series, 'data'))) === 0;
+  }
+
   calcMin(option, axis) {
     if (this.panel.serieType === "pie") {
       return option;

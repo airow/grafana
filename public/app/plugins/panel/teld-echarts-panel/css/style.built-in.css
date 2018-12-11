@@ -40,3 +40,14 @@
 .not-allowed{
   cursor: not-allowed;
 }
+
+.nodata_bg{
+  /* background-image: url('https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=3380443690,3009493331&fm=173&app=25&f=JPEG?w=218&h=146&s=33A827AA5AF85B8C6412597003001078'); */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url('nodata_bg.png');
+}
+
+.nodata_bg .ecContainer{
+  background-color: transparent !important;
+}
