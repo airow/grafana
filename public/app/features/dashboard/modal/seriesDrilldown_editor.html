@@ -1,0 +1,171 @@
+
+<div class="editor-row col-xs-2">
+    <div class="gf-form-query">
+      <div class="gf-form-query-content">
+        <div class="gf-form-group">
+          <div class="gf-form gf-form--grow">
+            <label class="gf-form-label query-keyword gf-form-label--grow">Dashborad Vars</label>
+            <label class="gf-form-label">
+                <a ng-click="ctrl.refreshDashVars()">
+                  <i class="fa fa-refresh"></i>
+                </a>
+            </label>
+          </div>
+          <div style="max-height:200px; max-width: 275px; overflow:auto;">
+            <div ng-if="false" ng-repeat="dashVar in ctrl.getDashVars()" ng-switch="dashVar.value===dashVar.text">
+              <div class="gf-form" ng-switch-when="true">
+                <label class="gf-form-label width-11">${vars.<span ng-bind="dashVar.name"></span>}</label>
+                <label class="gf-form-label gf-form-label--grow"> {{dashVar.value}}<br> </label>
+              </div>
+              <div class="gf-form" ng-switch-default>
+                <label class="gf-form-label width-11">${vars.<span ng-bind="dashVar.name"></span>.text}</label>
+                <label class="gf-form-label gf-form-label--grow">{{dashVar.text}}</label>
+              </div>
+              <div class="gf-form" ng-switch-default>
+                <label class="gf-form-label width-11">${vars.<span ng-bind="dashVar.name"></span>.value}</label>
+                <label class="gf-form-label gf-form-label--grow">{{dashVar.value}}</label>
+              </div>
+            </div>
+            <div ng-repeat="dashVar in ctrl.getDashVars()">
+                <div class="gf-form">
+                  <label class="gf-form-label gf-form-label--grow">${vars.<span ng-bind="dashVar.name"></span>.text}</label>
+                </div>
+                <div class="gf-form">
+                  <label class="gf-form-label gf-form-label--grow">${vars.<span ng-bind="dashVar.name"></span>.value}</label>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gf-form-query">
+    <div class="gf-form-query-content">
+      <div class="gf-form-group">
+        <div class="gf-form gf-form--grow">
+          <label class="gf-form-label query-keyword gf-form-label--grow">Click Data</label>
+        </div>
+        <div ng-repeat="(key,value) in ctrl.clickData" ng-switch="ctrl.getTypeof(value)">
+          <div ng-switch-when="object">
+            <div class="gf-form">
+              <label class="gf-form-label width-11" ng-bind="key"></label>
+            </div>
+            <div class="gf-form" ng-repeat="(subKey,subValue) in value">
+              <label class="gf-form-label width-11">${<span ng-bind="key"></span>.<span ng-bind="subKey"></span>}</label>
+              <label class="gf-form-label gf-form-label--grow">{{subValue}}</label>
+            </div>
+          </div>
+          <div class="gf-form" ng-switch-default>
+            <label class="gf-form-label width-11">${<span ng-bind="key"></span>}</label>
+            <label class="gf-form-label gf-form-label--grow">{{value}}</label>
+          </div>
+        </div>
+        <div class="gf-form gf-form--grow" ng-if='!ctrl.clickData'>
+          <label class="gf-form-label gf-form-label--grow">选择图表上的点</label>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+
+<div class="editor-row col-xs-10">
+
+  <div class="gf-form-query gf-form-group">
+    <div class="gf-form-query-content">
+      <div class="gf-form gf-form--grow">
+        <label class="gf-form-label query-keyword">说明</label>
+      </div>
+      <div class="gf-form gf-form--grow">
+        <label class="gf-form-label gf-form-label--grow">
+            <div class="col-xs-6">
+              <div>全局变量应用方式：${vars.xxxx.text}及${vars.xxxx.value}。 xxx表示变量名称，.text(显示文本)，.value(值)</div>
+              <div>面板日期范围：${vars.dashTimeFrom.xxx}   ${vars.dashTimeTo.xxx}</div>
+              <div>点击的数据：<br>
+                ${name}:x轴上显示的数据，一般为Unix时间戳，可以通过帮助方法${helper.m}包装的momentjs进行格式化<br>
+                ${clickSerie}:点击值的名称<br>
+                ${current.xxxx}:当前点击的Serie相关信息，包含名字，x轴，y轴<br>
+                ${series.xxxx}:点击点相同x轴上所有的数据<br>
+                对应访问可以通过属性操作和索引操作<br>
+              </div>
+              <div>
+                ${helper.xxxx} 功能函数<br>
+                ${helper.m}: <a href="http://momentjs.cn/">moment.js</a>库
+                ${helper._}: <a href="https://www.css88.com/doc/lodash/">lodash.js</a>库
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div>实例</div>
+              <div>日期格式化：${helper.m(vars.dashTimeFrom.text).format("YYYY-MM-DD")}</div>
+            </div>
+          </ul>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="gf-form-query">
+    <div class="gf-form-query-content">
+        <div class="gf-form-inline">
+          <gf-form-switch class="gf-form" label-class="width-6" label="调试模式" checked="ctrl.panelCtrl.seriesDrillDebug" on-change="ctrl.refresh()"></gf-form-switch>
+          <gf-form-switch class="gf-form" label="直接跳转" checked="ctrl.panel.jumpStraight" on-change="ctrl.refresh()"></gf-form-switch>
+        </div>
+    </div>
+  </div>
+  <div class="gf-form-query">
+    <div class="gf-form-query-content">
+        <div class="gf-form-inline">
+            <div class="gf-form gf-form--grow">
+              <label class="gf-form-label query-keyword gf-form-label--grow">Link</label>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label">
+                <a ng-click="ctrl.addLink()">
+                  <i class="fa fa-plus"></i>
+                </a>
+              </label>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="gf-form-query" ng-repeat="link in ctrl.panel.seriesLinkConf">
+    <gf-form-switch class="gf-form" switch-class="width-5" label-class="ng-hide" label="启用" checked="link.enable" on-change="ctrl.refresh()"></gf-form-switch>
+    <div class="gf-form-query-content">
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label width-5">Name</label>
+          <input type="text" class="gf-form-input width-8" placeholder="{{link.name}}" ng-model="link.name" ec-valwrap>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <label class="gf-form-label width-5">URL</label>
+          <input type="text" class="gf-form-input" placeholder="{{link.url}}" ng-model="link.url" ec-valwrap>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeItem(ctrl.panel.seriesLinkConf,link)">
+              <i class="fa fa-trash"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a ng-click="!$last && link.enable && ctrl.move(ctrl.panel.seriesLinkConf,$index,$index+1)">
+              <i class="fa fa-arrow-down" ng-class="{'not-allowed':$last || !link.enable}"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a ng-click="!$first && link.enable && ctrl.move(ctrl.panel.seriesLinkConf,$index,$index-1)">
+              <i class="fa fa-arrow-up" ng-class="{'not-allowed':$first || !link.enable}"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <div class="gf-form-group">
+          <div class="gf-form gf-form--grow">
+            <label class="gf-form-label width-5">URL</label>
+            <label class="gf-form-label gf-form-label--grow">
+                <a target="_black" ng-href="{{ctrl.print(link)}}"><i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <span ng-bind="ctrl.print(link)"></span>
+            </label>
+          </div>
+      </div>
+    </div>
+    <!-- markPoint end -->
+
+  </div>
+</div>

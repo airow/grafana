@@ -5,8 +5,9 @@ define([
   'echarts',
   'echarts.bmap',
   '../core_module',
+  'app/core/app_events'
 ],
-  function ($, angular, _, echarts, ecBmap, coreModule) {
+  function ($, angular, _, echarts, ecBmap, coreModule, appEvents) {
     'use strict';
 
     coreModule.default.directive('teldEcharts', function () {
@@ -80,12 +81,26 @@ define([
                 alert('bmap 组件加载失败');
               }
             }
+            chart.off('click');
+            chart.on('click', function (params) {
+              var option = this.getOption();
 
-            // chart.off('click');
-            // chart.on('click', function (params) {
-            //   // 控制台打印数据的名称
-            //   console.log(params.name);
-            // });
+              var keys = _.map(option.series, 'name');
+              var seriesData = _.map(option.series, 'data');
+              var values = _.transform(seriesData, function (result, itemValue) {
+                result.push(itemValue[params.dataIndex].value || itemValue[params.dataIndex]);
+              }, []);
+
+              var clickData = {
+                name: params.name,
+                clickSerie: params.seriesName,
+                current: _.pick(params, params.$vars),
+                series: _.zipObject(keys, values)
+              };
+
+              appEvents.default.emit('emit-echartsclick', { ecInstance: scope.instance, clickData: clickData });
+              console.log(params);
+            });
           }
 
           //自定义参数 - config

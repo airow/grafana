@@ -18,6 +18,8 @@ import {DataProcessor} from './data_processor';
 import {axesEditorComponent} from './axes_editor';
 import {calcSeriesEditorComponent} from './calcSeries_editor';
 import { cumulativeEditorComponent, cumulative } from './cumulative_editor';
+import { seriesDrilldownEditorComponent } from './editor/seriesDrilldown_editor';
+import { appEvents } from 'app/core/core';
 
 class GraphCtrl extends MetricsPanelCtrl {
   static template = template;
@@ -136,6 +138,7 @@ class GraphCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Display', 'public/app/plugins/panel/graph/tab_display.html', 4);
     this.addEditorTab('Calc', calcSeriesEditorComponent, 5);
     this.addEditorTab('Cumulative', cumulativeEditorComponent, 6);
+    this.addEditorTab('Serie Detail', seriesDrilldownEditorComponent, 7);
 
     if (config.alertingEnabled) {
       this.addEditorTab('Alert', alertTab, 5);
