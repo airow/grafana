@@ -17,8 +17,9 @@ import kbn from   'app/core/utils/kbn';
 import {appEvents, coreModule} from 'app/core/core';
 import GraphTooltip from './graph_tooltip';
 import {ThresholdManager} from './threshold_manager';
+import SeriesDrilldownParsing from 'app/core/series_drilldown';
 
-coreModule.directive('grafanaGraph', function($rootScope, timeSrv, contextSrv) {
+coreModule.directive('grafanaGraph', function ($rootScope, timeSrv, contextSrv, templateSrv) {
   return {
     restrict: 'A',
     template: '',
@@ -714,7 +715,7 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv, contextSrv) {
 
         elem.bind("plotclick", function (event, pos, item) {
           let eventArgs = { targetPanelId: "", clickPoint: !!item };
-
+          let e = elem;
           if (item) {
             console.group('点击数据');
             console.log(item.datapoint);//=>[1499406720000, 535.2230895541453] 0位时间轴
@@ -724,6 +725,30 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv, contextSrv) {
             let from = moment(item.datapoint[0]);
             let to = from.clone().add(1, 's');
             eventArgs["timeRange"] = { from, to };
+
+            let nameIndex = 0, valueIndex = 1;
+
+            let plot = elem.data().plot;
+            let poltData = plot.getData();
+            let keys = _.map(poltData, "label");
+            let values = _.map(poltData, (value, index) => { return value.data[item.dataIndex][valueIndex]; });
+            let name = item.datapoint[nameIndex];
+            let value = item.datapoint[valueIndex];
+            let seriesName = item.series.label;
+            let clickData = {
+              name: name,
+              clickSerie: seriesName,
+              current: { seriesName: seriesName, name: name, value: value },
+              series: _.zipObject(keys, values)
+            };
+
+            appEvents.emit('emit-plotclick', { plotInstance: plot, clickData: clickData });
+
+            // var links = _.filter(this.panel.seriesLinkConf, { enable: true });
+            // if (_.size(links) > 0 && (true !== this.editMode || this.seriesDrillDebug)) {
+            //   this.popup(clickData, links);
+            //   console.log('emit-plotclick');
+            // }
           }
 
           if (panel.publishPlotClick && panel.publishPlotClick !== "") {
@@ -733,6 +758,62 @@ coreModule.directive('grafanaGraph', function($rootScope, timeSrv, contextSrv) {
           }
         });
       }
+
+      appEvents.on('emit-plotclick', function (data) {
+        var { plotInstance, clickData } = data;
+        var links = _.filter(this.panel.seriesLinkConf, { enable: true });
+        let plot = elem.data().plot;
+        if (plot === plotInstance) {
+          if (_.size(links) > 0 && (true !== this.editMode || this.seriesDrillDebug)) {
+            popup(clickData, links, this.templateSrv, this.timeSrv, this.panel, this.$scope);
+            console.log('emit-plotclick');
+          }
+        }
+      }.bind(ctrl), scope);
+
+      function parsing(links, clickData, templateSrv, timeSrv) {
+
+        let seriesDrilldownParsing = new SeriesDrilldownParsing(templateSrv, timeSrv);
+        let returnValue = seriesDrilldownParsing.parsing(links, clickData);
+        return returnValue;
+      }
+
+      function popup(bindData, linksConf, templateSrv, timeSrv, panel, $scope) {
+
+        var links = parsing(linksConf, bindData, templateSrv, timeSrv);
+        if (_.size(links) === 1 && panel.jumpStraight) {
+          var link = links[0];
+          var goHref = $("<a>").attr('href', link.href).attr('target', link.target);
+          goHref[0].click();
+          goHref.remove();
+          return;
+        }
+
+        //debugger;
+        var popupModalScope = $scope.$new();
+        popupModalScope.$on("$destroy", function () {
+          popupModalScope.dismiss();
+        });
+        popupModalScope.panel = panel;
+        popupModalScope.bindData = bindData;
+        popupModalScope.links = links;
+        popupModalScope.modalTitle = panel.title;
+
+        var scrollY = window.scrollY;
+        $scope.$root.appEvent('show-modal', {
+          modalClass: "teld-go-to-detail",
+          //src: 'public/app/features/dashboard/partials/shareModal.html',
+          templateHtml: '<teld-go-to-detail></teld-go-to-detail>',
+          scope: popupModalScope
+        });
+
+        popupModalScope.$on('modal-shown', function (ve) {
+          window.scrollTo(0, scrollY);
+          $(".teld-go-to-detail").css('top', scrollY + $(window).height() / 4);
+        });
+      }
+
+
       scope.$on('$destroy', function() {
         tooltip.destroy();
         elem.off();

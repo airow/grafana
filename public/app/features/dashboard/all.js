@@ -25,4 +25,5 @@ define([
   '../signalr/dash_signalr_svr',
   '../signalr/grafana_screen_signalr_hub',
   '../websocket/ws_across_screen',
+  './modal/index'
 ], function () {});

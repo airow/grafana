@@ -3,6 +3,7 @@
 
 import _ from 'lodash';
 import angular from 'angular';
+import $ from 'jquery';
 import moment from 'moment';
 
 import kbn from 'app/core/utils/kbn';
@@ -16,9 +17,9 @@ import echarts from 'echarts';
 import echartsTheme, { echartsThemeName, echartsThemeMap } from './theme/all';
 
 import * as FileExport from '../../../core/utils/file_export';
-import {transformDataToTable} from '../table/transformers';
-import {tablePanelEditor} from '../table/editor';
-import {TableRenderer} from '../table/renderer';
+import { transformDataToTable } from '../table/transformers';
+import { tablePanelEditor } from '../table/editor';
+import { TableRenderer } from '../table/renderer';
 
 import { styleEditorComponent } from './style_editor';
 import { tabStyleEditorComponent } from './tab_style_editor';
@@ -26,11 +27,13 @@ import { seriesEditorComponent } from './series_editor';
 
 import { echartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
 import * as graphutils from '../../../core/utils/graphutils';
-import {calcSeriesEditorComponent} from '../graph/calcSeries_editor';
-import {seriesTypeEditorComponent} from './editor/seriesType_editor';
-import {cycleEditorComponent} from './editor/cycle_editor';
+import { calcSeriesEditorComponent } from '../graph/calcSeries_editor';
+import { seriesTypeEditorComponent } from './editor/seriesType_editor';
+import { seriesDrilldownEditorComponent } from './editor/seriesDrilldown_editor';
+import { cycleEditorComponent } from './editor/cycle_editor';
 import { cumulativeEditorComponent, cumulative } from '../graph/cumulative_editor';
 import empty_option from './theme/empty_option';
+import SeriesDrilldownParsing from 'app/core/series_drilldown';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-echarts-panel/css/style.built-in.css',
@@ -180,7 +183,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     columns: [],
     scroll: true,
     fontSize: '100%',
-    sort: {col: 0, desc: true},
+    sort: { col: 0, desc: true },
     filterNull: false,
   };
 
@@ -234,6 +237,17 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       }.bind(this)
     });
 
+    appEvents.on('emit-echartsclick', function (data) {
+      var { ecInstance, clickData } = data;
+      var links = _.filter(this.panel.seriesLinkConf, { enable: true });
+      if (this.ecInstance === ecInstance) {
+        if (_.size(links) > 0 && (true !== this.editMode || this.seriesDrillDebug)) {
+          this.popup(clickData, links);
+          console.log('emit-echartsclick');
+        }
+      }
+    }.bind(this), this.$scope);
+
     this.$rootScope.onAppEvent('emit-cycle', this.emitCycle.bind(this), this.$rootScope);
     this.$rootScope.onAppEvent('emit-clearCycle', function () {
       this.initCycle(this.currentCycle);
@@ -253,6 +267,92 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         this.currentMode = 'list';
       }
     }
+  }
+
+  parsing(links, clickData) {
+
+    let seriesDrilldownParsing = new SeriesDrilldownParsing(this.templateSrv, this.timeSrv);
+    let returnValue = seriesDrilldownParsing.parsing(links, clickData);
+    return returnValue;
+
+    // let templateSettings = {
+    //   imports: {
+    //     helper: {
+    //       '_': _,
+    //       'kbn': kbn,
+    //       'm': moment,
+    //       'valueFormats': (function (kbn) {
+    //         let bindContext = {
+    //           // kbn,
+    //           // valueFormats: kbn.valueFormats,
+    //           // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
+    //           valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
+    //             result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
+    //           }, {})
+    //         };
+
+    //         return function (unitFormatName, size, decimals) {
+    //           return this.valueFormats[unitFormatName](size, decimals);
+    //         }.bind(bindContext);
+    //       })(kbn)
+    //     }
+    //   }
+    // };
+    // //this.refreshDashVars();
+    // var dashVars = [];
+    // _.transform(this.templateSrv.variables, (r, v, k) => {
+    //   r.push({ name: v.name, text: v.current.text, value: v.current.value });
+    // }, dashVars);
+    // var vars = {};
+    // _.transform(dashVars, (r, v, k) => {
+    //   r[v.name] = v.text === v.value ? v.value : _.omit(v, ['name']);
+    // }, vars);
+    // var bindData = _.defaultsDeep({ vars: vars }, clickData);
+    // var returnValue = _.transform(links, (r, link, k) => {
+    //   var l = {
+    //     title: link.name,
+    //     target: link.target || "_blank",
+    //     href: _.template(link.url, templateSettings)(bindData)
+    //   };
+    //   r.push(l);
+    // }, []);
+    // return returnValue;
+  }
+
+  popup(bindData, linksConf) {
+
+    var links = this.parsing(linksConf, bindData);
+    if (_.size(links) === 1 && this.panel.jumpStraight) {
+      var link = links[0];
+      var goHref = $("<a>").attr('href', link.href).attr('target', link.target);
+      goHref[0].click();
+      goHref.remove();
+      return;
+    }
+
+    //debugger;
+    var popupModalScope = this.$scope.$new();
+    popupModalScope.$on("$destroy", function () {
+      popupModalScope.dismiss();
+    });
+    popupModalScope.panel = this.panel;
+    popupModalScope.bindData = bindData;
+    popupModalScope.links = links;
+    popupModalScope.panelCtrl = this;
+    popupModalScope.modalTitle = this.panel.title;
+
+    var scrollY = window.scrollY;
+    this.publishAppEvent('show-modal', {
+      modalClass: "teld-go-to-detail",
+      //src: 'public/app/features/dashboard/partials/shareModal.html',
+      templateHtml: '<teld-go-to-detail></teld-go-to-detail>',
+      scope: popupModalScope
+    });
+
+    popupModalScope.$on('modal-shown', function (ve) {
+      window.scrollTo(0, scrollY);
+      $(".teld-go-to-detail").css('top', scrollY + $(window).height() / 4);
+    });
   }
 
   changeCurrentMode() {
@@ -417,7 +517,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   xAxisLableFormatter(value, index) {
     if (this.currentCycle) {
-      var formatterConf = { format: "teldMoment", decimals: this.currentCycle.format||this.currentCycle.defaultFormat };
+      var formatterConf = { format: "teldMoment", decimals: this.currentCycle.format || this.currentCycle.defaultFormat };
       var decimals = formatterConf.decimals;
       let formater = this.valueFormats[formatterConf.format];
       return formater(value, decimals);
@@ -460,6 +560,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Calc', calcSeriesEditorComponent);
     this.addEditorTab('Cumulative', cumulativeEditorComponent);
     this.addEditorTab('SerieType', seriesTypeEditorComponent);
+    this.addEditorTab('Serie Detail', seriesDrilldownEditorComponent);
     this.editorTabIndex = 1;
   }
 
@@ -1046,7 +1147,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let axis: any;
 
     switch (axisType) {
-      case  this.ecConf.axis.category:
+      case this.ecConf.axis.category:
         if (this.isSeriesBar()) {
           axis = this.serie2cateAxisSerie(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
           if (this.panel.groupBar) {
@@ -1073,7 +1174,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return axis;
   }
 
-  categoryAxisAdapter(serie){
+  categoryAxisAdapter(serie) {
     let axis: any;
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
@@ -1081,7 +1182,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           var groupBySerieKeys = _.map(serie, function (item) { return item.name.toLocaleLowerCase().split(' ' + item.metric)[0]; });
           //groupBySerieKeys = _.groupBy(groupBySerieKeys, function (item) { return item; });
           //groupBySerieKeys = _.map(groupBySerieKeys, function (val, key) { return { name: key }; });
-          groupBySerieKeys = _.groupBy(groupBySerieKeys, function (item) { return "sort."+item; });
+          groupBySerieKeys = _.groupBy(groupBySerieKeys, function (item) { return "sort." + item; });
           groupBySerieKeys = _.map(groupBySerieKeys, function (val, key) { return { name: _.first(val) }; });
           axis = this.serie2cateAxisSerie(groupBySerieKeys, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
         } else {
@@ -1155,7 +1256,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return legendData;
   }
 
-  stackSumLabel(series){
+  stackSumLabel(series) {
 
     if (this.panel.groupBarStackSumLabel) {
       var barSeries = _.filter(series, { type: 'bar' });
@@ -1204,7 +1305,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   getGroupBarSerieMode() {
 
     var series = [];
-    var isStack =  this.panel.groupBarStack ? 'stack' : null;
+    var isStack = this.panel.groupBarStack ? 'stack' : null;
     if (this.ecSeries) {
       var d = {};
       var groupName = _.union(_.map(this.ecSeries, 'name'));
@@ -1796,14 +1897,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
         if (_.get(this.panel.formatter, 'tooltip_category.enable', false)) {
           xFormatter = (function (value, index) {
-          var returnValue = this.callFormatter('tooltip_category', value, index);
-          return returnValue;
+            var returnValue = this.callFormatter('tooltip_category', value, index);
+            return returnValue;
           }).bind(this);
         }
         if (_.get(this.panel.formatter, 'tooltip_value.enable', false)) {
           valueFormatter = (function (value, index) {
-          var returnValue = this.callFormatter('tooltip_value', value, index);
-          return returnValue;
+            var returnValue = this.callFormatter('tooltip_value', value, index);
+            return returnValue;
           }).bind(this);
         }
         var returnValue = [];
