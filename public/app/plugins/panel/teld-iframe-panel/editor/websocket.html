@@ -1,18 +1,22 @@
 <div class="editor-row">
   <div class="section gf-form-group">
     <gf-form-switch class="gf-form" label-class="width-8" label="启用通讯" checked="editor.websocketConf.enable" on-change="editor.render()"></gf-form-switch>
-    <gf-form-switch class="gf-form" label-class="width-8" label="显示跳转按钮" checked="editor.websocketConf.showGotoButton" on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-8" label="显示跳转按钮" checked="editor.websocketConf.showGotoButton"
+      on-change="editor.render()"></gf-form-switch>
     <div class="gf-form">
       <span class="gf-form-label width-7">top</span>
       <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.style.top" ng-change="ctrl.render()">
       <span class="gf-form-label width-7">left</span>
       <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.style.left" ng-change="ctrl.render()">
       <span class="gf-form-label width-7">right</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.style.right" placeholder="20px" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.style.right" placeholder="20px"
+        ng-change="ctrl.render()">
       <span class="gf-form-label width-7">bottom</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.style.bottom" placeholder="20px" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.style.bottom" placeholder="20px"
+        ng-change="ctrl.render()">
       <span class="gf-form-label width-7">goto</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.gotoStyle.top" placeholder="-276px" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.gotoStyle.top" placeholder="-276px"
+        ng-change="ctrl.render()">
     </div>
     <h5 class="section-heading">场景</h5>
 
@@ -41,7 +45,8 @@
         <input type="text" class="gf-form-input width-10" ng-model="scene.src" spellcheck="false" placeholder="src">
         <label class="gf-form-label query-keyword">cmd</label>
         <span ng-repeat="cmd in scene.cmds">
-          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="cmd.name" spellcheck="false" placeholder="cmd">
+          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="cmd.name"
+            spellcheck="false" placeholder="cmd">
           <label ng-if="false" class="gf-form-label" style="display: inline-block;">
             <a ng-click="editor.remove(scene.cmds, cmd)">
               <i class="pointer fa fa-remove"></i>
@@ -55,9 +60,12 @@
         </label>
         <label class="gf-form-label query-keyword">to</label>
         <span ng-repeat="button in scene.buttons">
-          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="button.to" spellcheck="false" placeholder="to">
-          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="button.text" spellcheck="false" placeholder="text">
-          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="button.cls" spellcheck="false" placeholder="cls">
+          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="button.to"
+            spellcheck="false" placeholder="to">
+          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="button.text"
+            spellcheck="false" placeholder="text">
+          <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="button.cls"
+            spellcheck="false" placeholder="cls">
           <label class="gf-form-label" style="display: inline-block;">
             <a ng-click="editor.remove(scene.buttons, button)">
               <i class="pointer fa fa-remove"></i>
@@ -85,7 +93,8 @@
 </div>
 <div class="editor-row">
   <div class="section gf-form-group">
-    <gf-form-switch class="gf-form" label-class="width-7" label="显示图标" checked="editor.websocketConf.teldlogo.enable" on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-7" label="显示图标" checked="editor.websocketConf.teldlogo.enable"
+      on-change="editor.render()"></gf-form-switch>
     <div class="gf-form">
       <span class="gf-form-label width-7">top</span>
       <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.style.top" ng-change="ctrl.render()">
@@ -96,20 +105,58 @@
       <span class="gf-form-label width-7">bottom</span>
       <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.style.bottom" ng-change="ctrl.render()">
     </div>
+    <div class="gf-form">
+      <span class="gf-form-label width-7">font-size</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle.fontSize"
+        ng-change="ctrl.render()">
+      <span class="gf-form-label width-7">font-weight</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle.fontWeight"
+        ng-change="ctrl.render()">
+      <span class="gf-form-label width-7">font-family</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle.fontFamily"
+        ng-change="ctrl.render()">
+    </div>
+    <div class="gf-form">
+      <span class="gf-form-label width-7">margin-left</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle['margin-left']"
+        ng-change="ctrl.render()">
+      <span class="gf-form-label width-7">padding-left</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle['padding-left']"
+        ng-change="ctrl.render()">
+      <span class="gf-form-label width-7">padding-top</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle['padding-top']"
+        ng-change="ctrl.render()">
+    </div>
+    <div class="gf-form">
+      <span class="gf-form-label width-7">bg-image</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle['background-image']"
+        ng-change="ctrl.render()">
+      <span class="gf-form-label width-7">bg-size</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle['background-size']"
+        ng-change="ctrl.render()">
+      <span class="gf-form-label width-7">bg-repeat</span>
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.teldlogo.customStyle['background-repeat']"
+        ng-change="ctrl.render()">
+    </div>
   </div>
 </div>
 <div class="editor-row">
   <div class="section gf-form-group">
-    <gf-form-switch class="gf-form" label-class="width-7" label="显示时间" checked="editor.websocketConf.clocks.enable" on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-7" label="显示时间" checked="editor.websocketConf.clocks.enable"
+      on-change="editor.render()"></gf-form-switch>
     <div class="gf-form">
       <span class="gf-form-label width-7">top</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.top" placeholder="50px" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.top" placeholder="50px"
+        ng-change="ctrl.render()">
       <span class="gf-form-label width-7">left</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.left" placeholder="50px" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.left" placeholder="50px"
+        ng-change="ctrl.render()">
       <span class="gf-form-label width-7">right</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.right" placeholder="100%" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.right" placeholder="100%"
+        ng-change="ctrl.render()">
       <span class="gf-form-label width-7">bottom</span>
-      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.bottom" placeholder="100%" ng-change="ctrl.render()">
+      <input type="text" class="gf-form-input width-6" ng-model="editor.websocketConf.clocks.style.bottom" placeholder="100%"
+        ng-change="ctrl.render()">
     </div>
   </div>
 </div>

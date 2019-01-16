@@ -18,6 +18,9 @@ export class WebsocketEditorCtrl {
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.websocketConf = this.panel.websocketConf;
+    if (false === _.has(this.websocketConf, 'teldlogo.styleContent')) {
+      _.set(this.websocketConf, 'teldlogo.styleContent', "/*\r\n.style \r\n{\r\n color: red;\r\n}\r\n*/\r\n");
+    }
   }
 
   render() {

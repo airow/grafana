@@ -138,6 +138,24 @@
               </span>
               <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.customStyle.style.color" ng-change="ctrl.render()" ng-model-onblur>
             </div>
+            <div class="gf-form" ng-show="ctrl.panel.borderClass==='BorderShow'">
+              <label class="gf-form-label width-6">borderHeight</label>
+              <input type="text" class="gf-form-input width-13" ng-model="ctrl.panel.borderHeight" ng-change="ctrl.render()" ng-model-onblur>
+            </div>
+			      <div class="gf-form" ng-show="ctrl.panel.borderClass==='BorderShow'">
+              <label class="gf-form-label width-7">borderColor</label>
+              <span class="gf-form-label">
+                <spectrum-picker ng-dblclick="ctrl.panel.borderColor=null" ng-model="ctrl.panel.borderColor" ng-change="ctrl.render()"></spectrum-picker>
+              </span>
+              <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.borderColor" ng-change="ctrl.render()" ng-model-onblur>
+            </div>
+            <div class="gf-form" ng-show="ctrl.panel.borderClass==='BorderShow'">
+              <label class="gf-form-label width-7">NumberColor</label>
+              <span class="gf-form-label">
+                <spectrum-picker ng-dblclick="ctrl.panel.NumFontColor=null" ng-model="ctrl.panel.NumFontColor" ng-change="ctrl.render()"></spectrum-picker>
+              </span>
+              <input type="text" class="gf-form-input width-10" ng-model="ctrl.panel.NumFontColor" ng-change="ctrl.render()" ng-model-onblur>
+            </div>
           </div>
       </div>
   </div>

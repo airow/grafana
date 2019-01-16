@@ -4,7 +4,7 @@ import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
 import rison from 'rison';
-import { PanelCtrl , loadPluginCssPath } from 'app/plugins/sdk';
+import { PanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
 import { kibanaEditor } from './editor/kibana';
 import { WebsocketEditor } from './editor/websocket';
 import { SaikuEditor } from './editor/saiku';
@@ -166,7 +166,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     }
   }
 
-  goto(i){
+  goto(i) {
     // for (var item in UserList) {
     //   if (item != loginname) {
     //     _sk.send(item + "|" + jsondata);
@@ -198,7 +198,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     let that = this;
 
     let messageIncomingHandlerConfin = {
-      "kibanaLoaded": function(eventData){
+      "kibanaLoaded": function (eventData) {
         that.grafanaLink2Kibana();
         that.isloaded = true;
         if (that.panel.panelState && that.panel.panelStateMin && that.changePanelState) {
@@ -295,7 +295,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
               setT(value);
             }
           });
-        }else{
+        } else {
           def.forEach(element => {
             that.variableSrv.templateSrv.removeVariable(`$${element.name}`, 'custom');
           });
@@ -348,7 +348,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.$scope.$emit('$messageOutgoing', angular.toJson(postMessage));
   }
 
-  grafanaLink2Kibana(){
+  grafanaLink2Kibana() {
 
     let dash = this.dashboardSrv.getCurrent();
 
@@ -405,8 +405,8 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     return this.datasourceSrv.get(dsName).then(function (ds) {
       return ds.metricFindQuery(jsonStr);
     })
-    .then(this.uiSegmentSrv.transformToSegments(false))
-    .catch(this.handleQueryError.bind(this));
+      .then(this.uiSegmentSrv.transformToSegments(false))
+      .catch(this.handleQueryError.bind(this));
   }
 
   handleQueryError(err) {
@@ -563,6 +563,10 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     }
 
     return returnValue;
+  }
+
+  logoStyle() {
+    return angular.fromJson(this.panel.websocketConf.teldlogo.styleContent);
   }
 
   onRender() {

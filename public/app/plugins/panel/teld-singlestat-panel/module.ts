@@ -9,7 +9,7 @@ import 'jquery.flot.gauge';
 import kbn from 'app/core/utils/kbn';
 import config from 'app/core/config';
 import TimeSeries from 'app/core/time_series2';
-import {MetricsPanelCtrl, loadPluginCssPath} from 'app/plugins/sdk';
+import { MetricsPanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
 
 import { finglestatEchartsEventEditorComponent } from '../teld-eventhandler-editor/echarts_eventhandler_editor';
 import { submenuDirective } from '../../../features/dashboard/submenu/submenu';
@@ -35,13 +35,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       name: '左右',
       tmpl: [
         '<div ng-dblclick="click()" ng-style="customStyle" ng-class="{\'panelAutoHeight\':autoHeight}" ',
-        ' class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}">',
+        ' class="{{layout}} {{borderClass}} {{bgClass}} {{iconClass}} {{heightClass}}" >',
         ' <span ng-if="tip.enable" ng-style="tip.style" style="z-index:1;position: absolute;">',
         '  <i class="grafana-tip fa fa-question-circle" bs-tooltip="tip.context"></i>',
         ' </span>',
         ' <div class="titleRight">',
-        '   <span ng-style="postfixStyle" ng-bind="postfix"></span>&nbsp;<span ng-style="valueStyle" ng-bind="rightValue"></span>',
-        ' </div>',
+        '   <span ng-style="postfixStyle" ng-bind="postfix"></span>&nbsp;',
+        ' <span ng-style="valueStyle"><span ng-style="valueNumColorStyle" ng-bind="rightValue"></span></span></div>',
         ' <div class="titleLeft">',
         '   <div class="iconTitle"></div>',
         '   <div class="titleValue">',
@@ -76,7 +76,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         '<div class="valueMain showAlign lv" ng-bind="value">',
         '</div>',
         '<div class="wordMain showAlign  {{valueLR}}">',
-           '<div class="titleValue" ng-bind="postfix"></div>',
+        '<div class="titleValue" ng-bind="postfix"></div>',
         '</div>',
         '<div class="valueMain showAlign rv" ng-bind="value"></div>',
         '<div class="titleIcon showAlign rvIcon"><div class="iconBox"><div class="iconTitle"></div></div></div>',
@@ -101,9 +101,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   };
   styleClass: any = {
     borderClass: {
-      LR: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'chargeBorder' },{ name: '', value: '' }],
+      LR: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'chargeBorder' },
+      { name: 'borderShow', value: 'BorderShow' }, { name: '', value: '' }],
       UD: [{ name: 'default', value: 'panelSubBor' }],
-      Flex: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'flex_chargeBorder' },{ name: '', value: '' }]
+      Flex: [{ name: 'top', value: 'penelBorder' }, { name: 'bottom', value: 'flex_chargeBorder' }, { name: '', value: '' }]
     },
     bgClass: {
       LR: [
@@ -165,30 +166,30 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { group: 'screen', name: '运营商_w', value: 'operator3' },
       { group: 'screen', name: '电站', value: 'dianzh' },
 
-      {group: 'yunwei', name: '服务器', value: '服务器' },
-      {group: 'yunwei', name: '工单', value: '工单' },
-      {group: 'yunwei', name: '互联互通', value: '互联互通' },
-      {group: 'yunwei', name: '机器', value: '机器' },
-      {group: 'yunwei', name: '集群', value: '集群' },
-      {group: 'yunwei', name: '节点', value: '节点' },
-      {group: 'yunwei', name: '进程', value: '进程' },
-      {group: 'yunwei', name: '平台', value: '平台' },
-      {group: 'yunwei', name: '容器服务', value: '容器服务' },
-      {group: 'yunwei', name: '时间', value: '时间' },
-      {group: 'yunwei', name: '新增', value: '新增' },
-      {group: 'yunwei', name: '修复', value: '修复' },
-      {group: 'yunwei', name: '遗留', value: '遗留' },
-      {group: 'yunwei', name: '预警', value: '预警' },
-      {group: 'yunwei', name: '站点', value: '站点' },
+      { group: 'yunwei', name: '服务器', value: '服务器' },
+      { group: 'yunwei', name: '工单', value: '工单' },
+      { group: 'yunwei', name: '互联互通', value: '互联互通' },
+      { group: 'yunwei', name: '机器', value: '机器' },
+      { group: 'yunwei', name: '集群', value: '集群' },
+      { group: 'yunwei', name: '节点', value: '节点' },
+      { group: 'yunwei', name: '进程', value: '进程' },
+      { group: 'yunwei', name: '平台', value: '平台' },
+      { group: 'yunwei', name: '容器服务', value: '容器服务' },
+      { group: 'yunwei', name: '时间', value: '时间' },
+      { group: 'yunwei', name: '新增', value: '新增' },
+      { group: 'yunwei', name: '修复', value: '修复' },
+      { group: 'yunwei', name: '遗留', value: '遗留' },
+      { group: 'yunwei', name: '预警', value: '预警' },
+      { group: 'yunwei', name: '站点', value: '站点' },
 
-      {group: 'default', name: 'charg', value: 'iconTip0' },
-      {group: 'default', name: 'rise-o', value: 'iconTip1' },
-      {group: 'default', name: 'rise-r', value: 'iconTip2' },
-      {group: 'default', name: 'rise-b', value: 'iconTip3' },
-      {group: 'default', name: 'fall-o', value: 'iconTip4' },
-      {group: 'default', name: 'fall-r', value: 'iconTip5' },
-      {group: 'default', name: 'fall-b', value: 'iconTip6' },
-      {group: 'default', name: '充电', value: 'iconCharg' },
+      { group: 'default', name: 'charg', value: 'iconTip0' },
+      { group: 'default', name: 'rise-o', value: 'iconTip1' },
+      { group: 'default', name: 'rise-r', value: 'iconTip2' },
+      { group: 'default', name: 'rise-b', value: 'iconTip3' },
+      { group: 'default', name: 'fall-o', value: 'iconTip4' },
+      { group: 'default', name: 'fall-r', value: 'iconTip5' },
+      { group: 'default', name: 'fall-b', value: 'iconTip6' },
+      { group: 'default', name: '充电', value: 'iconCharg' },
 
       { group: 'dataAnalysis', name: '1_1', value: 'da1_1' },
       { group: 'dataAnalysis', name: '1_2', value: 'da1_2' },
@@ -237,11 +238,14 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   invalidGaugeRange: boolean;
   panel: any;
   events: any;
-  valueNameOptions: any[] = ['min','max','avg', 'current', 'total', 'name', 'first', 'delta', 'diff', 'range'];
+  valueNameOptions: any[] = ['min', 'max', 'avg', 'current', 'total', 'name', 'first', 'delta', 'diff', 'range'];
   tableColumnOptions: any;
 
   // Set and populate defaults
   panelDefaults = {
+    NumFontColor: '',
+    borderColor: '',
+    borderHeight: '',
     autoHeight: false,
     customStyle: { enable: false, style: {} },
     tip: {
@@ -270,8 +274,8 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       { value: 'null', op: '=', text: 'N/A' }
     ],
     mappingTypes: [
-      {name: 'value to text', value: 1},
-      {name: 'range to text', value: 2},
+      { name: 'value to text', value: 1 },
+      { name: 'range to text', value: 2 },
     ],
     rangeMaps: [
       { from: 'null', to: 'null', text: 'N/A' }
@@ -382,7 +386,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   }
 
   onInitEditMode() {
-    this.fontSizes = ['20%', '30%','50%','70%','80%','100%', '110%', '120%', '150%', '170%', '200%'];
+    this.fontSizes = ['20%', '30%', '50%', '70%', '80%', '100%', '110%', '120%', '150%', '170%', '200%'];
     this.addEditorTab('Options', 'public/app/plugins/panel/teld-singlestat-panel/editor.html', 2);
     this.addEditorTab('Echarts Events', finglestatEchartsEventEditorComponent);
     this.addEditorTab('Value Mappings', 'public/app/plugins/panel/teld-singlestat-panel/mappings.html', 3);
@@ -572,7 +576,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
   getDecimalsForValue(value) {
     if (_.isNumber(this.panel.decimals)) {
-      return {decimals: this.panel.decimals, scaledDecimals: null};
+      return { decimals: this.panel.decimals, scaledDecimals: null };
     }
 
     var delta = value / 2;
@@ -616,7 +620,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       var error: any = new Error();
       error.message = 'Multiple Series Error';
       error.data = 'Metric query returns ' + this.series.length +
-        ' series. Single Stat Panel expects a single series.\n\nResponse:\n'+JSON.stringify(this.series);
+        ' series. Single Stat Panel expects a single series.\n\nResponse:\n' + JSON.stringify(this.series);
       throw error;
     }
 
@@ -645,7 +649,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
       // Add $__name variable for using in prefix or postfix
       data.scopedVars = _.extend({}, this.panel.scopedVars);
-      data.scopedVars["__name"] = {value: this.series[0].label};
+      data.scopedVars["__name"] = { value: this.series[0].label };
     }
 
     // check value to text mappings if its enabled
@@ -752,7 +756,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   };
 
   addValueMap() {
-    this.panel.valueMaps.push({value: '', op: '=', text: '' });
+    this.panel.valueMaps.push({ value: '', op: '=', text: '' });
   }
 
   removeRangeMap(rangeMap) {
@@ -762,7 +766,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   };
 
   addRangeMap() {
-    this.panel.rangeMaps.push({from: '', to: '', text: ''});
+    this.panel.rangeMaps.push({ from: '', to: '', text: '' });
   }
 
 
@@ -888,13 +892,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
       var color = getColorForValue(data, value);
       if (color) {
-        return '<span style="color:' + color + '">'+ valueString + '</span>';
+        return '<span style="color:' + color + '">' + valueString + '</span>';
       }
 
       return valueString;
     }
 
-    function getSpan(className, fontSize, value)  {
+    function getSpan(className, fontSize, value) {
       value = templateSrv.replace(value, data.scopedVars);
       return '<span class="' + className + '" style="font-size:' + fontSize + '">' +
         value + '</span>';
@@ -912,7 +916,13 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       subScope.iconLR = panel.iconPosition === "left" ? "iconL" : "iconR";
       delete subScope.customStyle;
       if (panel.customStyle.enable) {
-        //{ 'backgroundColor': 'green', color: 'red' };
+        if (panel.borderClass === "BorderShow") {
+          var color = panel.borderColor;
+          var height = panel.borderHeight;
+          panel.customStyle.style["border-bottom"] = height + " solid " + color;
+        } else {
+          panel.customStyle.style["border-bottom"] = 'none' ;
+        }
         subScope.customStyle = panel.customStyle.style;
       }
       subScope.tip = panel.tip;
@@ -936,7 +946,10 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       if (panel.valueFontSize2 !== "") {
         subScope.valueStyle["font-size"] = panel.valueFontSize2;
       }
-
+      subScope.valueNumColorStyle = {};
+      if (panel.borderClass === "BorderShow") {
+        subScope.valueNumColorStyle["color"] = panel.NumFontColor;
+      }
       updateSubScope(value);
       // if (panel.layout === 'LR') {
       //   subScope[`${panel.valuePosition}Value`] = subScope.value;
@@ -964,7 +977,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       var decimalInfo = that.getDecimalsForValue(+value);
       value = kbn.roundValue(value, decimalInfo.decimals);
       value = kbn.toFixed(value, decimalInfo.decimals);
-      subScope.valueRounded= kbn.roundValue(value, decimalInfo.decimals);
+      subScope.valueRounded = kbn.roundValue(value, decimalInfo.decimals);
 
       value = value / (that.panel.divisor);
       value = kbn.toFixed(value, decimalInfo.decimals);
@@ -1063,7 +1076,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       data = ctrl.data;
 
       // get thresholds
-      data.thresholds = panel.thresholds.split(',').map(function(strVale) {
+      data.thresholds = panel.thresholds.split(',').map(function (strVale) {
         return Number(strVale.trim());
       });
       data.colorMap = panel.colors;
@@ -1077,14 +1090,14 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       // drilldown link tooltip
       var drilldownTooltip = $('<div id="tooltip" class="">hello</div>"');
 
-      elem.mouseleave(function() {
-        if (panel.links.length === 0) { return;}
-        $timeout(function() {
+      elem.mouseleave(function () {
+        if (panel.links.length === 0) { return; }
+        $timeout(function () {
           drilldownTooltip.detach();
         });
       });
 
-      elem.click(function(evt) {
+      elem.click(function (evt) {
         if (!linkInfo) { return; }
         // ignore title clicks in title
         if ($(evt).parents('.panel-header').length > 0) { return; }
@@ -1098,7 +1111,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         if (linkInfo.href.indexOf('http') === 0) {
           window.location.href = linkInfo.href;
         } else {
-          $timeout(function() {
+          $timeout(function () {
             $location.url(linkInfo.href);
           });
         }
@@ -1106,17 +1119,17 @@ class SingleStatCtrl extends MetricsPanelCtrl {
         drilldownTooltip.detach();
       });
 
-      elem.mousemove(function(e) {
-        if (!linkInfo) { return;}
+      elem.mousemove(function (e) {
+        if (!linkInfo) { return; }
 
         drilldownTooltip.text('click to go to: ' + linkInfo.title);
-        drilldownTooltip.place_tt(e.pageX, e.pageY-50);
+        drilldownTooltip.place_tt(e.pageX, e.pageY - 50);
       });
     }
 
     //hookupDrilldownLinkTooltip();
 
-    this.events.on('render', function() {
+    this.events.on('render', function () {
       render();
       ctrl.renderingCompleted();
     });
@@ -1125,7 +1138,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
 
 function getColorForValue(data, value) {
   for (var i = data.thresholds.length; i > 0; i--) {
-    if (value >= data.thresholds[i-1]) {
+    if (value >= data.thresholds[i - 1]) {
       return data.colorMap[i];
     }
   }

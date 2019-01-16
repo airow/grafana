@@ -36,6 +36,8 @@ import 'brace/mode/text';
 import 'brace/snippets/text';
 import 'brace/mode/sql';
 import 'brace/snippets/sql';
+import 'brace/mode/css';
+import 'brace/snippets/css';
 
 const DEFAULT_THEME_DARK = "ace/theme/grafana-dark";
 const DEFAULT_THEME_LIGHT = "ace/theme/textmate";
@@ -109,7 +111,7 @@ function link(scope, elem, attrs) {
   scope.$watch('content', (newValue, oldValue) => {
     let editorValue = codeEditor.getValue();
     if (newValue !== editorValue && newValue !== oldValue) {
-      scope.$$postDigest(function() {
+      scope.$$postDigest(function () {
         setEditorContent(newValue);
       });
     }
@@ -126,7 +128,7 @@ function link(scope, elem, attrs) {
   // Keybindings
   codeEditor.commands.addCommand({
     name: 'executeQuery',
-    bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+    bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
     exec: () => {
       scope.onChange();
     }
