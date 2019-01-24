@@ -102,10 +102,17 @@ export class TeldServiceGatewayDatasource {
 
       parameters = _.transform(parameters, (r, param) => {
         param.originalVal = param.value;
+        var filterFun = function (item) {
+          return item.type === 'teldExpression' && "es" === (item.filter || "es");
+        };
+        var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVarsFormCache('TSG',
+          options.scopedVars, 'lucene', filterFun);
+
         if (param.type === 'object') {
           param.value = _.transform(param.value, (result, eachitem) => {
             var originalVal = eachitem.v;
             var v = eachitem.v || '';
+            v = this.templateSrv.replaceScopedVars(v, Object.assign({}, options.scopedVars, scopedExpressionVars));
             v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
             let compiled = _.template(v, templateSettings);
             v = compiled(bindData);
@@ -121,6 +128,7 @@ export class TeldServiceGatewayDatasource {
             return;
           }
         } else {
+          param.value = this.templateSrv.replaceScopedVars(param.value, Object.assign({}, options.scopedVars, scopedExpressionVars));
           param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
           let compiled = _.template(param.value, templateSettings);
           param.value = compiled(bindData);
@@ -244,7 +252,7 @@ export class TeldServiceGatewayDatasource {
         queries: [interpolatedQuery],
       }
     })
-    .then(data => this.responseParser.parseMetricFindQueryResult(refId, data));
+      .then(data => this.responseParser.parseMetricFindQueryResult(refId, data));
   }
 
   testDatasource() {
