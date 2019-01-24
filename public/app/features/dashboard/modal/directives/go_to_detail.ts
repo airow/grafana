@@ -19,9 +19,9 @@ export class GoToDetailCtrl {
     this.alertSrv = alertSrv;
     this.bindData = this.$scope.bindData;
     this.panel = this.$scope.panel;
-    this.modalTitle = this.$scope.modalTitle;
+    this.modalTitle = this.templateSrv.replace(this.$scope.modalTitle);
 
-    this.links =  this.$scope.links;
+    this.links = this.$scope.links;
     //this.links =  this.parsing(this.$scope.links);
   }
 }
