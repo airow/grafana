@@ -1,0 +1,116 @@
+<query-editor-row query-ctrl="ctrl" class="generic-datasource-query-row" has-text-edit-mode="true">
+
+  <div class="gf-form-inline">
+    <!-- <div class="gf-form">
+      <label class="gf-form-label width-5">字段</label>
+    </div> -->
+    <div class="gf-form max-width-8">
+      <select class="gf-form-input" ng-model="ctrl.target.type" ng-options="f as f for f in ['table', 'timeserie']"></select>
+    </div>
+    <div class="gf-form" ng-repeat="column in ctrl.getTarget().columns track by $index">
+      <label class="gf-form-label width-8" ng-show='column.name==="time_sec"'>time_sec</label>
+      <a ng-hide='column.name==="time_sec"' style="position: absolute;left: 6px" ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
+        <i class="fa" ng-class='{true:"fa-sort-numeric-asc",false:"fa-text-height"}[column.type==="number"]'></i>
+      </a>
+      <input style="padding-left: 20px;padding-right: 15px;" ng-hide='column.name==="time_sec"' class="gf-form-input width-8"
+        ng-model='ctrl.getTarget().columns[$index].name'></input>
+      <a ng-hide='column.name==="time_sec"' style="position: absolute;right: 6px" ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
+        <i class="fa fa-remove"></i>
+      </a>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label" ng-if='ctrl.target.type==="table"'>
+        <a ng-click="ctrl.addColumns()">
+          <i class="fa fa-text-height"></i>
+        </a>
+      </label>
+      <label class="gf-form-label">
+        <a ng-click="ctrl.addColumns('number')">
+          <i class="fa fa-sort-numeric-asc"></i>
+        </a>
+      </label>
+
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target[ctrl.target.type].rows.push({})">
+          <i class="fa fa-list"></i>
+        </a>
+      </label>
+    </div>
+  </div>
+  <div class="gf-form-inline" ng-repeat="row in ctrl.getTarget().rows track by $index">
+    <div class="gf-form">
+      <label class="gf-form-label width-8">{{$index+1}}</label>
+    </div>
+    <div class="gf-form" ng-repeat="column in ctrl.getTarget().columns track by $index">
+      <input ng-show='column.name==="time_sec"' class="gf-form-input width-8" ng-model='row[column.name]'></input>
+      <a ng-hide='column.name==="time_sec"' style="position: absolute;left: 6px" ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
+        <i class="fa" ng-class='{true:"fa-sort-numeric-asc",false:"fa-text-height"}[column.type==="number"]'></i>
+      </a>
+      <input style="padding-left: 20px;padding-right: 15px;" type="{{column.type}}" ng-hide='column.name==="time_sec"'
+        class="gf-form-input width-8" ng-model='row[column.name]'></input>
+      <a ng-if='false' style="position: absolute;right: 6px" ng-click="row[column.name]=null">
+        <i class="fa fa-remove"></i>
+      </a>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.remove(ctrl.getTarget().rows, row)">
+          <i class="pointer fa fa-trash"></i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-if="!$last">
+        <a ng-click="ctrl.move(ctrl.getTarget().columns,$index,$index+1)">
+          <i class="fa fa-arrow-down"></i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-if="!$first">
+        <a ng-click="ctrl.move(ctrl.getTarget().columns,$index,$index-1)">
+          <i class="fa fa-arrow-up"></i>
+        </a>
+      </label>
+    </div>
+  </div>
+  <div class="gf-form-inline">
+    <div class="gf-form gf-form--grow">
+      <label class="gf-form-label query-keyword width-8">Query</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.query" spellcheck='false' placeholder="query"
+        ng-blur="ctrl.refresh()">
+    </div>
+    <div class="gf-form" ng-show="ctrl.target.lastQueryMeta">
+      <label class="gf-form-label query-keyword width-11" ng-click="ctrl.showLastQuerySQL = !ctrl.showLastQuerySQL">
+        Generated Query
+        <i class="fa fa-caret-down" ng-show="ctrl.showLastQuerySQL"></i>
+        <i class="fa fa-caret-right" ng-hide="ctrl.showLastQuerySQL"></i>
+      </label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-8" ng-click="ctrl.showHelp = !ctrl.showHelp">
+        Show Help
+        <i class="fa fa-caret-down" ng-show="ctrl.showHelp"></i>
+        <i class="fa fa-caret-right" ng-hide="ctrl.showHelp"></i>
+      </label>
+    </div>
+  </div>
+  <div class="gf-form" ng-show="ctrl.showLastQuerySQL">
+    <pre class="gf-form-pre">{{ctrl.target.lastQueryMeta.query}}</pre>
+  </div>
+  <div class="gf-form" ng-show="ctrl.showHelp">
+    <div class="section">
+      <pre class="gf-form-pre alert alert-info">支持的操作符:
+      - 比较操作符: ~(regexp) !~(regexp) = != <> <= >=
+        key operator value
+
+      - 逻辑操作符: && ||
+        规则: expr operator expr
+
+      实例:
+        (name~Jack || name="Mike A") && age>10 等价于 ( `name` LIKE "%Jack%" ) OR ( `name` = "Mike A" ) ) AND ( `age` > 10 )
+
+      注意:
+        - 这里的字符串使用半角双引号，可以使用\转义双引号
+        - 使用~过滤是，需要设置变量为为空是的默认值为“(.*?)” 正在表达式所有
+      </pre>
+    </div>
+  </div>
+
+</query-editor-row>
