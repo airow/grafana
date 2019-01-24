@@ -504,6 +504,11 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     this.imports.helper.dashVariables = _.transform(this.templateSrv.variables, (r, v) => { r[v.name] = v.current; }, {});
     let compiled = _.template(src, { imports: this.imports });
 
+    var filterFun = function (item) {
+      return item.type === 'teldExpression' && "es" === (item.filter || "es");
+    };
+    var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVarsFormCache('TSG', {}, 'lucene', filterFun);
+
     let bindSource = {
       name: config.bootData.user.name,
       login: config.bootData.user.login,
@@ -518,6 +523,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
     returnValue = compiled(bindSource);
 
     if (this.panel.parsingDashVars) {
+      returnValue = this.templateSrv.replaceScopedVars(returnValue, Object.assign({}, {}, scopedExpressionVars));
       returnValue = this.templateSrv.replace(returnValue);
     }
 
@@ -531,8 +537,22 @@ export class TeldIframePanelCtrl extends PanelCtrl {
         var current = this.imports.helper.dashVariables[v.dashVar];
         if (current) {
           if (false === _.isNil(current.value) && false === _.includes(v.ignoreList, current.value)) {
-            var filter = _.pick(v, ['data_Field', 'data_Level']);
+            var filter = _.pick(v, ['data_Field', 'data_Level', 'func']);
             filter.val = current.value;
+            filter.val = this.templateSrv.replaceScopedVars(filter.val, Object.assign({}, {}, scopedExpressionVars));
+            filter.val = this.templateSrv.replace(filter.val);
+
+            if (false === _.isEmpty(filter.func)) {
+              var function_body = filter.func;
+              function_body = this.templateSrv.replaceScopedVars(function_body, Object.assign({}, {}, scopedExpressionVars));
+              function_body = this.templateSrv.replace(function_body);
+              var saikuCompiled = _.template(function_body, { imports: this.imports });
+              function_body = saikuCompiled(bindSource);
+              filter.val = new Function(function_body)();
+              console.log(filter);
+              delete filter.func;
+            }
+
             r.push(filter);
           }
         }
