@@ -8,8 +8,8 @@ export class GenericDatasourceQueryCtrl extends QueryCtrl {
     super($scope, $injector);
 
     this.scope = $scope;
-    this.target.target = this.target.target || 'select metric';
-    this.target.type = this.target.type || this.panel.type === "teld-querybar-panel" ? 'table' : 'timeserie';
+    //this.target.target = this.target.target || 'select metric';
+    this.target.type = this.target.type || (this.panel.type === "teld-querybar-panel" ? 'table' : 'timeserie');
 
     this.target.table = this.target.table || { columns: [], rows: [] };
     this.target.timeserie = this.target.timeserie || { columns: [], rows: [] };

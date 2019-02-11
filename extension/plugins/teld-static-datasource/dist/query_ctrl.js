@@ -69,8 +69,8 @@ System.register(['app/plugins/sdk', './css/query-editor.css!', 'lodash'], functi
           var _this = _possibleConstructorReturn(this, (GenericDatasourceQueryCtrl.__proto__ || Object.getPrototypeOf(GenericDatasourceQueryCtrl)).call(this, $scope, $injector));
 
           _this.scope = $scope;
-          _this.target.target = _this.target.target || 'select metric';
-          _this.target.type = _this.target.type || _this.panel.type === "teld-querybar-panel" ? 'table' : 'timeserie';
+          //this.target.target = this.target.target || 'select metric';
+          _this.target.type = _this.target.type || (_this.panel.type === "teld-querybar-panel" ? 'table' : 'timeserie');
 
           _this.target.table = _this.target.table || { columns: [], rows: [] };
           _this.target.timeserie = _this.target.timeserie || { columns: [], rows: [] };
