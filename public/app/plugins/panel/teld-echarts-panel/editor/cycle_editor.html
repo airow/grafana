@@ -41,18 +41,23 @@
           </label>
         </div>
         <div class="gf-form">
-            <input type="text" class="gf-form-input width-4" placeholder="{{cycle.name}}" ng-model="cycle.customName" min-length="0" ec-valwrap>
-          <label class="gf-form-label width-5">Format</label>
-          <input type="text" class="gf-form-input width-8" placeholder="{{cycle.defaultFormat}}" ng-model="cycle.format" min-length="0" ec-valwrap>
+          <input type="text" class="gf-form-input width-4" placeholder="{{cycle.name}}" ng-model="cycle.customName"
+            min-length="0" ec-valwrap>
+          <label class="gf-form-label width-5">tooltips</label>
+          <input type="text" class="gf-form-input width-11" placeholder="{{cycle.defaultFormat}}" ng-model="cycle.format"
+            min-length="0" ec-valwrap>
           <label class="gf-form-label">
             <a ng-click="cycle.format=cycle.defaultFormat">
               <i class="pointer fa fa-copy"></i>
             </a>
           </label>
+          <label class="gf-form-label width-5">xAxis</label>
+          <input type="text" class="gf-form-input width-11" placeholder="{{cycle.defaultFormat}}" ng-model="cycle.xAxisFormat"
+            min-length="0" ec-valwrap>
         </div>
         <div class="gf-form">
-            <label class="gf-form-label width-5">Interval</label>
-            <label class="gf-form-label width-3">{{cycle.interval}}</label>
+          <label class="gf-form-label width-5">Interval</label>
+          <label class="gf-form-label width-3">{{cycle.interval}}</label>
         </div>
       </div>
     </div>

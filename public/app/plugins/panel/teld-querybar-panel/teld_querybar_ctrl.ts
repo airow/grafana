@@ -167,6 +167,39 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
 
+
+    $scope.$root.onAppEvent('teld-fullscreen', function (evt, payload) {
+      console.time("teld-fullscreen snapshot querybar");
+      this.snapshot = {
+        querybarVariable: _.map(_.values(this.querybarVariable), eachItem => {
+          return { name: eachItem.name, current: eachItem.current };
+        }),
+        queryResult: _.cloneDeep(this.queryResult),
+        currentTarget: _.cloneDeep(this.currentTarget),
+        currentTabInfo: _.cloneDeep(this.currentTabInfo)
+      };
+      console.timeEnd("teld-fullscreen snapshot querybar");
+    }.bind(this), $scope);
+
+    $scope.$root.onAppEvent('teld-exitFullscreen', function (evt, payload) {
+      _.each(this.snapshot.querybarVariable, item => {
+        var t = _.find(this.templateSrv.variables, { name: item.name });
+        if (t) {
+          t.current = item.current;
+        }
+        t = _.find(this.querybarVariable, { name: item });
+        if (t) {
+          t.current = item.current;
+        }
+      });
+      this.queryResult = this.snapshot.queryResult;
+      this.currentTarget = this.snapshot.currentTarget;
+      this.currentTabInfo = this.snapshot.currentTabInfo;
+      this.templateSrv.updateTemplateData();
+      this.eh_clearCycle();
+      this.eh_query();
+    }.bind(this), $scope);
+
     if (this.panel.isCollapse) {
       this.row.height = 1;
       this.defineQuery = false;
@@ -1058,11 +1091,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     var fromYYYMMDD = moment(from.format("YYYYMMDD"));
     var toYYYYMMDD = moment(to.format("YYYYMMDD"));
     Object.assign(scopedVars, {
-      "dash_timeFrom":   { text: from.valueOf(), value: from.valueOf() },
-      "dash_timeTo":     { text: to.valueOf(), value: to.valueOf() },
+      "dash_timeFrom": { text: from.valueOf(), value: from.valueOf() },
+      "dash_timeTo": { text: to.valueOf(), value: to.valueOf() },
 
-      "dash_dateFrom":   { text: fromYYYMMDD.valueOf(), value: fromYYYMMDD.valueOf() },
-      "dash_dateTo":     { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
+      "dash_dateFrom": { text: fromYYYMMDD.valueOf(), value: fromYYYMMDD.valueOf() },
+      "dash_dateTo": { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
     });
 
     var metricsQuery = {
@@ -1135,6 +1168,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     } else {
       this.timeSrv.refreshDashboard();
       this.getExprVariables();
+      this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'querybar', target: this });
     }
     this.variables2LocalStorage();
     //this.isFetchData = false;

@@ -1,0 +1,25 @@
+<div class="modal-body">
+  <div class="modal-header">
+    <h2 class="modal-header-title">
+      <i class="fa fa-exclamation"></i>
+      <span class="p-l-1">确认</span>
+    </h2>
+
+    <a class="modal-header-close" ng-click="dismiss();">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <div class="modal-content text-center">
+
+    <div class="confirm-modal-text">
+      是否保留当前过滤条件?
+    </div>
+
+    <div class="confirm-modal-buttons">
+      <button type="button" class="btn btn-success" ng-click="backClose();dismiss();">是</button>
+      <button type="button" class="btn btn-danger" ng-click="backSnapshot();dismiss()">否</button>
+    </div>
+  </div>
+
+</div>

@@ -3,7 +3,7 @@
 import _ from 'lodash';
 
 import config from 'app/core/config';
-import {coreModule, appEvents} from 'app/core/core';
+import { coreModule, appEvents } from 'app/core/core';
 
 import './options';
 import './add_panel';
@@ -46,17 +46,17 @@ export class DashRowCtrl {
       dropTarget = this.dashboard.getPanelInfoById(dropTarget.id);
       // if draging new panel onto existing panel split it
       if (dragObject.panel.isNew) {
-        dragObject.panel.span = dropTarget.panel.span = dropTarget.panel.span/2;
+        dragObject.panel.span = dropTarget.panel.span = dropTarget.panel.span / 2;
         // insert after
-        dropTarget.row.panels.splice(dropTarget.index+1, 0, dragObject.panel);
+        dropTarget.row.panels.splice(dropTarget.index + 1, 0, dragObject.panel);
       } else if (this.row === dragObject.row) {
         // just move element
         this.row.movePanel(dragObject.index, dropTarget.index);
       } else {
         // split drop target space
-        dragObject.panel.span = dropTarget.panel.span = dropTarget.panel.span/2;
+        dragObject.panel.span = dropTarget.panel.span = dropTarget.panel.span / 2;
         // insert after
-        dropTarget.row.panels.splice(dropTarget.index+1, 0, dragObject.panel);
+        dropTarget.row.panels.splice(dropTarget.index + 1, 0, dragObject.panel);
         // remove from source row
         dragObject.row.removePanel(dragObject.panel, false);
       }
@@ -114,7 +114,7 @@ export class DashRowCtrl {
   }
 }
 
-coreModule.directive('dashRow', function($rootScope) {
+coreModule.directive('dashRow', function ($rootScope) {
   return {
     restrict: 'E',
     templateUrl: 'public/app/features/dashboard/row/row.html',
@@ -125,14 +125,14 @@ coreModule.directive('dashRow', function($rootScope) {
       dashboard: "=",
       row: "=",
     },
-    link: function(scope, element) {
+    link: function (scope, element) {
       //row展开时，处罚内部panel的refresh
       scope.$watch('ctrl.row.collapse', function (newValue, oldValue, scope) {
         if (false === newValue) {
           scope.$broadcast('refresh');
         }
       });
-      scope.$watchGroup(['ctrl.row.collapse', 'ctrl.row.height'], function() {
+      scope.$watchGroup(['ctrl.row.collapse', 'ctrl.row.height'], function () {
         element.toggleClass('dash-row--collapse', scope.ctrl.row.collapse);
         if (scope.ctrl.row.notWatchHeight) {
           element.find('.panels-wrapper').css({ minHeight: element.find(".teld-querybar-panel").height() });
@@ -141,23 +141,38 @@ coreModule.directive('dashRow', function($rootScope) {
         element.find('.panels-wrapper').css({ minHeight: scope.ctrl.row.collapse ? '5px' : scope.ctrl.row.height });
       });
 
-      $rootScope.onAppEvent('panel-fullscreen-enter', function(evt, info) {
-        if (scope.ctrl.row.fullScreenShow) { return; }
-        var hasPanel = _.find(scope.ctrl.row.panels, {id: info.panelId});
+      var tfilter = _.filter(scope.ctrl.row.panels, panel => {
+        var returnValue = false;
+        switch (panel.type) {
+          case 'teld-filter-builtin-panel':
+          case 'teld-querybar-panel':
+            returnValue = true;
+            break;
+        }
+        return returnValue;
+      });
+      var hasFilter = _.size(tfilter) > 0;
+      $rootScope.onAppEvent('teld-fullscreen-row', function (evt, info) {
+        scope.ctrl.dyfullScreenShow = info.allowViewModeFilter && hasFilter;
+      }, scope);
+
+      $rootScope.onAppEvent('panel-fullscreen-enter', function (evt, info) {
+        if (scope.ctrl.row.fullScreenShow || scope.ctrl.dyfullScreenShow) { return; }
+        var hasPanel = _.find(scope.ctrl.row.panels, { id: info.panelId });
         if (!hasPanel) {
           element.hide();
         }
       }, scope);
 
-      $rootScope.onAppEvent('panel-fullscreen-exit', function() {
+      $rootScope.onAppEvent('panel-fullscreen-exit', function () {
         if (scope.ctrl.row.hideRow !== true) { element.show(); }
       }, scope);
     }
   };
 });
 
-coreModule.directive('panelWidth', function($rootScope) {
-  return function(scope, element) {
+coreModule.directive('panelWidth', function ($rootScope) {
+  return function (scope, element) {
     var fullscreen = false;
 
     function updateWidth() {
@@ -166,18 +181,18 @@ coreModule.directive('panelWidth', function($rootScope) {
       }
     }
 
-    $rootScope.onAppEvent('panel-fullscreen-enter', function(evt, info) {
+    $rootScope.onAppEvent('panel-fullscreen-enter', function (evt, info) {
       fullscreen = true;
 
       if (scope.panel.id !== info.panelId) {
-        if (scope.ctrl.row.fullScreenShow) { return; }
+        if (scope.ctrl.row.fullScreenShow || scope.ctrl.dyfullScreenShow) { return; }
         element.hide();
       } else {
         element[0].style.width = '100%';
       }
     }, scope);
 
-    $rootScope.onAppEvent('panel-fullscreen-exit', function(evt, info) {
+    $rootScope.onAppEvent('panel-fullscreen-exit', function (evt, info) {
       fullscreen = false;
 
       if (scope.panel.id !== info.panelId) {
@@ -196,8 +211,8 @@ coreModule.directive('panelWidth', function($rootScope) {
 });
 
 
-coreModule.directive('panelDropZone', function($timeout) {
-  return function(scope, element) {
+coreModule.directive('panelDropZone', function ($timeout) {
+  return function (scope, element) {
     var row = scope.ctrl.row;
     var dashboard = scope.ctrl.dashboard;
     var indrag = false;
@@ -221,7 +236,7 @@ coreModule.directive('panelDropZone', function($timeout) {
 
       var dropZoneSpan = 12 - row.span;
       if (dropZoneSpan > 0) {
-        if (indrag)  {
+        if (indrag) {
           return showPanel(dropZoneSpan, 'Drop Here');
         } else {
           return showPanel(dropZoneSpan, 'Empty Space');
@@ -240,12 +255,12 @@ coreModule.directive('panelDropZone', function($timeout) {
 
     row.events.on('span-changed', updateState, scope);
 
-    scope.$on("ANGULAR_DRAG_START", function() {
+    scope.$on("ANGULAR_DRAG_START", function () {
       indrag = true;
       updateState();
     });
 
-    scope.$on("ANGULAR_DRAG_END", function() {
+    scope.$on("ANGULAR_DRAG_END", function () {
       indrag = false;
       updateState();
     });

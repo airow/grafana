@@ -5,7 +5,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import angular from 'angular';
 import $ from 'jquery';
-import {profiler} from 'app/core/profiler';
+import { profiler } from 'app/core/profiler';
 import Remarkable from 'remarkable';
 
 const TITLE_HEIGHT = 25;
@@ -13,7 +13,7 @@ const EMPTY_TITLE_HEIGHT = 9;
 const PANEL_PADDING = 5;
 const PANEL_BORDER = 2;
 
-import {Emitter, contextSrv} from 'app/core/core';
+import { Emitter, contextSrv } from 'app/core/core';
 
 export class PanelCtrl {
   panel: any;
@@ -37,6 +37,8 @@ export class PanelCtrl {
   events: Emitter;
   timing: any;
   calcHide: boolean;
+  fullscreenView: boolean;
+  gfilterFetch: number;
 
   //panelState: boolean;
 
@@ -73,7 +75,7 @@ export class PanelCtrl {
 
   init() {
     this.calculatePanelHeight();
-    this.publishAppEvent('panel-initialized', {scope: this.$scope});
+    this.publishAppEvent('panel-initialized', { scope: this.$scope });
     this.events.emit('panel-initialized');
   }
 
@@ -92,21 +94,85 @@ export class PanelCtrl {
   }
 
   changeView(fullscreen, edit) {
+    this.fullscreenView = fullscreen && edit === false;
     this.publishAppEvent('panel-change-view', {
       fullscreen: fullscreen, edit: edit, panelId: this.panel.id
     });
   }
 
+  gfilterFetchHandler: any;
   viewPanel() {
+    this.gfilterFetch = 0;
+    var eventInfo = {
+      fullscreen: true, edit: false, panelId: this.panel.id, allowViewModeFilter: this.panel.allowViewModeFilter
+    };
+    this.publishAppEvent('teld-fullscreen-row', eventInfo);
     this.changeView(true, false);
+    if (this.panel.allowViewModeFilter) {
+      this.publishAppEvent('teld-fullscreen', eventInfo);
+      this.gfilterFetchHandler = this.$scope.$root.onAppEvent("gfilter-fetch", (e) => {
+        this.gfilterFetch++;
+        console.log('gfilter-fetch gfilterFetch=', this.gfilterFetch);
+      }, this.$scope);
+    }
   }
 
   editPanel() {
     this.changeView(true, true);
   }
 
-  exitFullscreen() {
+  backSnapshot() {
+    this.publishAppEvent('teld-exitFullscreen', {
+      fullscreen: false, edit: false, panelId: this.panel.id,
+      targetPanel: this.panel,
+      backSnapshot: true
+    });
     this.changeView(false, false);
+    this.cleargfilterFetch();
+  }
+
+  backClose() {
+    this.changeView(false, false);
+    this.cleargfilterFetch();
+  }
+
+  cleargfilterFetch() {
+    this.gfilterFetch = 0;
+    if (this.gfilterFetchHandler) {
+      this.gfilterFetchHandler();
+      this.gfilterFetchHandler = null;
+    }
+  }
+
+  exitFullscreen() {
+    if (this.gfilterFetch > 0 && this.fullscreenView && this.panel.allowViewModeFilter) {
+      switch (_.get(this.panel, 'viewModeFilterBackHandler', 'close')) {
+        case 'snapshot':
+          this.backSnapshot();
+          break;
+        case 'close':
+          this.backClose();
+          break;
+        case 'ask':
+        default:
+          var modalScope = this.$scope.$new();
+          modalScope.backSnapshot = function () {
+            this.ctrl.backSnapshot();
+          };
+          modalScope.backClose = function () {
+            this.ctrl.backClose();
+          };
+          this.publishAppEvent('show-modal', {
+            src: 'public/app/partials/exit-fullscreen.html',
+            modalClass: 'confirm-modal',
+            scope: modalScope
+          });
+          break;
+      }
+    } else {
+      this.changeView(false, false);
+      this.cleargfilterFetch();
+    }
   }
 
   panelClick() {
@@ -146,11 +212,11 @@ export class PanelCtrl {
   }
 
   addEditorTab(title, directiveFn, index?) {
-    var editorTab = {title, directiveFn};
+    var editorTab = { title, directiveFn };
 
     if (_.isString(directiveFn)) {
-      editorTab.directiveFn = function() {
-        return {templateUrl: directiveFn};
+      editorTab.directiveFn = function () {
+        return { templateUrl: directiveFn };
       };
     }
     if (index) {
@@ -160,10 +226,34 @@ export class PanelCtrl {
     }
   }
 
+  hasQuerybarAndFilterPanel() {
+    var tfilter = _.filter(this.row.panels, panel => {
+      var returnValue = false;
+      switch (panel.type) {
+        case 'teld-filter-builtin-panel':
+        case 'teld-querybar-panel':
+          returnValue = true;
+          break;
+      }
+      return returnValue;
+    });
+
+    return _.size(tfilter) > 0;
+  }
+
+  showTeldPanelClose() {
+    return this.row.fullScreenShow !== true
+      && false === this.hasQuerybarAndFilterPanel()
+      && !this['loading']
+      && this.dashboard.meta.fullscreen;
+  }
+
   getMenu() {
     let menu = [];
-    menu.push({text: 'View', click: 'ctrl.viewPanel(); dismiss();'});
-    menu.push({text: 'Edit', click: 'ctrl.editPanel(); dismiss();', role: 'Editor'});
+    if (false === this.hasQuerybarAndFilterPanel()) {
+      menu.push({ text: 'View', click: 'ctrl.viewPanel(); dismiss();' });
+    }
+    menu.push({ text: 'Edit', click: 'ctrl.editPanel(); dismiss();', role: 'Editor' });
     if (!this.fullscreen) { //  duplication is not supported in fullscreen mode
       menu.push({ text: 'Duplicate', click: 'ctrl.duplicate()', role: 'Editor' });
     }
@@ -337,7 +427,8 @@ export class PanelCtrl {
   }
 
   otherPanelInFullscreenMode() {
-    return this.dashboard.meta.fullscreen && !this.fullscreen && this.row.fullScreenShow !== true;
+    return this.dashboard.meta.fullscreen && !this.fullscreen
+      && this.row.fullScreenShow !== true && this.hasQuerybarAndFilterPanel() !== true;
   }
 
   calculatePanelHeight() {
@@ -366,7 +457,18 @@ export class PanelCtrl {
         'variable': ['vars'],
         imports: {
           '_': _,
-          'moment': moment
+          'moment': moment,
+          device: (function () {
+            var ua = window.navigator.userAgent;
+            var android = ua.match(/(Android);?[\s\/]+([\d.]+)?/);
+            var ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
+            var ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/);
+            var iphone = !ipad && ua.match(/(iPhone\sOS|iOS)\s([\d_]+)/);
+            return {
+              ios: ipad || iphone || ipod,
+              android: android
+            };
+          })()
         }
       });
 
@@ -468,7 +570,7 @@ export class PanelCtrl {
     var modalScope = this.$scope.$new();
     modalScope.panel = this.panel;
 
-    modalScope.dismiss = function() {
+    modalScope.dismiss = function () {
       this.publishAppEvent('hide-modal');
       modalScope.$destroy();
     };
@@ -535,7 +637,7 @@ export class PanelCtrl {
     var modalScope = this.$scope.$new();
     modalScope.panel = this.panel;
     modalScope.dashboard = this.dashboard;
-    modalScope.panelInfoHtml = this.getInfoContent({mode: 'inspector'});
+    modalScope.panelInfoHtml = this.getInfoContent({ mode: 'inspector' });
 
     modalScope.inspector = $.extend(true, {}, this.inspector);
     this.publishAppEvent('show-modal', {

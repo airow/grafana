@@ -152,14 +152,14 @@ export class TeldfilterCtrl extends PanelCtrl {
               _.fill(_that._panle.QueryList, item, findeindex, findeindex + 1);
             }
           }
-          if (item.Querytype==="date" && !item.IsLocalStorage){
+          if (item.Querytype === "date" && !item.IsLocalStorage) {
             delete (item["$$hashvalue"]);
             var selectdata = { "QueryAttributeName": item.QueryAttributeName };
             var findeindex = _.findIndex(_that._panle.QueryList, selectdata);
             if (findeindex > -1) {
               var dataobj = _.find(_that._panle.QueryList, selectdata);
-              _.forEach(item.QueryOptions,(itemvalue)=>{
-                if (itemvalue.IsLocalStorage){
+              _.forEach(item.QueryOptions, (itemvalue) => {
+                if (itemvalue.IsLocalStorage) {
                   var selectdatavalue = { "QueryAttributeName": itemvalue.QueryAttributeName };
                   var findeindexvalue = _.findIndex(dataobj.QueryOptions, selectdatavalue);
                   _.fill(dataobj.QueryOptions, itemvalue, findeindexvalue, findeindexvalue + 1);
@@ -205,6 +205,23 @@ export class TeldfilterCtrl extends PanelCtrl {
         this.btnFilterKHRed = false;
       }
     }, 500);
+
+    $scope.$root.onAppEvent('teld-fullscreen', function (evt, payload) {
+      console.time("teld-fullscreen snapshot filter");
+      this.snapshot = {
+        QueryList: _.cloneDeep(this._panle.QueryList),
+        currentCycle: this.currentCycle,
+        localStorageFilter: localStorage.getItem(this._panle.FilterTitle)
+      };
+      console.timeEnd("teld-fullscreen snapshot filter");
+    }.bind(this), $scope);
+
+    $scope.$root.onAppEvent('teld-exitFullscreen', function (evt, payload) {
+      this._panle.QueryList = this.snapshot.QueryList;
+      localStorage.setItem(this._panle.FilterTitle, this.snapshot.localStorageFilter);
+      this.eh_emitCycle(this.snapshot.currentCycle);
+      this.variableSrv.templateSrv.updateTemplateData();
+    }.bind(this), $scope);
   }
 
   //获取配置的年、月、日等按钮
@@ -237,7 +254,7 @@ export class TeldfilterCtrl extends PanelCtrl {
     }
     if (this.panel.cycleSaveToLocalStorage) {
       if (_.isEmpty(this._panle.FilterTitle)) {
-        this.alertSrv.set("警告", "启用的周期切换为配置LocalStorage Key", "warning", 2000);
+        this.alertSrv.set("警告", "启用的周期切换未配置LocalStorage Key", "warning", 2000);
       } else {
         var cycleLSKey = `${this._panle.FilterTitle}_cycle_SelectedKey`;
         if (_.isNil(this.currentCycle)) {
@@ -281,6 +298,7 @@ export class TeldfilterCtrl extends PanelCtrl {
         localStorage.removeItem(this._panle.FilterTitle + "versions");
       }
       this.timeSrv.refreshDashboard();
+      this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'filter-builtin', target: this });
     }
   }
   move(variableArray, index, newIndex) {

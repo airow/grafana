@@ -503,7 +503,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   callFormatter(type, value) {
     var formatterConf = this.panel.formatter[type];
     if (type === 'tooltip_category' && this.currentCycle) {
-      formatterConf = { format: "teldMoment", decimals: this.currentCycle.format || this.currentCycle.defaultFormat };
+      var momentFormat = this.currentCycle.format || this.currentCycle.defaultFormat;
+      formatterConf = { format: "teldMoment", decimals: momentFormat };
     }
     var decimals = formatterConf.decimals;
     let formater = this.valueFormats[formatterConf.format];
@@ -517,7 +518,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
   xAxisLableFormatter(value, index) {
     if (this.currentCycle) {
-      var formatterConf = { format: "teldMoment", decimals: this.currentCycle.format || this.currentCycle.defaultFormat };
+      var momentFormat = this.currentCycle.xAxisFormat || this.currentCycle.format || this.currentCycle.defaultFormat;
+      var formatterConf = { format: "teldMoment", decimals: momentFormat };
       var decimals = formatterConf.decimals;
       let formater = this.valueFormats[formatterConf.format];
       return formater(value, decimals);
@@ -1016,6 +1018,26 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
           return (formatterExpression.prefixes || "") + (returnVal || window["gcache"]) + (formatterExpression.suffix || "");
           //return returnVal;
+        };
+      }
+    }
+
+    if (serie.label && serie.label.formatterExpression) {
+      let formatterExpression = serie.label.formatterExpression;
+      if (formatterExpression && formatterExpression.enable) {
+        serie.label.normal.formatter = (params) => {
+
+          var returnVal = "";
+          let formatTmpl = formatterExpression.formatTmpl;
+          if (formatTmpl) {
+            let compiled = _.template(formatTmpl, {
+              imports: {
+                "_": _
+              }
+            });
+            returnVal = compiled(params);
+          }
+          return returnVal;
         };
       }
     }
@@ -1552,7 +1574,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
         let formatTmpl = this.panel.echarts.legend.formatTmpl;
         if (formatTmpl) {
-          let compiled = _.template(formatTmpl);
+          let compiled = _.template(formatTmpl, {
+            imports: {
+              "_": _
+            }
+          });
           returnVal = compiled({ name, percent, value });
         }
         return returnVal;

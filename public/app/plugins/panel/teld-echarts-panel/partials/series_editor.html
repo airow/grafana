@@ -2,17 +2,18 @@
   <div class="editor-row" ng-switch-when="line">
     <!-- areaStyle start -->
     <div class="section gf-form-group">
-        <gf-form-switch class="gf-form" label="smooth" label-class="query-keyword width-7" checked="ctrl.panel.echarts.series.line.smooth">
-        </gf-form-switch>
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-14">areaStyle</label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label width-7">opacity
-            <tip>图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。</tip>
-          </label>
-          <input type="number" min='0' step='0.1' max='1' class="gf-form-input width-7" bs-typeahead="[0,0.7]" min-length="0" ng-model="ctrl.panel.echarts.series.line.areaStyle.normal.opacity">
-        </div>
+      <gf-form-switch class="gf-form" label="smooth" label-class="query-keyword width-7" checked="ctrl.panel.echarts.series.line.smooth">
+      </gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-14">areaStyle</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">opacity
+          <tip>图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。</tip>
+        </label>
+        <input type="number" min='0' step='0.1' max='1' class="gf-form-input width-7" bs-typeahead="[0,0.7]" min-length="0"
+          ng-model="ctrl.panel.echarts.series.line.areaStyle.normal.opacity">
+      </div>
     </div>
     <!-- areaStyle end -->
     <div class="section gf-form-group">
@@ -34,16 +35,23 @@
     <div class="section gf-form-group">
       <h5 class="section-heading">扩展配置</h5>
       <div class="gf-form">
-        <gf-form-switch class="gf-form" label="合并计算比例" label-class="width-8" checked="ctrl.panel.merge.enable" on-change="ctrl.render()"></gf-form-switch>
-        <label class="gf-form-label"><tip>计算比例，beta</tip></label>
+        <gf-form-switch class="gf-form" label="合并计算比例" label-class="width-8" checked="ctrl.panel.merge.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <label class="gf-form-label">
+          <tip>计算比例，beta</tip>
+        </label>
       </div>
       <div class="gf-form">
-        <gf-form-switch class="gf-form" label="计算累计" label-class="width-8" checked="ctrl.panel.cumulativeConf.enable" on-change="ctrl.render()"></gf-form-switch>
-        <label class="gf-form-label"><tip>累计seres值</tip></label>
+        <gf-form-switch class="gf-form" label="计算累计" label-class="width-8" checked="ctrl.panel.cumulativeConf.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <label class="gf-form-label">
+          <tip>累计seres值</tip>
+        </label>
       </div>
-      <gf-form-switch ng-if="ctrl.panel.cumulativeConf.enable" class="gf-form" label="label" label-class="query-keyword width-" checked="ctrl.panel.cumulativeConf.enableInit">
+      <gf-form-switch ng-if="ctrl.panel.cumulativeConf.enable" class="gf-form" label="label" label-class="query-keyword width-"
+        checked="ctrl.panel.cumulativeConf.enableInit">
       </gf-form-switch>
-      <div class="gf-form-inline" ng-if="ctrl.panel.cumulativeConf.enable" >
+      <div class="gf-form-inline" ng-if="ctrl.panel.cumulativeConf.enable">
         <div class="gf-form">
           <label class="gf-form-label width-8">初始值</label>
         </div>
@@ -60,10 +68,12 @@
       </div>
       <div class="gf-form-inline" ng-repeat="item in ctrl.panel.cumulativeConf.initMapping" ng-if="ctrl.panel.cumulativeConf.enable">
         <div class="gf-form">
-          <input type="text" class="gf-form-input width-8" ng-model="item.initRefId" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+          <input type="text" class="gf-form-input width-8" ng-model="item.initRefId" spellcheck="false" placeholder=""
+            ng-blur="ctrl.refresh()">
         </div>
         <div class="gf-form" ng-repeat="set in item.sets track by $index">
-          <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+          <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false" placeholder=""
+            ng-blur="ctrl.refresh()">
           <label class="gf-form-label">
             <a class="pointer" ng-click="ctrl.removeInitMapping(item,set)">
               <i class="fa fa-trash"></i>
@@ -98,7 +108,8 @@
         <div class="gf-form-inline">
           <div class="gf-form">
             <div class="gf-form-select-wrapper">
-              <select class="gf-form-input width-7" ng-model="markline.type" ng-options="serie for serie in ['min','max','average']" ng-change="ctrl.render()"></select>
+              <select class="gf-form-input width-7" ng-model="markline.type" ng-options="serie for serie in ['min','max','average']"
+                ng-change="ctrl.render()"></select>
             </div>
           </div>
           <div class="gf-form">
@@ -172,24 +183,25 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">position</label>
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.markPoint.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.series.line.markPoint.label.normal.position"
+          ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">symbol
           <tip>'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'</tip>
         </label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbol" ng-change="ctrl.render()"
-          ng-model-onblur>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbol"
+          ng-change="ctrl.render()" ng-model-onblur>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">symbolSize</label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolSize" ng-change="ctrl.render()"
-          ng-model-onblur>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolSize"
+          ng-change="ctrl.render()" ng-model-onblur>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">symbolRotate</label>
-        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolRotate" ng-change="ctrl.render()"
-          ng-model-onblur>
+        <input type="text" class="gf-form-input width-30" ng-model="ctrl.panel.echarts.series.line.markPoint.symbolRotate"
+          ng-change="ctrl.render()" ng-model-onblur>
       </div>
       <gf-form-switch class="gf-form" label="Show" label-class="width-9" checked="ctrl.panel.echarts.series.line.markPoint.label.normal.show"
         on-change="ctrl.render()"></gf-form-switch>
@@ -283,10 +295,21 @@
           <label class="gf-form-label query-keyword width-7">Style</label>
         </div>
         <gf-form-switch class="gf-form" label="Show" label-class="width-9" checked="ctrl.seriesConf.bar.label.normal.show"
-        on-change="ctrl.render()"></gf-form-switch>
+          on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form">
           <label class="gf-form-label width-7">position</label>
           <select class="gf-form-input" ng-model="ctrl.seriesConf.bar.label.normal.position" ng-options="serie for serie in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']"></select>
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-7">formatter</label>
+        </div>
+        <gf-form-switch class="gf-form" label-class="width-9" label="启用" checked="ctrl.panel.echarts.series.bar.label.formatterExpression.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label width-7">formatTmpl</label>
+          <input type="text" class="gf-form-input width-15" ng-model="ctrl.panel.echarts.series.bar.label.formatterExpression.formatTmpl">
         </div>
       </div>
       <div class="gf-form-inline">
@@ -384,7 +407,8 @@
           <label class="gf-form-label width-5">outer</label>
           <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.echarts.series.pie.radius[1]">
         </div>
-        <gf-form-switch class="gf-form" label="Pie Ring" label-class="width-8" checked="ctrl.panel.style.innerRing.show" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="Pie Ring" label-class="width-8" checked="ctrl.panel.style.innerRing.show"
+          on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form" ng-show="ctrl.panel.style.innerRing.show">
           <label class="gf-form-label width-7">width</label>
           <input type="text" class="gf-form-input width-7" ng-model="ctrl.panel.style.innerRing.width">
@@ -401,7 +425,8 @@
 
     <div class="section gf-form-group">
       <h5 class="section-heading">other data</h5>
-      <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.pieExt.dataExt.enable" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.pieExt.dataExt.enable"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form-inline" ng-if="ctrl.panel.pieExt.dataExt.enable">
         <div class="gf-form">
           <label class="gf-form-label width-9">

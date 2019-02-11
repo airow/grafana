@@ -20,7 +20,7 @@ var panelTemplate = `
       </span>
 
       <span class="panel-loading teld-panel-close"
-        ng-show="!ctrl.loading && ctrl.dashboard.meta.fullscreen"
+        ng-show="ctrl.showTeldPanelClose()"
         ng-click="ctrl.exitFullscreen()">
         <i class="fa fa-close"></i>
       </span>
@@ -70,13 +70,13 @@ var panelTemplate = `
   </div>
 `;
 
-module.directive('grafanaPanel', function($rootScope, $document) {
+module.directive('grafanaPanel', function ($rootScope, $document) {
   return {
     restrict: 'E',
     template: panelTemplate,
     transclude: true,
     scope: { ctrl: "=" },
-    link: function(scope, elem) {
+    link: function (scope, elem) {
       var panelContainer = elem.find('.panel-container');
       var cornerInfoElem = elem.find('.panel-info-corner');
       var ctrl = scope.ctrl;
@@ -103,7 +103,7 @@ module.directive('grafanaPanel', function($rootScope, $document) {
       // set initial height
       if (!ctrl.containerHeight) {
         ctrl.calculatePanelHeight();
-        panelContainer.css({minHeight: ctrl.containerHeight});
+        panelContainer.css({ minHeight: ctrl.containerHeight });
         lastHeight = ctrl.containerHeight;
       }
 
@@ -142,11 +142,11 @@ module.directive('grafanaPanel', function($rootScope, $document) {
           let fillHeight = ctrl.containerHeight;
           if (ctrl.fullscreen) {
             let p = (ctrl.editMode ? 0.4 : 0.8);
-             fillHeight /= p;
-             fillHeight *= (p + 0.18);
+            fillHeight /= p;
+            fillHeight *= (p + 0.18);
 
-             let fullScreenShowHeight = _.sumBy(_.filter(ctrl.dashboard.rows, { fullScreenShow: true, hideRow: false }), 'height') || 0;
-             fillHeight -= (+fullScreenShowHeight);
+            let fullScreenShowHeight = _.sumBy(_.filter(ctrl.dashboard.rows, { fullScreenShow: true, hideRow: false }), 'height') || 0;
+            fillHeight -= (+fullScreenShowHeight);
 
 
             // let offset = panelContainer.offset();
@@ -194,7 +194,7 @@ module.directive('grafanaPanel', function($rootScope, $document) {
       });
 
       var lastFullscreen;
-      $rootScope.onAppEvent('panel-change-view', function(evt, payload) {
+      $rootScope.onAppEvent('panel-change-view', function (evt, payload) {
         if (lastFullscreen !== ctrl.fullscreen) {
           elem.toggleClass('panel-fullscreen', ctrl.fullscreen ? true : false);
           lastFullscreen = ctrl.fullscreen;
@@ -212,8 +212,8 @@ module.directive('grafanaPanel', function($rootScope, $document) {
 
           infoDrop = new Drop({
             target: cornerInfoElem[0],
-            content: function() {
-              return ctrl.getInfoContent({mode: 'tooltip'});
+            content: function () {
+              return ctrl.getInfoContent({ mode: 'tooltip' });
             },
             position: 'top left',
             classes: ctrl.error ? 'drop-error' : 'drop-help',
@@ -227,7 +227,7 @@ module.directive('grafanaPanel', function($rootScope, $document) {
       scope.$watchGroup(['ctrl.error', 'ctrl.panel.description'], updatePanelCornerInfo);
       scope.$watchCollection('ctrl.panel.links', updatePanelCornerInfo);
 
-      cornerInfoElem.on('click', function() {
+      cornerInfoElem.on('click', function () {
         infoDrop.close();
         scope.$apply(ctrl.openInspector.bind(ctrl));
       });
@@ -235,7 +235,7 @@ module.directive('grafanaPanel', function($rootScope, $document) {
       elem.on('mouseenter', mouseEnter);
       elem.on('mouseleave', mouseLeave);
 
-      scope.$on('$destroy', function() {
+      scope.$on('$destroy', function () {
         elem.off();
         cornerInfoElem.off();
 
@@ -247,11 +247,11 @@ module.directive('grafanaPanel', function($rootScope, $document) {
   };
 });
 
-module.directive('panelResizer', function($rootScope) {
+module.directive('panelResizer', function ($rootScope) {
   return {
     restrict: 'E',
     template: '<span class="resize-panel-handle icon-gf icon-gf-grabber"></span>',
-    link: function(scope, elem) {
+    link: function (scope, elem) {
       var resizing = false;
       var lastPanel;
       var ctrl = scope.ctrl;
@@ -297,7 +297,7 @@ module.directive('panelResizer', function($rootScope) {
 
         ctrl.row.panelSpanChanged(true);
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           ctrl.render();
         });
       }
@@ -310,9 +310,9 @@ module.directive('panelResizer', function($rootScope) {
 
         // first digest to propagate panel width change
         // then render
-        $rootScope.$apply(function() {
+        $rootScope.$apply(function () {
           ctrl.row.panelSpanChanged();
-          setTimeout(function() {
+          setTimeout(function () {
             $rootScope.$broadcast('render');
           });
         });
@@ -323,7 +323,7 @@ module.directive('panelResizer', function($rootScope) {
 
       elem.on('mousedown', dragStartHandler);
 
-      var unbind = scope.$on("$destroy", function() {
+      var unbind = scope.$on("$destroy", function () {
         elem.off('mousedown', dragStartHandler);
         unbind();
       });
@@ -331,7 +331,7 @@ module.directive('panelResizer', function($rootScope) {
   };
 });
 
-module.directive('panelHelpCorner', function($rootScope) {
+module.directive('panelHelpCorner', function ($rootScope) {
   return {
     restrict: 'E',
     template: `
@@ -341,7 +341,7 @@ module.directive('panelHelpCorner', function($rootScope) {
         </span>
       </span>
     `,
-    link: function(scope, elem) {
+    link: function (scope, elem) {
     }
   };
 });
