@@ -1,0 +1,55 @@
+<div class="turnoverModuleMain_two active" ng-style="{'border-left-color':ctrl._panel.MainColors,'background-color':ctrl._panel.bgColor}">
+  <div class="help-tip" ng-if="ctrl._panel.tip.enable">
+		<p ng-bind="ctrl._panel.tip.context"></p>
+	</div>
+  <div class="turnover_Content_main_two">
+    <div class="turnover_Content_left_two">
+      <div class="turnover_Content_left_sum_two">
+        <span ng-class="{ manageWait: ctrl._panel.sum1_v=='' }" ng-bind="ctrl._panel.sum1" ng-style="{'color':ctrl._panel.sumFontColor1}">
+
+        </span>
+      </div>
+      <div class="turnover_Content_left_title_two" ng-style="{'color':ctrl._panel.titleFontColor1}">
+        <span ng-bind="ctrl._panel.title1"></span>
+        <span ng-if="ctrl._panel.percent1">
+        （<span ng-bind="ctrl._panel.percent1"></span>）
+      </span>
+      </div>
+      <div class="turnover_Content_left_title_two" style="margin-top: 5px;" ng-style="{'color':ctrl._panel.titleFontColor11}">
+          <span ng-bind="ctrl._panel.title11"  ng-style="{'background-color':ctrl._panel.bgColor}"></span>&nbsp;
+          <span ng-bind="ctrl._panel.sum11"  ng-style="{'background-color':ctrl._panel.bgColor}"></span>
+          <span ng-bind="ctrl._panel.percent11"  ng-style="{'background-color':ctrl._panel.bgColor}"></span>
+      </div>
+      <div class="turnover_Content_left_percent_two" style="display: none;">
+
+      </div>
+    </div>
+    <div class="turnover_Content_right_two">
+      <div class="turnover_Content_right_main_two turnover_Content_right_main_one_two">
+        <div class="turnover_Content_right_content_two">
+          <div class="turnover_Content_right_sum_two">
+            <span ng-class="{ manageWait: ctrl._panel.sum2_v=='' }" ng-bind="ctrl._panel.sum2"  ng-style="{'color':ctrl._panel.sumFontColor2}">
+
+            </span>
+          </div>
+          <div class="turnover_Content_right_title_two" ng-style="{'color':ctrl._panel.titleFontColor2}">
+            <span ng-bind="ctrl._panel.title2" ng-style="{'background-color':ctrl._panel.bgColor}"></span>
+            <span class="turnover_Content_right_title_percent_two" ng-if="ctrl._panel.percent2" ng-style="{'background-color':ctrl._panel.bgColor}">
+              （<span ng-bind="ctrl._panel.percent2"></span>）
+            </span>
+          </div>
+          <div class="turnover_Content_right_title_two" style="margin-top: 5px;" ng-style="{'color':ctrl._panel.titleFontColor22}">
+              <span ng-bind="ctrl._panel.title22"  ng-style="{'background-color':ctrl._panel.bgColor}"></span>&nbsp;
+              <span ng-bind="ctrl._panel.sum22"  ng-style="{'background-color':ctrl._panel.bgColor}"></span>
+              <span ng-bind="ctrl._panel.percent22" ng-style="{'background-color':ctrl._panel.bgColor}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="turnover_Content_Bottom_two" ng-style="{'background-color':ctrl._panel.BottomColors}">
+  </div>
+  <div class="turnover_Content_xiala1_two">
+    <!--<img :src=" '../../src/img/ManagerAnalysis/' +Topupimg " class="turnover_img_xiala1"/>-->
+  </div>
+</div>

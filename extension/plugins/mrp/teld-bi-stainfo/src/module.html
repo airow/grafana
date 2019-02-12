@@ -1,0 +1,36 @@
+<div>
+  <div class="sta-info">
+    <div class="sta-main-info">
+      <div class="sta-main-info-staname" ng-bind="ctrl.staName">
+
+      </div>
+      <div class="sta-main-store">
+        <div class="sta-main-info-star">
+          <div class="sta-main-info-star-store" ng-style=" { 'width': ctrl.staScoreWidth }">
+            <i class="sta-main-info-star-store-star"></i>
+          </div>
+        </div>
+        <div class="sta-main-info-color-a1a1a1" ng-bind="ctrl.staScore">
+
+        </div>
+      </div>
+      <div class="sta-main-info-color-a1a1a1">
+        <span>自营</span>|<span>对外开放</span>|<span>露天1F</span></div>
+      <div class="sta-main-info-color-4DE3DB" style="margin-top: 3px;" ng-bind="ctrl.stapay">
+
+      </div>
+    </div>
+    <div class="sta-main-img" ng-style="ctrl.staimgurl">
+      <div class="sta-main-img-01">
+        <span class="sta-main-img-01-span-01" ng-bind="ctrl.goodssta"></span>
+        <span class="sta-main-img-01-span-02" ng-bind="ctrl.terminalNum"></span>
+      </div>
+      <div class="sta-main-img-02">
+        <div class="sta-main-img-02-span-01"><span ng-bind="ctrl.staState"></span></div>
+        <div class="sta-main-img-02-span-02" ng-bind="ctrl.staCode"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sta-address" ng-bind="ctrl.address">
+  </div>
+</div>

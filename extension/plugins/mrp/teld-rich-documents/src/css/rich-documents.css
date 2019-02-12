@@ -1,0 +1,271 @@
+/* .rich-documents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+} */
+
+
+/*������ͼƬ*/
+
+.manageWait {
+    background-image: url(data:image/gif;base64,R0lGODlhEAAQAPMPAN3d3bu7u5mZmXd3d1VVVTMzMxEREQAAAO7u7qqqqoiIiGZmZkRERCIiIgARAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFBwAPACwAAAAAEAAQAAAEcfDJh+gideoHGkDHAVCbBBwN4ojIqAGjcigrnEkIM4MOQXymDEDnCLhwQBwiUTjiNAqGT1CiIK5RBoNaul6tgcEtqEEoDAxnyzgZNARmBQyQoLA5I0AhkBAA5E8TCAQDDwJUAHAlAAMjhxIBYyUBAVURACH5BAUHAA8ALAAAAAAPABAAAARd8Mn5xpKITiabBEaiSQXSOEBzBKMkNIZwcBMRI0ZhHUeWSYRDATAJEFu01iOxGAxYyoeAsFhAox/B6DdJMAhbwE/BSCAECYD6KNYsAAHzVTPQxiVzjCBzfxyVaiMRACH5BAUHAA8ALAAAAAAQAA8AAARa8Mn5hKJYLskaQkUmOQTSIYSIVEfSJRMQSEORgIyiFAegHD2NIRUTAA+zSWCxUh4ukoBOAMh8romBVsR9wLqUhaLZFQwCiAD6qpIoAHAEgIwRzOAPOfeLz1MiACH5BAUHAA8ALAAAAAAQABAAAARd8MkpBb1yIETYJgH2FFqHLBgyGUEXHCgCSMoCIMwgCMyBCAeD6jEg3SaBhoh4AcBuiIAgkRAtDAYHaCeYXRaHcIESagLOQ4DCskR2Zd7lMLoZtgOzTVvi1e8nfhcRACH5BAUHAAgALAAAAAAQAA4AAARGEMmJxqBYEnkOz9zWIQYoDUfQCUdJEUaAHIXlVaN2bFh3CBgepjABCI6ggi9muWQMvpsEgFERMcCqj4rgmnwZLyUgnJomEQAh+QQFBwAOACwAAAAAEAAQAAAEbNDJ6UKg2KGEkBrdAGTIwCmK14wZsAAoYChYkACeYA0FEjQMiU8RQEwQAMKhwJIAEhgEQ9DpAK5GjIBAYCiu2Iyg0TAsKNkJoCCIXinPwyEoxFU7hkPyYEhnEgcEElBRFA0HFyQYAAdtGY9+EQAh+QQFBwAPACwAAAAAEAAQAAAEX/DJ+QCgWAaEhOBCJgkAknwCI0qKSTIJZnFJYAmLxOQSYGcLAwGDuGAWCY6SI0osFoSWsskoFAarCSGJyGoOh0VXNFg0DojFobAyHBQHrE+EcBuNdMfB4oitEAQFYxQRACH5BAUHAA4ALAEAAQAPAA8AAARa0EmAUAg1yS1Dx8HCcWAALJ6DqBvgAsmAAIRSzes4FMOYc4rUaBgYGDXDTYhQS0oQqOEM8AQ0Dr3R4aBQMBoIxYEBxDYaAu4QsAUYDIhCMnHAvGcNYWtDSEYAACH5BAUHAA8ALAAAAAAQABAAAARg8Mn5EKJYWgSADVfmcR4ghBhHIgqQbXCQSIqQpcJi35jg8hiAYgicAAbImSTQCGBaFADjcNhNGAaFxnEoAA4NQWLBQAgaC4nASSsUElXJj9JAuBEEB8/haRQkDDwhSDcRACH5BAUHAA4ALAAAAQAQAA8AAARc0MnpkEWAamll2Nr1bcB1AZkjjOCUKAGipRTrLEa+gEkfFIcgAyQQwDAAgYEmEbQcsQliUXBKGocFosHoKQiIAGEgSdAEBEbAkKiACog0YlAABRoSxvDG3CgUIBEAIfkEBQcADwAsAAABABAADwAABF3wyUkfqngiUAHHwEUdh4KcqIQEX0Ae3wSw1XAknSg1fPYEQADBYTAMMsDEB5FgYHAVAikmUSygj8JhgGAQgIKFZCCQBCSC22ABKPgeBgZijRA4QfcF4XR8PwRlGBEAIfkEBQcADwAsAAABAA8ADwAABF7wyWCAvPiG07KXxJF8UvcAx+EByNmkwnghLCY4QYbsiFIwDIWHBgAMGkihrsjaBQie3GxwMHgSisAupEAsBsWEgBY7TQwBBXhhebQkiMKiN0Ak6p6FRL0TkCQJMhgRADs=);
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.Wait_Parent {
+    position: relative;
+}
+
+.Wait_span {
+    display: inline-block;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+}
+
+.Wait_png {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+}
+
+.DivMinHeight {
+    height: 280px;
+}
+
+.DivMaxHeight {
+    height: 630px;
+}
+
+.DivMaxHeight2 {
+    height: 632px;
+}
+
+.waitCenter {
+    top: 50%;
+    display: inline-block;
+    position: absolute;
+}
+
+.turnoverModuleMain_question {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+}
+
+.turnoverModuleMain_question>.btn-primary {
+    background-color: #FFF!important;
+    border-color: #bfc0bf!important;
+    color: #bfc0bf!important;
+    width: 16px!important;
+    height: 16px !important;
+    line-height: 15px !important;
+    font-size: 12px !important;
+}
+
+.turnoverModuleMain {
+    height: 140px;
+    background-size: 100% 100%;
+    /* margin-bottom: 10px; */
+    /* background-color: #FFFFFF; */
+    box-shadow: 2px 4px 6px #dcd9d9;
+}
+
+.turnoverModuleMain.active {
+    border-left-width: 4px;
+    border-left-style: solid;
+    border-radius: 6px;
+    border-right: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.turnover_Content_main {
+    display: flex;
+    color: #393939;
+    /*margin-top: 1.2rem;*/
+}
+
+.turnover_Content_left {
+    flex: 3;
+    -webkit-flex: 3;
+    -moz-box-flex: 3;
+    height: 107px;
+    margin-top: 12px;
+    border-right: 1px dashed #e5e5e5;
+    padding-left: 4px;
+    padding-top: 18px;
+    margin-bottom: 9px;
+}
+
+.turnover_Content_left0 {
+    text-align: center;
+    padding-left: 0px;
+    border-right: 0;
+}
+
+.turnover_Content_right {
+    flex: 6;
+    -webkit-flex: 6;
+    -moz-box-flex: 6;
+}
+
+.turnover_Content_left_sum {
+    font-size: 24px;
+    color: #333333;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.turnover_Content_left_title {
+    font-size: 12px;
+    color: #999999;
+}
+
+.turnover_Content_left_percent {
+    font-size: 12px;
+    color: #999999;
+}
+
+.turnover_Content_right_sum {
+    color: #666;
+    font-size: 16px;
+}
+
+.turnover_Content_right_title {
+    font-size: 12px;
+    color: #999999;
+    padding-right: 5px;
+}
+
+.turnover_Content_right_main {
+    display: flex;
+    margin-top: 10px;
+}
+
+.turnover_Content_right_dian {
+    flex: 1;
+    -webkit-flex: 1;
+    -moz-box-flex: 1;
+}
+
+.turnover_Content_right_dian_three {
+    margin-left: -20px;
+}
+
+.turnover_Content_right_content {
+    flex: 5;
+    -webkit-flex: 5;
+    -moz-box-flex: 5;
+}
+
+.turnover_Content_right_main_one {
+    margin-top: 45px;
+}
+
+.turnover_dian1 {
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    border: 2px solid;
+    float: right;
+    margin-right: 6px;
+    margin-top: 6px;
+}
+
+.turnover_Content_Bottom {
+    height: 13px;
+    display: none;
+}
+
+.turnover_Content_xiala1 {
+    text-align: center;
+    margin-top: 12px;
+    display: none;
+}
+
+.div_Echarts {
+    display: none;
+}
+
+.turnover_img_xiala1 {
+    width: 22px;
+}
+
+.turnover_Content_shangla1 {
+    text-align: center;
+}
+
+.turnover_Content {}
+
+.turnover_Content_hr {
+    margin-top: -10px;
+    margin-bottom: 0px;
+    border: 1px dashed;
+    z-index: 1;
+}
+
+.turnover_Content_right_title>span:first-child {
+    z-index: 2;
+    background-color: #FFF;
+    margin-right: -3px;
+}
+
+.turnover_Content_right_title_percent {
+    z-index: 2;
+    font-size: 12px;
+    background-color: #FFF;
+    padding-right: 5px;
+}
+
+.turnover_Content_right_title_percent>span {
+    margin-right: -3px;
+    margin-left: -3px;
+}
+
+.turnover_Content_left_percent>span {
+    margin-right: -3px;
+    margin-left: -3px;
+}
+panel-plugin-teld-rich-documents .panel-content{
+  padding: 0px !important;
+}
+panel-plugin-teld-rich-documents .panel-header{
+  height: 2px;
+}
+@media screen and (max-width: 380px) {
+  .turnover_Content_left_sum{
+    font-size: 24px;
+  }
+  .turnover_Content_right_title{
+    font-size: 13px;
+  }
+}
+@media screen and (max-width: 358px) {
+  .turnover_Content_left_sum{
+    font-size: 24px;
+  }
+  .turnover_Content_right_title{
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 347px) {
+  .turnover_Content_left_sum{
+    font-size: 18px;
+  }
+  .turnover_Content_left_title{
+    font-size: 12px;
+  }
+  .turnover_Content_right_sum{
+    font-size: 14px;
+  }
+  .turnover_Content_hr{
+    display: none;
+  }
+}

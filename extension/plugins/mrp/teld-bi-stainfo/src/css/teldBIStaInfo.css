@@ -1,0 +1,102 @@
+panel-plugin-teld-bi-stainfo .sta-info{
+  padding: 5px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-info{
+  margin-right: 150px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-info-staname{
+  font-size: 18px;
+  font-weight: 600;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img{
+  width: 140px;
+  height: 80px;
+  margin-right: 5px;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  float: right;
+  margin-top: -97px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-01{
+  margin-top: 2px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-02{
+  margin-top: 39px;
+  text-align: center;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-01-span-01{
+  background-color: #F84D5D;
+  color: #FFF;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-left: -2px;
+  border-radius: 2px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-01-span-02{
+  background-color: #18191A;
+  color: #FFFFFF;
+  font-size: 12px;
+  padding: 0px 8px;
+  border-radius: 14px;
+  float: right;
+  margin-right: 7px;
+  margin-top: 2px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-02-span-01{
+  font-size: 12px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  background-color: RGB(24,25,26,0.5);
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-02-span-01 span{
+  color: #FFFFFF;
+}
+panel-plugin-teld-bi-stainfo .sta-main-img-02-span-01{
+
+}
+panel-plugin-teld-bi-stainfo .sta-main-info-color-a1a1a1{
+  color: #a1a1a1;
+}
+panel-plugin-teld-bi-stainfo .sta-main-info-color-4DE3DB{
+  color: #4DE3DB;
+}
+panel-plugin-teld-bi-stainfo .panel-content{
+  padding: 0px !important;
+}
+panel-plugin-teld-bi-stainfo .panel-header{
+  height: 2px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-info-star{
+  display: inline-block;
+  height: 14px;
+  background: #eee;
+  vertical-align: middle;
+  float:left;
+  margin-top: 4px;
+  margin-right: 10px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-store{
+  margin: 5px 0px;
+}
+panel-plugin-teld-bi-stainfo .sta-main-info-star-store{
+  background: #FF8401;
+  width: 0%;
+}
+panel-plugin-teld-bi-stainfo .sta-main-info-star-store-star{
+  width: 81px;
+  height: 14px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+  background-image: url(/public/plugins/teld-bi-stainfo/src/img/star.png);
+}
+panel-plugin-teld-bi-stainfo .sta-address{
+  width: 77%;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 15px;
+  padding-left: 5px;
+}

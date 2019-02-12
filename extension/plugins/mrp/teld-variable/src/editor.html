@@ -1,0 +1,39 @@
+<div class="editor-row">
+  <div class="gf-form">
+    <label class="gf-form-label width-9">发布字段</label>
+    <input class="input-small gf-form-input" placeholder="发布字段：SG需要填写，不填写默认不计算" ng-model="ctrl.panel.tableColumn" />
+  </div>
+</div>
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <div class="gf-form">
+      <label class="gf-form-label width-9">ES变量名称</label>
+      <input class="input-small gf-form-input" placeholder="变量名称" ng-model="ctrl.panel.variableName" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">ES引号值</label>
+      <input class="input-small gf-form-input" placeholder="引号值" ng-model="ctrl.panel.quotationMark" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">ES链接</label>
+      <input class="input-small gf-form-input" placeholder="链接" ng-model="ctrl.panel.linkValue" />
+    </div>
+  </div>
+  <div class="section gf-form-group">
+    <gf-form-switch class="gf-form" label-class="width-10" label="是否发布SQL" checked="ctrl.panel.IsReleaseSQL" on-change="ctrl.render()"></gf-form-switch>
+  </div>
+  <div class="section gf-form-group" ng-if="ctrl.panel.IsReleaseSQL">
+    <div class="gf-form">
+      <label class="gf-form-label width-9">SQL变量名称</label>
+      <input class="input-small gf-form-input" placeholder="Sql变量名称" ng-model="ctrl.panel.variableNameSql" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">SQL引号值</label>
+      <input class="input-small gf-form-input" placeholder="Sql引号值" ng-model="ctrl.panel.quotationMarkSql" />
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">SQL链接</label>
+      <input class="input-small gf-form-input" placeholder="Sql链接" ng-model="ctrl.panel.linkValueSql" />
+    </div>
+  </div>
+</div>
