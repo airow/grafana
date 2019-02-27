@@ -5,8 +5,8 @@
     </h2>
 
     <ul class="gf-tabs">
-      <li class="gf-tabs-item" >
-        <a class="gf-tabs-link" ng-click="mode = 'list';" ng-class="{active: mode === 'list'}">
+      <li class="gf-tabs-item">
+        <a class="gf-tabs-link" ng-click="returnList();mode = 'list';" ng-class="{active: mode === 'list'}">
           Variables
         </a>
       </li>
@@ -42,8 +42,10 @@
             {{variable.query}}
           </td>
 
-          <td style="width: 1%"><i ng-click="_.move(variables,$index,$index-1)" ng-hide="$first" class="pointer fa fa-arrow-up"></i></td>
-          <td style="width: 1%"><i ng-click="_.move(variables,$index,$index+1)" ng-hide="$last" class="pointer fa fa-arrow-down"></i></td>
+          <td style="width: 1%"><i ng-click="_.move(variables,$index,$index-1)" ng-hide="$first"
+              class="pointer fa fa-arrow-up"></i></td>
+          <td style="width: 1%"><i ng-click="_.move(variables,$index,$index+1)" ng-hide="$last"
+              class="pointer fa fa-arrow-down"></i></td>
           <td style="width: 1%">
             <a ng-click="duplicate(variable)" class="btn btn-inverse btn-mini">
               Duplicate
@@ -66,8 +68,10 @@
 
     <div class="gf-form" ng-show="mode === 'list'">
       <div class="gf-form-button-row">
-        <a type="button" ng-hide="true"class="btn gf-form-button btn-success" ng-click="getVariables();"><i class="fa" ng-class="{true:'fa-folder',false:'fa-folder-open'}[showAll]" ></i></a>
-        <a type="button" class="btn gf-form-button btn-success" ng-click="mode = 'new';"><i class="fa fa-plus" ></i>&nbsp;&nbsp;New</a>
+        <a type="button" ng-hide="true" class="btn gf-form-button btn-success" ng-click="getVariables();"><i class="fa"
+            ng-class="{true:'fa-folder',false:'fa-folder-open'}[showAll]"></i></a>
+        <a type="button" class="btn gf-form-button btn-success" ng-click="mode = 'new';"><i
+            class="fa fa-plus"></i>&nbsp;&nbsp;New</a>
       </div>
     </div>
 
@@ -75,12 +79,14 @@
       <h5 class="section-heading">Variable</h5>
       <div class="gf-form-group">
         <div class="gf-form" ng-show="ctrl.form.name.$error.pattern">
-          <span class="gf-form-error">Template names cannot begin with '__' that's reserved for Grafanas global variables</span>
+          <span class="gf-form-error">Template names cannot begin with '__' that's reserved for Grafanas global
+            variables</span>
         </div>
         <div class="gf-form-inline">
           <div class="gf-form max-width-19">
             <span class="gf-form-label width-6">Name</span>
-            <input type="text" class="gf-form-input" name="name" placeholder="name" ng-model='current.name' required ng-pattern="namePattern"></input>
+            <input type="text" class="gf-form-input" name="name" placeholder="name" ng-model='current.name' required
+              ng-pattern="namePattern"></input>
           </div>
           <div class="gf-form max-width-19">
             <span class="gf-form-label width-6">
@@ -90,19 +96,22 @@
               </info-popover>
             </span>
             <div class="gf-form-select-wrapper max-width-17">
-              <select class="gf-form-input" ng-model="current.type" ng-options="k as v.name for (k, v) in variableTypes" ng-change="typeChanged()"></select>
+              <select class="gf-form-input" ng-model="current.type" ng-options="k as v.name for (k, v) in variableTypes"
+                ng-change="typeChanged()"></select>
             </div>
           </div>
         </div>
         <div class="gf-form-inline">
           <div class="gf-form max-width-19">
             <span class="gf-form-label width-6">Label</span>
-            <input type="text" class="gf-form-input" ng-model='current.label' placeholder="optional display name"></input>
+            <input type="text" class="gf-form-input" ng-model='current.label'
+              placeholder="optional display name"></input>
           </div>
           <div class="gf-form max-width-19">
             <span class="gf-form-label width-6">Hide</span>
             <div class="gf-form-select-wrapper max-width-15">
-              <select class="gf-form-input" ng-model="current.hide" ng-options="f.value as f.text for f in hideOptions"></select>
+              <select class="gf-form-input" ng-model="current.hide"
+                ng-options="f.value as f.text for f in hideOptions"></select>
             </div>
           </div>
         </div>
@@ -113,11 +122,13 @@
 
         <div class="gf-form">
           <span class="gf-form-label width-9">Values</span>
-          <input type="text" class="gf-form-input" placeholder="name" ng-model='current.query' placeholder="1m,10m,1h,6h,1d,7d" ng-model-onblur ng-change="runQuery()" required></input>
+          <input type="text" class="gf-form-input" placeholder="name" ng-model='current.query'
+            placeholder="1m,10m,1h,6h,1d,7d" ng-model-onblur ng-change="runQuery()" required></input>
         </div>
 
         <div class="gf-form-inline">
-          <gf-form-switch class="gf-form" label="Auto Option" label-class="width-9" checked="current.auto" on-change="runQuery()">
+          <gf-form-switch class="gf-form" label="Auto Option" label-class="width-9" checked="current.auto"
+            on-change="runQuery()">
           </gf-form-switch>
 
           <div class="gf-form">
@@ -125,14 +136,16 @@
               Step count <tip>How many times should the current time range be divided to calculate the value</tip>
             </span>
             <div class="gf-form-select-wrapper max-width-10" ng-show="current.auto">
-              <select class="gf-form-input" ng-model="current.auto_count" ng-options="f for f in [1,2,3,4,5,10,20,30,40,50,100,200,300,400,500]" ng-change="runQuery()"></select>
+              <select class="gf-form-input" ng-model="current.auto_count"
+                ng-options="f for f in [1,2,3,4,5,10,20,30,40,50,100,200,300,400,500]" ng-change="runQuery()"></select>
             </div>
           </div>
           <div class="gf-form">
             <span class="gf-form-label" ng-show="current.auto">
               Min interval <tip>The calculated value will not go below this threshold</tip>
             </span>
-            <input type="text" class="gf-form-input max-width-10" ng-show="current.auto" ng-model="current.auto_min" ng-change="runQuery()" placeholder="10s"></input>
+            <input type="text" class="gf-form-input max-width-10" ng-show="current.auto" ng-model="current.auto_min"
+              ng-change="runQuery()" placeholder="10s"></input>
           </div>
         </div>
       </div>
@@ -141,7 +154,8 @@
         <h5 class="section-heading">Custom Options</h5>
         <div class="gf-form">
           <span class="gf-form-label width-14">Values separated by comma</span>
-          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" placeholder="1, 10, 20, myvalue" required></input>
+          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()"
+            placeholder="1, 10, 20, myvalue" required></input>
         </div>
       </div>
 
@@ -149,7 +163,8 @@
         <h5 class="section-heading">Constant options</h5>
         <div class="gf-form">
           <span class="gf-form-label">Value</span>
-          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" placeholder="your metric prefix"></input>
+          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()"
+            placeholder="your metric prefix"></input>
         </div>
       </div>
 
@@ -160,7 +175,8 @@
           <div class="gf-form max-width-21">
             <span class="gf-form-label width-7">Data source</span>
             <div class="gf-form-select-wrapper max-width-14">
-              <select class="gf-form-input" ng-model="current.datasource" ng-options="f.value as f.name for f in datasources" required>
+              <select class="gf-form-input" ng-model="current.datasource"
+                ng-options="f.value as f.name for f in datasources" required>
                 <option value="" ng-if="false"></option>
               </select>
             </div>
@@ -173,13 +189,15 @@
               </info-popover>
             </span>
             <div class="gf-form-select-wrapper max-width-14">
-              <select class="gf-form-input" ng-model="current.refresh" ng-options="f.value as f.text for f in refreshOptions"></select>
+              <select class="gf-form-input" ng-model="current.refresh"
+                ng-options="f.value as f.text for f in refreshOptions"></select>
             </div>
           </div>
         </div>
         <div class="gf-form">
           <span class="gf-form-label width-7">Query</span>
-          <input type="text" class="gf-form-input" ng-model='current.query' placeholder="metric name or tags query" ng-model-onblur ng-change="runQuery()" required></input>
+          <input type="text" class="gf-form-input" ng-model='current.query' placeholder="metric name or tags query"
+            ng-model-onblur ng-change="runQuery()" required></input>
         </div>
         <div class="gf-form">
           <span class="gf-form-label width-7">
@@ -188,7 +206,8 @@
               Optional, if you want to extract part of a series name or metric node segment.
             </info-popover>
           </span>
-          <input type="text" class="gf-form-input" ng-model='current.regex' placeholder="/.*-(.*)-.*/" ng-model-onblur ng-change="runQuery()"></input>
+          <input type="text" class="gf-form-input" ng-model='current.regex' placeholder="/.*-(.*)-.*/" ng-model-onblur
+            ng-change="runQuery()"></input>
         </div>
         <div class="gf-form max-width-21">
           <span class="gf-form-label width-7">
@@ -198,7 +217,8 @@
             </info-popover>
           </span>
           <div class="gf-form-select-wrapper max-width-14">
-            <select class="gf-form-input" ng-model="current.sort" ng-options="f.value as f.text for f in sortOptions" ng-change="runQuery()"></select>
+            <select class="gf-form-input" ng-model="current.sort" ng-options="f.value as f.text for f in sortOptions"
+              ng-change="runQuery()"></select>
           </div>
         </div>
       </div>
@@ -209,7 +229,8 @@
         <div class="gf-form">
           <label class="gf-form-label width-12">Type</label>
           <div class="gf-form-select-wrapper max-width-18">
-            <select class="gf-form-input" ng-model="current.query" ng-options="f.value as f.text for f in datasourceTypes" ng-change="runQuery()"></select>
+            <select class="gf-form-input" ng-model="current.query"
+              ng-options="f.value as f.text for f in datasourceTypes" ng-change="runQuery()"></select>
           </div>
         </div>
 
@@ -224,7 +245,8 @@
 
             </info-popover>
           </label>
-          <input type="text" class="gf-form-input max-width-18" ng-model='current.regex' placeholder="/.*-(.*)-.*/" ng-model-onblur ng-change="runQuery()"></input>
+          <input type="text" class="gf-form-input max-width-18" ng-model='current.regex' placeholder="/.*-(.*)-.*/"
+            ng-model-onblur ng-change="runQuery()"></input>
         </div>
       </div>
 
@@ -233,7 +255,8 @@
         <div class="gf-form max-width-21">
           <span class="gf-form-label width-8">Data source</span>
           <div class="gf-form-select-wrapper max-width-14">
-            <select class="gf-form-input" ng-model="current.datasource" ng-options="f.value as f.name for f in datasources" required ng-change="validate()">
+            <select class="gf-form-input" ng-model="current.datasource"
+              ng-options="f.value as f.name for f in datasources" required ng-change="validate()">
               <option value="" ng-if="false"></option>
             </select>
           </div>
@@ -245,7 +268,8 @@
         <div class="gf-form max-width-21">
           <span class="gf-form-label width-8">Data source</span>
           <div class="gf-form-select-wrapper max-width-14">
-            <select class="gf-form-input" ng-model="current.datasource" ng-options="f.value as f.name for f in datasources" required ng-change="validate()">
+            <select class="gf-form-input" ng-model="current.datasource"
+              ng-options="f.value as f.name for f in datasources" required ng-change="validate()">
               <option value="" ng-if="false"></option>
             </select>
           </div>
@@ -256,7 +280,8 @@
         <h5 class="section-heading">Custom Options</h5>
         <div class="gf-form">
           <span class="gf-form-label width-14">Values separated by comma</span>
-          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" placeholder="1, 10, 20, myvalue" required></input>
+          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()"
+            placeholder="1, 10, 20, myvalue" required></input>
         </div>
         <gf-form-switch class="gf-form" label="canSaved" label-class="" checked="current.canSaved">
         </gf-form-switch>
@@ -265,12 +290,14 @@
         <h5 class="section-heading">options</h5>
         <div class="gf-form">
           <span class="gf-form-label">Expression</span>
-          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()" placeholder="your expression"></input>
+          <input type="text" class="gf-form-input" ng-model='current.query' ng-blur="runQuery()"
+            placeholder="your expression"></input>
         </div>
 
         <div class="gf-form">
           <span class="gf-form-label">适用类型</span>
-          <input type="text" class="gf-form-input" min-length="0" bs-typeahead="['sql']" ng-model='current.filter' ng-blur="runQuery()"></input>
+          <input type="text" class="gf-form-input" min-length="0" bs-typeahead="['sql']" ng-model='current.filter'
+            ng-blur="runQuery()"></input>
         </div>
 
         <div class="gf-form">
@@ -317,40 +344,123 @@
         </div>
       </div>
 
+      <div ng-show="current.type === 'teldDatasource'" class="gf-form-group">
+        <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
+          <rebuild-on-change property="ctrl.panel.datasource || target.datasource" show-null="true">
+            <plugin-component type="query-ctrl">
+            </plugin-component>
+          </rebuild-on-change>
+        </div>
+        <metrics-ds-selector panel-ctrl="ctrl"></metrics-ds-selector>
+        <h5 class="section-heading">Options</h5>
+        <div class="gf-form-group">
+          <div class="gf-form-inline">
+            <div class="gf-form">
+              <label class="gf-form-label width-6">Unit</label>
+              <div class="gf-form-dropdown-typeahead" ng-model="ctrl.panel.format"
+                dropdown-typeahead2="ctrl.unitFormats"
+                dropdown-typeahead-on-select="ctrl.setUnitFormat($subItem);refresh();">
+              </div>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label width-6">Decimals</label>
+              <input type="number" class="gf-form-input" placeholder="auto" data-placement="right"
+                bs-tooltip="'Override automatic decimal precision for legend and tooltips'"
+                ng-model="ctrl.panel.decimals" ng-change="refresh()" ng-model-onblur>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label width-6">Stat</label>
+              <div class="gf-form-select-wrapper">
+                <select class="gf-form-input" ng-model="ctrl.panel.valueName"
+                  ng-options="f for f in ctrl.valueNameOptions" ng-change="refresh()"></select>
+              </div>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label width-7">tableColumn</label>
+              <input class="gf-form-input" ng-model="ctrl.panel.tableColumn" ng-change="refresh()" ng-model-onblur>
+            </div>
+            <gf-form-switch ng-if="false" class="gf-form" label="unescape" label-class="query-keyword width-7"
+              checked="ctrl.panel.unescape" on-change="refresh()">
+            </gf-form-switch>
+            <div class="gf-form-inline" ng-if='ctrl.panel.valueName==="join"'>
+              <div class="gf-form">
+                <label class="gf-form-label">separator</label>
+                <input type="text" class="gf-form-input" placeholder="," data-placement="right"
+                  ng-model="ctrl.panel.separator" ng-change="refresh()" ng-model-onblur>
+              </div>
+              <div class="gf-form">
+                <label class="gf-form-label">fix</label>
+                <input type="text" class="gf-form-input" placeholder="" ng-model="ctrl.panel.fix" ng-change="refresh()"
+                  ng-model-onblur>
+              </div>
+              <div class="gf-form">
+                <label class="gf-form-label">prefix</label>
+                <input type="text" class="gf-form-input" placeholder="" ng-model="ctrl.panel.prefix"
+                  ng-change="refresh()" ng-model-onblur>
+              </div>
+              <div class="gf-form">
+                <label class="gf-form-label">suffix</label>
+                <input type="text" class="gf-form-input" placeholder="" ng-model="ctrl.panel.suffix"
+                  ng-change="refresh()" ng-model-onblur>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h5 class="section-heading">Refresh<button type="submit" class="btn gf-form-btn btn-secondary"
+            ng-click="refresh();"><i class="fa fa-refresh"></i></button></h5>
+        <div class="gf-form-group">
+          <div class="gf-form-inline">
+            <gf-form-switch class="gf-form" label="onDashboardRefresh" label-class="width-10"
+              checked="ctrl.panel.onDashboardRefresh" on-change="refresh()">
+            </gf-form-switch>
+            <gf-form-switch class="gf-form" label="autoRefresh" label-class="width-7" checked="ctrl.panel.autoRefresh"
+              on-change="refresh()">
+            </gf-form-switch>
+            <div class="gf-form-inline" ng-if="ctrl.panel.autoRefresh">
+              <div class="gf-form max-width-28">
+                <select ng-model="ctrl.panel.interval" class="gf-form-input input-medium"
+                  ng-options="f for f in ctrl.refresh_intervals"></select>
+              </div>
+              <div class="gf-form">
+                <button type="submit" class="btn gf-form-btn btn-secondary" ng-click="applyCustom();">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="section gf-form-group" ng-show="variableTypes[current.type].supportsMulti">
         <h5 class="section-heading">Selection Options</h5>
         <div class="section">
-          <gf-form-switch class="gf-form"
-                          label="Multi-value"
-                          label-class="width-10"
-                          tooltip="Enables multiple values to be selected at the same time"
-                          checked="current.multi"
-                          on-change="runQuery()">
+          <gf-form-switch class="gf-form" label="Multi-value" label-class="width-10"
+            tooltip="Enables multiple values to be selected at the same time" checked="current.multi"
+            on-change="runQuery()">
           </gf-form-switch>
-          <gf-form-switch class="gf-form"
-                          label="Include All option"
-                          label-class="width-10"
-                          checked="current.includeAll"
-                          on-change="runQuery()">
+          <gf-form-switch class="gf-form" label="Include All option" label-class="width-10" checked="current.includeAll"
+            on-change="runQuery()">
           </gf-form-switch>
         </div>
         <div class="gf-form" ng-if="current.includeAll">
           <span class="gf-form-label width-10">Custom all value</span>
-          <input type="text" class="gf-form-input max-width-15" ng-model='current.allValue' placeholder="blank = auto"></input>
+          <input type="text" class="gf-form-input max-width-15" ng-model='current.allValue'
+            placeholder="blank = auto"></input>
         </div>
       </div>
 
       <div class="gf-form-group" ng-if="current.type === 'query'">
         <h5>Value groups/tags (Experimental feature)</h5>
-        <gf-form-switch class="gf-form" label="Enabled" label-class="width-10" checked="current.useTags" on-change="runQuery()">
+        <gf-form-switch class="gf-form" label="Enabled" label-class="width-10" checked="current.useTags"
+          on-change="runQuery()">
         </gf-form-switch>
         <div class="gf-form last" ng-if="current.useTags">
           <span class="gf-form-label width-10">Tags query</span>
-          <input type="text" class="gf-form-input" ng-model='current.tagsQuery' placeholder="metric name or tags query" ng-model-onblur></input>
+          <input type="text" class="gf-form-input" ng-model='current.tagsQuery' placeholder="metric name or tags query"
+            ng-model-onblur></input>
         </div>
         <div class="gf-form" ng-if="current.useTags">
           <li class="gf-form-label width-10">Tag values query</li>
-          <input type="text" class="gf-form-input" ng-model='current.tagValuesQuery' placeholder="apps.$tag.*" ng-model-onblur></input>
+          <input type="text" class="gf-form-input" ng-model='current.tagValuesQuery' placeholder="apps.$tag.*"
+            ng-model-onblur></input>
         </div>
       </div>
 
@@ -375,4 +485,3 @@
     </form>
   </div>
 </div>
-

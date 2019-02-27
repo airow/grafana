@@ -626,9 +626,10 @@ export class PanelCtrl {
 
     var templateSrv = this.$injector.get('templateSrv');
     var interpolatedMarkdown = templateSrv.replace(markdown, this.panel.scopedVars);
-    var html = '<div class="markdown-tooltip">';
 
-    html += new Remarkable().render(interpolatedMarkdown);
+    var html = '<div class="markdown-tooltip" style="text-align:' + _.get(this.panel.helpTooltip, 'textAlign', "left") + '">';
+    var options = _.defaults({}, _.get(this.panel, 'helpTooltip.option', {}), { html: false, breaks: true });
+    html += new Remarkable(options).render(interpolatedMarkdown);
 
     return html + '</div>';
   }

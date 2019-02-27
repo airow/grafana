@@ -4,6 +4,7 @@ import config from 'app/core/config';
 import angular from 'angular';
 import moment from 'moment';
 import _ from 'lodash';
+import async from 'async';
 import coreModule from 'app/core/core_module';
 import kbn from 'app/core/utils/kbn';
 import * as dateMath from 'app/core/utils/datemath';
@@ -19,7 +20,7 @@ class TimeSrv {
   /** @ngInject **/
   constructor(private $rootScope, private $timeout, private $location, private timer, private contextSrv) {
     // default time
-    this.time = {from: '6h', to: 'now'};
+    this.time = { from: '6h', to: 'now' };
 
     $rootScope.$on('zoom-out', this.zoomOut.bind(this));
     $rootScope.$on('$routeUpdate', this.routeUpdated.bind(this));
@@ -129,7 +130,25 @@ class TimeSrv {
 
   refreshDashboard() {
     delete window['teldExpression2ScopedVars'];
-    this.$rootScope.$broadcast('refresh');
+
+    var teldDatasourceList = _.filter(this.dashboard.templating.list, item => {
+      return item.type === 'teldDatasource' && item.panel.onDashboardRefresh;
+    });
+    if (_.size(teldDatasourceList) > 0) {
+      async.mapSeries(teldDatasourceList, (variable, cb) => {
+        //variable.runQuery().then(cb);
+        variable.updateOptions().then(function () {
+          cb();
+        });
+      }, (err, r) => {
+        console.log('emit template-variable-value-updated');
+        this.$rootScope.$emit('template-variable-value-updated');
+        this.$rootScope.$broadcast('refresh');
+      });
+    } else {
+      this.$rootScope.$broadcast('refresh');
+    }
+
     // todo:Signalr
     // this.$rootScope.$emit('signalr_screen', 'parent');
     // this.grafanaScreenSignalrHub.send('timeSrv', new Date().valueOf());
@@ -201,10 +220,10 @@ class TimeSrv {
     var range = this.timeRange();
 
     var timespan = (range.to.valueOf() - range.from.valueOf());
-    var center = range.to.valueOf() - timespan/2;
+    var center = range.to.valueOf() - timespan / 2;
 
-    var to = (center + (timespan*factor)/2);
-    var from = (center - (timespan*factor)/2);
+    var to = (center + (timespan * factor) / 2);
+    var from = (center - (timespan * factor) / 2);
 
     if (to > Date.now() && range.to <= Date.now()) {
       var offset = to - Date.now();
@@ -212,7 +231,7 @@ class TimeSrv {
       to = Date.now();
     }
 
-    this.setTime({from: moment.utc(from), to: moment.utc(to)});
+    this.setTime({ from: moment.utc(from), to: moment.utc(to) });
   }
 }
 

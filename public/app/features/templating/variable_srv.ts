@@ -3,7 +3,7 @@
 import angular from 'angular';
 import _ from 'lodash';
 import coreModule from 'app/core/core_module';
-import {Variable, variableTypes} from './variable';
+import { Variable, variableTypes } from './variable';
 
 export class VariableSrv {
   dashboard: any;
@@ -38,18 +38,18 @@ export class VariableSrv {
 
   onDashboardRefresh() {
     var promises = this.variables
-    .filter(variable => variable.refresh === 2)
-    .map(variable => {
-      var previousOptions = variable.options.slice();
+      .filter(variable => variable.refresh === 2)
+      .map(variable => {
+        var previousOptions = variable.options.slice();
 
-      return variable.updateOptions()
-      .then(this.variableUpdated.bind(this, variable))
-      .then(() => {
-        if (angular.toJson(previousOptions) !== angular.toJson(variable.options)) {
-          this.$rootScope.$emit('template-variable-value-updated');
-        }
+        return variable.updateOptions()
+          .then(this.variableUpdated.bind(this, variable))
+          .then(() => {
+            if (angular.toJson(previousOptions) !== angular.toJson(variable.options)) {
+              this.$rootScope.$emit('template-variable-value-updated');
+            }
+          });
       });
-    });
 
     return this.$q.all(promises);
   }
@@ -75,6 +75,8 @@ export class VariableSrv {
 
       if (variable.type === 'teldSqlDataPermissions') {
         return this.processTeldSqlVariable(variable);
+      } else if (variable.processTeldVariable) {
+        return variable.processTeldVariable(variable.initLock);
       } else {
         variable.initLock.resolve();
       }
@@ -119,7 +121,7 @@ export class VariableSrv {
       throw "Unable to find variable constructor for " + model.type;
     }
 
-    var variable = this.$injector.instantiate(ctor, {model: model});
+    var variable = this.$injector.instantiate(ctor, { model: model });
     return variable;
   }
 
@@ -190,14 +192,14 @@ export class VariableSrv {
         selected = variable.options[0];
       } else {
         selected = {
-          value: _.map(selected, function(val) {return val.value;}),
-          text: _.map(selected, function(val) {return val.text;}).join(' + '),
+          value: _.map(selected, function (val) { return val.value; }),
+          text: _.map(selected, function (val) { return val.text; }).join(' + '),
         };
       }
 
       return variable.setValue(selected);
     } else {
-      var currentOption = _.find(variable.options, {text: variable.current.text});
+      var currentOption = _.find(variable.options, { text: variable.current.text });
       if (currentOption) {
         return variable.setValue(currentOption);
       } else {
@@ -219,7 +221,7 @@ export class VariableSrv {
         return op.text === urlValue || op.value === urlValue;
       });
 
-      option = option || {text: urlValue, value: urlValue};
+      option = option || { text: urlValue, value: urlValue };
       return variable.setValue(option);
     });
   }
@@ -240,7 +242,7 @@ export class VariableSrv {
     var params = this.$location.search();
 
     // remove variable params
-    _.each(params, function(value, key) {
+    _.each(params, function (value, key) {
       if (key.indexOf('var-') === 0) {
         delete params[key];
       }

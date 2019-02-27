@@ -6,12 +6,12 @@ import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
 import kbn from 'app/core/utils/kbn';
-import {PanelCtrl} from './panel_ctrl';
+import { PanelCtrl } from './panel_ctrl';
 
 import * as rangeUtil from 'app/core/utils/rangeutil';
 import * as dateMath from 'app/core/utils/datemath';
 
-import {Subject} from 'vendor/npm/rxjs/Subject';
+import { Subject } from 'vendor/npm/rxjs/Subject';
 
 class MetricsPanelCtrl extends PanelCtrl {
   loading: boolean;
@@ -159,21 +159,21 @@ class MetricsPanelCtrl extends PanelCtrl {
     // load datasource service
     this.setTimeQueryStart();
     this.datasourceSrv.get(this.panel.datasource)
-    .then(this.issueQueries.bind(this))
-    .then(this.handleQueryResult.bind(this))
-    .catch(err => {
-      // if cancelled  keep loading set to true
-      if (err.cancelled) {
-        console.log('Panel request cancelled', err);
-        return;
-      }
+      .then(this.issueQueries.bind(this))
+      .then(this.handleQueryResult.bind(this))
+      .catch(err => {
+        // if cancelled  keep loading set to true
+        if (err.cancelled) {
+          console.log('Panel request cancelled', err);
+          return;
+        }
 
-      this.loading = false;
-      this.error = err.message || "Request Error";
-      this.inspector = {error: err};
-      this.events.emit('data-error', err);
-      console.log('Panel data error:', err);
-    });
+        this.loading = false;
+        this.error = err.message || "Request Error";
+        this.inspector = { error: err };
+        this.events.emit('data-error', err);
+        console.log('Panel data error:', err);
+      });
   }
 
 
@@ -288,8 +288,8 @@ class MetricsPanelCtrl extends PanelCtrl {
     // make shallow copy of scoped vars,
     // and add built in variables interval and interval_ms
     var scopedVars = Object.assign({}, this.panel.scopedVars, {
-      "__interval":     {text: this.interval,   value: this.interval},
-      "__interval_ms":  {text: this.intervalMs, value: this.intervalMs},
+      "__interval": { text: this.interval, value: this.interval },
+      "__interval_ms": { text: this.intervalMs, value: this.intervalMs },
     });
 
     var from = this.range.from.clone();
@@ -297,11 +297,11 @@ class MetricsPanelCtrl extends PanelCtrl {
     var fromYYYMMDD = moment(from.format("YYYYMMDD"));
     var toYYYYMMDD = moment(to.format("YYYYMMDD"));
     Object.assign(scopedVars, {
-      "dash_timeFrom":   { text: from.valueOf(), value: from.valueOf() },
-      "dash_timeTo":     { text: to.valueOf(), value: to.valueOf() },
+      "dash_timeFrom": { text: from.valueOf(), value: from.valueOf() },
+      "dash_timeTo": { text: to.valueOf(), value: to.valueOf() },
 
-      "dash_dateFrom":   { text: fromYYYMMDD.valueOf(), value: fromYYYMMDD.valueOf() },
-      "dash_dateTo":     { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
+      "dash_dateFrom": { text: fromYYYMMDD.valueOf(), value: fromYYYMMDD.valueOf() },
+      "dash_dateTo": { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
     });
 
     var metricsQuery = {
@@ -342,7 +342,7 @@ class MetricsPanelCtrl extends PanelCtrl {
 
     if (!result || !result.data) {
       console.log('Data source query result invalid, missing data field:', result);
-      result = {data: []};
+      result = { data: [] };
     }
 
     return this.events.emit('data-received', result.data);
@@ -397,4 +397,4 @@ class MetricsPanelCtrl extends PanelCtrl {
   }
 }
 
-export {MetricsPanelCtrl};
+export { MetricsPanelCtrl };
