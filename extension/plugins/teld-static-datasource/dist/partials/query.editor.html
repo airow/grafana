@@ -5,16 +5,19 @@
       <label class="gf-form-label width-5">字段</label>
     </div> -->
     <div class="gf-form max-width-8">
-      <select class="gf-form-input" ng-model="ctrl.target.type" ng-options="f as f for f in ['table', 'timeserie']"></select>
+      <select class="gf-form-input" ng-model="ctrl.target.type"
+        ng-options="f as f for f in ['table', 'timeserie']"></select>
     </div>
     <div class="gf-form" ng-repeat="column in ctrl.getTarget().columns track by $index">
       <label class="gf-form-label width-8" ng-show='column.name==="time_sec"'>time_sec</label>
-      <a ng-hide='column.name==="time_sec"' style="position: absolute;left: 6px" ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
+      <a ng-hide='column.name==="time_sec"' style="position: absolute;left: 6px"
+        ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
         <i class="fa" ng-class='{true:"fa-sort-numeric-asc",false:"fa-text-height"}[column.type==="number"]'></i>
       </a>
-      <input style="padding-left: 20px;padding-right: 15px;" ng-hide='column.name==="time_sec"' class="gf-form-input width-8"
-        ng-model='ctrl.getTarget().columns[$index].name'></input>
-      <a ng-hide='column.name==="time_sec"' style="position: absolute;right: 6px" ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
+      <input style="padding-left: 20px;padding-right: 15px;" ng-hide='column.name==="time_sec"'
+        class="gf-form-input width-8" ng-model='ctrl.getTarget().columns[$index].name'></input>
+      <a ng-hide='column.name==="time_sec"' style="position: absolute;right: 6px"
+        ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
         <i class="fa fa-remove"></i>
       </a>
     </div>
@@ -43,7 +46,8 @@
     </div>
     <div class="gf-form" ng-repeat="column in ctrl.getTarget().columns track by $index">
       <input ng-show='column.name==="time_sec"' class="gf-form-input width-8" ng-model='row[column.name]'></input>
-      <a ng-hide='column.name==="time_sec"' style="position: absolute;left: 6px" ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
+      <a ng-hide='column.name==="time_sec"' style="position: absolute;left: 6px"
+        ng-click="ctrl.remove(ctrl.getTarget().columns, column)">
         <i class="fa" ng-class='{true:"fa-sort-numeric-asc",false:"fa-text-height"}[column.type==="number"]'></i>
       </a>
       <input style="padding-left: 20px;padding-right: 15px;" type="{{column.type}}" ng-hide='column.name==="time_sec"'
@@ -59,12 +63,12 @@
         </a>
       </label>
       <label class="gf-form-label" ng-if="!$last">
-        <a ng-click="ctrl.move(ctrl.getTarget().columns,$index,$index+1)">
+        <a ng-click="ctrl.move(ctrl.getTarget().rows,$index,$index+1)">
           <i class="fa fa-arrow-down"></i>
         </a>
       </label>
       <label class="gf-form-label" ng-if="!$first">
-        <a ng-click="ctrl.move(ctrl.getTarget().columns,$index,$index-1)">
+        <a ng-click="ctrl.move(ctrl.getTarget().rows,$index,$index-1)">
           <i class="fa fa-arrow-up"></i>
         </a>
       </label>
