@@ -7,7 +7,8 @@
     </div>
     <div class="gf-form gf-form--v-stretch">
       <span class="gf-form-label width-7">Description</span>
-      <textarea class="gf-form-input width-25" rows="3" ng-model="ctrl.panel.description" placeholder="Panel description, supports markdown & links"></textarea>
+      <textarea class="gf-form-input width-25" rows="3" ng-model="ctrl.panel.description"
+        placeholder="Panel description, supports markdown & links"></textarea>
     </div>
 
     <gf-form-switch class="gf-form" label="Help Tooltip" label-class="width-7" checked="ctrl.panel.helpTooltip.show">
@@ -15,8 +16,24 @@
 
     <div class="gf-form gf-form--v-stretch" ng-if='ctrl.panel.helpTooltip.show'>
       <span class="gf-form-label width-7">Description</span>
-      <textarea class="gf-form-input width-25" rows="3" ng-model="ctrl.panel.helpTooltip.description" placeholder="supports markdown & links"></textarea>
+      <textarea class="gf-form-input width-25" rows="3" ng-model="ctrl.panel.helpTooltip.description"
+        placeholder="supports markdown & links"></textarea>
     </div>
+
+    <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
+      <span class="gf-form-label width-7">对齐</span>
+      <select class="gf-form-input" ng-model="ctrl.panel.helpTooltip.textAlign"
+        ng-options="f.id as f.name for f in [{id:'inherit',name:'默认'},{id:'left',name:'左对齐'},{id:'right',name:'右对齐'}]">
+      </select>
+    </div>
+
+    <gf-form-switch class="gf-form" label="html" label-class="width-7" ng-if='ctrl.panel.helpTooltip.show'
+      checked="ctrl.panel.helpTooltip.option.html">
+    </gf-form-switch>
+
+    <gf-form-switch class="gf-form" label="换行" label-class="width-7" ng-if='false && ctrl.panel.helpTooltip.show'
+      checked="ctrl.panel.helpTooltip.option.breaks">
+    </gf-form-switch>
 
     <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
       <span class="gf-form-label width-7">Size</span>
@@ -36,7 +53,8 @@
     <div class="gf-form" ng-if='ctrl.panel.helpTooltip.show'>
       <span class="gf-form-label width-7">color</span>
       <spectrum-picker ng-model="ctrl.panel.helpTooltip.style.color"></spectrum-picker>
-      <input type="text" class="gf-form-input" bs-typeahead="['white','black']" min-length="0" ng-model='ctrl.panel.helpTooltip.style.color'></input>
+      <input type="text" class="gf-form-input" bs-typeahead="['white','black']" min-length="0"
+        ng-model='ctrl.panel.helpTooltip.style.color'></input>
     </div>
 
   </div>
@@ -45,14 +63,15 @@
     <h5 class="section-heading">Dimensions</h5>
     <div class="gf-form">
       <span class="gf-form-label width-7">Span</span>
-      <select class="gf-form-input width-6" ng-model="ctrl.panel.span" ng-options="f for f in [0,1,2,3,4,5,6,7,8,9,10,11,12]"></select>
+      <select class="gf-form-input width-6" ng-model="ctrl.panel.span"
+        ng-options="f for f in [0,1,2,3,4,5,6,7,8,9,10,11,12]"></select>
     </div>
     <div class="gf-form">
       <span class="gf-form-label width-7">Height</span>
       <input type="text" class="gf-form-input width-6" ng-model='ctrl.panel.height' placeholder="100px"></input>
     </div>
-    <gf-form-switch class="gf-form" label-class="width-7" switch-class="max-width-6" label="Transparent" checked="ctrl.panel.transparent"
-      on-change="ctrl.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-7" switch-class="max-width-6" label="Transparent"
+      checked="ctrl.panel.transparent" on-change="ctrl.render()"></gf-form-switch>
   </div>
 
   <div class="section gf-form-group">
@@ -77,17 +96,19 @@
     <div class="gf-form">
       <span class="gf-form-label">条件满足面板将隐藏,通过vars来引用变量</span>
     </div>
-    <gf-form-switch class="gf-form" label-class="width-8" switch-class="max-width-6" label="查看过滤" checked="ctrl.panel.allowViewModeFilter"
-      on-change="ctrl.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-8" switch-class="max-width-6" label="查看过滤"
+      checked="ctrl.panel.allowViewModeFilter" on-change="ctrl.render()"></gf-form-switch>
     <div class="gf-form" ng-if='ctrl.panel.allowViewModeFilter'>
       <span class="gf-form-label width-8">返回到</span>
-      <select class="gf-form-input" ng-model="ctrl.panel.viewModeFilterBackHandler" ng-options="f.id as f.name for f in [{id:'close',name:'默认'},{id:'snapshot',name:'之前'},{id:'ask',name:'讯问'}]">
+      <select class="gf-form-input" ng-model="ctrl.panel.viewModeFilterBackHandler"
+        ng-options="f.id as f.name for f in [{id:'close',name:'默认'},{id:'snapshot',name:'之前'},{id:'ask',name:'讯问'}]">
       </select>
     </div>
     <h5 class="section-heading">Layout</h5>
     <div class="gf-form">
       <span class="gf-form-label width-15">@media (max-width: 767px)<tip>小屏比例,col2=1/2,col3=1/3</tip></span>
-      <select class="gf-form-input" ng-model="ctrl.panel.colx" ng-options="f for f in ['responsive','col1','col2','col3']">
+      <select class="gf-form-input" ng-model="ctrl.panel.colx"
+        ng-options="f for f in ['responsive','col1','col2','col3']">
         <option value=""></option>
       </select>
     </div>
