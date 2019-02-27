@@ -405,7 +405,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
   currentVal = { initVal: 0, val: 0, step: 0, totalStep: 0 };
 
   stepValModel(mapSeries) {
-    let { cardinal, increment, outerCardina } = this.panel.stepVal;
+    let { cardinal, increment, outerCardina, seconds } = this.panel.stepVal;
     let cardinalSeries = _.filter(mapSeries, ['alias', cardinal]);
     let incrementSeries = _.filter(mapSeries, ['alias', increment]);
     let outerCardinalSeries = _.filter(mapSeries, ['alias', outerCardina]);
@@ -415,7 +415,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
     var incrementData: any = {};
     this.setValues(incrementData);
 
-    this.currentVal.step = _.round(incrementData.value / 60, 2);
+    this.currentVal.step = _.round(incrementData.value / (seconds || 60), 2);
 
     this.series = outerCardinalSeries;
     var outerCardinaData: any = {};
@@ -921,7 +921,7 @@ class SingleStatCtrl extends MetricsPanelCtrl {
           var height = panel.borderHeight;
           panel.customStyle.style["border-bottom"] = height + " solid " + color;
         } else {
-          panel.customStyle.style["border-bottom"] = 'none' ;
+          panel.customStyle.style["border-bottom"] = 'none';
         }
         subScope.customStyle = panel.customStyle.style;
       }
