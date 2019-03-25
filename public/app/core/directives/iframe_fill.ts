@@ -14,7 +14,7 @@ function iframeFill($animate) {
     scope: {
       panel: '='
     },
-    link: function(scope, elem, attrs, ctrl, transclude) {
+    link: function (scope, elem, attrs, ctrl, transclude) {
       function fill() {
         var panelContainer = elem.closest('.panel-container');
         panelContainer.height($(window).height() - panelContainer.offset().top - 15);
@@ -24,14 +24,18 @@ function iframeFill($animate) {
       if (scope.panel.isFill) {
         elem.hide();
         elem.on('load', fill);
+        $(window).resize(fill);
+        //$(window).on('resize', fill);
         scope.$on('$destroy', function () {
           elem.unbind('load', fill);
+          //$(window).unbind('resize', fill);
+          //$(window).off("resize");
         });
 
         scope.$root.onAppEvent('querybar-queryswitch', function (e, data) {
           console.log(elem);
           //fill();
-          setTimeout(fill,100);
+          setTimeout(fill, 100);
           console.log('scope.$root.onAppEvent("querybar-queryswitch"');
         });
       }

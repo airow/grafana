@@ -31,7 +31,8 @@
   <!-- title -->
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'title'">
     <div class="section gf-form-group">
-      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.title.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.title.show"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">text</label>
         <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.text" class="gf-form-input">
@@ -43,17 +44,20 @@
       <div class="gf-form">
         <label class="gf-form-label width-8">target</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.target" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.target" ng-options="serie for serie in ['blank','self']" ng-change="ctrl.refresh()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.target"
+          ng-options="serie for serie in ['blank','self']" ng-change="ctrl.refresh()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">textAlign</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.textAlign" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.textAlign" ng-options="serie for serie in ['left','center','right']" ng-change="ctrl.refresh()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.textAlign"
+          ng-options="serie for serie in ['left','center','right']" ng-change="ctrl.refresh()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">textBaseline</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.textBaseline" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.textBaseline" ng-options="serie for serie in ['top','middle','bottom']" ng-change="ctrl.refresh()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.textBaseline"
+          ng-options="serie for serie in ['top','middle','bottom']" ng-change="ctrl.refresh()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -69,7 +73,8 @@
       <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.title' />
       <div class="gf-form">
         <label class="gf-form-label width-8">backgroundColor</label>
-        <spectrum-picker ng-model="ctrl.panel.echarts.title.backgroundColor" ng-change="ctrl.refresh()"></spectrum-picker>
+        <spectrum-picker ng-model="ctrl.panel.echarts.title.backgroundColor" ng-change="ctrl.refresh()">
+        </spectrum-picker>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">borderColor</label>
@@ -77,7 +82,8 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">borderWidth</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.borderWidth" class="gf-form-input">
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.borderWidth"
+          class="gf-form-input">
       </div>
     </div>
     <div class="section gf-form-group">
@@ -97,7 +103,8 @@
       <div class="gf-form">
         <label class="gf-form-label width-8">subtarget</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.title.subtarget" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.subtarget" ng-options="serie for serie in ['blank','self']" ng-change="ctrl.refresh()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.title.subtarget"
+          ng-options="serie for serie in ['blank','self']" ng-change="ctrl.refresh()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">subtextStyle</label>
@@ -110,24 +117,31 @@
   <!-- legend -->
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'legend'">
     <div class="section gf-form-group">
-      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.legend.show" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="2 Side" label-class="width-8" checked="ctrl.panel.legendExt.twoSides" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.legend.show"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="2 Side" label-class="width-8" checked="ctrl.panel.legendExt.twoSides"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">formatter
         </label>
-        <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.legend.formatTmpl" class="gf-form-input">
-        <label class="gf-form-label"><tip> ${name}=名称 ${percent}=百分比 ${value}=值</tip></label>
+        <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.legend.formatTmpl"
+          class="gf-form-input">
+        <label class="gf-form-label">
+          <tip> ${name}=名称 ${percent}=百分比 ${value}=值</tip>
+        </label>
       </div>
       <div class="gf-form">
-          <ec-clear-val ec-target='ctrl.panel.echarts.legend.orient' ec-class='width-8'></ec-clear-val>
+        <ec-clear-val ec-target='ctrl.panel.echarts.legend.orient' ec-class='width-8'></ec-clear-val>
         <div class="gf-form-select-wrapper max-width-16">
-          <select class="gf-form-input" ng-model="ctrl.panel.echarts.legend.orient" ng-options="serie for serie in ['horizontal','vertical']" ng-change="ctrl.refresh()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.legend.orient"
+            ng-options="serie for serie in ['horizontal','vertical']" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
       <div class="gf-form">
         <ec-clear-val ec-target='ctrl.panel.echarts.legend.align' ec-class='width-8'></ec-clear-val>
         <div class="gf-form-select-wrapper max-width-16">
-          <select class="gf-form-input" ng-model="ctrl.panel.echarts.legend.align" ng-options="serie for serie in ['auto','left','right']" ng-change="ctrl.refresh()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.legend.align"
+            ng-options="serie for serie in ['auto','left','right']" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
       <div class="gf-form">
@@ -149,10 +163,12 @@
           <label class="gf-form-label width-11">groupBarLegends
             <tip>groupBar模式，自定义legend。数量顺序与Metrics的query一致</tip>
           </label>
-          <input type="text" ng-model="ctrl.panel.groupBarLegends" min-length="0" class="gf-form-input" placeholder="groupBarLegends">
+          <input type="text" ng-model="ctrl.panel.groupBarLegends" min-length="0" class="gf-form-input"
+            placeholder="groupBarLegends">
         </div>
         <div class="gf-form-inline">
-          <gf-form-switch class="gf-form" label="高级" checked="ctrl.panel.groupBarLegendsConf.enable" label-class="query-keyword width-11">
+          <gf-form-switch class="gf-form" label="高级" checked="ctrl.panel.groupBarLegendsConf.enable"
+            label-class="query-keyword width-11">
           </gf-form-switch>
           <div class="gf-form" ng-if='ctrl.panel.groupBarLegendsConf.enable'>
             <label class="gf-form-label">
@@ -171,7 +187,8 @@
         </div>
       </div>
     </div>
-    <div ng-if='ctrl.panel.groupBarLegendsConf.enable' class="section gf-form-group" ng-repeat="item in ctrl.panel.groupBarLegendsConf.legends">
+    <div ng-if='ctrl.panel.groupBarLegendsConf.enable' class="section gf-form-group"
+      ng-repeat="item in ctrl.panel.groupBarLegendsConf.legends">
       <gf-form-switch class="gf-form" label="enable" label-class="width-8" checked="item.enable">
       </gf-form-switch>
       <div class="gf-form">
@@ -203,15 +220,16 @@
     <!-- groupBarLegendsAdvConf end -->
 
     <div class="gf-form-inline">
-      <gf-form-switch class="gf-form" label="legendMapping" label-class="query-keyword width-8" checked="ctrl.panel.metricsLegend.enable">
+      <gf-form-switch class="gf-form" label="legendMapping" label-class="query-keyword width-8"
+        checked="ctrl.panel.metricsLegend.enable">
       </gf-form-switch>
-        <div class="gf-form">
-          <label class="gf-form-label">
-            <a ng-click='ctrl.metricsLegendFun()'>
-              <i class="pointer fa fa-refresh"></i>
-            </a>
-          </label>
-        </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click='ctrl.metricsLegendFun()'>
+            <i class="pointer fa fa-refresh"></i>
+          </a>
+        </label>
+      </div>
     </div>
     <div class="section gf-form-group" ng-repeat="item in ctrl.panel.metricsLegend.legends">
       <div class="gf-form-inline">
@@ -245,18 +263,22 @@
   <!-- tooltip -->
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'tooltip'">
     <div class="section gf-form-group">
-      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.tooltip.show" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="confine" label-class="width-8" checked="ctrl.panel.echarts.tooltip.confine" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="show" label-class="width-8" checked="ctrl.panel.echarts.tooltip.show"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="confine" label-class="width-8" checked="ctrl.panel.echarts.tooltip.confine"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">trigger</label>
         <div class="gf-form-select-wrapper max-width-15">
-          <select class="gf-form-input" ng-model="ctrl.panel.echarts.tooltip.trigger" ng-options="serie for serie in ['item','axis','none']" ng-change="refresh()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.tooltip.trigger"
+            ng-options="serie for serie in ['item','axis','none']" ng-change="refresh()"></select>
         </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">type</label>
         <div class="gf-form-select-wrapper max-width-15">
-          <select class="gf-form-input" ng-model="ctrl.panel.echarts.tooltip.axisPointer.type" ng-options="axisPointerType for axisPointerType in ['line','shadow']" ng-change="refresh()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.echarts.tooltip.axisPointer.type"
+            ng-options="axisPointerType for axisPointerType in ['line','shadow']" ng-change="refresh()"></select>
         </div>
       </div>
       <div class="gf-form">
@@ -265,37 +287,45 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">formatter</label>
-        <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.tooltip.formatter" class="gf-form-input">
+        <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.tooltip.formatter"
+          class="gf-form-input">
         <label class="gf-form-label">
-            <tip>模板变量有 {a}, {b}，{c}，{d}，{e}，分别表示系列名，数据名，数据值等。 在 trigger 为 'axis' 的时候，会有多个系列的数据，此时可以通过 {a0}, {a1}, {a2} 这种后面加索引的方式表示系列的索引。 不同图表类型下的 {a}，{b}，{c}，{d} 含义不一样。 其中变量{a}, {b}, {c}, {d}在不同图表类型下代表数据含义为：
-  <br/>折线（区域）图、柱状（条形）图、K线图 : {a}（系列名称），{b}（类目值），{c}（数值）, {d}（无）
-  <br/>散点图（气泡）图 : {a}（系列名称），{b}（数据名称），{c}（数值数组）, {d}（无）
-  <br/>地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
-  <br/>饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）</tip>
-          </label>
+          <tip>模板变量有 {a}, {b}，{c}，{d}，{e}，分别表示系列名，数据名，数据值等。 在 trigger 为 'axis' 的时候，会有多个系列的数据，此时可以通过 {a0}, {a1}, {a2}
+            这种后面加索引的方式表示系列的索引。 不同图表类型下的 {a}，{b}，{c}，{d} 含义不一样。 其中变量{a}, {b}, {c}, {d}在不同图表类型下代表数据含义为：
+            <br />折线（区域）图、柱状（条形）图、K线图 : {a}（系列名称），{b}（类目值），{c}（数值）, {d}（无）
+            <br />散点图（气泡）图 : {a}（系列名称），{b}（数据名称），{c}（数值数组）, {d}（无）
+            <br />地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
+            <br />饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）</tip>
+        </label>
       </div>
-      <gf-form-switch class="gf-form" label="tooltip_category" label-class="width-8" checked="ctrl.panel.formatter.tooltip_category.enable">
+      <gf-form-switch class="gf-form" label="tooltip_category" label-class="width-8"
+        checked="ctrl.panel.formatter.tooltip_category.enable">
       </gf-form-switch>
       <div ng-if='ctrl.panel.formatter.tooltip_category.enable'>
         <div class="gf-form">
           <label class="gf-form-label width-8">format</label>
-          <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.tooltip_category.format" dropdown-typeahead2="ctrl.unitFormats"
+          <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.tooltip_category.format"
+            dropdown-typeahead2="ctrl.unitFormats"
             dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.tooltip_category, $subItem)"></div>
         </div>
         <div class="gf-form offset-width-8">
-          <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.tooltip_category.decimals" class="gf-form-input">
+          <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.tooltip_category.decimals"
+            class="gf-form-input">
         </div>
       </div>
-      <gf-form-switch class="gf-form" label="tooltip_value" label-class="width-8" checked="ctrl.panel.formatter.tooltip_value.enable">
+      <gf-form-switch class="gf-form" label="tooltip_value" label-class="width-8"
+        checked="ctrl.panel.formatter.tooltip_value.enable">
       </gf-form-switch>
       <div ng-if='ctrl.panel.formatter.tooltip_value.enable'>
         <div class="gf-form">
           <label class="gf-form-label width-8">format</label>
-          <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.tooltip_value.format" dropdown-typeahead2="ctrl.unitFormats"
+          <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.tooltip_value.format"
+            dropdown-typeahead2="ctrl.unitFormats"
             dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.tooltip_value, $subItem)"></div>
         </div>
         <div class="gf-form offset-width-8">
-          <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.tooltip_value.decimals" class="gf-form-input">
+          <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.tooltip_value.decimals"
+            class="gf-form-input">
         </div>
       </div>
       <div class="gf-form">
@@ -305,8 +335,7 @@
     </div>
     <div class="section gf-form-group">
       <gf-form-switch class="gf-form" label="seriesName空不显示" label-class="width-11"
-      checked="ctrl.panel.emptySerieNameNoDisplayTooltip"
-        on-change="ctrl.render()"></gf-form-switch>
+        checked="ctrl.panel.emptySerieNameNoDisplayTooltip" on-change="ctrl.render()"></gf-form-switch>
     </div>
   </div>
   <!-- end tooltip -->
@@ -318,48 +347,66 @@
       <div class="gf-form">
         <label class="gf-form-label width-8">Chart Type</label>
         <div class="gf-form-select-wrapper max-width-8">
-          <select class="gf-form-input" ng-model="ctrl.panel.serieType" ng-options="serie for serie in ctrl.getSerieType()" ng-change="ctrl.refresh()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.serieType"
+            ng-options="serie for serie in ctrl.getSerieType()" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
       <div class="gf-form" ng-if="ctrl.panel.serieType!=='pie'">
         <span class="gf-form-label width-8">xAxisMode</span>
         <div class="gf-form-select-wrapper max-width-8">
-          <select class="gf-form-input" ng-model="ctrl.panel.xAxisMode" ng-options="axisMode for axisMode in ctrl.getXAxisMode()" ng-change="ctrl.refresh()"></select>
+          <select class="gf-form-input" ng-model="ctrl.panel.xAxisMode"
+            ng-options="axisMode for axisMode in ctrl.getXAxisMode()" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Theme Name</label>
-        <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" min-length="0" class="gf-form-input" placeholder="Theme name">
+        <input type="text" ng-model="ctrl.panel.style.themeName" bs-typeahead="ctrl.getThemeName" min-length="0"
+          class="gf-form-input" placeholder="Theme name">
       </div>
       <div class="gf-form" ng-hide="ctrl.panel.serieType==='pie'">
-        <gf-form-switch class="gf-form" label="Exchange Axis" label-class="width-8" checked="ctrl.panel.exchangeAxis" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="Exchange Axis" label-class="width-8" checked="ctrl.panel.exchangeAxis"
+          on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form" ng-show="ctrl.panel.serieType==='pie'">
-        <gf-form-switch class="gf-form" label="Pie Ring" label-class="width-8" checked="ctrl.panel.style.pieRing" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="Pie Ring" label-class="width-8" checked="ctrl.panel.style.pieRing"
+          on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">backgroundColor</label>
         <spectrum-picker ng-model="ctrl.panel.echarts.backgroundColor" ng-change="refresh()"></spectrum-picker>
       </div>
-      <gf-form-switch class="gf-form" label="显示暂无图片" label-class="width-8" checked="ctrl.panel.showNoDataBg" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="显示暂无图片" label-class="width-8" checked="ctrl.panel.showNoDataBg"
+        on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">基准时间</label>
+        <input type="text" ng-model="ctrl.panel.baseTS" bs-typeahead="ctrl.metricsTarget" min-length="0"
+          class="gf-form-input" placeholder="metric">
+      </div>
     </div>
     <div class="section gf-form-group" ng-if="ctrl.panel.serieType!=='pie'">
       <!-- <h5 class="section-heading">Bar</h5> -->
       <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="合并Bar" label-class="width-8" checked="ctrl.panel.groupBar" on-change="ctrl.render()"></gf-form-switch>
-        <gf-form-switch class="gf-form" label="按TermValue" label-class="width-8" checked="ctrl.panel.groupBarByTermValue" on-change="ctrl.render()"
-          ng-if="ctrl.panel.groupBar"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="合并Bar" label-class="width-8" checked="ctrl.panel.groupBar"
+          on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="按TermValue" label-class="width-8"
+          checked="ctrl.panel.groupBarByTermValue" on-change="ctrl.render()" ng-if="ctrl.panel.groupBar">
+        </gf-form-switch>
       </div>
-      <gf-form-switch class="gf-form" label="groupBar计算配置" label-class="width-8" checked="ctrl.panel.calcSeriesGropuBar" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="groupBar计算配置" label-class="width-8" checked="ctrl.panel.calcSeriesGropuBar"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" ng-if="ctrl.panel.groupBar" label="堆叠" label-class="width-8" checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
-        <gf-form-switch class="gf-form" label="SumLabel" label-class="width-8" checked="ctrl.panel.groupBarStackSumLabel" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" ng-if="ctrl.panel.groupBar" label="堆叠" label-class="width-8"
+          checked="ctrl.panel.groupBarStack" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="SumLabel" label-class="width-8"
+          checked="ctrl.panel.groupBarStackSumLabel" on-change="ctrl.render()"></gf-form-switch>
       </div>
       <div class="gf-form-inline" ng-if="ctrl.panel.groupBarStack">
-        <gf-form-switch class="gf-form" label="堆叠分组" label-class="width-8" checked="ctrl.panel.groupBarStackGroup" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="堆叠分组" label-class="width-8" checked="ctrl.panel.groupBarStackGroup"
+          on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form">
           <label class="gf-form-label">
-            <a class="pointer" ng-click="ctrl.panel.groupBarStackGroupConf=ctrl.panel.groupBarStackGroupConf||[];ctrl.panel.groupBarStackGroupConf.push({gName:'',sets:['']})">
+            <a class="pointer"
+              ng-click="ctrl.panel.groupBarStackGroupConf=ctrl.panel.groupBarStackGroupConf||[];ctrl.panel.groupBarStackGroupConf.push({gName:'',sets:['']})">
               <i class="fa fa-plus"></i>
             </a>
           </label>
@@ -367,10 +414,12 @@
       </div>
       <div class="gf-form-inline" ng-repeat="item in ctrl.panel.groupBarStackGroupConf">
         <div class="gf-form">
-          <input type="text" class="gf-form-input width-8" ng-model="item.gName" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+          <input type="text" class="gf-form-input width-8" ng-model="item.gName" spellcheck="false" placeholder=""
+            ng-blur="ctrl.refresh()">
         </div>
         <div class="gf-form" ng-repeat="set in item.sets track by $index">
-          <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+          <input type="text" class="gf-form-input width-8" ng-model="item.sets[$index]" spellcheck="false"
+            placeholder="" ng-blur="ctrl.refresh()">
           <label class="gf-form-label">
             <a class="pointer" ng-click="ctrl.removeBarStackGroup(item,set)">
               <i class="fa fa-trash"></i>
@@ -387,9 +436,15 @@
 
       </div>
       <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="排序" label-class=" width-8" checked="ctrl.panel.seriesSort.enable" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="排序" label-class=" width-8" checked="ctrl.panel.seriesSort.enable"
+          on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form">
-          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.seriesSort.serieName" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.seriesSort.serieName" spellcheck="false"
+            placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.seriesSort.size" spellcheck="false"
+            placeholder="Size" ng-blur="ctrl.refresh()">
         </div>
       </div>
     </div>
@@ -399,19 +454,23 @@
       <div class="gf-form-inline">
         <div class="gf-form">
           <label class="gf-form-label width-8">Category</label>
-          <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.category.format" dropdown-typeahead2="ctrl.unitFormats"
+          <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.category.format"
+            dropdown-typeahead2="ctrl.unitFormats"
             dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.category, $subItem)"></div>
         </div>
         <div class="gf-form">
-          <input type="text" class="gf-form-input width-18" placeholder="auto" data-placement="right" ng-model="ctrl.panel.formatter.category.formatArgs" ng-change="ctrl.refresh()" ng-model-onblur>
+          <input type="text" class="gf-form-input width-18" placeholder="auto" data-placement="right"
+            ng-model="ctrl.panel.formatter.category.formatArgs" ng-change="ctrl.refresh()" ng-model-onblur>
         </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Value</label>
-        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.value.format" dropdown-typeahead2="ctrl.unitFormats"
+        <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.formatter.value.format"
+          dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.value, $subItem)"></div>
       </div>
-      <gf-form-switch class="gf-form" label="Show Table" label-class="width-8" checked="ctrl.panel.showTable" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show Table" label-class="width-8" checked="ctrl.panel.showTable"
+        on-change="ctrl.render()"></gf-form-switch>
     </div>
   </div>
   <!-- end Style -->
@@ -420,7 +479,8 @@
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'xAxis'">
     <div class="section gf-form-group">
       <h5 class="section-heading">Base</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.show"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">name</label>
         <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.name" class="gf-form-input">
@@ -429,22 +489,27 @@
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
       <h5 class="section-heading">Label</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.xAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
-        <input type="number" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.interval" class="gf-form-input">
+        <input type="number" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.interval"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="number" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.rotate"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">format</label>
-        <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.xAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+        <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.xAxis.axisLabel.format"
+          dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.xAxis.axisLabel, $subItem)"></div>
       </div>
       <div class="gf-form offset-width-8">
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.xAxis.axisLabel.decimals" class="gf-form-input">
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.xAxis.axisLabel.decimals"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -453,26 +518,30 @@
       <div class="gf-form">
         <label class="gf-form-label width-8">align</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.align" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.align" ng-options="serie for serie in ['left','center','right']" ng-change="ctrl.refresh()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.align"
+          ng-options="serie for serie in ['left','center','right']" ng-change="ctrl.refresh()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">baseline</label>
         <!--<input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.baseline" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.baseline" ng-options="serie for serie in ['top','middle','bottom']" ng-change="ctrl.refresh()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisLabel.textStyle.baseline"
+          ng-options="serie for serie in ['top','middle','bottom']" ng-change="ctrl.refresh()"></select>
       </div>
     </div>
     <!-- Line -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
       <h5 class="section-heading">Line</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.xAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.interval" class="gf-form-input"
-          placeholder="interval">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.interval"
+          class="gf-form-input" placeholder="interval">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisLine.rotate"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>
@@ -482,25 +551,30 @@
     <!-- Tick -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
       <h5 class="section-heading">Tick</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.xAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.xAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">alignWithLabel</label>
         <!--<input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.alignWithLabel" class="gf-form-input"-->
-          <!--placeholder="interval">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisTick.alignWithLabel" ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
+        <!--placeholder="interval">-->
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisTick.alignWithLabel"
+          ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.interval" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.interval"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">inside</label>
         <!--<input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.inside" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisTick.inside" ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.xAxis.axisTick.inside"
+          ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">length</label>
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.length" class="gf-form-input">
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.xAxis.axisTick.length"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>
@@ -514,26 +588,31 @@
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'yAxis'">
     <div class="section gf-form-group">
       <h5 class="section-heading">Base</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.show"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
-        <textarea placeholder="显示名称" class="gf-form-input width-15" ng-model="ctrl.panel.echarts.yAxis.name" rows="3" ng-model-onblur>
+        <textarea placeholder="显示名称" class="gf-form-input width-15" ng-model="ctrl.panel.echarts.yAxis.name" rows="3"
+          ng-model-onblur>
         </textarea>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">min</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" ec-valwrap class="gf-form-input">
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.min" ec-valwrap
+          class="gf-form-input">
       </div>
       <gf-form-switch class="gf-form" label="计算最小值" label-class="width-8" checked="ctrl.panel.echarts.yAxis.calcMin">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">max</label>
-        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" ec-valwrap class="gf-form-input">
+        <input type="text" on-change="ctrl.refresh()" ng-model="ctrl.panel.echarts.yAxis.max" ec-valwrap
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">position</label>
         <!-- <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.position" ng-options="f for f in ['left','right']">
         </select> -->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.position" ng-options="f for f in ctrl.panel.exchangeAxis?['top','bottom']:['left','right']">
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.position"
+          ng-options="f for f in ctrl.panel.exchangeAxis?['top','bottom']:['left','right']">
         </select>
       </div>
     </div>
@@ -548,22 +627,27 @@
     <!-- Label -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
       <h5 class="section-heading">Label</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.yAxis.axisLabel.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.interval" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.interval"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.rotate"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">format</label>
-        <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.yAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+        <div class="gf-form-dropdown-typeahead width-15" ng-model="ctrl.panel.formatter.yAxis.axisLabel.format"
+          dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.yAxis.axisLabel, $subItem)"></div>
       </div>
       <div class="gf-form offset-width-8">
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.yAxis.axisLabel.decimals" class="gf-form-input">
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.yAxis.axisLabel.decimals"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>
@@ -572,26 +656,30 @@
       <div class="gf-form">
         <label class="gf-form-label width-8">align</label>
         <!--<input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.align" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.align" ng-options="serie for serie in ['left','center','right']" ng-change="ctrl.render()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.align"
+          ng-options="serie for serie in ['left','center','right']" ng-change="ctrl.render()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">baseline</label>
         <!--<input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.baseline" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.baseline" ng-options="serie for serie in ['top','middle','bottom']" ng-change="ctrl.render()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisLabel.textStyle.baseline"
+          ng-options="serie for serie in ['top','middle','bottom']" ng-change="ctrl.render()"></select>
       </div>
     </div>
     <!-- Line -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
       <h5 class="section-heading">Line</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.yAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.interval" class="gf-form-input"
-          placeholder="interval">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.interval"
+          class="gf-form-input" placeholder="interval">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">rotate</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.rotate" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisLine.rotate"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>
@@ -601,25 +689,30 @@
     <!-- Tick -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
       <h5 class="section-heading">Tick</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.yAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.yAxis.axisTick.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">alignWithLabel</label>
         <!--<input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.alignWithLabel" class="gf-form-input"-->
-          <!--placeholder="interval">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisTick.alignWithLabel" ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
+        <!--placeholder="interval">-->
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisTick.alignWithLabel"
+          ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
-        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.interval" class="gf-form-input">
+        <input type="number" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.interval"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">inside</label>
         <!--<input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.inside" class="gf-form-input">-->
-        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisTick.inside" ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
+        <select class="gf-form-input" ng-model="ctrl.panel.echarts.yAxis.axisTick.inside"
+          ng-options="serie for serie in ['false','true']" ng-change="ctrl.render()"></select>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">length</label>
-        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.length" class="gf-form-input">
+        <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.echarts.yAxis.axisTick.length"
+          class="gf-form-input">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">lineStyle</label>
@@ -633,12 +726,14 @@
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'grid'">
     <div class="section gf-form-group">
       <h5 class="section-heading">Base</h5>
-      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.grid.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8" checked="ctrl.panel.echarts.grid.show"
+        on-change="ctrl.render()"></gf-form-switch>
     </div>
     <!-- Label -->
     <div class="section gf-form-group">
       <ec-opt-left-top-right-bottom ctrl='ctrl' option='ctrl.panel.echarts.grid' />
-      <gf-form-switch class="gf-form" label="containLabel" label-class="width-8" checked="ctrl.panel.echarts.grid.containLabel" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="containLabel" label-class="width-8"
+        checked="ctrl.panel.echarts.grid.containLabel" on-change="ctrl.render()"></gf-form-switch>
     </div>
   </div>
   <!-- end grid -->
@@ -646,14 +741,15 @@
   <!-- color -->
   <div class="edit-tab-content" ng-if="ctrl.subTab === 'color'">
 
-      <div class="gf-form">
-        <gf-form-switch class="gf-form" label="color" label-class="width-7" checked="ctrl.panel.customColor" on-change="ctrl.render()"></gf-form-switch>
-        <label class="gf-form-label">
-          <a ng-click="ctrl.appendColor()">
-            <i class="fa fa-plus"></i>
-          </a>
-        </label>
-      </div>
+    <div class="gf-form">
+      <gf-form-switch class="gf-form" label="color" label-class="width-7" checked="ctrl.panel.customColor"
+        on-change="ctrl.render()"></gf-form-switch>
+      <label class="gf-form-label">
+        <a ng-click="ctrl.appendColor()">
+          <i class="fa fa-plus"></i>
+        </a>
+      </label>
+    </div>
     <div class="gf-form-group">
       <div class="gf-form" ng-repeat="(key, val) in ctrl.panel.echarts.color track by $index">
         <label class="gf-form-label width-7" ng-bind='$index+1'></label>

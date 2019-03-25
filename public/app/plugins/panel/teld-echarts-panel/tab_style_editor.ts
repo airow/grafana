@@ -21,6 +21,7 @@ export class TabStyleEditorCtrl {
   }
 
   getThemeName: Function;
+  metricsTarget: Function;
 
   /** @ngInject **/
   constructor(private $scope, private $q) {
@@ -35,6 +36,10 @@ export class TabStyleEditorCtrl {
     this.getThemeName = () => {
       let serieType = this.panel.serieType || 'line';
       return _.get(this.panelCtrl.echartsThemeName, `${serieType}Theme`);
+    };
+
+    this.metricsTarget = () => {
+      return _.map(this.panelCtrl.dataList, 'target');
     };
 
     this.panel.metricsLegend = this.panel.metricsLegend || { enable: false, legends: [] };

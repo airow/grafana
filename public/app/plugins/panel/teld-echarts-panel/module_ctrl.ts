@@ -747,12 +747,18 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     if (_.size(dataList) === 1 && dataList[0].type === 'docs') {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
     }
+    var maxDatapoints = _.maxBy(_.map(dataList, 'datapoints'), 'length');
+    var maxdataListItem = _.find(dataList, i => { return i.datapoints === maxDatapoints; });
+
+    this.timesOffset(dataList);
 
     this.timesAlignment(dataList);
 
     this.groupTime(dataList);
 
     this.dataList = dataList;
+
+    this.timesOffsetDropRightWhile(dataList, maxdataListItem);
 
     if (this.isSeriesBar() && this.panel.groupBar) {
       if (this.panel.groupBarByTermValue) {
@@ -769,7 +775,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     dataList = this.calcSeries(this.panel.calcSeriesConf, dataList, hideMetrics);
     this.pieMerge(dataList);
-
+    this.timesOffsetDropRightWhile(dataList, maxdataListItem);
     this.renderTable(dataList);
 
     /**
@@ -786,6 +792,42 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.ecSeries = series;
 
     this.render();
+  }
+
+  timesOffsetDropRightWhile(dataList, maxdataListItem) {
+    if (_.isEmpty(this.panel.baseTS) === false) {
+      _.each(dataList, item => {
+        if (item !== maxdataListItem) {
+          item.datapoints = _.dropRightWhile(item.datapoints, dp => { return dp[0] === 0; });
+        }
+      });
+    }
+  }
+
+  timesOffset(dl) {
+
+    function firstTs(datapoints) {
+      return _.first(datapoints)[1];
+    }
+    if (_.isEmpty(this.panel.baseTS) === false) {
+      var target = this.panel.baseTS;
+      var datapoints = _.find(dl, { target }).datapoints;
+      if (_.size(datapoints) === 0) {
+        return;
+      }
+      var baseTS = firstTs(datapoints);
+      _.each(dl, item => {
+        var itemDatapoints = item.datapoints;
+        if (_.size(itemDatapoints) === 0) {
+          return;
+        }
+        var offset = baseTS - firstTs(itemDatapoints);
+        _.each(item.datapoints, dp => {
+          dp.push(dp[1]);
+          dp[1] += offset;
+        });
+      });
+    }
   }
 
   //补全缺少的日期
@@ -807,7 +849,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         var itemTime = _.map(dp, '1');
         var diffTime = _.difference(time, itemTime);
         if (_.size(diffTime) > 0) {
-          var newDP = _.map(diffTime, dt => { return [0, dt]; });
+          var newDP = _.map(diffTime, dt => { var rv = [0, dt]; rv['alignment'] = true; return rv; });
           dataList[index].datapoints = _.sortBy(_.concat(dp, newDP), '1');
         }
       });
@@ -820,6 +862,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
     let sortSeries = _.groupBy(series, 'refId');
     let sortKey = this.panel.seriesSort.serieName || "占比";
+    let size = this.panel.seriesSort.size;
 
     let index = 0;
     let sorted = _.orderBy(sortSeries[sortKey], (o, i) => { o._index = index++; return o.data[0]; }, 'desc');
@@ -827,7 +870,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let sordMapping = _.map(sorted, '_index');
     _.each(sortSeries, (value, keyd) => {
       _.each(sordMapping, (index, _index) => {
-        value[index]._index = _index;
+        if (value[index]) {
+          value[index]._index = _index;
+        }
       });
       value = _.sortBy(value, '_index');
       sortSeries[keyd] = value;
@@ -837,6 +882,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let other = _.omit(sortSeries, sortKey);
     returnValue = _.concat(returnValue, _.flatten(_.map(other)));
 
+    if (!_.isEmpty(size)) {
+      returnValue = _.concat(_.take(returnValue, size), _.flatten(_.transform(other, (r, v) => { return r.push(_.take(v, size)); }, [])));
+    }
     return returnValue;
   }
 
@@ -1544,7 +1592,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     if (this.panel.xAxisMode === 'series') {
       xAxis = categoryAxis = this.axisAdapter(this.ecSeries, this.ecConf.axis.category);
     } else {
-      let firstSeries = _.first(this.ecSeries) || {};
+      //let firstSeries = _.first(this.ecSeries) || {};
+      let firstSeries = { data: _.maxBy(_.map(this.ecSeries, 'data'), 'length') };
       xAxis = categoryAxis = this.axisAdapter(firstSeries, this.ecConf.axis.category);
     }
 
