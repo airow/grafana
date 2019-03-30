@@ -192,7 +192,7 @@ return function (callback) {
     return protocol + '//' + host + domain + '/api/invoke?SID=' + SID;
   }
 
-  function getButton() {
+  function getButton(MenuId) {
     var data = {
       "queries": [{
         "refId": "TSG",
@@ -201,7 +201,7 @@ return function (callback) {
         "parameters": [{
           "key": "MenuId",
           "type": "value",
-          "value": "10aab4c9-6164-4da7-b8b0-80df1111a06b"
+          "value": MenuId || "10aab4c9-6164-4da7-b8b0-80df1111a06b"
         }]
       }]
     };
@@ -303,24 +303,58 @@ return function (callback) {
     return cbfail();
   }
 
-  $.when(getComponentDash(ARGS.component), getButton())
-    .fail(function (getComponentRes, getButtonRes) {
-      debugger;
-      console.log(getComponentRes, getButtonRes);
-    })
-    .done(function (getComponentRes, getButtonRes) {
-      var component = parseComponent.apply(this, getComponentRes);
+  function main(getComponentRes, getButtonRes) {
+    var component = parseComponent.apply(this, getComponentRes);
 
-      if (isInApp() && getButtonRes === false) {
-        getButtonRes = mockApp(component, getButtonRes);
-      }
+    if (isInApp() && getButtonRes === false) {
+      getButtonRes = mockApp(component, getButtonRes);
+    }
 
-      //选择页签
-      component.openDash = switchDash.apply(this, _.flatten([component, getButtonRes]));
+    //选择页签
+    component.openDash = switchDash.apply(this, _.flatten([component, getButtonRes]));
 
-      /*注入按钮权限*/
-      injectDataList(component, getButtonRes);
+    /*注入按钮权限*/
+    injectDataList(component, getButtonRes);
 
-      gotoDashboard(component);
-    });
+    gotoDashboard(component);
+  }
+
+  function v1() {
+    $.when(getComponentDash(ARGS.component), getButton())
+      .fail(function (getComponentRes, getButtonRes) {
+        debugger;
+        console.log(getComponentRes, getButtonRes);
+      })
+      .done(main);
+  }
+
+  function v2() {
+    getComponentDash(ARGS.component)
+      .fail(function (getComponentRes) {
+        debugger;
+        console.log(getComponentRes);
+      })
+      .done(function (getComponentRes) {
+        debugger;
+        var menuId = "10aab4c9-6164-4da7-b8b0-80df1111a06b";
+
+        var panels = _.flatten(_.map(getComponentRes.dashboard.rows, 'panels'));
+        var dashtabPanel = _.find(panels, { "type": 'teld-dashtab-panel', datasource: "TeldServiceGateway" });
+        if (dashtabPanel.targets) {
+          var target = dashtabPanel.targets[0];
+          var menuParam = _.find(target.parameters, { key: "MenuId" });
+          menuId = menuParam.value;
+        }
+        var that = this;
+        return getButton(menuId).done(function (getButtonRes) {
+          main.call([that, this], [getComponentRes, "success", that], [getButtonRes, "success", this]);
+        });
+      });
+  }
+
+  if (ARGS.bootstrap && ARGS.bootstrap === 'v2') {
+    v2();
+  } else {
+    v1();
+  }
 };
