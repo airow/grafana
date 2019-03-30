@@ -2,7 +2,8 @@
   <h5 class="section-heading">Series</h5>
   <div class="gf-form-inline">
     <div class="gf-form">
-      <label class="gf-form-label" ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target}}']</label>
+      <label class="gf-form-label"
+        ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target}}']</label>
     </div>
   </div>
   <h5 class="section-heading">Dash Vars</h5>
@@ -16,7 +17,8 @@
     <h5 class="section-heading">Calc Serie</h5>
     <div class="gf-form-inline">
       <div class="gf-form">
-        <gf-form-switch class="gf-form" label="ALL" label-class="width-4" checked="ctrl.allChecked" on-change="ctrl.checkedAll()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="ALL" label-class="width-4" checked="ctrl.allChecked"
+          on-change="ctrl.checkedAll()"></gf-form-switch>
         <label class="gf-form-label query-keyword width-10">标签</label>
         <label class="gf-form-label query-keyword width-30">表达式</label>
         <label class="gf-form-label query-keyword width-5">位置</label>
@@ -29,12 +31,16 @@
     </div>
     <div class="gf-form-inline" ng-repeat="calcSerie in ctrl.panel.calcSeriesConf">
       <div class="gf-form">
-        <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-4" checked="calcSerie.enable" on-change="ctrl.refresh()"></gf-form-switch>
-        <input type="text" class="gf-form-input width-10" ng-model="calcSerie.target" spellcheck="false" placeholder="target">
-        <input type="text" class="gf-form-input width-30" ng-model="calcSerie.expression" spellcheck="false" placeholder="value">
-        <input type="text" class="gf-form-input width-5" ng-model="calcSerie.sort" spellcheck="false" placeholder="value">
+        <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-4" checked="calcSerie.enable"
+          on-change="ctrl.refresh()"></gf-form-switch>
+        <input type="text" class="gf-form-input width-10" ng-model="calcSerie.target" spellcheck="false"
+          placeholder="target">
+        <input type="text" class="gf-form-input width-30" ng-model="calcSerie.expression" spellcheck="false"
+          placeholder="value">
+        <input type="text" class="gf-form-input width-5" ng-model="calcSerie.sort" spellcheck="false"
+          placeholder="value">
         <label class="gf-form-label">
-          <a ng-click="ctrl.removeItem(ctrl.panel.calcSeriesConf, option)">
+          <a ng-click="ctrl.removeItem(ctrl.panel.calcSeriesConf, calcSerie)">
             <i class="pointer fa fa-remove"></i>
           </a>
         </label>
