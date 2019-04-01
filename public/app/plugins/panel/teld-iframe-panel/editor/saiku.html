@@ -1,6 +1,7 @@
 <div class="editor-row">
   <h5 class="section-heading">时间</h5>
-  <gf-form-switch class="gf-form" label="时间" label-class="query-keyword width-5" checked="editor.saikuConf.dateFilter.enable">
+  <gf-form-switch class="gf-form" label="时间" label-class="query-keyword width-5"
+    checked="editor.saikuConf.dateFilter.enable">
   </gf-form-switch>
   <div class="gf-form-inline" ng-show='editor.saikuConf.dateFilter.enable'>
     <div class="gf-form">
@@ -15,8 +16,8 @@
     </div>
     <div class="gf-form">
       <label class="gf-form-label query-keyword width-10">日期 dateFormat</label>
-      <input type="text" class="gf-form-input width-10" ng-model="editor.saikuConf.dateFilter.dateFormat" spellcheck="false"
-        placeholder="dateFormat" bs-typeahead="['YYYYMMDD']" data-min-length=0>
+      <input type="text" class="gf-form-input width-10" ng-model="editor.saikuConf.dateFilter.dateFormat"
+        spellcheck="false" placeholder="dateFormat" bs-typeahead="['YYYYMMDD']" data-min-length=0>
     </div>
   </div>
 </div>
@@ -45,13 +46,15 @@
       </label>
       <input type="text" class="gf-form-input width-10" ng-model="filter.dashVar" spellcheck="false" placeholder="var"
         bs-typeahead="editor.searchVars" data-min-length=0>
-      <input type="text" class="gf-form-input width-10" ng-model="filter.data_Field" spellcheck="false" placeholder="data_Field">
-      <input type="text" class="gf-form-input width-10" ng-model="filter.data_Level" spellcheck="false" placeholder="data_Level">
+      <input type="text" class="gf-form-input width-10" ng-model="filter.data_Field" spellcheck="false"
+        placeholder="data_Field">
+      <input type="text" class="gf-form-input width-10" ng-model="filter.data_Level" spellcheck="false"
+        placeholder="data_Level">
       <input type="text" class="gf-form-input width-20" ng-model="filter.func" spellcheck="false" placeholder="func">
       <label class="gf-form-label query-keyword">ignore</label>
       <span ng-repeat="ignore in filter.ignoreList track by $index">
-        <input type="text" class="gf-form-input width-5" style="display: inline-block;" ng-model="filter.ignoreList[$index]"
-          spellcheck="false" placeholder="value">
+        <input type="text" class="gf-form-input width-5" style="display: inline-block;"
+          ng-model="filter.ignoreList[$index]" spellcheck="false" placeholder="value">
         <label class="gf-form-label" style="display: inline-block;">
           <a ng-click="editor.remove(filter.ignoreList, filter.ignoreList[$index])">
             <i class="pointer fa fa-remove"></i>
@@ -64,12 +67,12 @@
         </a>
       </label>
       <label class="gf-form-label" ng-hide="$last">
-        <a ng-click="editor.move(editor.websocketConf.scene,$index,$index+1)">
+        <a ng-click="editor.move(editor.saikuConf.filters,$index,$index+1)">
           <i class="pointer fa fa-arrow-down"></i>
         </a>
       </label>
       <label class="gf-form-label" ng-hide="$first">
-        <a ng-click="editor.move(editor.websocketConf.scene,$index,$index-1)">
+        <a ng-click="editor.move(editor.saikuConf.filters,$index,$index-1)">
           <i class="pointer fa fa-arrow-up"></i>
         </a>
       </label>
