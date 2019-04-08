@@ -288,25 +288,40 @@ export class TeldfilterCtrl extends PanelCtrl {
       this._panleQueryList = _.cloneDeep(this._panle.QueryList);
     }
     if (!that.KwHuTuCaoDropDown) {
-      if (that._panle.IsLocalStorage) {
-        var JSONQueryList = JSON.stringify(this._panle.QueryList);
-        JSONQueryList = _.replace(JSONQueryList, /hashKey/g, 'hashvalue');
-        localStorage.setItem(this._panle.FilterTitle, JSONQueryList);
-        localStorage.setItem(this._panle.FilterTitle + "versions", this._panle.versions);
-      } else {
-        localStorage.removeItem(this._panle.FilterTitle);
-        localStorage.removeItem(this._panle.FilterTitle + "versions");
-      }
-      this.timeSrv.refreshDashboard();
-      this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'filter-builtin', target: this });
+      this.fetch();
     }
-  }
+  };
+  fetch() {
+    if (this._panle.IsLocalStorage) {
+      var JSONQueryList = JSON.stringify(this._panle.QueryList);
+      JSONQueryList = _.replace(JSONQueryList, /hashKey/g, 'hashvalue');
+      localStorage.setItem(this._panle.FilterTitle, JSONQueryList);
+      localStorage.setItem(this._panle.FilterTitle + "versions", this._panle.versions);
+    } else {
+      localStorage.removeItem(this._panle.FilterTitle);
+      localStorage.removeItem(this._panle.FilterTitle + "versions");
+    }
+    this.timeSrv.refreshDashboard();
+    this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'filter-builtin', target: this });
+  };
   move(variableArray, index, newIndex) {
     _.move(variableArray, index, newIndex);
   }
   open(QueryOptions, $event) {
     QueryOptions.opened = true;
   };
+  goYesterday(QueryOptions, conf, $event) {
+    QueryOptions.ClickValue = moment(QueryOptions.ClickValue).subtract(1, conf.step || 'days').toDate();
+  };
+  goTomorrow(QueryOptions, conf, $event) {
+    QueryOptions.ClickValue = moment(QueryOptions.ClickValue).add(1, conf.step || 'days').toDate();
+  };
+
+  refreshFilter() {
+    this.setDashboardVariables();
+    this.fetch();
+  }
+
   removeVariable(variableArray, variable) {
     var index = _.indexOf(variableArray, variable);
     variableArray.splice(index, 1);
