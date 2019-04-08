@@ -104,7 +104,9 @@ export class TeldDatasourceVariable implements Variable {
     this.timer.cancel(this.refreshTimer);
   };
 
+  i = 0;
   processTeldVariable(initLock) {
+    // if (this.i++ === 1) { initLock.resolve(); return Promise.resolve(); }
     var pickMethods = ['updateTimeRange', 'applyPanelTimeOverrides', 'setRangeString',
       'calculateInterval', 'issueQueries'
     ];

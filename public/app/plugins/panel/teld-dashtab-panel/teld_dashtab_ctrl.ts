@@ -184,6 +184,8 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
     if (target.dash === this.dashboard.meta.slug) {
       return false;
     }
+    //处理表达式变量缓存
+    delete window['teldExpression2ScopedVars'];
     if (window.location.pathname === "/dashboard/script/dashtab_switch.js" ||
       window.location.pathname === "/dashboard/script/dashtab_switch_link.js") {
       var search = this.$location.search();
@@ -204,7 +206,7 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
     return false;
   }
 
-  scrollLeft(){
+  scrollLeft() {
     $(".buttons-tab").scrollLeft();
   }
 
