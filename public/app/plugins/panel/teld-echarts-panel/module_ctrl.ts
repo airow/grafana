@@ -2038,6 +2038,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   ecIsEmpty() {
+    if (_.isNil(this.ecOption) || _.isNil(this.ecOption.baseOption)) { return false; }
     return this.panel.showNoDataBg && _.size(_.flatten(_.map(this.ecOption.baseOption.series, 'data'))) === 0;
   }
 
