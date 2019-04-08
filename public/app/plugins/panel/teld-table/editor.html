@@ -4,7 +4,8 @@
     <div class="gf-form">
       <label class="gf-form-label width-10">Table Transform</label>
       <div class="gf-form-select-wrapper max-width-15">
-        <select class="gf-form-input" ng-model="editor.panel.transform" ng-options="k as v.description for (k, v) in editor.transformers"
+        <select class="gf-form-input" ng-model="editor.panel.transform"
+          ng-options="k as v.description for (k, v) in editor.transformers"
           ng-change="editor.transformChanged()"></select>
       </div>
     </div>
@@ -19,16 +20,23 @@
         </label>
       </div>
       <div class="gf-form">
-        <metric-segment segment="editor.addColumnSegment" get-options="editor.getColumnOptions()" on-change="editor.addColumn()"></metric-segment>
+        <metric-segment segment="editor.addColumnSegment" get-options="editor.getColumnOptions()"
+          on-change="editor.addColumn()"></metric-segment>
       </div>
     </div>
-    <gf-form-switch class="gf-form" label-class="width-10" label="Filter null values" checked="editor.panel.filterNull" on-change="editor.render()"></gf-form-switch>
-    <gf-form-switch class="gf-form" label-class="width-10" label="scrollDisplay" checked="editor.panel.scrollDisplay" on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-10" label="Filter null values" checked="editor.panel.filterNull"
+      on-change="editor.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-10" label="scrollDisplay" checked="editor.panel.scrollDisplay"
+      on-change="editor.render()"></gf-form-switch>
 
     <div class="gf-form-inline">
       <div class="gf-form">
         <label class="gf-form-label width-10">Ext Columns</label>
         <input type="text" class="gf-form-input" ng-model="editor.panel.extColumn">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">Table Title</label>
+        <input type="text" class="gf-form-input" ng-model="editor.panel.teldTableTitle">
       </div>
     </div>
   </div>
@@ -38,19 +46,22 @@
     <div class="gf-form-inline">
       <div class="gf-form">
         <label class="gf-form-label width-8">Rows per page</label>
-        <input type="number" class="gf-form-input width-6" placeholder="100" data-placement="right" ng-model="editor.panel.pageSize"
-          ng-change="editor.render()" ng-model-onblur>
+        <input type="number" class="gf-form-input width-6" placeholder="100" data-placement="right"
+          ng-model="editor.panel.pageSize" ng-change="editor.render()" ng-model-onblur>
       </div>
-      <gf-form-switch class="gf-form" label-class="width-4" label="Scroll" checked="editor.panel.scroll" on-change="editor.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label-class="width-4" label="Scroll" checked="editor.panel.scroll"
+        on-change="editor.render()"></gf-form-switch>
       <div class="gf-form max-width-17">
         <label class="gf-form-label width-6">Font size</label>
         <div class="gf-form-select-wrapper max-width-15">
-          <select class="gf-form-input" ng-model="editor.panel.fontSize" ng-options="f for f in editor.fontSizes" ng-change="editor.render()"></select>
+          <select class="gf-form-input" ng-model="editor.panel.fontSize" ng-options="f for f in editor.fontSizes"
+            ng-change="editor.render()"></select>
         </div>
       </div>
-      <gf-form-switch ng-show="editor.panel.transform==='json'" class="gf-form" label-class="width-6" label="Row 2 Col" checked="editor.panel.jsonr2c"
+      <gf-form-switch ng-show="editor.panel.transform==='json'" class="gf-form" label-class="width-6" label="Row 2 Col"
+        checked="editor.panel.jsonr2c" on-change="editor.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label-class="width-6" label="nowrap" checked="editor.panel.nowrap"
         on-change="editor.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label-class="width-6" label="nowrap" checked="editor.panel.nowrap" on-change="editor.render()"></gf-form-switch>
     </div>
   </div>
 </div>
@@ -62,27 +73,30 @@
     <div class="gf-form-inline">
       <div class="gf-form">
         <label class="gf-form-label width-10">template</label>
-        <select class="gf-form-input" ng-model="editor.panel.teldtemplate" ng-options="item for item in ['default', 'teldboard']">
+        <select class="gf-form-input" ng-model="editor.panel.teldtemplate"
+          ng-options="item for item in ['default', 'teldboard']">
         </select>
       </div>
     </div>
     <div class="gf-form-inline" ng-show="editor.panel.teldtemplate!='default'">
       <div class="gf-form">
         <label class="gf-form-label width-10">templateText</label>
-        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input" ng-model="editor.panel.teldtemplatetext" ng-blur="editor.render()">
+        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input"
+          ng-model="editor.panel.teldtemplatetext" ng-blur="editor.render()">
         </textarea>
       </div>
     </div>
     <div class="gf-form-inline" ng-show="editor.panel.teldtemplate!='default'">
-        <div class="gf-form">
-          <label class="gf-form-label width-10">help</label>
-          <span>&lt;%= staName %&gt;：数据字段名称</span>
-        </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-10">help</label>
+        <span>&lt;%= staName %&gt;：数据字段名称</span>
       </div>
+    </div>
     <div class="gf-form-inline" ng-show="editor.panel.teldtemplate!='default'">
       <div class="gf-form">
         <label class="gf-form-label width-10">templateDemo</label>
-        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input" ng-model="editor.panel.teldtemplatetextdemo" ng-blur="editor.render()">
+        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input"
+          ng-model="editor.panel.teldtemplatetextdemo" ng-blur="editor.render()">
         </textarea>
       </div>
     </div>
@@ -96,29 +110,32 @@
       <div class="gf-form-inline">
         <div class="gf-form">
           <label class="gf-form-label">Name or regex</label>
-          <input type="text" class="gf-form-input" ng-model="style.pattern" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()"
-            data-min-length=0 data-items=100 ng-model-onblur>
+          <input type="text" class="gf-form-input" ng-model="style.pattern" bs-typeahead="editor.getColumnNames"
+            ng-blur="editor.render()" data-min-length=0 data-items=100 ng-model-onblur>
         </div>
         <div class="gf-form">
           <label class="gf-form-label">Type</label>
           <div class="gf-form-select-wrapper">
-            <select class="gf-form-input" ng-model="style.type" ng-options="c.value as c.text for c in editor.columnTypes" ng-change="editor.render()"></select>
+            <select class="gf-form-input" ng-model="style.type"
+              ng-options="c.value as c.text for c in editor.columnTypes" ng-change="editor.render()"></select>
           </div>
         </div>
         <div class="gf-form">
           <label class="gf-form-label">Alias</label>
           <div class="gf-form-select-wrapper">
-            <input type="text" class="gf-form-input" ng-model="style.alias" ng-blur="editor.render()" data-min-length=0 ng-model-onblur>
+            <input type="text" class="gf-form-input" ng-model="style.alias" ng-blur="editor.render()" data-min-length=0
+              ng-model-onblur>
           </div>
         </div>
         <div class="gf-form" ng-if="style.type === 'date'">
           <label class="gf-form-label">Format</label>
-          <metric-segment-model property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()" custom="true"></metric-segment-model>
-          <input type="number" class="gf-form-input width-6" placeholder="8" data-placement="right" ng-model="style.dateUTCOffset"
-            ng-change="editor.render()" ng-model-onblur>
+          <metric-segment-model property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()"
+            custom="true"></metric-segment-model>
+          <input type="number" class="gf-form-input width-6" placeholder="8" data-placement="right"
+            ng-model="style.dateUTCOffset" ng-change="editor.render()" ng-model-onblur>
         </div>
-        <gf-form-switch class="gf-form" label-class="width-8" ng-if="style.type === 'string'" label="Sanitize HTML" checked="style.sanitize"
-          change="editor.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label-class="width-8" ng-if="style.type === 'string'" label="Sanitize HTML"
+          checked="style.sanitize" change="editor.render()"></gf-form-switch>
         <div class="gf-form gf-form--grow">
           <div class="gf-form-label gf-form-label--grow"></div>
         </div>
@@ -136,17 +153,19 @@
           <label class="gf-form-label width-8">Unit</label>
         </div>
         <div class="gf-form">
-          <div class="gf-form-dropdown-typeahead" ng-model="style.unit" dropdown-typeahead2="editor.unitFormats" dropdown-typeahead-on-select="editor.setUnitFormat(style, $subItem)"></div>
+          <div class="gf-form-dropdown-typeahead" ng-model="style.unit" dropdown-typeahead2="editor.unitFormats"
+            dropdown-typeahead-on-select="editor.setUnitFormat(style, $subItem)"></div>
         </div>
         <div class="gf-form">
           <label class="gf-form-label">Decimals</label>
-          <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="style.decimals" ng-change="editor.render()"
-            ng-model-onblur>
+          <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="style.decimals"
+            ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form">
           <label class="gf-form-label">Coloring</label>
           <div class="gf-form-select-wrapper">
-            <select class="gf-form-input" ng-model="style.colorMode" ng-options="c.value as c.text for c in editor.colorModes" ng-change="editor.render()"></select>
+            <select class="gf-form-input" ng-model="style.colorMode"
+              ng-options="c.value as c.text for c in editor.colorModes" ng-change="editor.render()"></select>
           </div>
         </div>
         <div class="gf-form gf-form--grow">
@@ -159,8 +178,8 @@
           <label class="gf-form-label width-8">Thresholds
             <tip>Comma separated values</tip>
           </label>
-          <input type="text" class="gf-form-input width-10" ng-model="style.thresholds" placeholder="50,80" ng-blur="editor.render()"
-            array-join ng-model-onblur>
+          <input type="text" class="gf-form-input width-10" ng-model="style.thresholds" placeholder="50,80"
+            ng-blur="editor.render()" array-join ng-model-onblur>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-5">Colors</label>
@@ -184,8 +203,8 @@
       <div class="gf-form-inline" ng-if="style.type === 'link'">
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">Text</label>
-          <input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.text" ng-change="editor.render()"
-            ng-model-onblur>
+          <input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.text"
+            ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-5">Color</label>
@@ -194,20 +213,24 @@
           </span>
         </div>
         <div class="gf-form">
-          <gf-form-switch class="gf-form" label-class="width-5" label="Time" checked="style.calcDateRange" change="editor.render()"></gf-form-switch>
+          <gf-form-switch class="gf-form" label-class="width-5" label="Time" checked="style.calcDateRange"
+            change="editor.render()"></gf-form-switch>
         </div>
         <div class="gf-form" ng-if="style.calcDateRange">
-          <input type="text" class="gf-form-input width-9" ng-model="style.timeField" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()"
-            data-min-length=0 data-items=100 ng-model-onblur>
-          <gf-form-switch class="gf-form" label-class="width-5" label="Format" checked="style.enableFormat" change="editor.render()"></gf-form-switch>
-          <metric-segment-model ng-if="style.enableFormat" property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()"
-            custom="true"></metric-segment-model>
+          <input type="text" class="gf-form-input width-9" ng-model="style.timeField"
+            bs-typeahead="editor.getColumnNames" ng-blur="editor.render()" data-min-length=0 data-items=100
+            ng-model-onblur>
+          <gf-form-switch class="gf-form" label-class="width-5" label="Format" checked="style.enableFormat"
+            change="editor.render()"></gf-form-switch>
+          <metric-segment-model ng-if="style.enableFormat" property="style.dateFormat" options="editor.dateFormats"
+            on-change="editor.render()" custom="true"></metric-segment-model>
           <label class="gf-form-label">timeRangeField</label>
-          <input type="text" class="gf-form-input width-9" ng-model="style.timeRangeField" bs-typeahead="editor.getColumnNames" ng-blur="editor.render()"
-            data-min-length=0 data-items=100 ng-model-onblur>
+          <input type="text" class="gf-form-input width-9" ng-model="style.timeRangeField"
+            bs-typeahead="editor.getColumnNames" ng-blur="editor.render()" data-min-length=0 data-items=100
+            ng-model-onblur>
           <div class="gf-form-select-wrapper" ng-show="style.timeRangeField">
-            <select class="gf-form-input" ng-model="style.timeRangeFieldUnit" ng-options="c.value as c.text for c in editor.timeRangeUnits"
-              ng-change="editor.render()"></select>
+            <select class="gf-form-input" ng-model="style.timeRangeFieldUnit"
+              ng-options="c.value as c.text for c in editor.timeRangeUnits" ng-change="editor.render()"></select>
           </div>
           <span class="gf-form-label" ng-show="style.timeField">
             {{style.timeField}}Start - {{style.timeField}}End
@@ -215,8 +238,8 @@
         </div>
         <div class="gf-form ng-hide">
           <label class="gf-form-label">Target</label>
-          <input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.target" ng-change="editor.render()"
-            ng-model-onblur>
+          <input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.target"
+            ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form gf-form--grow">
           <div class="gf-form-label gf-form-label--grow"></div>
@@ -226,8 +249,8 @@
       <div class="gf-form-inline" ng-if="style.type === 'link'">
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">UrlTemplate</label>
-          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.urlTemplate" ng-change="editor.render()"
-            ng-model-onblur>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right"
+            ng-model="style.urlTemplate" ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form gf-form--grow">
           <div class="gf-form-label gf-form-label--grow"></div>

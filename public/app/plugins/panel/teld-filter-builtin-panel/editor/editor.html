@@ -12,7 +12,8 @@
     <div class="gf-form">
       <label class="gf-form-label width-9">ButtonOk Color</label>
       <span class="max-width-10">
-        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.ButtonOkColor" ng-change="ctrl.render()"></spectrum-picker>
+        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.ButtonOkColor" ng-change="ctrl.render()">
+        </spectrum-picker>
       </span>
       <input class="input-small gf-form-input" placeholder="输入色值" ng-model="ctrl.panel.ButtonOkColor" />
     </div>
@@ -31,7 +32,8 @@
       <input class="input-small gf-form-input" placeholder="输入色值" ng-model="ctrl.panel.ButtonResetColor" />
     </div>
     <div class="gf-form">
-      <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8" checked="ctrl.panel.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8" checked="ctrl.panel.IsLocalStorage"
+        on-change="ctrl.render()"></gf-form-switch>
     </div>
   </div>
 
@@ -52,8 +54,10 @@
             </a>
           </label>
           <label class="gf-form-label" ng-if='cycle.enable' ng-class='{"not-allowed":!cycle.enable}'>
-            <a ng-click="ctrl.panel.initCycle === cycle.key ? ctrl.panel.initCycle = '' : ctrl.panel.initCycle = cycle.key; ctrl.currentCycle=ctrl.panel.initCycle != '' ? cycle : undefined ; " ng-disabled='!cycle.enable'>
-              <i class="pointer fa" ng-class="{true:'fa-check-circle-o currentCycle',false:'fa-circle-o'}[ctrl.panel.initCycle==cycle.key]"></i>
+            <a ng-click="ctrl.panel.initCycle === cycle.key ? ctrl.panel.initCycle = '' : ctrl.panel.initCycle = cycle.key; ctrl.currentCycle=ctrl.panel.initCycle != '' ? cycle : undefined ; "
+              ng-disabled='!cycle.enable'>
+              <i class="pointer fa"
+                ng-class="{true:'fa-check-circle-o currentCycle',false:'fa-circle-o'}[ctrl.panel.initCycle==cycle.key]"></i>
             </a>
           </label>
           <label class="gf-form-label" ng-hide='$last'>
@@ -65,8 +69,8 @@
       </div>
     </div>
     <div class="gf-form-inline">
-      <gf-form-switch class="gf-form" label="Refresh Dash" label-class="width-9" checked="ctrl.panel.cycleRefreshDashboard"
-        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Refresh Dash" label-class="width-9"
+        checked="ctrl.panel.cycleRefreshDashboard" on-change="ctrl.render()"></gf-form-switch>
       <gf-form-switch class="gf-form" label="保存状态" label-class="width-6" checked="ctrl.panel.cycleSaveToLocalStorage"
         on-change="ctrl.render()"></gf-form-switch>
       <gf-form-switch class="gf-form" label="反序显示" label-class="width-6" checked="ctrl.panel.cycleReverseDisplay"
@@ -87,23 +91,26 @@
     <div ng-repeat="QueryOptions in ctrl.panel.QueryList">
       <div class="gf-form">
         <label class="gf-form-label width-9">QueryTitle{{$index+1}}</label>
-        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入名称" ng-model="QueryOptions.QueryTitle" ng-change="ctrl.render()"
-          ng-model-onblur />
-        <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9" placeholder="请输入默认选项名称"
-          ng-model="QueryOptions.QueryClickName" ng-change="ctrl.render()" ng-model-onblur />
-        <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9" placeholder="请输入默认值"
-          ng-model="QueryOptions.QueryClickVal" ng-change="ctrl.render()" ng-model-onblur />
-        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入全局变量名称" ng-model="QueryOptions.QueryAttributeName"
-          ng-change="ctrl.render()" ng-model-onblur />
-        <gf-form-switch ng-if="QueryOptions.Querytype!='date'" class="gf-form" label="MultiClick" label-class="width-8" checked="QueryOptions.MultiClick"
-          on-change="ctrl.render()"></gf-form-switch>
-        <gf-form-switch class="gf-form" label="aloneRelease" ng-if="QueryOptions.MultiClick" label-class="width-8" checked="QueryOptions.aloneReleaseAttribute"
-          on-change="ctrl.render()"></gf-form-switch>
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入名称"
+          ng-model="QueryOptions.QueryTitle" ng-change="ctrl.render()" ng-model-onblur />
+        <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9"
+          placeholder="请输入默认选项名称" ng-model="QueryOptions.QueryClickName" ng-change="ctrl.render()" ng-model-onblur />
+        <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9"
+          placeholder="请输入默认值" ng-model="QueryOptions.QueryClickVal" ng-change="ctrl.render()" ng-model-onblur />
+        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入全局变量名称"
+          ng-model="QueryOptions.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
+        <gf-form-switch ng-if="QueryOptions.Querytype!='date'" class="gf-form" label="MultiClick" label-class="width-8"
+          checked="QueryOptions.MultiClick" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="aloneRelease" ng-if="QueryOptions.MultiClick" label-class="width-8"
+          checked="QueryOptions.aloneReleaseAttribute" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label width-9">type</label>
         <!-- <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','input','select','date']"></select> -->
-        <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','date']"></select>
-        <gf-form-switch class="gf-form" label="isViewShow" label-class="width-8" checked="QueryOptions.isViewShow" on-change="ctrl.render()"></gf-form-switch>
-        <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8" checked="QueryOptions.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
+        <select class="gf-form-input" ng-model="QueryOptions.Querytype"
+          ng-options="item for item in ['button','date']"></select>
+        <gf-form-switch class="gf-form" label="isViewShow" label-class="width-8" checked="QueryOptions.isViewShow"
+          on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8"
+          checked="QueryOptions.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(ctrl.panel.QueryList,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>
@@ -147,22 +154,45 @@
           </a>
         </label>
       </div>
+      <div class="gf-form" ng-if="QueryOptions.Querytype=='date'">
+        <gf-form-switch class="gf-form" label="上一天" label-class="width-9" checked="QueryOptions.yesterdayConf.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form" ng-if="QueryOptions.yesterdayConf.enable">
+          <label class="gf-form-label width-9">周期</label>
+          <input type="text" class="input-small gf-form-input max-width-9" placeholder=""
+            ng-model="QueryOptions.yesterdayConf.step" ng-change="ctrl.render()" ng-model-onblur />
+        </div>
+      </div>
+      <div class="gf-form" ng-if="QueryOptions.Querytype=='date'">
+        <gf-form-switch class="gf-form" label="下一天" label-class="width-9" checked="QueryOptions.tomorrowConf.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form" ng-if="QueryOptions.tomorrowConf.enable">
+          <label class="gf-form-label width-9">周期</label>
+          <input type="text" class="input-small gf-form-input max-width-9" ng-model="QueryOptions.tomorrowConf.step"
+            ng-change="ctrl.render()" ng-model-onblur />
+        </div>
+      </div>
       <label class="gf-form-label width-9">QueryOption{{$index+1}}</label>
       <div class="gf-form" ng-repeat="QueryOption in QueryOptions.QueryOptions">
-        <input ng-if="QueryOptions.Querytype=='button' || QueryOptions.Querytype=='select' " type="text" class="input-small gf-form-input max-width-9"
-          placeholder="请输入名称" ng-model="QueryOption.OptionName" ng-change="ctrl.render()" ng-model-onblur />
-        <input ng-if="QueryOptions.Querytype!='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="请输入查询值"
-          ng-model="QueryOption.ClickValue" ng-change="ctrl.render()" ng-model-onblur />
-        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="请输入查询值"
-          ng-model="QueryOption.TimeClickValue" ng-change="ctrl.render()" ng-model-onblur />
-        <input ng-if="QueryOptions.MultiClick || QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
-          placeholder="请输入变量" ng-model="QueryOption.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
-        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9" placeholder="校验时间变量"
-          ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
-        <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9" ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于','大于','小于']"></select>
-        <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form" label="isClick" label-class="width-8"
-          checked="QueryOption.isClick" on-change="ctrl.render()"></gf-form-switch>
-        <gf-form-switch ng-if="QueryOptions.Querytype=='date'"  class="gf-form" label="IsLocalStorage" label-class="width-8" checked="QueryOption.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
+        <input ng-if="QueryOptions.Querytype=='button' || QueryOptions.Querytype=='select' " type="text"
+          class="input-small gf-form-input max-width-9" placeholder="请输入名称" ng-model="QueryOption.OptionName"
+          ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype!='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="请输入查询值" ng-model="QueryOption.ClickValue" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="请输入查询值" ng-model="QueryOption.TimeClickValue" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.MultiClick || QueryOptions.Querytype=='date'" type="text"
+          class="input-small gf-form-input max-width-9" placeholder="请输入变量" ng-model="QueryOption.QueryAttributeName"
+          ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="校验时间变量" ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
+        <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9"
+          ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于','大于','小于']"></select>
+        <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form"
+          label="isClick" label-class="width-8" checked="QueryOption.isClick" on-change="ctrl.render()">
+        </gf-form-switch>
+        <gf-form-switch ng-if="QueryOptions.Querytype=='date'" class="gf-form" label="IsLocalStorage"
+          label-class="width-8" checked="QueryOption.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(QueryOptions.QueryOptions,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>
