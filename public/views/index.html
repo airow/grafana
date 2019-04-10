@@ -23,17 +23,155 @@
   <!--<link rel="icon" type="image/png" href="[[.AppSubUrl]]/public/img/fav32.png">-->
   <link rel="icon" type="image/png" href="[[.AppSubUrl]]/public/img/ddd/t-grafana.png">
   <base href="[[.AppSubUrl]]/" />
+  <style scoped>
+    #grafHostLoadingContainer {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      /* background-color: white; */
+    }
 
+    #grafHostLoading {
+      /* padding-top:100px;  */
+      position: fixed;
+      left: 50%;
+      top: 50%;
+    }
+
+    .loader {
+      position: absolute;
+      top: calc(50% - 1.25em);
+      left: calc(50% - 1.25em);
+      width: 2.5em;
+      height: 2.5em;
+      transform: rotate(165deg);
+    }
+
+    .loader:before,
+    .loader:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 0.25em;
+      transform: translate(-50%, -50%);
+    }
+
+    .loader:before {
+      animation: before 2s infinite;
+    }
+
+    .loader:after {
+      animation: after 2s infinite;
+    }
+
+    @keyframes before {
+      0% {
+        width: 0.5em;
+        box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75),
+          -1em 0.5em rgba(111, 202, 220, 0.75);
+      }
+
+      35% {
+        width: 2.5em;
+        box-shadow: 0 -0.5em rgba(225, 20, 98, 0.75),
+          0 0.5em rgba(111, 202, 220, 0.75);
+      }
+
+      70% {
+        width: 0.5em;
+        box-shadow: -1em -0.5em rgba(225, 20, 98, 0.75),
+          1em 0.5em rgba(111, 202, 220, 0.75);
+      }
+
+      100% {
+        box-shadow: 1em -0.5em rgba(225, 20, 98, 0.75),
+          -1em 0.5em rgba(111, 202, 220, 0.75);
+      }
+    }
+
+    @keyframes after {
+      0% {
+        height: 0.5em;
+        box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75),
+          -0.5em -1em rgba(233, 169, 32, 0.75);
+      }
+
+      35% {
+        height: 2.5em;
+        box-shadow: 0.5em 0 rgba(61, 184, 143, 0.75),
+          -0.5em 0 rgba(233, 169, 32, 0.75);
+      }
+
+      70% {
+        height: 0.5em;
+        box-shadow: 0.5em -1em rgba(61, 184, 143, 0.75),
+          -0.5em 1em rgba(233, 169, 32, 0.75);
+      }
+
+      100% {
+        box-shadow: 0.5em 1em rgba(61, 184, 143, 0.75),
+          -0.5em -1em rgba(233, 169, 32, 0.75);
+      }
+    }
+  </style>
 </head>
 
-<body ng-cloak>
-  <grafana-app class="grafana-app _[[.User.ThemeName]]">
+<body>
+  <div id='grafHostLoadingContainer'>
+    <div id='grafHostLoading'>
+      <div id='grafLoading' class="loader"></div>
+    </div>
+  </div>
+  <script>
+    function isInApp() {
+      return window.navigator.userAgent.indexOf("TeldIosWebView") !== -1
+        || window.navigator.userAgent.indexOf("TeldAndroidWebView") !== -1;
+    }
+
+    function parseQueryString(url) {
+      var arr;
+      var res = {};
+      //#符号之后的值称为hash，都不会加到request请求中去
+      url = url.split('#')[0];
+      //获取queryString 第一个？号后面的全是查询字符串
+      arr = url.split('?');
+      arr.shift();
+      var queryStr = arr.join('?');
+      //查询字符串为空直接返回 避免出现这样的返回值{"":""}
+      if (queryStr.trim().length == 0) {
+        return res;
+      }
+
+      //获取参数
+      arr = queryStr.split('&');
+      for (var i = 0; i < arr.length; i++) {
+        var itemArr = arr[i].split('=');
+        //第一个=号之前的是name 后面的全是值
+        var name = itemArr.shift();
+        var value = itemArr.join('=');
+        res[name] = value;
+      }
+      return res;
+    }
+
+    var qs = parseQueryString(window.location.search);
+    if (isInApp() || qs.ltop) {
+      var ltop = qs.ltop || '50px';
+      document.getElementById("grafHostLoading").style.top = ltop;
+    }
+  </script>
+
+  <grafana-app ng-cloak class="grafana-app _[[.User.ThemeName]]">
 
     <aside class="sidemenu-wrapper">
       <sidemenu ng-if="contextSrv.sidemenu"></sidemenu>
     </aside>
 
-    <div class="page-alert-list">
+    <div ng-cloak class="page-alert-list">
       <div ng-repeat='alert in dashAlerts.list' class="alert-{{alert.severity}} alert">
         <button type="button" class="alert-close" ng-click="dashAlerts.clear(alert)">
           <i class="fa fa-times-circle"></i>
@@ -44,7 +182,7 @@
     </div>
 
     <div ng-view class="main-view"></div>
-    <footer class="footer">
+    <footer class="footer" style="display:none;">
       <div class="row text-center">
         <ul>
           <li>

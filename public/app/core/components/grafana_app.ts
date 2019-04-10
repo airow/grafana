@@ -214,6 +214,7 @@ export function grafanaAppDirective(playlistSrv, contextSrv, $timeout, $window) 
       // var delayH = 24 - new Date().getHours() + 6;
       // var delay = delayH * 3600000;
 
+      angular.element("#grafHostLoadingContainer").hide();
       var now = new Date();
       var trigger_hour = 8;
       var offset_hour;
