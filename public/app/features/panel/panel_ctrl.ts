@@ -56,7 +56,7 @@ export class PanelCtrl {
       this.pluginId = plugin.id;
       this.pluginName = plugin.name;
     }
-
+    angular.element("#grafHostLoadingContainer").hide();
     $scope.$on("refresh", () => this.refresh());
     $scope.$on("render", () => this.render());
     $scope.$on("$destroy", () => {
@@ -421,7 +421,10 @@ export class PanelCtrl {
   }
 
   getExtendedMenu() {
-    var actions = [{ text: 'Panel JSON', click: 'ctrl.editPanelJson(); dismiss();', role: 'Editor' }];
+    var actions = [];
+    if (this.dashboard.editable) {
+      actions.push({ text: 'Panel JSON', click: 'ctrl.editPanelJson(); dismiss();', role: 'Editor' });
+    }
     this.events.emit('init-panel-actions', actions);
     return actions;
   }

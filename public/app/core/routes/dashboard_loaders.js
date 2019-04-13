@@ -1,56 +1,56 @@
 define([
-  '../core_module',
+  '../core_module', 'angular'
 ],
-function (coreModule) {
-  "use strict";
+  function (coreModule, angular) {
+    "use strict";
 
-  coreModule.default.controller('LoadDashboardCtrl', function ($scope, $routeParams, dashboardLoaderSrv
-    , backendSrv, $location, mePageLoading, wsAcrossScreen) {
-    $scope.appEvent("dashboard-fetch-start");
+    coreModule.default.controller('LoadDashboardCtrl', function ($scope, $routeParams, dashboardLoaderSrv
+      , backendSrv, $location, mePageLoading, wsAcrossScreen) {
+      $scope.appEvent("dashboard-fetch-start");
+      angular.element("#grafHostLoadingContainer").show();
+      //页面切换效果
+      mePageLoading.show();
 
-    //页面切换效果
-    mePageLoading.show();
+      wsAcrossScreen.singleUserConnect($location.path());
 
-    wsAcrossScreen.singleUserConnect($location.path());
+      if (!$routeParams.slug) {
+        backendSrv.get('/api/dashboards/home').then(function (homeDash) {
+          if (homeDash.redirectUri) {
+            $location.path('dashboard/' + homeDash.redirectUri);
+          } else {
+            var meta = homeDash.meta;
+            meta.canSave = meta.canShare = meta.canStar = false;
+            $scope.initDashboard(homeDash, $scope);
+          }
+        }).finally(function () {
+          mePageLoading.hide();
+        });
+        return;
+      }
 
-    if (!$routeParams.slug) {
-      backendSrv.get('/api/dashboards/home').then(function(homeDash) {
-        if (homeDash.redirectUri) {
-          $location.path('dashboard/' + homeDash.redirectUri);
-        } else {
-          var meta = homeDash.meta;
-          meta.canSave = meta.canShare = meta.canStar = false;
-          $scope.initDashboard(homeDash, $scope);
-        }
+      dashboardLoaderSrv.loadDashboard($routeParams.type, $routeParams.slug).then(function (result) {
+        $scope.initDashboard(result, $scope);
       }).finally(function () {
         mePageLoading.hide();
       });
-      return;
-    }
 
-    dashboardLoaderSrv.loadDashboard($routeParams.type, $routeParams.slug).then(function(result) {
-      $scope.initDashboard(result, $scope);
-    }).finally(function () {
-      mePageLoading.hide();
+    });
+
+    coreModule.default.controller('NewDashboardCtrl', function ($scope) {
+      $scope.initDashboard({
+        meta: { canStar: false, canShare: false, isNew: true },
+        dashboard: {
+          title: "New dashboard",
+          rows: [
+            {
+              title: 'Dashboard Row',
+              height: '250px',
+              panels: [],
+              isNew: true,
+            }
+          ]
+        },
+      }, $scope);
     });
 
   });
-
-  coreModule.default.controller('NewDashboardCtrl', function($scope) {
-    $scope.initDashboard({
-      meta: { canStar: false, canShare: false, isNew: true },
-      dashboard: {
-        title: "New dashboard",
-        rows: [
-          {
-            title: 'Dashboard Row',
-            height: '250px',
-            panels:[],
-            isNew: true,
-          }
-        ]
-      },
-    }, $scope);
-  });
-
-});

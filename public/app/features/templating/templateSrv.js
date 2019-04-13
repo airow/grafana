@@ -324,8 +324,8 @@ define([
                 //debugger;
                 var regex = /\$(\w+)|\[\[([\s\S]+?)\]\]/g;
                 var f = regex.test(variable);
-                console.log(variable);
-                console.log(f);
+                // console.log(variable);
+                // console.log(f);
                 if (f) {
                   return '';
                 }
@@ -381,14 +381,14 @@ define([
           value = value.replace(/\]\s+\[/g, ']\r\n[');
           value = value.replace(/\[\s*(.[^\s]*)\s*=>\s*(.*)\]/gm, "${m.has(\"$1\", \" $2 \")}");
 
-          console.group("expression 解析" + item.name);
-          console.log('    ' + item.query);
-          console.log(' => ' + value);
+          // console.group("expression 解析" + item.name);
+          // console.log('    ' + item.query);
+          // console.log(' => ' + value);
           //debugger;
           value = _.template(value, templateOptions)();
           value = value.replace(/\r\n/g, ' ');
-          console.log(' => ' + value);
-          console.groupEnd();
+          // console.log(' => ' + value);
+          // console.groupEnd();
 
           //result[item.name] = { text: item.name, value: value };
           result[item.name] = { text: value, value: value };

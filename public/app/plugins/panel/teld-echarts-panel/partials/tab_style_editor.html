@@ -377,6 +377,8 @@
       </div>
       <gf-form-switch class="gf-form" label="显示暂无图片" label-class="width-8" checked="ctrl.panel.showNoDataBg"
         on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="禁用双击最大化" label-class="width-8" checked="ctrl.panel.disableDbclick"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">基准时间</label>
         <input type="text" ng-model="ctrl.panel.baseTS" bs-typeahead="ctrl.metricsTarget" min-length="0"
@@ -646,8 +648,11 @@
           dropdown-typeahead-on-select="ctrl.setUnitFormat(ctrl.panel.formatter.yAxis.axisLabel, $subItem)"></div>
       </div>
       <div class="gf-form offset-width-8">
+        <label class="gf-form-label width-5">decimals</label>
         <input type="text" on-change="ctrl.render()" ng-model="ctrl.panel.formatter.yAxis.axisLabel.decimals"
-          class="gf-form-input">
+          class="gf-form-input width-5">
+        <input type="text" placeholder="tooltip" on-change="ctrl.render()"
+          ng-model="ctrl.panel.formatter.yAxis.axisLabel.tooltipDecimals" class="gf-form-input width-5">
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-8">textStyle</label>

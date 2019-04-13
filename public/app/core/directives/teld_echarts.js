@@ -121,15 +121,15 @@ define([
           );
 
           scope.$on("$destroy", function () {
-            console.log('teld echarts... destroy');
+            // console.log('teld echarts... destroy');
             if (scope.bmap) {
               scope.bmap = null;
             }
             if (scope.instance) {
               scope.instance.clear();
-              console.log('teld echarts... clear');
+              // console.log('teld echarts... clear');
               scope.instance.dispose();
-              console.log('teld echarts... dispose');
+              // console.log('teld echarts... dispose');
               scope.option = null;
               scope.config = null;
               scope.instance = null;

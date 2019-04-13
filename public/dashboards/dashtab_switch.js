@@ -20,7 +20,7 @@
 var window, document, ARGS, $, jQuery, moment, kbn;
 
 return function (callback) {
-  debugger;
+  // debugger;
   // Intialize a skeleton with nothing but a rows array and service object
   var dynamicDash = {
     editable: false,
@@ -206,7 +206,7 @@ return function (callback) {
       }]
     };
 
-    debugger;
+    // debugger;
     if (isInApp()) {
       var dtd = $.Deferred();
       dtd.resolve(false);
@@ -335,7 +335,7 @@ return function (callback) {
         console.log(getComponentRes);
       })
       .done(function (getComponentRes) {
-        debugger;
+        // debugger;
         var menuId = "10aab4c9-6164-4da7-b8b0-80df1111a06b";
 
         var panels = _.flatten(_.map(getComponentRes.dashboard.rows, 'panels'));

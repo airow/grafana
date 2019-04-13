@@ -468,6 +468,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   }
 
   dblclick() {
+    if (this.panel.disableDbclick || window['isInApp']()) {
+      return;
+    }
     if (this.isfullscreen()) {
       this.exitFullscreen();
     } else {
@@ -572,7 +575,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       this.initEcharts();
       this.events.on('refresh', this.onRefresh.bind(this));
       this.events.on('render', this.onRender.bind(this));
-      this.refresh();
+      this.onRender();
     }, 1000);
   }
 
@@ -1836,10 +1839,21 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     var yAxis = _.cloneDeep(_.filter(this.panel.yAxisConf, { show: true }));
     if (_.size(yAxis) > 0) {
-      var leftYAxis = option[axis.axis];
-      leftYAxis.axisLabel.formatter = function (value) {
-        return value;
+
+      var formatterFun = function (value) {
+        // debugger;
+        var decimals = this.formatterConf.decimals;
+        let formater = this.valueFormats[this.formatterConf.format];
+        return formater(value, decimals);
+        //return value;
       };
+
+      var leftYAxis = option[axis.axis];
+      var formatterBindThis = {
+        valueFormats: this.valueFormats,
+        formatterConf: { format: leftYAxis.axisLabel.format, decimals: leftYAxis.axisLabel.decimals }
+      };
+      leftYAxis.axisLabel.formatter = formatterFun.bind(formatterBindThis);
       option[axis.axis] = [leftYAxis];
       var defaultAxis = _.cloneDeep(leftYAxis);
       _.unset(defaultAxis, 'max');/** 处理最大值 */
@@ -1850,13 +1864,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         //var formatterConf = { format: format, decimals: decimals } = y.axisLabel;
         var formatterConf = { format: format, decimals: decimals };
         if (false === _.isUndefined(format)) {
-          y.axisLabel.formatter = (value) => {
-            //debugger;
-            var decimals = formatterConf.decimals;
-            let formater = this.valueFormats[formatterConf.format];
-            //return formater(value, decimals);
-            return value;
-          };
+          y.axisLabel.formatter = formatterFun.bind({ valueFormats: this.valueFormats, formatterConf: formatterConf });
         }
         option[axis.axis].push(y);
       });
@@ -1946,13 +1954,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         var axisIndex = _.get(serie, axis.axisIndex, 0);
         //var axisIndex = axis.axisIndex;
         var y = option[axis.axis][axisIndex] || { axisLabel: {} };
-        var { format, decimals } = y.axisLabel;
-        var formatterConf = { format: format, decimals: decimals, valueFormats: this.valueFormats };
+        var { format, decimals, tooltipDecimals } = y.axisLabel;
+        var formatterConf = { format: format, decimals: decimals, tooltipDecimals: tooltipDecimals, valueFormats: this.valueFormats };
 
         var formatter = function (params) {
           var { value } = params;
           //console.log(this);
-          var decimals = this.decimals;
+          var decimals = this.tooltipDecimals || this.decimals;
           let formater = this.valueFormats[this.format] || function (val) { return val; };
           return formater(value, decimals);
         };

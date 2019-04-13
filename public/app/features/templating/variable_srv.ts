@@ -76,7 +76,7 @@ export class VariableSrv {
       if (variable.type === 'teldSqlDataPermissions') {
         return this.processTeldSqlVariable(variable);
       } else if (variable.processTeldVariable) {
-        return variable.processTeldVariable(variable.initLock);
+        return variable.processTeldVariable(variable.initLock, true);
       } else {
         variable.initLock.resolve();
       }

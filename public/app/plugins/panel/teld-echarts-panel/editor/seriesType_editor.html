@@ -1,12 +1,14 @@
 <div class="editor-row">
-  <gf-form-switch ng-if="false" class="gf-form" label="启用配置" label-class="query-keyword" checked="ctrl.panel.enableSerieType">
+  <gf-form-switch ng-if="false" class="gf-form" label="启用配置" label-class="query-keyword"
+    checked="ctrl.panel.enableSerieType">
   </gf-form-switch>
   <div class="gf-form-inline gf-form-group">
     <div class="gf-form">
       <label class="gf-form-label query-keyword width-7">Series</label>
     </div>
     <div class="gf-form">
-      <label class="gf-form-label" ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target}}']</label>
+      <label class="gf-form-label"
+        ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target}}']</label>
     </div>
   </div>
 
@@ -24,7 +26,8 @@
   <div class="gf-form-inline" ng-repeat="yAxis in ctrl.panel.yAxisConf">
     <!-- base start-->
     <div class="gf-form-group">
-      <gf-form-switch class="gf-form width-7" label="{{$index+1}}" label-class="width-7" checked="yAxis.show" on-change="ctrl.render()">
+      <gf-form-switch class="gf-form width-7" label="{{$index+1}}" label-class="width-7" checked="yAxis.show"
+        on-change="ctrl.render()">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">Key</label>
@@ -40,7 +43,8 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">position</label>
-        <select class="gf-form-input width-8" ng-model="yAxis.position" ng-options="f for f in ctrl.panel.exchangeAxis?['top','bottom']:['left','right']">
+        <select class="gf-form-input width-8" ng-model="yAxis.position"
+          ng-options="f for f in ctrl.panel.exchangeAxis?['top','bottom']:['left','right']">
         </select>
       </div>
     </div>
@@ -64,13 +68,15 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">min</label>
-        <input type="text" class="gf-form-input width-8" ng-model="yAxis.min" bs-typeahead="['dataMix']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="yAxis.min" bs-typeahead="['dataMix']" min-length="0"
+          ec-valwrap>
       </div>
       <gf-form-switch class="gf-form" label="计算最小值" label-class="width-7" checked="yAxis.calcMin">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">max</label>
-        <input type="text" class="gf-form-input width-8" ng-model="yAxis.max" bs-typeahead="['dataMax']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="yAxis.max" bs-typeahead="['dataMax']" min-length="0"
+          ec-valwrap>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">rotate
@@ -95,21 +101,26 @@
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-14">axisLabel</label>
       </div>
-      <gf-form-switch class="gf-form width-7" label="Show" label-class="width-7" checked="yAxis.axisLabel.show" on-change="ctrl.render()">
+      <gf-form-switch class="gf-form width-7" label="Show" label-class="width-7" checked="yAxis.axisLabel.show"
+        on-change="ctrl.render()">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">format<tip ng-if='yAxis.axisLabel.format==="teldGeneralFormat"'>
-          format:
-          decimals:
-          prefix:
-          suffix:
-          correction:
-        </tip></label>
-        <div class="gf-form-dropdown-typeahead max-width-7" ng-model="yAxis.axisLabel.format" dropdown-typeahead2="ctrl.unitFormats"
+            format:
+            decimals:
+            prefix:
+            suffix:
+            correction:
+          </tip></label>
+        <div class="gf-form-dropdown-typeahead max-width-7" ng-model="yAxis.axisLabel.format"
+          dropdown-typeahead2="ctrl.unitFormats"
           dropdown-typeahead-on-select="ctrl.setUnitFormat(yAxis.axisLabel, $subItem)"></div>
       </div>
-      <div class="gf-form offset-width-7">
-        <input type="text" on-change="ctrl.render()" ng-model="yAxis.axisLabel.decimals" class="gf-form-input">
+      <div class="gf-form offset-width-2">
+        <label class="gf-form-label width-5">decimals</label>
+        <input type="text" on-change="ctrl.render()" ng-model="yAxis.axisLabel.decimals" class="gf-form-input width-5">
+        <input type="text" placeholder="tooltip" on-change="ctrl.render()" ng-model="yAxis.axisLabel.tooltipDecimals"
+          class="gf-form-input width-5">
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">rotate
@@ -123,11 +134,11 @@
         </label>
         <input type="number" class="gf-form-input width-8" ng-model="yAxis.axisLabel.margin" ec-valwrap>
       </div>
-      <gf-form-switch ng-if="false" class="gf-form width-7" label="Min Label" label-class="width-7" checked="yAxis.axisLabel.showMinLabel"
-        on-change="ctrl.render()">
+      <gf-form-switch ng-if="false" class="gf-form width-7" label="Min Label" label-class="width-7"
+        checked="yAxis.axisLabel.showMinLabel" on-change="ctrl.render()">
       </gf-form-switch>
-      <gf-form-switch ng-if="false" class="gf-form width-7" label="Max Label" label-class="width-7" checked="yAxis.axisLabel.showMaxLabel"
-        on-change="ctrl.render()">
+      <gf-form-switch ng-if="false" class="gf-form width-7" label="Max Label" label-class="width-7"
+        checked="yAxis.axisLabel.showMaxLabel" on-change="ctrl.render()">
       </gf-form-switch>
     </div>
     <div class="section gf-form-group">
@@ -138,22 +149,23 @@
         <label class="gf-form-label width-7">style
           <tip>文字字体的风格</tip>
         </label>
-        <input class="gf-form-input width-7" type="text" ng-model="yAxis.axisLabel.fontStyle" bs-typeahead="['normal','italic','oblique']"
-          min-length="0" ec-valwrap>
+        <input class="gf-form-input width-7" type="text" ng-model="yAxis.axisLabel.fontStyle"
+          bs-typeahead="['normal','italic','oblique']" min-length="0" ec-valwrap>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">weight
           <tip>文字字体的粗细</tip>
         </label>
-        <input class="gf-form-input width-7" type="text" ng-model="yAxis.axisLabel.fontWeight" bs-typeahead="['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300']"
-          min-length="0" ec-valwrap>
+        <input class="gf-form-input width-7" type="text" ng-model="yAxis.axisLabel.fontWeight"
+          bs-typeahead="['normal', 'bold', 'bolder', 'lighter', '100', '130', '200', '300']" min-length="0" ec-valwrap>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">family
           <tip>文字字体的粗细</tip>
         </label>
-        <input class="gf-form-input width-7" type="text" ng-model="yAxis.axisLabel.fontFamily" bs-typeahead="['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC']"
-          min-length="0" ec-valwrap>
+        <input class="gf-form-input width-7" type="text" ng-model="yAxis.axisLabel.fontFamily"
+          bs-typeahead="['sans-serif', 'Arial', 'Microsoft YaHei', 'Helvetica', 'Tahoma', 'Heiti SC']" min-length="0"
+          ec-valwrap>
       </div>
     </div>
     <!-- axisLabel end -->
@@ -163,7 +175,8 @@
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-14">axisTick</label>
       </div>
-      <gf-form-switch class="gf-form width-7" label="Show" label-class="width-7" checked="yAxis.axisTick.show" on-change="ctrl.render()">
+      <gf-form-switch class="gf-form width-7" label="Show" label-class="width-7" checked="yAxis.axisTick.show"
+        on-change="ctrl.render()">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">length
@@ -191,7 +204,8 @@
   <div class="gf-form-inline" ng-repeat="seriesType in ctrl.panel.seriesTypeConf">
     <!-- base start-->
     <div class="section">
-      <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-7" checked="seriesType.enable" on-change="ctrl.refresh()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="{{$index+1}}" label-class="width-7" checked="seriesType.enable"
+        on-change="ctrl.refresh()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">target</label>
         <select class="gf-form-input width-7" ng-model="seriesType.target" ng-options="f for f in ctrl.metricsTarget()">
@@ -202,7 +216,8 @@
         <select class="gf-form-input width-7" ng-model="seriesType.type" ng-options="f for f in ['bar','line']">
         </select>
       </div>
-      <gf-form-switch ng-if='seriesType.type=="line"' class="gf-form" label="smooth" label-class="query-keyword width-7" checked="seriesType.smooth">
+      <gf-form-switch ng-if='seriesType.type=="line"' class="gf-form" label="smooth" label-class="query-keyword width-7"
+        checked="seriesType.smooth">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">yAxis</label>
@@ -235,16 +250,19 @@
         <div class="gf-form">
           <label class="gf-form-label query-keyword width-14">label</label>
         </div>
-        <gf-form-switch class="gf-form width-7" label="Show" label-class="width-7" checked="seriesType.label.normal.show" on-change="ctrl.render()">
+        <gf-form-switch class="gf-form width-7" label="Show" label-class="width-7"
+          checked="seriesType.label.normal.show" on-change="ctrl.render()">
         </gf-form-switch>
         <div class="gf-form">
           <label class="gf-form-label width-7">position</label>
-          <select class="gf-form-input width-7" ng-model="seriesType.label.normal.position" ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
+          <select class="gf-form-input width-7" ng-model="seriesType.label.normal.position"
+            ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
           </select>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-7">position</label>
-          <select class="gf-form-input width-7" ng-model="seriesType.label.normal.position" ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
+          <select class="gf-form-input width-7" ng-model="seriesType.label.normal.position"
+            ng-options="f for f in ['top','left','right','bottom','inside','insideLeft','insideRight','insideTop','insideBottom','insideTopLeft','insideBottomLeft','insideTopRight','insideBottomRight']">
           </select>
         </div>
         <div class="gf-form">
@@ -255,8 +273,8 @@
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-7">fontStyle</label>
-          <select class="gf-form-input" ng-model="seriesType.label.normal.textStyle.fontStyle" ng-options="serie for serie in ['normal','italic','oblique']"
-            ng-change="ctrl.refresh()"></select>
+          <select class="gf-form-input" ng-model="seriesType.label.normal.textStyle.fontStyle"
+            ng-options="serie for serie in ['normal','italic','oblique']" ng-change="ctrl.refresh()"></select>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-7">fontWeight
@@ -278,7 +296,8 @@
           <label class="gf-form-label width-7">opacity
             <tip>图形透明度。支持从 0 到 1 的数字，为 0 时不绘制该图形。</tip>
           </label>
-          <input type="number" min='0' step='0.1' max='1' class="gf-form-input width-7" bs-typeahead="[0,0.7]" min-length="0" ng-model="seriesType.areaStyle.normal.opacity">
+          <input type="number" min='0' step='0.1' max='1' class="gf-form-input width-7" bs-typeahead="[0,0.7]"
+            min-length="0" ng-model="seriesType.areaStyle.normal.opacity">
         </div>
       </div>
       <!-- areaStyle end -->
@@ -312,19 +331,21 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">symbol</label>
-        <input type="text" class="gf-form-input width-7" ng-model="seriesType.line.symbol" bs-typeahead="['circle', 'rect', 'none']"
-          min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-7" ng-model="seriesType.line.symbol"
+          bs-typeahead="['circle', 'rect', 'none']" min-length="0" ec-valwrap>
       </div>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-14">lineStyle</label>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">width</label>
-        <input type="text" class="gf-form-input width-7" ec-valwrap ng-model="seriesType.line.lineStyle.normal.width" ec-valwrap>
+        <input type="text" class="gf-form-input width-7" ec-valwrap ng-model="seriesType.line.lineStyle.normal.width"
+          ec-valwrap>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">type</label>
-        <input type="text" class="gf-form-input width-7" ng-model="seriesType.line.lineStyle.normal.type" bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-7" ng-model="seriesType.line.lineStyle.normal.type"
+          bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
       </div>
     </div>
     <!-- line end -->
@@ -335,19 +356,22 @@
         <label class="gf-form-label query-keyword width-16">markPoint</label>
       </div>
       <div class="gf-form">
-          <label class="gf-form-label width-8">type</label>
-          <label class="gf-form-label width-8">symbol</label>
-          <label class="gf-form-label width-8">symbolSize</label>
-          <label class="gf-form-label width-8">symbolRotate</label>
-          <label class="gf-form-label">
-            <a ng-click="seriesType.markPoint.data.push({})">
-              <i class="pointer fa fa-plus"></i>
-            </a>
-          </label>
+        <label class="gf-form-label width-8">type</label>
+        <label class="gf-form-label width-8">symbol</label>
+        <label class="gf-form-label width-8">symbolSize</label>
+        <label class="gf-form-label width-8">symbolRotate</label>
+        <label class="gf-form-label">
+          <a ng-click="seriesType.markPoint.data.push({})">
+            <i class="pointer fa fa-plus"></i>
+          </a>
+        </label>
       </div>
       <div class="gf-form" ng-repeat="markPoint in seriesType.markPoint.data">
-        <input type="text" class="gf-form-input width-8" ng-model="markPoint.type" bs-typeahead="['min', 'max', 'average']" min-length="0" ec-valwrap>
-        <input type="text" class="gf-form-input width-8" ng-model="markPoint.symbol" bs-typeahead="['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markPoint.type"
+          bs-typeahead="['min', 'max', 'average']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markPoint.symbol"
+          bs-typeahead="['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']" min-length="0"
+          ec-valwrap>
         <input type="text" class="gf-form-input width-8" ng-model="markPoint.symbolSize" ec-valwrap>
         <input type="number" class="gf-form-input width-8" ng-model="markPoint.symbolRotate" ec-valwrap>
         <label class="gf-form-label">
@@ -379,17 +403,20 @@
         </label>
       </div>
       <div class="gf-form" ng-repeat="markLine in seriesType.markLine.data">
-        <input type="text" class="gf-form-input width-8" ng-model="markLine.type" bs-typeahead="['min', 'max', 'average']" min-length="0"
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.type"
+          bs-typeahead="['min', 'max', 'average']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.symbol"
+          bs-typeahead="['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']" min-length="0"
           ec-valwrap>
-        <input type="text" class="gf-form-input width-8" ng-model="markLine.symbol" bs-typeahead="['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']"
-          min-length="0" ec-valwrap>
         <input type="text" class="gf-form-input width-8" ng-model="markLine.symbolSize" ec-valwrap>
         <input type="number" class="gf-form-input width-8" ng-model="markLine.symbolRotate" ec-valwrap>
-        <input type="text" class="gf-form-input width-8" ng-model="markLine.label.normal.position" bs-typeahead="['start', 'middle', 'end']" min-length="0" ec-valwrap>
-        <input type="text" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.type" bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.label.normal.position"
+          bs-typeahead="['start', 'middle', 'end']" min-length="0" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.type"
+          bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
         <input type="number" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.width" ec-valwrap>
         <label class="gf-form-label">
-            <a ng-click="ctrl.removeItem(seriesType.markLine.data, markLine)">
+          <a ng-click="ctrl.removeItem(seriesType.markLine.data, markLine)">
             <i class="pointer fa fa-remove"></i>
           </a>
         </label>
