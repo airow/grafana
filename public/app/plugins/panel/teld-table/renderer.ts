@@ -275,15 +275,17 @@ export class TableRenderer {
       } else if (this.panel.teldtemplate === "teldboard") {
         try {
           let compiled = _.template(this.panel.teldtemplatetext);
-          var rowsObj = this.rowObj.JSON;
+          var rowsObj = this.rowObj.JSON || this.rowObj;
           if (this.rowObj.hasOwnProperty("JSON")) {
             rowsObj = JSON.parse(this.rowObj.JSON);
           }
           cellHtml = compiled(rowsObj);
         } catch (error) {
           cellHtml = this.panel.teldtemplatetextdemo;
+          if (error.message) {
+            cellHtml = "<td>" + error.message + "</td>";
+          }
         }
-
       }
       if (this.colorState.row) {
         rowStyle = ' style="background-color:' + this.colorState.row + ';color: white"';
