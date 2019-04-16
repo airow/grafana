@@ -103,6 +103,7 @@ class TimeSrv {
   }
 
   private timeHasChangedSinceLoad() {
+    // if (this.dashboard.hideDashNavbar && this.dashboard.isSubShowTime !== true) { return false; }
     return this.timeAtLoad.from !== this.time.from || this.timeAtLoad.to !== this.time.to;
   }
 

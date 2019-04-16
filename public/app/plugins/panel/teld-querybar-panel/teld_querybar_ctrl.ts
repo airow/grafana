@@ -898,6 +898,15 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     let linkages = [];
     this.linkageMap(linkages, target);
 
+    // if (_.size(linkages) === 0) {
+    //   this.currentTarget = target;
+    //   this.skipSyncLinkageTarget = false;
+    //   this.isFetchData = false;
+    //   this.query();
+    //   this.changeQueryBarTab(target);
+    //   return;
+    // }
+
     async.mapSeries(linkages, (item, cb) => {
       this.skipSyncLinkageTarget = true;
       this.isFetchData = true;
@@ -986,6 +995,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
 
   onMetricsPanelRefresh() {
+    // debugger;
     console.log('onMetricsPanelRefresh');
     this.spin = true;
     // ignore fetching data if another panel is in fullscreen
@@ -1160,6 +1170,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   eh_query() {
     this.queryCount++;
+    // debugger;
     console.log('query');
     this.triggerRefresh = true;
     this.dashboard.meta.hasQuerybarPanel = false;
