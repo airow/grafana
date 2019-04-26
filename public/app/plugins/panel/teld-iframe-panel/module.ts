@@ -10,6 +10,7 @@ import { WebsocketEditor } from './editor/websocket';
 import { SaikuEditor } from './editor/saiku';
 import appEvents from 'app/core/app_events';
 import config from 'app/core/config';
+import { advanced_search } from './conf';
 
 // loadPluginCssPath({
 //   cssPath: '/public/app/plugins/panel/teld-iframe-panel/css/teld-iframe-panel.built-in.css',
@@ -582,6 +583,68 @@ export class TeldIframePanelCtrl extends PanelCtrl {
       }
     }
 
+
+    var kibanaConf = this.panel.kibanaConf || {};
+    var kibanaFilter = kibanaConf.filters || [];
+
+    // kibanaFilter = [
+    //   { dashVar: "ddd", field: "AreaID", operatorKey: "string_equal" },
+    //   { dashVar: "tab1_selectValue", field: "AreaID", operatorKey: "string_equal" }
+    // ];
+
+    if (_.size(kibanaFilter) > 0 && _.size(this.imports.helper.dashVariables) > 0) {
+      var tempFilter = _.transform(kibanaFilter, (r, v) => {
+        var current = this.imports.helper.dashVariables[v.dashVar];
+        if (current) {
+          if (false === _.isNil(current.value) && false === _.includes(v.ignoreList, current.value)) {
+            var filter = _.pick(v, ['field', 'operatorKey', 'func', 'embed']);
+            filter.val = current.value;
+            filter.val = this.templateSrv.replaceScopedVars(filter.val, Object.assign({}, {}, scopedExpressionVars));
+            filter.val = this.templateSrv.replace(filter.val);
+
+            if (false === _.isEmpty(filter.func)) {
+              var function_body = filter.func;
+              function_body = this.templateSrv.replaceScopedVars(function_body, Object.assign({}, {}, scopedExpressionVars));
+              function_body = this.templateSrv.replace(function_body);
+              var kibanaCompiled = _.template(function_body, { imports: this.imports });
+              function_body = kibanaCompiled(bindSource);
+              filter.val = new Function(function_body)();
+              console.log(filter);
+              delete filter.func;
+            }
+
+            r.push(filter);
+          }
+        }
+      }, []);
+      if (_.size(tempFilter)) {
+
+        var conf = advanced_search;
+
+        var must = _.transform(tempFilter, (r, value, index) => {
+          var operatorKey = value.operatorKey;
+          var mapping = conf[operatorKey];
+          var mustItem = {};
+          if (value.embed === 'embed') { mustItem['embed'] = 'embed'; }
+          // _.set(mustItem, 'conf.operatorKey', mapping.operatorKey);
+          _.set(mustItem, [mapping.keyword, "conf.operatorKey"].join("."), mapping.operatorKey);
+          var encodeField = encodeURIComponent(value.field);
+          var encodeVal = typeof (value.val) !== 'string' ? value.val : encodeURIComponent(value.val);
+          if (mapping.ext) {
+            _.set(mustItem, [mapping.keyword, encodeField].join("."), mapping.ext);
+          }
+          _.set(mustItem, [mapping.keyword, encodeField, mapping.link].join("."), encodeVal);
+          r.push(mustItem);
+        }, []);
+
+        var _ts = rison.encode_object({ advancedSearchBool: { must: must } });
+        _ts = `_ts=(${_ts})`;
+        console.log(_ts);
+        _ts = btoa(_ts);
+        returnValue += ("/" + _ts + "/");
+      }
+    }
+
     return returnValue;
   }
 
@@ -590,20 +653,6 @@ export class TeldIframePanelCtrl extends PanelCtrl {
   }
 
   onRender() {
-
-    // let src = this.panel.src;
-
-    // let compiled = _.template(src);
-
-    // let bindSource = {
-    //   name: config.bootData.user.name,
-    //   login: config.bootData.user.login,
-    //   wslogin: this.search.teld_user || config.bootData.user.login,
-    //   isTeldUser: Boolean(this.search.teld_user) ? "Y" : "N",
-    //   orgId: config.bootData.user.orgId,
-    //   timestamp: (new Date()).valueOf()
-    // };
-    // src = compiled(bindSource);
 
     let src = this.formatSrc(this.panel.src);
 

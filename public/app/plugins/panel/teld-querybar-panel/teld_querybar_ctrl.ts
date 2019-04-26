@@ -464,7 +464,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         let predicateValue = target.conf.predicateValue || 0;
         let index = _.toNumber(predicateValue);
         if (_.isNaN(index)) {
-          let predicate = new Function('eachItem', "return " + predicateValue);
+          let replaceTemplatePredicateValue = this.templateSrv.replace(predicateValue);
+          let predicate = new Function('eachItem', "return " + replaceTemplatePredicateValue);
           index = _.findIndex(sortDatapoints, predicate);
           index = index === -1 ? 0 : index;
         }

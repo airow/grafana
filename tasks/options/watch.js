@@ -1,4 +1,4 @@
-module.exports = function(config, grunt) {
+module.exports = function (config, grunt) {
   'use strict';
 
   var gaze = require('gaze');
@@ -7,7 +7,7 @@ module.exports = function(config, grunt) {
   var done;
   var lastTime;
 
-  grunt.registerTask('watch', function() {
+  grunt.registerTask('watch', function () {
 
     done = this.async();
     lastTime = new Date().getTime();
@@ -17,11 +17,11 @@ module.exports = function(config, grunt) {
       return;
     }
 
-    gaze(config.srcDir + '/**/*', function(err, watcher) {
+    gaze(config.srcDir + '/**/*', function (err, watcher) {
 
       console.log('Gaze watchers setup');
 
-      watcher.on('all', function(evtName, filepath) {
+      watcher.on('all', function (evtName, filepath) {
         filepath = path.relative(process.cwd(), filepath);
 
         // ignore multiple changes at once
@@ -71,7 +71,7 @@ module.exports = function(config, grunt) {
           grunt.config('tslint.source.files.src', filepath);
 
           grunt.task.run('exec:tscompile');
-          grunt.task.run('exec:tslint');
+          // grunt.task.run('exec:tslint');
         }
 
         done();
