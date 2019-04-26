@@ -1,32 +1,43 @@
 <div class="query-editor-rows gf-form-group">
   <div class="gf-form">
     <label class="gf-form-label query-keyword width-6">默认页签</label>
-    <select class="gf-form-input width-10" ng-model="ctrl.panel.selectTab" ng-options="option.refId as option.conf.title for option in ctrl.panel.targets">
+    <select class="gf-form-input width-10" ng-model="ctrl.panel.selectTab"
+      ng-options="option.refId as option.conf.title for option in ctrl.panel.targets">
     </select>
     <gf-form-switch class="gf-form" label="默认收起" label-class="query-keyword width-6" checked="ctrl.panel.isCollapse">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="禁用选中取数" label-class="query-keyword width-8" checked="ctrl.panel.stopClickRefresh">
+    <gf-form-switch class="gf-form" label="禁用选中取数" label-class="query-keyword width-8"
+      checked="ctrl.panel.stopClickRefresh">
     </gf-form-switch>
-    <gf-form-switch ng-show="ctrl.panel.stopClickRefresh" class="gf-form" label="多级联动" label-class="query-keyword width-8" checked="ctrl.panel.multiSyncLinkage">
+    <gf-form-switch ng-show="ctrl.panel.stopClickRefresh" class="gf-form" label="多级联动"
+      label-class="query-keyword width-8" checked="ctrl.panel.multiSyncLinkage">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="响应面板刷新" label-class="query-keyword width-8" checked="ctrl.panel.subscribeRefresh">
+    <gf-form-switch class="gf-form" label="响应面板刷新" label-class="query-keyword width-8"
+      checked="ctrl.panel.subscribeRefresh">
     </gf-form-switch>
     <label class="gf-form-label query-keyword width-6">显示条数</label>
-    <input type="text" class="gf-form-input width-5" ng-model="ctrl.panel.displayCount" spellcheck="false" placeholder="displayCount">
-    <gf-form-switch class="gf-form" label="隐藏标题" label-class="query-keyword width-6" checked="ctrl.panel.hiddenTabbedVieHheader">
+    <input type="text" class="gf-form-input width-5" ng-model="ctrl.panel.displayCount" spellcheck="false"
+      placeholder="displayCount">
+    <gf-form-switch class="gf-form" label="隐藏标题" label-class="query-keyword width-6"
+      checked="ctrl.panel.hiddenTabbedVieHheader">
     </gf-form-switch>
     <label class="gf-form-label query-keyword width-6">滑块宽<tip>最小值190</tip></label>
-    <input type="number" min="190" class="gf-form-input width-5" ng-model="ctrl.panel.slideWidth" spellcheck="false" placeholder="250">
-    <gf-form-switch class="gf-form" label="使用右上角时间" label-class="query-keyword width-8" checked="ctrl.panel.dashboardTime">
+    <input type="number" min="190" class="gf-form-input width-5" ng-model="ctrl.panel.slideWidth" spellcheck="false"
+      placeholder="250">
+    <gf-form-switch class="gf-form" label="使用右上角时间" label-class="query-keyword width-8"
+      checked="ctrl.panel.dashboardTime">
     </gf-form-switch>
   </div>
   <div class="gf-form">
-    <gf-form-switch class="gf-form" label="保存条件" label-class="query-keyword width-8" checked="ctrl.panel.saveVariable">
+    <gf-form-switch class="gf-form" label="保存条件" label-class="query-keyword width-6" checked="ctrl.panel.saveVariable">
     </gf-form-switch>
-    <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8" ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="">
-    <gf-form-switch class="gf-form" label="点击查询取数" label-class="query-keyword width-8" checked="ctrl.panel.clickQueryBtn2Fetch">
+    <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8"
+      ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="">
+    <gf-form-switch class="gf-form" label="点击查询取数" label-class="query-keyword width-8"
+      checked="ctrl.panel.clickQueryBtn2Fetch">
     </gf-form-switch>
-    <gf-form-switch ng-if="ctrl.panel.clickQueryBtn2Fetch" class="gf-form" label="界面显示" label-class="query-keyword width-8" checked="ctrl.panel.showClickQueryBtn2Fetch">
+    <gf-form-switch ng-if="ctrl.panel.clickQueryBtn2Fetch" class="gf-form" label="界面显示"
+      label-class="query-keyword width-8" checked="ctrl.panel.showClickQueryBtn2Fetch">
     </gf-form-switch>
   </div>
   <div class="gf-form">
@@ -51,92 +62,120 @@
       </div>
     </div>
   </div>
-  <hr>
-  <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
-    <h5 class="section-heading" style="font-size:24px; font-style: italic;">{{target.conf.title}} &nbsp;<i class="fa fa-refresh" ng-click="ctrl.toggleQuery(target)"></i></h5>
-    <rebuild-on-change property="ctrl.panel.datasource || target.datasource" show-null="true">
-      <plugin-component type="query-ctrl">
-      </plugin-component>
-    </rebuild-on-change>
-    <div class="section">
-      <h5 class="section-heading">Base Config</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-6">refId</label>
-          <input type="text" class="gf-form-input width-6" ng-disabled="true" ng-model="target.refId" spellcheck="false" placeholder="refId">
-          <label class="gf-form-label query-keyword width-6">页签</label>
-          <input type="text" class="gf-form-input width-6" ng-model="target.conf.title" spellcheck="false" placeholder="Title">
-          <label class="gf-form-label query-keyword width-6">显示条数</label>
-          <input type="text" class="gf-form-input width-5" ng-model="target.conf.displayCount" spellcheck="false" placeholder="displayCount">
-        </div>
-        <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-6" checked="target.conf.required">
-        </gf-form-switch>
-        <div class="gf-form" ng-if="target.conf.required">
-          <label class="gf-form-label width-8">索引/表达式<tip>表达式：通过eachItem引用记录，eachItem = {field,fieldValue,_original.xxx}</tip></label>
-          <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false" placeholder="eachItem._original.xxxx">
-        </div>
+  <div class="gf-form">
+    <gf-form-switch class="gf-form" label="日期选择" label-class="query-keyword width-6"
+      checked="ctrl.panel.timeRangeConf.enable">
+    </gf-form-switch>
+
+    <gf-form-switch ng-if='ctrl.panel.saveVariable' class="gf-form" label="不持久化" label-class="query-keyword width-6"
+      checked="ctrl.panel.timeRangeConf.denySave">
+    </gf-form-switch>
+
+    <!-- <label class="gf-form-label query-keyword width-4">From</label>
+    <input type="text" class="gf-form-input width-15" ng-model="ctrl.panel.timeRangeConf.from" spellcheck="false"
+      placeholder="开始时间">
+    <label class="gf-form-label query-keyword width-4">To</label>
+    <input type="text" class="gf-form-input width-15" ng-model="ctrl.panel.timeRangeConf.to" spellcheck="false"
+      placeholder="结束时间"> -->
+  </div>
+</div>
+<hr>
+<div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
+  <h5 class="section-heading" style="font-size:24px; font-style: italic;">{{target.conf.title}} &nbsp;<i
+      class="fa fa-refresh" ng-click="ctrl.toggleQuery(target)"></i></h5>
+  <rebuild-on-change property="ctrl.panel.datasource || target.datasource" show-null="true">
+    <plugin-component type="query-ctrl">
+    </plugin-component>
+  </rebuild-on-change>
+  <div class="section">
+    <h5 class="section-heading">Base Config</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-6">refId</label>
+        <input type="text" class="gf-form-input width-6" ng-disabled="true" ng-model="target.refId" spellcheck="false"
+          placeholder="refId">
+        <label class="gf-form-label query-keyword width-6">页签</label>
+        <input type="text" class="gf-form-input width-6" ng-model="target.conf.title" spellcheck="false"
+          placeholder="Title">
+        <label class="gf-form-label query-keyword width-6">显示条数</label>
+        <input type="text" class="gf-form-input width-5" ng-model="target.conf.displayCount" spellcheck="false"
+          placeholder="displayCount">
       </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-6">滑块宽<tip>最小值190,默认值250</tip></label>
-          <input type="number" min="190" class="gf-form-input width-6" ng-model="target.slideWidth" spellcheck="false" placeholder="250">
-        </div>
-        <gf-form-switch class="gf-form" label="后端排序" label-class="query-keyword width-6" checked="target.conf.defOrder">
-        </gf-form-switch>
+      <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-6" checked="target.conf.required">
+      </gf-form-switch>
+      <div class="gf-form" ng-if="target.conf.required">
+        <label class="gf-form-label width-8">索引/表达式<tip>表达式：通过eachItem引用记录，eachItem = {field,fieldValue,_original.xxx}
+          </tip></label>
+        <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false"
+          placeholder="eachItem._original.xxxx">
       </div>
-      <h5 class="section-heading">OrderBy <label class="gf-form-label width-10">${{target.conf.variablePrefix}}_orderby</label></h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-10">名称</label>
-          <label class="gf-form-label query-keyword width-15">表达式</label>
-          <label class="gf-form-label">
-            <a ng-click="target.conf.orderByOptions ? target.conf.orderByOptions.push({}) : target.conf.orderByOptions=[{}]">
-              <i class="fa fa-plus"></i>
-            </a>
-          </label>
-        </div>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-6">滑块宽<tip>最小值190,默认值250</tip></label>
+        <input type="number" min="190" class="gf-form-input width-6" ng-model="target.slideWidth" spellcheck="false"
+          placeholder="250">
       </div>
-      <div class="gf-form-inline" ng-repeat="option in target.conf.orderByOptions">
-        <div class="gf-form">
-          <input type="text" class="gf-form-input width-10" ng-model="option.text" spellcheck="false" placeholder="text">
-          <input type="text" class="gf-form-input width-15" ng-model="option.value" spellcheck="false" placeholder="value">
-          <label class="gf-form-label">
-            <a ng-click="ctrl.removeVariable(target.conf.orderByOptions, option)">
-              <i class="pointer fa fa-remove"></i>
-            </a>
-          </label>
-          <label class="gf-form-label" ng-hide="$last">
-            <a ng-click="ctrl.move(target.conf.orderByOptions,$index,$index+1)">
-              <i class="pointer fa fa-arrow-down"></i>
-            </a>
-          </label>
-          <label class="gf-form-label" ng-hide="$first">
-            <a ng-click="ctrl.move(target.conf.orderByOptions,$index,$index-1)">
-              <i class="pointer fa fa-arrow-up"></i>
-            </a>
-          </label>
-        </div>
+      <gf-form-switch class="gf-form" label="后端排序" label-class="query-keyword width-6" checked="target.conf.defOrder">
+      </gf-form-switch>
+    </div>
+    <h5 class="section-heading">OrderBy <label
+        class="gf-form-label width-10">${{target.conf.variablePrefix}}_orderby</label></h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-10">名称</label>
+        <label class="gf-form-label query-keyword width-15">表达式</label>
+        <label class="gf-form-label">
+          <a
+            ng-click="target.conf.orderByOptions ? target.conf.orderByOptions.push({}) : target.conf.orderByOptions=[{}]">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
       </div>
-      <h5 class="section-heading">Linkage</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form" ng-repeat="link in target.conf.linkage">
-          <select class="gf-form-input" ng-model="link.refId" ng-options="option.refId as option.conf.title for option in ctrl.getLinkageOptions(target)">
-          </select>
-          <label class="gf-form-label">
-            <a ng-click="ctrl.removeVariable(target.conf.linkage, link)">
-              <i class="fa fa-remove"></i>
-            </a>
-          </label>
-        </div>
-        <div class="gf-form">
-          <label class="gf-form-label">
-            <a ng-click="target.conf.linkage.push({})">
-              <i class="fa fa-plus"></i>
-            </a>
-          </label>
-        </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="option in target.conf.orderByOptions">
+      <div class="gf-form">
+        <input type="text" class="gf-form-input width-10" ng-model="option.text" spellcheck="false" placeholder="text">
+        <input type="text" class="gf-form-input width-15" ng-model="option.value" spellcheck="false"
+          placeholder="value">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeVariable(target.conf.orderByOptions, option)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(target.conf.orderByOptions,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(target.conf.orderByOptions,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
       </div>
-      <!-- <h5 class="section-heading">Fetch Linkage</h5>
+    </div>
+    <h5 class="section-heading">Linkage</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form" ng-repeat="link in target.conf.linkage">
+        <select class="gf-form-input" ng-model="link.refId"
+          ng-options="option.refId as option.conf.title for option in ctrl.getLinkageOptions(target)">
+        </select>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeVariable(target.conf.linkage, link)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click="target.conf.linkage.push({})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <!-- <h5 class="section-heading">Fetch Linkage</h5>
       <div class="gf-form-inline">
         <div class="gf-form" ng-repeat="fetch in target.conf.fetchLinkage">
           <select class="gf-form-input" ng-model="fetch.refId" ng-options="option.refId as option.conf.title for option in ctrl.getLinkageOptions(target)">
@@ -155,121 +194,141 @@
           </label>
         </div>
       </div> -->
-      <h5 class="section-heading">Label</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-6">&nbsp;</label>
-          <label class="gf-form-label width-15">绑定字段</label>
-          <label class="gf-form-label width-25">格式化</label>
-          <label class="gf-form-label width-25">样式</label>
-        </div>
-      </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-6">主标题</label>
-          <input type="text" class="gf-form-input width-15" ng-model="target.conf.field" spellcheck="false" placeholder="field">
-          <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleTemplate" spellcheck="false" placeholder="Template">
-          <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleStyle" spellcheck="false" placeholder="Style">
-        </div>
-      </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-6">下副标题</label>
-          <input type="text" class="gf-form-input width-15" ng-model="target.conf.fieldValue" spellcheck="false" placeholder="fieldValue">
-          <input type="text" class="gf-form-input width-5" ng-if="false" ng-model="target.conf.fieldOrder" min-length="0" bs-typeahead="['asc','desc']" spellcheck="false" placeholder="OrderBy">
-          <input type="text" class="gf-form-input width-25" ng-model="target.conf.bottomTemplate" spellcheck="false" placeholder="Template">
-          <input type="text" class="gf-form-input width-25" ng-model="target.conf.bottomStyle" spellcheck="false" placeholder="Style">
-        </div>
-      </div>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-21">上副标题</label>
-          <input type="text" class="gf-form-input width-25" ng-model="target.conf.topTemplate" spellcheck="false" placeholder="Template">
-          <input type="text" class="gf-form-input width-25" ng-model="target.conf.topStyle" spellcheck="false" placeholder="Style">
-        </div>
-      </div>
-    </div>
-    <div class="section">
-      <h5 class="section-heading">Variables</h5>
+    <h5 class="section-heading">Label</h5>
+    <div class="gf-form-inline">
       <div class="gf-form">
-        <label class="gf-form-label query-keyword width-10">Variable Prefix</label>
-        <input type="text" class="gf-form-input" ng-model="target.conf.variablePrefix" spellcheck="false" placeholder="Variable Prefix">
-      </div>
-      <h5 class="section-heading">Query</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-15">变量格式</label>
-          <label class="gf-form-label query-keyword width-10">变量名</label>
-          <label class="gf-form-label query-keyword width-10">标签</label>
-          <label class="gf-form-label query-keyword width-10">Null</label>
-          <label class="gf-form-label">
-            <a ng-click="target.conf.dsQueryVariables.push({})">
-              <i class="fa fa-plus"></i>
-            </a>
-          </label>
-        </div>
-      </div>
-      <div class="gf-form-inline" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-15">${{target.conf.variablePrefix}}_ds_{{dsQueryVariable.name}}</label>
-          <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.name" spellcheck="false" placeholder="name">
-          <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.label" spellcheck="false" placeholder="label">
-          <input type="text" class="gf-form-input width-5" ng-model="dsQueryVariable.nullValue" spellcheck="false" placeholder="null value">
-          <input type="text" class="gf-form-input width-5" ng-model="dsQueryVariable.nullText" spellcheck="false" placeholder="null text">
-          <label class="gf-form-label">
-            <a ng-click="ctrl.removeVariable(target.conf.dsQueryVariables, bindVariable)">
-              <i class="pointer fa fa-remove"></i>
-            </a>
-          </label>
-          <label class="gf-form-label" ng-hide="$last">
-            <a ng-click="ctrl.move(target.conf.dsQueryVariables,$index,$index+1)">
-              <i class="pointer fa fa-arrow-down"></i>
-            </a>
-          </label>
-          <label class="gf-form-label" ng-hide="$first">
-            <a ng-click="ctrl.move(target.conf.dsQueryVariables,$index,$index-1)">
-              <i class="pointer fa fa-arrow-up"></i>
-            </a>
-          </label>
-        </div>
-      </div>
-      <h5 class="section-heading">Publish</h5>
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-15">变量格式</label>
-          <label class="gf-form-label query-keyword width-10">变量名</label>
-          <label class="gf-form-label query-keyword width-10">字段</label>
-          <label class="gf-form-label query-keyword width-10">Null</label>
-          <label class="gf-form-label">
-            <a ng-click="target.conf.bindVariables.push({})">
-              <i class="fa fa-plus"></i>
-            </a>
-          </label>
-        </div>
-      </div>
-      <div class="gf-form-inline" ng-repeat="bindVariable in target.conf.bindVariables">
-        <div class="gf-form">
-          <label class="gf-form-label query-keyword width-15">
-            <i style="margin: auto 5px;" class="fa fa-eye" ng-if="$first"></i>${{target.conf.variablePrefix}}_{{bindVariable.name}}</label>
-          <input type="text" class="gf-form-input width-10" ng-model="bindVariable.name" spellcheck="false" placeholder="name">
-          <input type="text" class="gf-form-input width-10" ng-model="bindVariable.field" spellcheck="false" placeholder="field">
-          <input type="text" class="gf-form-input width-5" ng-model="bindVariable.nullValue" spellcheck="false" placeholder="null value">
-          <input type="text" class="gf-form-input width-5" ng-model="bindVariable.nullText" spellcheck="false" placeholder="null text">
-          <label class="gf-form-label">
-            <a ng-click="ctrl.removeVariable(target.conf.bindVariables, bindVariable)">
-              <i class="fa fa-remove"></i>
-            </a>
-          </label>
-          <label class="gf-form-label" ng-hide="$first">
-            <a ng-click="ctrl.move(target.conf.bindVariables,$index,0)">
-              <i class="pointer fa fa-eye"></i>
-            </a>
-          </label>
-        </div>
+        <label class="gf-form-label width-6">&nbsp;</label>
+        <label class="gf-form-label width-15">绑定字段</label>
+        <label class="gf-form-label width-25">格式化</label>
+        <label class="gf-form-label width-25">样式</label>
       </div>
     </div>
-    <hr>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label width-6">主标题</label>
+        <input type="text" class="gf-form-input width-15" ng-model="target.conf.field" spellcheck="false"
+          placeholder="field">
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleTemplate" spellcheck="false"
+          placeholder="Template">
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleStyle" spellcheck="false"
+          placeholder="Style">
+      </div>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label width-6">下副标题</label>
+        <input type="text" class="gf-form-input width-15" ng-model="target.conf.fieldValue" spellcheck="false"
+          placeholder="fieldValue">
+        <input type="text" class="gf-form-input width-5" ng-if="false" ng-model="target.conf.fieldOrder" min-length="0"
+          bs-typeahead="['asc','desc']" spellcheck="false" placeholder="OrderBy">
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.bottomTemplate" spellcheck="false"
+          placeholder="Template">
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.bottomStyle" spellcheck="false"
+          placeholder="Style">
+      </div>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label width-21">上副标题</label>
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.topTemplate" spellcheck="false"
+          placeholder="Template">
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.topStyle" spellcheck="false"
+          placeholder="Style">
+      </div>
+    </div>
   </div>
+  <div class="section">
+    <h5 class="section-heading">Variables</h5>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-10">Variable Prefix</label>
+      <input type="text" class="gf-form-input" ng-model="target.conf.variablePrefix" spellcheck="false"
+        placeholder="Variable Prefix">
+    </div>
+    <h5 class="section-heading">Query</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-15">变量格式</label>
+        <label class="gf-form-label query-keyword width-10">变量名</label>
+        <label class="gf-form-label query-keyword width-10">标签</label>
+        <label class="gf-form-label query-keyword width-10">Null</label>
+        <label class="gf-form-label">
+          <a ng-click="target.conf.dsQueryVariables.push({})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
+      <div class="gf-form">
+        <label
+          class="gf-form-label query-keyword width-15">${{target.conf.variablePrefix}}_ds_{{dsQueryVariable.name}}</label>
+        <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.name" spellcheck="false"
+          placeholder="name">
+        <input type="text" class="gf-form-input width-10" ng-model="dsQueryVariable.label" spellcheck="false"
+          placeholder="label">
+        <input type="text" class="gf-form-input width-5" ng-model="dsQueryVariable.nullValue" spellcheck="false"
+          placeholder="null value">
+        <input type="text" class="gf-form-input width-5" ng-model="dsQueryVariable.nullText" spellcheck="false"
+          placeholder="null text">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeVariable(target.conf.dsQueryVariables, bindVariable)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(target.conf.dsQueryVariables,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(target.conf.dsQueryVariables,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <h5 class="section-heading">Publish</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-15">变量格式</label>
+        <label class="gf-form-label query-keyword width-10">变量名</label>
+        <label class="gf-form-label query-keyword width-10">字段</label>
+        <label class="gf-form-label query-keyword width-10">Null</label>
+        <label class="gf-form-label">
+          <a ng-click="target.conf.bindVariables.push({})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="bindVariable in target.conf.bindVariables">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-15">
+          <i style="margin: auto 5px;" class="fa fa-eye"
+            ng-if="$first"></i>${{target.conf.variablePrefix}}_{{bindVariable.name}}</label>
+        <input type="text" class="gf-form-input width-10" ng-model="bindVariable.name" spellcheck="false"
+          placeholder="name">
+        <input type="text" class="gf-form-input width-10" ng-model="bindVariable.field" spellcheck="false"
+          placeholder="field">
+        <input type="text" class="gf-form-input width-5" ng-model="bindVariable.nullValue" spellcheck="false"
+          placeholder="null value">
+        <input type="text" class="gf-form-input width-5" ng-model="bindVariable.nullText" spellcheck="false"
+          placeholder="null text">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeVariable(target.conf.bindVariables, bindVariable)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(target.conf.bindVariables,$index,0)">
+            <i class="pointer fa fa-eye"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr>
+</div>
 </div>
 
 <mixed-metrics-ds-selector panel-ctrl="ctrl"></mixed-metrics-ds-selector>

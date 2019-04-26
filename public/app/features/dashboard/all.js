@@ -13,6 +13,7 @@ define([
   './time_srv',
   './unsavedChangesSrv',
   './timepicker/timepicker',
+  './timepicker/querybartimepicker',
   './graphiteImportCtrl',
   './impression_store',
   './upload',
@@ -26,4 +27,4 @@ define([
   '../signalr/grafana_screen_signalr_hub',
   '../websocket/ws_across_screen',
   './modal/index'
-], function () {});
+], function () { });

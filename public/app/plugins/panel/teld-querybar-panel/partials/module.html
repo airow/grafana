@@ -1,9 +1,11 @@
- <div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
+<div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
   <div ng-show="ctrl.defineQuery">
     <div class="tabbed-view-header">
-      <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }" style="margin-top: 0px;">
+      <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }"
+        style="margin-top: 0px;">
         <li class="gf-tabs-item" ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets">
-          <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}" ng-click="ctrl.manualChangeQueryBarTab(target)"
+          <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}"
+            ng-click="ctrl.manualChangeQueryBarTab(target)"
             ng-class="{active: ctrl.currentTargetRefId === target.refId}">
             {{target.conf.title}}
             <!-- <i ng-if="target.conf.required" style="color: red;" class="fa fa-asterisk"></i> -->
@@ -12,11 +14,13 @@
       </ul>
     </div>
     <div class="-tabbed-view-body">
-      <div ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets" style="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;"
+      <div ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets"
+        style="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;"
         st2yle="border: 1px red solid;border-top: 0px;padding: 10px;" ng-if="ctrl.currentTargetRefId === target.refId">
         <div class="gf-form-inline">
           <div class="gf-form" ng-repeat="dsQueryVariable in target.conf.dsQueryVariables">
-            <input type="text" ng-keyup="ctrl.enterkey(target)"  style="padding-top: 2px; padding-bottom: 2px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
+            <input type="text" ng-keyup="ctrl.enterkey(target)" style="padding-top: 2px; padding-bottom: 2px;"
+              class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value"
               spellcheck="false" placeholder="{{dsQueryVariable.label}}">
             <!-- <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
               <a ng-click="ctrl.currentTabInfo[target.refId].dsQuery[dsQueryVariable.name].value=''">
@@ -25,31 +29,38 @@
             </label> -->
           </div>
           <div class="gf-form" ng-if='target.conf.orderByOptions.length'>
-            <select style="padding-top: 2px; padding-bottom: 2px; height: 24px;" class="gf-form-input" ng-model="ctrl.currentTabInfo[target.refId].orderBy" ng-options="option.text for option in target.conf.orderByOptions">
+            <select style="padding-top: 2px; padding-bottom: 2px; height: 24px;" class="gf-form-input"
+              ng-model="ctrl.currentTabInfo[target.refId].orderBy"
+              ng-options="option.text for option in target.conf.orderByOptions">
             </select>
           </div>
           <div class="gf-form" ng-if="target.conf.dsQueryVariables.length>0">
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
-              <button ng-click="ctrl.undoQuery(target)" style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
+              <button ng-click="ctrl.undoQuery(target)"
+                style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
                 ng-disabled="ctrl.isLoading()">
                 <i class="fa fa-undo"></i>
                 <span class="queryBtnHide-">重置</span>
               </button>
             </label>
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
-              <button ng-click="ctrl.toggleQuery(target)" style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
+              <button ng-click="ctrl.toggleQuery(target)"
+                style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
                 ng-disabled="ctrl.isLoading()">
                 <i class="fa fa-filter"></i>
                 <span class="queryBtnHide-">过滤</span>
               </button>
             </label>
           </div>
-          <gf-form-switch ng-if="ctrl.panel.showClickQueryBtn2Fetch" class="gf-form" label="点击查询取数" label-class="width-8" checked="ctrl.rtClickQueryBtn2Fetch">
+          <gf-form-switch ng-if="ctrl.panel.showClickQueryBtn2Fetch" class="gf-form" label="点击查询取数"
+            label-class="width-8" checked="ctrl.rtClickQueryBtn2Fetch">
           </gf-form-switch>
         </div>
-        <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="true" on-ready="ctrl.onReadySwiper(swiper)"
+        <ks-swiper-container wrapper-cls="swiper-wrapper-cls" loop="false" space-between="10" show-nav-buttons="true"
+          on-ready="ctrl.onReadySwiper(swiper)"
           override-parameters="{slideToClickedSlide:true, grabCursor:true, mousewheelControl:true,observer: true, observeParents: true}">
-          <ks-swiper-slide slider-cls='{{ctrl.getSliderCls(target,$index)}}' ng-repeat="row in ctrl.getQueryResult(target)">
+          <ks-swiper-slide slider-cls='{{ctrl.getSliderCls(target,$index)}}'
+            ng-repeat="row in ctrl.getQueryResult(target)">
             <div ng-if="row.isNil">
               <div ng-click="ctrl.swiperSlide_ClickHandler(target, row)">
                 <div class="empty">
@@ -67,11 +78,12 @@
                 </div>
                 <div class="rt">
                   <div>
-                    <p class="top"  ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
+                    <p class="top" ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
                     <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls">
                       <div>{{row.label}}</div>
                     </p>
-                    <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.conf.bottomCls">{{row.labelBottom}}</p>
+                    <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.conf.bottomCls">{{row.labelBottom}}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -92,18 +104,26 @@
   </div>
   <div>
     <div class="gf-form-inline">
+      <div class="gf-form filter" ng-repeat="item in ctrl.enableTimeRange()">
+        <label bs-tooltip="ctrl.tooltip" ng-click="ctrl.popup()" class="gf-form-label">
+          <i class="fa fa-clock-o"></i>
+          <span ng-bind="ctrl.rangeString">近 2 年</span>，
+        </label>
+      </div>
       <div class="gf-form filter" ng-repeat="(key,item) in ctrl.exprVariables">
         <label ng-hide="ctrl.variableIsHide(item.variable)" class="gf-form-label">{{key}}：
           <span class="filter-value" ng-bind="item.variable.current.text"></span>
-          <a ng-if="!item.target.conf.required" ng-click="ctrl.eh_clearBindVariables(item.target)"><i class="fa fa-remove"></i></a>
+          <a ng-if="!item.target.conf.required" ng-click="ctrl.eh_clearBindVariables(item.target)"><i
+              class="fa fa-remove"></i></a>
         </label>
       </div>
       <div class="gf-form filter-button">
         <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.eh_clearCycle();ctrl.eh_query();">
           <i class="fa fa-search"></i>
         </button>
-        <button type="button" class="btn gf-form-btn btn-secondary" ng-repeat="cycle in ctrl.getTimeButton()" ng-click="ctrl.eh_queryWithCycle(cycle);">
-            {{cycle.name}}
+        <button type="button" class="btn gf-form-btn btn-secondary" ng-repeat="cycle in ctrl.getTimeButton()"
+          ng-click="ctrl.eh_queryWithCycle(cycle);">
+          {{cycle.name}}
         </button>
         <button type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuerySwitch()">
           <i class="fa" ng-class="{true:'fa-angle-double-up',false:'fa-angle-double-down'}[ctrl.defineQuery]"></i>

@@ -1,0 +1,60 @@
+<div style="margin-top: 30px;">
+  <form name="timeForm" class="gf-timepicker-absolute-section" style="border-right:none;margin-right:80px;">
+    <h3>时间范围</h3>
+
+    <label class="small">开始:</label>
+    <div class="gf-form-inline">
+      <div class="gf-form max-width-28">
+        <input type="text" class="gf-form-input input-large" ng-model="ctrl.timeRaw.from" input-datetime>
+      </div>
+      <div class="gf-form">
+        <button class="btn gf-form-btn btn-primary" type="button" ng-click="openFromPicker=!openFromPicker">
+          <i class="fa fa-calendar"></i>
+        </button>
+      </div>
+    </div>
+
+    <div ng-if="openFromPicker">
+      <datepicker ng-model="ctrl.absolute.fromJs" class="gf-timepicker-component" show-weeks="false"
+        starting-day="ctrl.firstDayOfWeek" ng-change="ctrl.absoluteFromChanged();">
+      </datepicker>
+    </div>
+
+
+    <label class="small">结束:</label>
+    <div class="gf-form-inline">
+      <div class="gf-form max-width-28">
+        <input type="text" class="gf-form-input input-large" ng-model="ctrl.timeRaw.to" input-datetime>
+      </div>
+      <div class="gf-form">
+        <button class="btn gf-form-btn btn-primary" type="button" ng-click="openToPicker=!openToPicker">
+          <i class="fa fa-calendar"></i>
+        </button>
+      </div>
+    </div>
+
+    <div ng-if="openToPicker">
+      <datepicker ng-model="ctrl.absolute.toJs" class="gf-timepicker-component" show-weeks="false"
+        starting-day="ctrl.firstDayOfWeek" ng-change="ctrl.absoluteToChanged();"></datepicker>
+    </div>
+  </form>
+
+  <div class="gf-timepicker-relative-section" style="padding-left:10px" ng-hide="ctrl.hideQuick()">
+    <h3>快速选择</h3>
+    <ul ng-repeat="group in ctrl.timeOptions">
+      <li bindonce ng-repeat='option in group' ng-class="{active: ctrl.optionActive===option}">
+        <a ng-click="ctrl.setRelativeFilter(option)" bo-text="option.display"></a>
+      </li>
+    </ul>
+    <div style="clear:both">
+      <div style="margin-bottom: 20px;text-align: right;padding-right: 30px">
+        <button type="submit" class="btn gf-form-btn btn-secondary" ng-click="ctrl.applyCustom();"
+          ng-disabled="!timeForm.$valid">确定</button>
+        <button type="submit" class="btn gf-form-btn btn-secondary" ng-click="ctrl.dismiss();">取消</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<div class="clearfix"></div>

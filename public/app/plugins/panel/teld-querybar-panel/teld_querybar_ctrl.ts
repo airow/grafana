@@ -15,6 +15,7 @@ import appEvents from 'app/core/app_events';
 import config from 'app/core/config';
 import './directives/all';
 import { loadPluginCss } from 'app/plugins/sdk';
+import * as rangeUtil from 'app/core/utils/rangeutil';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-querybar-panel/css/swiper.3.0.8.built-in.css',
@@ -94,6 +95,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     slideWidth: 250,
     targets: [],
     saveVariable: false,
+    timeRangeConf: {},
     saveVariableLocalStoragePrefix: _.uniqueId('def')
   };
 
@@ -108,7 +110,6 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.variableSrv = $injector.get('variableSrv');
     this.alertSrv = $injector.get('alertSrv');
     this.uiSegmentSrv = $injector.get('uiSegmentSrv');
-
     this.device = (function () {
       var ua = window.navigator.userAgent;
       var android = ua.match(/(Android);?[\s\/]+([\d.]+)?/);
@@ -182,19 +183,21 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }.bind(this), $scope);
 
     $scope.$root.onAppEvent('teld-exitFullscreen', function (evt, payload) {
-      _.each(this.snapshot.querybarVariable, item => {
-        var t = _.find(this.templateSrv.variables, { name: item.name });
-        if (t) {
-          t.current = item.current;
-        }
-        t = _.find(this.querybarVariable, { name: item });
-        if (t) {
-          t.current = item.current;
-        }
-      });
-      this.queryResult = this.snapshot.queryResult;
-      this.currentTarget = this.snapshot.currentTarget;
-      this.currentTabInfo = this.snapshot.currentTabInfo;
+      if (this.snapshot) {
+        _.each(this.snapshot.querybarVariable, item => {
+          var t = _.find(this.templateSrv.variables, { name: item.name });
+          if (t) {
+            t.current = item.current;
+          }
+          t = _.find(this.querybarVariable, { name: item });
+          if (t) {
+            t.current = item.current;
+          }
+        });
+        this.queryResult = this.snapshot.queryResult;
+        this.currentTarget = this.snapshot.currentTarget;
+        this.currentTabInfo = this.snapshot.currentTabInfo;
+      }
       this.templateSrv.updateTemplateData();
       this.eh_clearCycle();
       this.eh_query();
@@ -229,6 +232,16 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     _.set(this.generalVariable, variable.name, variable);
     return variable;
   }
+
+  setGeneralVariable(target, variableConf) {
+    var variable = _.find(this.generalVariable, { name: `${target.conf.variablePrefix}_${variableConf.name}` });
+    if (_.isNil(variable)) {
+      this.addGeneralVariable(target, variableConf);
+    } else {
+      variable.current = { text: variableConf.value, value: variableConf.value };
+    }
+  }
+
 
   addBindVariable(target, bindVariable, nullValue) {
     let variable = this.variableSrv.addVariable({
@@ -273,9 +286,47 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     //end initDashboardVariables
   }
 
+  setTimeRangeVariable(timeRange?) {
+    var enable = _.get(this.panel, 'timeRangeConf.enable', false);
+    if (enable !== true) { return; }
+    timeRange = timeRange || this.timeSrv.timeRange();
+    var targetConf = { conf: { variablePrefix: "_timeRange" } };
+    _.each(["from", "to"], item => {
+      var value = timeRange[item].format();
+      this.setGeneralVariable(targetConf, { name: item, text: value, value: value });
+    });
+  }
+
+  setTimeRange(range) {
+
+    if (false === moment.isMoment(range.from)) {
+      var from = moment(range.from);
+      if (from.isValid()) {
+        range.from = from;
+      }
+    }
+
+    if (false === moment.isMoment(range.to)) {
+      var to = moment(range.to);
+      if (to.isValid()) {
+        range.to = to;
+      }
+    }
+    this.timeSrv.setTime(range);
+    this.setTimeRangeVariable();
+    this.variables2LocalStorage();
+  }
+
+  enableTimeRange() {
+    this.getRangeString();
+    var enable = _.get(this.panel, 'timeRangeConf.enable', false);
+    return enable ? [0] : [];
+  }
+
   localStorage2Variables() {
     if (false === this.panel.saveVariable) {
       this.variables2LocalStorage();
+      this.setTimeRangeVariable();
       return;
     }
     //this.isFirstWithSaveVariable = true;
@@ -310,6 +361,17 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         ls = JSON.parse(ls);
 
         _.each(ls, (lsVal, varKey) => {
+
+          if (varKey === "timeRange") {
+            if (this.denyTimeRangeSave()) {
+              this.setTimeRangeVariable();
+              this.variables2LocalStorage();
+            } else {
+              this.setTimeRange(lsVal);
+            }
+            return;
+          }
+
           var bindVars = this[varKey];
 
           _.each(bindVars, (varVal, varName) => {
@@ -336,6 +398,14 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     });
   }
 
+  denyTimeRangeSave() {
+    return this.panel.saveVariable && _.get(this.panel, 'timeRangeConf.denySave', false);
+  }
+
+  lsTimeRange(item) {
+    return moment.isMoment(item) ? item.format("YYYY-MM-DD HH:mm:ss") : item;
+  }
+
   variables2LocalStorage() {
 
     var dashLocalStorage = this.dashboard.dashLocalStorage;
@@ -347,7 +417,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
     var lsVariables = ['querybarVariable', 'generalVariable', 'querybarDsVariable'];
 
-    var ls = {};
+    var timeRange = this.timeSrv.timeRange();
+    var ls = {
+      timeRange: {
+        from: this.lsTimeRange(timeRange.raw.from),
+        to: this.lsTimeRange(timeRange.raw.to)
+      }
+    };
     _.each(lsVariables, item => {
       ls[item] = _.transform(this[item], (result, variable) => {
         result[variable.name] = variable.current;
@@ -374,7 +450,6 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
 
   onDataReceived(dataList) {
-
     let currentTarget = this.currentTarget;
     let targetConf = currentTarget.conf || {};
     let eachList = _.isArray(dataList) ? dataList : [dataList];
@@ -1219,6 +1294,77 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.row.height = 1;
     this.defineQuery = !this.defineQuery;
     this.$scope.$root.appEvent("querybar-queryswitch", this);
+  }
+
+  absolute: any;
+  tooltip: any;
+  isUtc: boolean;
+  rangeString: any;
+  getRangeString() {
+
+    // this.panel = this.dashboard.timepicker;
+
+    var time = angular.copy(this.timeSrv.timeRange());
+    var timeRaw = angular.copy(time.raw);
+
+    if (!this.dashboard.isTimezoneUtc()) {
+      time.from.local();
+      time.to.local();
+      if (moment.isMoment(timeRaw.from)) {
+        timeRaw.from.local();
+      }
+      if (moment.isMoment(timeRaw.to)) {
+        timeRaw.to.local();
+      }
+    } else {
+      this.isUtc = true;
+    }
+
+    // var rangeString = rangeUtil.describeTimeRange(timeRaw);
+    var absoluteFormat = { from: { absoluteFormat: "YYYY-MM-DD" }, to: { absoluteFormat: "YYYY-MM-DD" } };
+    // _.defaultsDeep(absoluteFormat, timeRaw);
+    // var rangeString = rangeUtil_querybar.describeTimeRange_zh_CN(absoluteFormat);
+    // _.defaultsDeep(timeRaw, absoluteFormat);
+    this.rangeString = rangeUtil.describeTimeRangeRTZ(timeRaw);
+    this.absolute = { fromJs: time.from.toDate(), toJs: time.to.toDate() };
+    this.tooltip = this.dashboard.formatDate(time.from) + ' <br>to<br>';
+    this.tooltip += this.dashboard.formatDate(time.to);
+
+    // do not update time raw when dropdown is open
+    // as auto refresh will reset the from/to input fields
+
+    return this.rangeString;
+
+    // return "asdfasdfasf";
+  }
+
+  popup() {
+
+    //debugger;
+    var popupModalScope = this.$scope.$new();
+    popupModalScope.$on("$destroy", function () {
+      popupModalScope.dismiss();
+    });
+    popupModalScope.panel = this.panel;
+    // popupModalScope.links = links;
+    popupModalScope.panelCtrl = this;
+    popupModalScope.modalTitle = this.panel.title;
+    popupModalScope.syncTimeRange = this.setTimeRange.bind(this);
+    popupModalScope.dashboard = this.dashboard;
+
+    var scrollY = window.scrollY;
+    this.publishAppEvent('show-modal', {
+      modalClass: "teld-go-to-detail",
+      //src: 'public/app/features/dashboard/partials/shareModal.html',
+      templateHtml: '<querybar-time-picker dash3board="ctrl.dashboard"></querybar-time-picker>',
+      // src: 'public/app/features/dashboard/timepicker/dropdown.html',
+      scope: popupModalScope
+    });
+
+    popupModalScope.$on('modal-shown', function (ve) {
+      window.scrollTo(0, scrollY);
+      $(".teld-go-to-detail").css('top', scrollY + $(window).height() / 4);
+    });
   }
 
   alert(s) {
