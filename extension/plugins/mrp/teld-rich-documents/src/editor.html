@@ -4,7 +4,8 @@
     <div class="gf-form">
       <label class="gf-form-label width-9">Bg Color</label>
       <span class="max-width-10">
-        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.bgColor" ng-change="ctrl.render()"></spectrum-picker>
+        <spectrum-picker class="gf-form-input" ng-model="ctrl.panel.bgColor" ng-change="ctrl.render()">
+        </spectrum-picker>
       </span>
       <input class="input-small gf-form-input" placeholder="输入色值" ng-model="ctrl.panel.bgColor" />
     </div>
@@ -52,63 +53,71 @@
 
   <div class="section gf-form-group" ng-if="ctrl.panel.teldtemplate=='default'">
     <h5 class="section-heading"></h5>
-    <gf-form-switch class="gf-form" label="IsDataSource" label-class="width-8" checked="ctrl.panel.IsDataSource" on-change="ctrl.render()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label="IsDataSource" label-class="width-8" checked="ctrl.panel.IsDataSource"
+      on-change="ctrl.render()"></gf-form-switch>
     <div class="gf-form">
       <label class="gf-form-label width-9">IsShow</label>
       <input type="number" class="input-small gf-form-input width-9" ng-model="ctrl.panel.IsShow" ng-model-onblur />
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=1">
       <label class="gf-form-label width-9">title1</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title1" ng-model="ctrl.panel.title1" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title1"
+        ng-model="ctrl.panel.title1" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9" ng-if="!ctrl.panel.IsDataSource">value1</label>
-      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource" placeholder="请输入值1" ng-model="ctrl.panel.sum1"
-        ng-change="ctrl.render()" ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource"
+        placeholder="请输入值1" ng-model="ctrl.panel.sum1" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">percent1</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位1" ng-model="ctrl.panel.percent1" ng-change="ctrl.render()"
-        ng-model-onblur />
-      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator1" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand1" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround1" on-change="ctrl.render()"></gf-form-switch>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位1"
+        ng-model="ctrl.panel.percent1" ng-change="ctrl.render()" ng-model-onblur />
+      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator1"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand1"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround1"
+        on-change="ctrl.render()"></gf-form-switch>
       <label class="gf-form-label width-9">decimals</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数" ng-model="ctrl.panel.decimals1" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数"
+        ng-model="ctrl.panel.decimals1" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">SumFontColor1</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.sumFontColor1" ng-change="ctrl.render()"
-        ng-model-onblur />
-        <label class="gf-form-label width-9">titleFontColor1</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.titleFontColor1" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.sumFontColor1" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">titleFontColor1</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.titleFontColor1" ng-change="ctrl.render()" ng-model-onblur />
     </div>
     <div class="gf-form-inline" ng-if="ctrl.panel.IsShow>=1">
       <div class="gf-form">
         <label class="gf-form-label width-9">expression1</label>
-        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式1；${(BindData['Count0'].Max/100000).toFixed(2)}"
-          ng-model="ctrl.panel.expression1" ng-change="ctrl.render()" ng-model-onblur />
+        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
+          placeholder="请输入表达式1；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression1"
+          ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=2">
       <label class="gf-form-label width-9">title2</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title2" ng-model="ctrl.panel.title2" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title2"
+        ng-model="ctrl.panel.title2" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9" ng-if="!ctrl.panel.IsDataSource">value2</label>
-      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource" placeholder="请输入值2" ng-model="ctrl.panel.sum2"
-        ng-change="ctrl.render()" ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource"
+        placeholder="请输入值2" ng-model="ctrl.panel.sum2" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">percent2</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位2" ng-model="ctrl.panel.percent2" ng-change="ctrl.render()"
-        ng-model-onblur />
-      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator2" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand2" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround2" on-change="ctrl.render()"></gf-form-switch>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位2"
+        ng-model="ctrl.panel.percent2" ng-change="ctrl.render()" ng-model-onblur />
+      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator2"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand2"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround2"
+        on-change="ctrl.render()"></gf-form-switch>
       <label class="gf-form-label width-9">decimals</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数" ng-model="ctrl.panel.decimals2" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数"
+        ng-model="ctrl.panel.decimals2" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">SumFontColor2</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.sumFontColor2" ng-change="ctrl.render()"
-        ng-model-onblur />
-        <label class="gf-form-label width-9">titleFontColor2</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.titleFontColor2" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.sumFontColor2" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">titleFontColor2</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.titleFontColor2" ng-change="ctrl.render()" ng-model-onblur />
       <!-- <label class="gf-form-label width-9">expression2</label>
       <input type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式2" ng-model="ctrl.panel.expression2"
         ng-change="ctrl.render()" ng-model-onblur /> -->
@@ -120,32 +129,36 @@
     <div class="gf-form-inline" ng-if="ctrl.panel.IsShow>=2">
       <div class="gf-form">
         <label class="gf-form-label width-9">expression2</label>
-        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式2；${(BindData['Count0'].Max/100000).toFixed(2)}"
-          ng-model="ctrl.panel.expression2" ng-change="ctrl.render()" ng-model-onblur />
+        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
+          placeholder="请输入表达式2；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression2"
+          ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=3">
       <label class="gf-form-label width-9">title3</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title3" ng-model="ctrl.panel.title3" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title3"
+        ng-model="ctrl.panel.title3" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9" ng-if="!ctrl.panel.IsDataSource">value3</label>
-      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource" placeholder="请输入值3" ng-model="ctrl.panel.sum3"
-        ng-change="ctrl.render()" ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource"
+        placeholder="请输入值3" ng-model="ctrl.panel.sum3" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">percent3</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位3" ng-model="ctrl.panel.percent3" ng-change="ctrl.render()"
-        ng-model-onblur />
-      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator3" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand3" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround3" on-change="ctrl.render()"></gf-form-switch>
-       <label class="gf-form-label width-9">decimals</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数" ng-model="ctrl.panel.decimals3" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位3"
+        ng-model="ctrl.panel.percent3" ng-change="ctrl.render()" ng-model-onblur />
+      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator3"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand3"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround3"
+        on-change="ctrl.render()"></gf-form-switch>
+      <label class="gf-form-label width-9">decimals</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数"
+        ng-model="ctrl.panel.decimals3" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">SumFontColor3</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.sumFontColor3" ng-change="ctrl.render()"
-        ng-model-onblur />
-        <label class="gf-form-label width-9">titleFontColor3</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.titleFontColor3" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.sumFontColor3" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">titleFontColor3</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.titleFontColor3" ng-change="ctrl.render()" ng-model-onblur />
       <!-- <label class="gf-form-label width-9">expression3</label>
       <input type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式3" ng-model="ctrl.panel.expression3"
         ng-change="ctrl.render()" ng-model-onblur /> -->
@@ -157,32 +170,36 @@
     <div class="gf-form-inline" ng-if="ctrl.panel.IsShow>=3">
       <div class="gf-form">
         <label class="gf-form-label width-9">expression3</label>
-        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式3；${(BindData['Count0'].Max/100000).toFixed(2)}"
-          ng-model="ctrl.panel.expression3" ng-change="ctrl.render()" ng-model-onblur />
+        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
+          placeholder="请输入表达式3；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression3"
+          ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=4">
       <label class="gf-form-label width-9">title4</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title4" ng-model="ctrl.panel.title4" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title4"
+        ng-model="ctrl.panel.title4" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9" ng-if="!ctrl.panel.IsDataSource">value4</label>
-      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource" placeholder="请输入值4" ng-model="ctrl.panel.sum4"
-        ng-change="ctrl.render()" ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource"
+        placeholder="请输入值4" ng-model="ctrl.panel.sum4" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">percent4</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位4" ng-model="ctrl.panel.percent4" ng-change="ctrl.render()"
-        ng-model-onblur />
-      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator4" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand4" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround4" on-change="ctrl.render()"></gf-form-switch>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位4"
+        ng-model="ctrl.panel.percent4" ng-change="ctrl.render()" ng-model-onblur />
+      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator4"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand4"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround4"
+        on-change="ctrl.render()"></gf-form-switch>
       <label class="gf-form-label width-9">decimals</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数" ng-model="ctrl.panel.decimals4" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数"
+        ng-model="ctrl.panel.decimals4" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">SumFontColor4</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.sumFontColor4" ng-change="ctrl.render()"
-        ng-model-onblur />
-        <label class="gf-form-label width-9">titleFontColor4</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.titleFontColor4" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.sumFontColor4" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">titleFontColor4</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.titleFontColor4" ng-change="ctrl.render()" ng-model-onblur />
       <!-- <label class="gf-form-label width-9">expression4</label>
       <input type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式4" ng-model="ctrl.panel.expression4"
         ng-change="ctrl.render()" ng-model-onblur /> -->
@@ -194,32 +211,36 @@
     <div class="gf-form-inline" ng-if="ctrl.panel.IsShow>=4">
       <div class="gf-form">
         <label class="gf-form-label width-9">expression4</label>
-        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式4；${(BindData['Count0'].Max/100000).toFixed(2)}"
-          ng-model="ctrl.panel.expression4" ng-change="ctrl.render()" ng-model-onblur />
+        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
+          placeholder="请输入表达式4；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression4"
+          ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=5">
       <label class="gf-form-label width-9">title5</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title5" ng-model="ctrl.panel.title5" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title5"
+        ng-model="ctrl.panel.title5" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9" ng-if="!ctrl.panel.IsDataSource">value5</label>
-      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource" placeholder="请输入值5" ng-model="ctrl.panel.sum5"
-        ng-change="ctrl.render()" ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource"
+        placeholder="请输入值5" ng-model="ctrl.panel.sum5" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">percent5</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位5" ng-model="ctrl.panel.percent5" ng-change="ctrl.render()"
-        ng-model-onblur />
-      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator5" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand5" on-change="ctrl.render()"></gf-form-switch>
-      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround5" on-change="ctrl.render()"></gf-form-switch>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位5"
+        ng-model="ctrl.panel.percent5" ng-change="ctrl.render()" ng-model-onblur />
+      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator5"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand5"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround5"
+        on-change="ctrl.render()"></gf-form-switch>
       <label class="gf-form-label width-9">decimals</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数" ng-model="ctrl.panel.decimals5" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数"
+        ng-model="ctrl.panel.decimals5" ng-change="ctrl.render()" ng-model-onblur />
       <label class="gf-form-label width-9">SumFontColor5</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.sumFontColor5" ng-change="ctrl.render()"
-        ng-model-onblur />
-        <label class="gf-form-label width-9">titleFontColor5</label>
-      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色" ng-model="ctrl.panel.titleFontColor5" ng-change="ctrl.render()"
-        ng-model-onblur />
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.sumFontColor5" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">titleFontColor5</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.titleFontColor5" ng-change="ctrl.render()" ng-model-onblur />
       <!-- <label class="gf-form-label width-9">expression5</label>
       <input type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式5" ng-model="ctrl.panel.expression5"
         ng-change="ctrl.render()" ng-model-onblur /> -->
@@ -231,8 +252,9 @@
     <div class="gf-form-inline" ng-if="ctrl.panel.IsShow>=5">
       <div class="gf-form">
         <label class="gf-form-label width-9">expression5</label>
-        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式5；例：${(BindData['Count0'].Max/100000).toFixed(2)}"
-          ng-model="ctrl.panel.expression5" ng-change="ctrl.render()" ng-model-onblur />
+        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
+          placeholder="请输入表达式5；例：${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression5"
+          ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form-inline">
@@ -251,14 +273,16 @@
     <div class="gf-form-inline">
       <div class="gf-form">
         <label class="gf-form-label width-10">template</label>
-        <select class="gf-form-input" ng-model="ctrl.panel.teldtemplate" ng-options="item for item in ['default', 'teldboard']">
+        <select class="gf-form-input" ng-model="ctrl.panel.teldtemplate"
+          ng-options="item for item in ['default', 'teldboard']">
         </select>
       </div>
     </div>
     <div class="gf-form-inline" ng-show="ctrl.panel.teldtemplate!='default'">
       <div class="gf-form">
         <label class="gf-form-label width-10">templateText</label>
-        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input" ng-model="ctrl.panel.teldtemplatetext" ng-blur="editor.render()">
+        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input"
+          ng-model="ctrl.panel.teldtemplatetext" ng-blur="editor.render()">
         </textarea>
       </div>
     </div>
@@ -272,12 +296,19 @@
     </div>
     <div class="gf-form-inline" ng-show="ctrl.panel.teldtemplate!='default'">
       <div class="gf-form">
+        <label class="gf-form-label width-10">expression helper</label>
+        <label class="max-width-31">helper.m, helper._, helper.kbn, helper.valueFormats。
+          helper.valueFormats('千分位',4967999.22,2)</label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-show="ctrl.panel.teldtemplate!='default'">
+      <div class="gf-form">
         <label class="gf-form-label width-10">templateDemo</label>
-        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input" ng-model="ctrl.panel.teldtemplatetextdemo"
-          ng-blur="editor.render()">
+        <textarea style="width: 925px;height: 200px;" type="text" class="gf-form-input"
+          ng-model="ctrl.panel.teldtemplatetextdemo" ng-blur="editor.render()">
         </textarea>
       </div>
-    </div>2
+    </div>
   </div>
 </div>
 
@@ -285,10 +316,12 @@
   <div class="section gf-form-group">
     <h5 class="section-heading">Tip</h5>
     <div class="gf-form-inline">
-      <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.tip.enable" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label-class="width-8" label="enable" checked="ctrl.panel.tip.enable"
+        on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-7">context</label>
-        <input type="text" class="gf-form-input width-20" ng-model="ctrl.panel.tip.context" ng-change="ctrl.render()" ng-model-onblur>
+        <input type="text" class="gf-form-input width-20" ng-model="ctrl.panel.tip.context" ng-change="ctrl.render()"
+          ng-model-onblur>
       </div>
       <!-- <div class="gf-form">
         <label class="gf-form-label width-7">top</label>

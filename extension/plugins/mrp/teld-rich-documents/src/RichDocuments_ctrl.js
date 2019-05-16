@@ -1,6 +1,7 @@
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import moment from 'moment';
 import _ from 'lodash';
+import kbn from 'app/core/utils/kbn';
 import './css/microtip.css!';
 import './css/rich-documents.css!';
 import './css/jq22.css!';
@@ -185,6 +186,31 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     _.defaultsDeep(this.panel, panelDefaults);
     this.variableSrv = $injector.get('variableSrv');
+
+    this.templateSettings = {
+      imports: {
+        helper: {
+          '_': _,
+          'kbn': kbn,
+          'm': moment,
+          'valueFormats': (function (kbn) {
+            let bindContext = {
+              // kbn,
+              // valueFormats: kbn.valueFormats,
+              // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
+              valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
+                result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
+              }, {})
+            };
+
+            return function (unitFormatName, size, decimals) {
+              return this.valueFormats[unitFormatName](size, decimals);
+            }.bind(bindContext);
+          })(kbn)
+        }
+      }
+    };
+
     this.sce = $sce;
     if (!(this.panel.countdownSettings.endCountdownTime instanceof Date)) {
       this.panel.countdownSettings.endCountdownTime = moment(this.panel.countdownSettings.endCountdownTime).toDate();
@@ -260,8 +286,6 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
     });
     return variable;
   }
-
-
 
   onDataReceived(dataList) {
     if (this.panel.teldtemplate == "default") {
@@ -543,7 +567,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           "BindData": this.filterData
         }
       }
-      let compiled = _.template(this._panel.teldtemplatetext);
+      let compiled = _.template(this._panel.teldtemplatetext, this.templateSettings);
       this._panel.cellHtml = compiled(this.filterDataList);
       this._panel.cellHtml = this.sce.trustAsHtml(this._panel.cellHtml);
     }
