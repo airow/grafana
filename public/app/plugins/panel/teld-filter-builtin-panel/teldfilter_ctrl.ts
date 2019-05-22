@@ -234,6 +234,10 @@ export class TeldfilterCtrl extends PanelCtrl {
     return this.enableCycleConf;
   }
 
+  formatTime(QueryOption) {
+    return moment(QueryOption.ClickValue).format(QueryOption.timeFormat || 'YYYY-MM-DD');
+  }
+
   currentCycle: any;
   emitCycle(cycle, refresh) {
     var returnCycle = undefined;
@@ -308,7 +312,12 @@ export class TeldfilterCtrl extends PanelCtrl {
     _.move(variableArray, index, newIndex);
   }
   open(QueryOptions, $event) {
-    QueryOptions.opened = true;
+    if (QueryOptions.isMonthMode) {
+      QueryOptions.datepickerShow = !QueryOptions.datepickerShow;
+      $event.stopPropagation();
+    } else {
+      QueryOptions.opened = true;
+    }
   };
   goYesterday(QueryOptions, conf, $event) {
     QueryOptions.ClickValue = moment(QueryOptions.ClickValue).subtract(1, conf.step || 'days').toDate();
@@ -536,6 +545,15 @@ export class TeldfilterCtrl extends PanelCtrl {
     } else {
       this.btnFilterKHRed = false;
     }
+    this.closeDatepickerShow();
+  }
+  closeDatepickerShow() {
+    _.each(_.filter(this._panle.QueryList, { Querytype: "date" }), item => {
+      // item.datepickerShow = false;
+      _.each(item.QueryOptions, qo => {
+        if (qo.datepickerShow) { qo.datepickerShow = false; }
+      });
+    });
   }
   formatDate(now) {
     var year = now.getFullYear();

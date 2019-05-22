@@ -24,7 +24,7 @@
           <i style="cursor: pointer;" ng-if='QueryOptions.yesterdayConf.enable' class="fa fa-angle-double-left"
             title="前一天" ng-click="ctrl.goYesterday(QueryOption,QueryOptions.yesterdayConf,$event);ctrl.refreshFilter();"
             aria-hidden="true"></i>
-          <span class="OrerationTitleHeightKHSpan">{{QueryOption.ClickValue | date:'yyyy-MM-dd'}}</span>
+          <span class="OrerationTitleHeightKHSpan">{{ctrl.formatTime(QueryOption)}}</span>
           <i style="cursor: pointer;" ng-if='QueryOptions.tomorrowConf.enable' class="fa fa-angle-double-right"
             title="后一天" ng-click="ctrl.goTomorrow(QueryOption,QueryOptions.tomorrowConf,$event);ctrl.refreshFilter();"
             aria-hidden="true"></i>
@@ -43,7 +43,8 @@
       {{cycle.name}}
     </div>
   </div>
-  <div class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-6 col-md-offset-4" ng-show="ctrl.KwHuTuCaoDropDown">
+  <div ng-click='ctrl.closeDatepickerShow()' class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-6 col-md-offset-4"
+    ng-show="ctrl.KwHuTuCaoDropDown">
     <div style="display:inline-block;width:100%" ng-repeat="QueryOptions in ctrl._panle.QueryList">
       <div id="YunMonthOffTitle" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanal"
         style="line-height:30px !important;" ng-if="QueryOptions.QueryTitle">
@@ -65,14 +66,19 @@
 
         <div class="col-lg-4 gf-timepicker-component-v" ng-if="QueryOptions.Querytype=='date'"
           ng-repeat="QueryOption in QueryOptions.QueryOptions">
-          <input type="text" class="form-control date-pack" style="width:150px;"
-            datepicker-popup="{{ctrl.myDefaultDateFormat}}" ng-model="QueryOption.ClickValue"
-            is-open="QueryOption.opened" datepicker-options="ctrl.dateOptions"
+          <input type="text" class="form-control date-pack" style="width:173px;"
+            datepicker-popup="{{QueryOption.inputDateFormat||ctrl.myDefaultDateFormat}}"
+            ng-model="QueryOption.ClickValue" is-open="QueryOption.opened" datepicker-options="ctrl.dateOptions"
             custom-class="ctrl.getDayClass(date, mode)" ng-required="true" show-weeks="false" clear-text="清空"
             current-text="今天" close-text="确定" />
           <span class="input-group-btn">
-            <button type="button" class="btn btn-default date-pack-button" ng-click="ctrl.open(QueryOption,$event)">
+            <button type="button" ng-if='!QueryOption.datepickerShow' class="btn btn-default date-pack-button"
+              ng-click="ctrl.open(QueryOption,$event)">
               <i class="fa fa-calendar"></i>
+            </button>
+            <button type="button" ng-if='QueryOption.datepickerShow' class="btn btn-default date-pack-button"
+              ng-click="ctrl.open(QueryOption,$event)">
+              <i class="fa fa-close"></i>
             </button>
             <button ng-if='QueryOptions.yesterdayConf.enable' type="button" class="btn btn-default date-pack-button"
               ng-click="ctrl.goYesterday(QueryOption,QueryOptions.yesterdayConf,$event)">
@@ -83,6 +89,11 @@
               <i class="fa fa-angle-double-right"></i>
             </button>
           </span>
+          <datepicker ng-click='$event.stopPropagation();'
+            style="position: absolute;z-index: 99999;background-color: white;" ng-if='QueryOption.datepickerShow'
+            min-mode='month' ng-model="QueryOption.ClickValue" min-date="minDate" show-weeks="false"
+            class="well well-sm" custom-class="getDayClass(date, mode)" ng-required="true">
+          </datepicker>
         </div>
       </div>
       <hr class="SplitLineKH">

@@ -186,6 +186,15 @@
           ng-change="ctrl.render()" ng-model-onblur />
         <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
           placeholder="校验时间变量" ng-model="QueryOption.CheckoutTimeAttribute" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="显示格式" bs-typeahead='["YYYY-MM-DD", "使用momnet格式"]' min-length="0"
+          ng-model="QueryOption.timeFormat" ng-change="ctrl.render()" ng-model-onblur />
+        <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
+          placeholder="选择框显示格式" bs-typeahead='["yyyy-MM-dd","anguler 日期格式"]' min-length="0"
+          ng-model="QueryOption.inputDateFormat" ng-change="ctrl.render()" ng-model-onblur />
+        <gf-form-switch class="gf-form" label="年月模式" label-class="width-8" checked="QueryOption.isMonthMode"
+          on-change="ctrl.render()">
+        </gf-form-switch>
         <select ng-if="QueryOptions.Querytype=='date'" class="gf-form-input max-width-9"
           ng-model="QueryOption.Checkoutwhere" ng-options="item for item in ['大于等于','小于等于','大于','小于']"></select>
         <gf-form-switch ng-if="QueryOptions.MultiClick && QueryOptions.Querytype!='date'" class="gf-form"
