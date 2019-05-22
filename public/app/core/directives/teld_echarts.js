@@ -88,7 +88,7 @@ define([
               var keys = _.map(option.series, 'name');
               var seriesData = _.map(option.series, 'data');
               var values = _.transform(seriesData, function (result, itemValue) {
-                result.push(itemValue[params.dataIndex].value || itemValue[params.dataIndex]);
+                if (itemValue[params.dataIndex]) { result.push(itemValue[params.dataIndex].value || itemValue[params.dataIndex]); }
               }, []);
 
               var clickData = {
