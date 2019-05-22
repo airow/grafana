@@ -67,7 +67,8 @@ export class TeldServiceGatewayDatasource {
         ares.shift();
         ares.unshift("");
         domain = ares.join('.');
-        if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
+        // if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
+        if (!/^\.(teld\.(cn|net)+|hfcdgs.com)$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
         return `${protocol}//${host}${domain}`;
       }
     }
