@@ -20,7 +20,7 @@
 var window, document, ARGS, $, jQuery, moment, kbn;
 
 return function (callback) {
-  // debugger;
+  debugger;
   // Intialize a skeleton with nothing but a rows array and service object
   var dynamicDash = {
     editable: false,
@@ -188,7 +188,7 @@ return function (callback) {
     ares.unshift("");
     domain = ares.join('.');
     //if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
-    if (!new RegExp("^\.teld\.(cn|net)+$", "i").test(domain)) { domain += ':7777'; }//准生产加端口号
+    if (!new RegExp("^\.(teld\.(cn|net)+|hfcdgs.com)$", "i").test(domain)) { domain += ':7777'; }//准生产加端口号
     return protocol + '//' + host + domain + '/api/invoke?SID=' + SID;
   }
 
