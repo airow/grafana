@@ -260,6 +260,10 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
       var value = 0;
       try {
         value = compiled(contextData);
+        if (_.isEmpty(item.zeroTo) === false && (_.isEmpty(value) || item.zeroTo === value)) {
+          expressionData.datapoints.push([null, timeSeries]);
+          continue;
+        }
         value = _.toNumber(value);
         if (_.isNaN(value) || value === Infinity || false === _.isNumber(value)) {
           value = 0;

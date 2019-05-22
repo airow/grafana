@@ -21,6 +21,7 @@
           on-change="ctrl.checkedAll()"></gf-form-switch>
         <label class="gf-form-label query-keyword width-10">标签</label>
         <label class="gf-form-label query-keyword width-30">表达式</label>
+        <label class="gf-form-label query-keyword width-5">0转null</label>
         <label class="gf-form-label query-keyword width-5">位置</label>
         <label class="gf-form-label">
           <a ng-click="ctrl.panel.calcSeriesConf.push({enable:true,target:''})">
@@ -36,6 +37,8 @@
         <input type="text" class="gf-form-input width-10" ng-model="calcSerie.target" spellcheck="false"
           placeholder="target">
         <input type="text" class="gf-form-input width-30" ng-model="calcSerie.expression" spellcheck="false"
+          placeholder="value">
+        <input type="text" class="gf-form-input width-5" ng-model="calcSerie.zeroTo" spellcheck="false"
           placeholder="value">
         <input type="text" class="gf-form-input width-5" ng-model="calcSerie.sort" spellcheck="false"
           placeholder="value">
