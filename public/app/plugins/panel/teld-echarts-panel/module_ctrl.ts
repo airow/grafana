@@ -88,7 +88,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     series: {
       line: { type: 'line' },
       bar: { type: 'bar' },
-      pie: { type: 'pie' }
+      pie: { type: 'pie' },
+      scatter: { type: 'scatter' }
     }
   };
 
@@ -143,7 +144,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           label: { normal: { show: false } },
           center: ['50%', '50%'],
           radius: [0, '67%']
-        }
+        },
+        scatter: {}
       },
     },
 
@@ -759,6 +761,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     this.groupTime(dataList);
 
+    this.groupTimeWithScatter(dataList);
+
     this.dataList = dataList;
 
     this.timesOffsetDropRightWhile(dataList, maxdataListItem);
@@ -935,6 +939,18 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           r.push([sum, timeGroup]);
         }, []);
         dl.datapoints = ndp;
+      });
+    }
+  }
+
+  groupTimeWithScatter(dataList) {
+    if (this.panel.serieType === this.ecConf.series.scatter.type) {
+      var moment_zhCn = this.get_moment_zhCn;
+      _.each(dataList, dl => {
+        _.each(dl.datapoints, dp => {
+          // dp[1] = moment_zhCn(dp[1]).startOf('day').valueOf();
+          dp[1] = moment_zhCn(moment_zhCn(dp[1]).format("YYYYMMDDHHmm"),"YYYYMMDDHHmm").valueOf();
+        });
       });
     }
   }
@@ -1251,6 +1267,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let axis: any;
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
+        // case this.ecConf.series.scatter.type:
         if (this.panel.xAxisMode === 'series') {
           var groupBySerieKeys = _.map(serie, function (item) { return item.name.toLocaleLowerCase().split(' ' + item.metric)[0]; });
           //groupBySerieKeys = _.groupBy(groupBySerieKeys, function (item) { return item; });
@@ -1262,6 +1279,10 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
         }
 
+        break;
+      case this.ecConf.series.scatter.type:
+        axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
+        axis.data = _.unionBy(axis.data, 'value');
         break;
       case this.ecConf.series.bar.type:
         axis = this.serie2cateAxis(serie, _.defaultsDeep(this.ecConf.axis.category, this.panel.echarts.xAxis));
@@ -1282,6 +1303,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
       case this.ecConf.series.bar.type:
+      case this.ecConf.series.scatter.type:
         axis = _.defaultsDeep(this.ecConf.axis.value, this.panel.echarts.yAxis);
         if (this.panel.formatter.yAxis.axisLabel) {
           _.set(axis, 'axisLabel.formatter', this.yAxisLableFormatter.bind(this));
@@ -1534,6 +1556,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     let series = this.ecSeries;
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
+        // case this.ecConf.series.scatter.type:
         if (this.panel.xAxisMode === 'series') {
           series = this.getLineSerieMode();
         } else {
@@ -1546,6 +1569,14 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             return item;
           });
         }
+        break;
+      case this.ecConf.series.scatter.type:
+        var that = this;
+        series = _.cloneDeep(this.ecSeries).map(item => {
+          item.data = _.map(item.data, 'value');
+          item.data = _.uniqBy(item.data, i => { return i[0] + i[1]; });
+          return item;
+        });
         break;
       case this.ecConf.series.bar.type:
         if (this.isSeriesBar()) {
@@ -1757,6 +1788,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     switch (this.panel.serieType) {
       case this.ecConf.series.line.type:
       case this.ecConf.series.bar.type:
+      case this.ecConf.series.scatter.type:
         if (this.panel.exchangeAxis) {
           option.yAxis = xAxis;
           option.xAxis = yAxis;
@@ -1826,7 +1858,29 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       }
     });
   }
+  templateSettings = {
+    imports: {
+      helper: {
+        '_': _,
+        'kbn': kbn,
+        'm': moment,
+        'valueFormats': (function (kbn) {
+          let bindContext = {
+            // kbn,
+            // valueFormats: kbn.valueFormats,
+            // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
+            valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
+              result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
+            }, {})
+          };
 
+          return function (unitFormatName, size, decimals) {
+            return this.valueFormats[unitFormatName](size, decimals);
+          }.bind(bindContext);
+        })(kbn)
+      }
+    }
+  };
   useSerieTypeConf(option) {
     if (this.panel.serieType === "pie") {
       return option;
@@ -1870,6 +1924,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       });
     }
 
+    var dynamicBindContext = {
+      vars: _.transform(this.templateSrv.variables, (result, value, key) => {
+        result[value.name] = value.current.value;
+      }, {})
+    };
+
     let seriesTypeConf = _.filter(this.panel.seriesTypeConf, { enable: true });
     _.each(seriesTypeConf, type => {
       var series = _.find(option.series, s => {
@@ -1902,6 +1962,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             }
             series.markPoint = _.cloneDeep(type.markPoint);
             series.markLine = _.cloneDeep(type.markLine);
+            var yAxisDynaimc = _.filter(series.markLine.data, { markLineType: "yAxisDynamic" });
+            _.each(yAxisDynaimc, item => {
+              var compiled = _.template('${' + item.yAxis + '}', this.templateSettings);
+              var yAxisValue = compiled(dynamicBindContext);
+              item.yAxis = +yAxisValue;
+            });
+
             if (_.has(type, 'label.normal')) {
               _.set(series, 'label.normal', _.cloneDeep(type.label.normal));
             }
@@ -1992,8 +2059,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
         }
         var returnValue = [];
         var paramArray = _.isArray(params) ? params : [params];
-        returnValue.push(xFormatter(paramArray[0].name));
+        returnValue.push(xFormatter(paramArray[0].name || paramArray[0].data[0]));
         var ctrl = this;
+        var regExp = (/\[suffix.*\]/g);
         _.each(paramArray, function (param, index) {
           var item = [param.marker];
           switch (param.seriesName) {
@@ -2003,6 +2071,13 @@ export class ModuleCtrl extends MetricsPanelCtrl {
               }
               break;
             default:
+              if (_.startsWith(param.seriesName, '[hide]')) { return; }
+              if (_.startsWith(param.seriesName, '[hideMarker]')) { item.pop(); }
+              if (regExp.test(param.seriesName)) {
+                item.pop();
+                param.seriesName = _.replace(param.seriesName, regExp, "");
+              }
+
               item.push(param.seriesName + "：");
               break;
           }
@@ -2015,11 +2090,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
             var yAxisIndex = _.get(s, axis.axisIndex, 0);
             //option[axis.axis] 为了处理轴切换 this.panel.exchangeAxis==true
             formatter = _.get(option[axis.axis][yAxisIndex], 'axisLabel.formatter', valueFormatter);
-            tooltipVal = formatter(param.value);
+            var paramValue = param.value;
+            if (_.isArray(paramValue)) {
+              paramValue = paramValue[1];
+            }
+            tooltipVal = formatter(paramValue);
           } else {
             tooltipVal = formatter(param);
           }
           item.push(tooltipVal);
+          if (_.isEmpty(tooltipVal)) { return; }
           returnValue.push(_.join(item, ''));
         });
         return _.join(returnValue, '<br/>');

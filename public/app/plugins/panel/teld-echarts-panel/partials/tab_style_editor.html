@@ -534,6 +534,8 @@
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.xAxis.show">
       <h5 class="section-heading">Line</h5>
       <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.xAxis.splitLine.show" on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
         checked="ctrl.panel.echarts.xAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label width-8">interval</label>
@@ -674,6 +676,8 @@
     <!-- Line -->
     <div class="section gf-form-group" ng-show="ctrl.panel.echarts.yAxis.show">
       <h5 class="section-heading">Line</h5>
+      <gf-form-switch class="gf-form" label="Show" label-class="width-8"
+        checked="ctrl.panel.echarts.yAxis.splitLine.show" on-change="ctrl.render()"></gf-form-switch>
       <gf-form-switch class="gf-form" label="Show" label-class="width-8"
         checked="ctrl.panel.echarts.yAxis.axisLine.show" on-change="ctrl.render()"></gf-form-switch>
       <div class="gf-form">

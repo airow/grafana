@@ -213,7 +213,8 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">type</label>
-        <select class="gf-form-input width-7" ng-model="seriesType.type" ng-options="f for f in ['bar','line']">
+        <select class="gf-form-input width-7" ng-model="seriesType.type"
+          ng-options="f for f in ['bar','line','scatter']">
         </select>
       </div>
       <gf-form-switch ng-if='seriesType.type=="line"' class="gf-form" label="smooth" label-class="query-keyword width-7"
@@ -389,6 +390,7 @@
         <label class="gf-form-label query-keyword width-16">markLine</label>
       </div>
       <div class="gf-form">
+        <label class="gf-form-label width-8">markLineType</label>
         <label class="gf-form-label width-8">type</label>
         <label class="gf-form-label width-8">symbol</label>
         <label class="gf-form-label width-8">symbolSize</label>
@@ -396,6 +398,8 @@
         <label class="gf-form-label width-8">position</label>
         <label class="gf-form-label width-8">lineType</label>
         <label class="gf-form-label width-8">lineWidth</label>
+        <label class="gf-form-label width-8">yAxis</label>
+        <label class="gf-form-label width-9">lineColor</label>
         <label class="gf-form-label">
           <a ng-click="seriesType.markLine.data.push({})">
             <i class="pointer fa fa-plus"></i>
@@ -403,6 +407,8 @@
         </label>
       </div>
       <div class="gf-form" ng-repeat="markLine in seriesType.markLine.data">
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.markLineType"
+          bs-typeahead="['yAxisDynamic']" min-length="0" ec-valwrap>
         <input type="text" class="gf-form-input width-8" ng-model="markLine.type"
           bs-typeahead="['min', 'max', 'average']" min-length="0" ec-valwrap>
         <input type="text" class="gf-form-input width-8" ng-model="markLine.symbol"
@@ -415,6 +421,10 @@
         <input type="text" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.type"
           bs-typeahead="['solid', 'dashed', 'dotted']" min-length="0" ec-valwrap>
         <input type="number" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.width" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.yAxis" ec-valwrap>
+        <input type="text" class="gf-form-input width-8" ng-model="markLine.lineStyle.normal.color" ec-valwrap>
+        <spectrum-picker ng-model="markLine.lineStyle.normal.color" ng-change="ctrl.refresh()">
+        </spectrum-picker>
         <label class="gf-form-label">
           <a ng-click="ctrl.removeItem(seriesType.markLine.data, markLine)">
             <i class="pointer fa fa-remove"></i>

@@ -3,8 +3,9 @@ import echarts from 'echarts';
 import lineTheme from './screen/line/all';
 import barTheme from './screen/bar/all';
 import pieTheme from './screen/pie/all';
+import scatterTheme from './screen/line/all';
 
-let echartsTheme = { lineTheme, barTheme, pieTheme };
+let echartsTheme = { lineTheme, barTheme, pieTheme, scatterTheme };
 
 let echartsThemeName = {};
 let echartsThemeMap = {};
