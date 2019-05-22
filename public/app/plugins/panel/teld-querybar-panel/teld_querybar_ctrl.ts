@@ -415,15 +415,26 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       return;
     }
 
+    // debugger;
     var lsVariables = ['querybarVariable', 'generalVariable', 'querybarDsVariable'];
 
-    var timeRange = this.timeSrv.timeRange();
-    var ls = {
-      timeRange: {
+    var ls = {};
+    var enable = _.get(this.panel, 'timeRangeConf.enable', false);
+    var getls = window.localStorage.getItem(localStorageKey);
+    if (getls) {
+      getls = JSON.parse(getls);
+      if (_.isNil(getls['timeRange']) === false) {
+        ls['timeRange'] = getls['timeRange'];
+      }
+    }
+    if (enable && this.denyTimeRangeSave() === false) {
+      var timeRange = this.timeSrv.timeRange();
+      ls['timeRange'] = {
         from: this.lsTimeRange(timeRange.raw.from),
         to: this.lsTimeRange(timeRange.raw.to)
-      }
-    };
+      };
+    }
+
     _.each(lsVariables, item => {
       ls[item] = _.transform(this[item], (result, variable) => {
         result[variable.name] = variable.current;
