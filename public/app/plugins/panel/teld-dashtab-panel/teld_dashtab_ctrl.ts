@@ -190,6 +190,10 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
       window.location.pathname === "/dashboard/script/dashtab_switch_link.js") {
       var search = this.$location.search();
       search.db = target.dash;
+      if (this.panel.ignoreDate || target.ignoreDate) {
+        delete search.from;
+        delete search.to;
+      }
       //search.tab = this.panel.localStorageKey;
       // this.$location.search(search);
       switch (window.location.pathname) {
