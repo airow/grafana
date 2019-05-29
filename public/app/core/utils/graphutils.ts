@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 
-export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables) {
+export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables, panel) {
   if (_.size(data) === 0) {
     return data;
   }
@@ -173,7 +173,7 @@ function calcSeriesGropuBarItem(calcSeriesConf, data, hideMetrics, dashVariables
   return returnValue;
 }
 
-export function calcSeriesGropuBar(calcSeriesConf, data, hideMetrics, dashVariables) {
+export function calcSeriesGropuBar(calcSeriesConf, data, hideMetrics, dashVariables, panel) {
   if (_.size(data) === 0 || _.size(calcSeriesConf) === 0) {
     return data;
   }
@@ -203,7 +203,7 @@ export function calcSeriesGropuBar(calcSeriesConf, data, hideMetrics, dashVariab
   return returnValue;
 }
 
-export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
+export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables, panel) {
   if (_.size(data) === 0) {
     return data;
   }
@@ -212,7 +212,7 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
 
   calcSeriesConf = calcSeriesConf || [];
   calcSeriesConf = _.filter(calcSeriesConf, 'enable');
-  var master = _.maxBy(dataList, function (o) { return o.datapoints.length; });
+  var masterByLength = _.maxBy(dataList, function (o) { return o.datapoints.length; });
   var expression = [];
 
   // _.map(dashVariables,variable=>{return  });
@@ -231,7 +231,28 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
       '_': _
     }
   };
+  /** 方案1.去掉datalist值 */
+  if (_.find(calcSeriesConf, { opts: 'scatter' })) {
+    // debugger;
+    _.each(dataList, dl => {
+      var g = _.groupBy(dl.datapoints, i => { return i[1]; });
+      g = _.filter(g, item => { return item.length > 1; });
+      var g2 = _.map(g, item => { return _.remove(item, (v, i) => { return i > 0; }); });
 
+      dl.datapoints = _.unionBy(dl.datapoints, i => { return i[1]; });
+      dl.goupDP = _.flatten(g2);
+    });
+
+    var dataSourceGroup = _.transform(dataList, (result, n) => {
+      if (_.size(n.goupDP) === 0) { return; }
+      var values = n.goupDP.map(item => { return item[0]; });
+      var times = n.goupDP.map(item => { return item[1]; });
+      result[n.target] = _.zipObject(['values', 'time'], [values, times]);
+      if (n.groupKey) {
+        result[n.groupKey] = result[n.target];
+      }
+    }, {});
+  }
   var dataSource = _.transform(dataList, (result, n) => {
     var values = n.datapoints.map(item => { return item[0]; });
     var times = n.datapoints.map(item => { return item[1]; });
@@ -248,6 +269,7 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
     expression.push(expressionData);
 
     var compiled = _.template("${" + item.expression + "}", templateSettings);
+    var master = masterByLength;
 
     for (let index = 0; index < master.datapoints.length; index++) {
 
@@ -274,6 +296,10 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
       }
       expressionData.datapoints.push([_.toNumber(value), timeSeries]);
     }
+
+    if (item.opts ==='scatter') {//补充scatter重复的点
+      additionScatter(dataSourceGroup, dataSource, compiled, expressionData, item);
+    }
   });
 
   if (_.size(hideMetrics) > 0) {
@@ -285,6 +311,48 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables) {
 
   var returnValue = _.concat(dataList, expression);
   return returnValue;
+}
+
+function additionScatter(dataSourceGroup, dataSource, compiled, expressionData, item){
+  if (_.isEmpty(dataSourceGroup)) { return; }
+
+  _.transform(dataSourceGroup, (result, item, key) => {
+    result[key] = item.values[1];
+  }, {});
+
+  var dataSourceGroupLength = _.maxBy(_.map(dataSourceGroup, 'values'), 'length').length;
+  var dataSourceFields = _.omit(dataSource, _.keys(dataSourceGroup));
+  for (let index = 0; index < dataSourceGroupLength; index++) {
+    // debugger;
+    var contextData2 = _.transform(dataSourceGroup, (result, item, key) => {
+      result.timeSeries = item.time[index];
+      result[key] = item.values[index];
+      _.each(dataSourceFields, (dsFieldVal, dsFieldKey) => {
+        if (key !== dsFieldKey && result[dsFieldKey] === undefined) {
+          var findIndex = _.findIndex(dsFieldVal.time, value => { return value === result.timeSeries; });
+          var findValue = dsFieldVal.values[findIndex];
+          if (findValue) { result[dsFieldKey] = findValue; }
+        }
+      });
+    }, {});
+
+    var value = 0;
+    try {
+      value = compiled(contextData2);
+      if (_.isEmpty(item.zeroTo) === false && (_.isEmpty(value) || item.zeroTo === value)) {
+        expressionData.datapoints.push([null, contextData2.timeSeries]);
+        continue;
+      }
+      value = _.toNumber(value);
+      if (_.isNaN(value) || value === Infinity || false === _.isNumber(value)) {
+        value = 0;
+      }
+    } catch (error) {
+      console.error(error);
+      value = 0;
+    }
+    expressionData.datapoints.push([_.toNumber(value), contextData2.timeSeries]);
+  }
 }
 
 export function dashVars(dashVariables) {

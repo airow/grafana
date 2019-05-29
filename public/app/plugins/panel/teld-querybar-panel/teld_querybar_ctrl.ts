@@ -251,6 +251,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       query: '',
       current: { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT }
     });
+    variable.querybarRequired = target.conf.required;
+    variable.confVarValue = { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT };
     _.set(this.querybarVariable, variable.name, variable);
     return variable;
   }
@@ -655,15 +657,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.$scope.$watch(
       () => { return this.$window.innerWidth; },
       (value) => {
-        console.log(1);
+        // console.log(1);
+        console.log(this.panel);
         let slideWidth = this.currentTarget.slideWidth;
         slideWidth = slideWidth || (this.panel.slideWidth || this.panelDefaults.slideWidth);
-        swiper.params.slidesPerView = (value / slideWidth);
-        //swiper.params.slidesPerView = _.floor(value / 325);
-        // swiper.params.slidesPerView = _.floor(value / 250);
-        // if (swiper.params.slidesPerView === 1) {
-        //   swiper.params.slidesPerView = 1.1;
-        // }
+        // swiper.params.slidesPerView = (value / slideWidth);
+        // swiper.params.slidesPerView = Math.round(value / slideWidth / (12 / this.panel.span));
+        swiper.params.slidesPerView = value / slideWidth / (12 / this.panel.span);
         swiper.onResize();
       });
   }
@@ -1256,6 +1256,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   eh_query() {
+    // if (this.queryCount === 0 && this.panel.stopClickRefresh) {
+    //   this.dashboard.querybarInitFinish = true;
+    // }
     this.queryCount++;
     // debugger;
     console.log('query');
@@ -1264,6 +1267,17 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     if (this.panel.subscribeRefresh) {
 
     } else {
+
+      if (this.panel.clickQueryBtn2Fetch && this.panel.checkRequiredVariableIsPass) {
+        var requiredVariableIsPass = _.find(this.variableSrv.variables, item => item.querybarRequired
+          && item.confVarValue.value === item.current.value);
+
+        if (requiredVariableIsPass) {
+          this.alertSrv.set("警告", `必选项不能为空`, "warning", 2000);
+          return;
+        }
+      }
+
       this.timeSrv.refreshDashboard();
       this.getExprVariables();
       this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'querybar', target: this });

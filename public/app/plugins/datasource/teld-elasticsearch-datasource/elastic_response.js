@@ -1,8 +1,9 @@
 define([
   "lodash",
-  "./query_def"
+  "./query_def",
+  "moment"
 ],
-function (_, queryDef) {
+function (_, queryDef, moment) {
   'use strict';
 
   function ElasticResponse(targets, response) {
@@ -305,7 +306,92 @@ function (_, queryDef) {
 
   ElasticResponse.prototype.getTimeSeries = function() {
     var seriesList = [];
+    // debugger;
+    function doc2timeseriesHandler(item) {
+      {
+        var returnValue = _.flatten(_.values(_.pick(item, pick)));
+        //("00"+Math.trunc( moment("2019-05-23 05:30:00").format("mm")/3)*3).substring(1)
 
+        if (false === _.isEmpty(doc2timeseries.intervalM)) {
+
+          var arr = /^(\d{1,2})([d|h|m])$/.exec(doc2timeseries.intervalM);
+          if (arr === null) {
+            return returnValue;
+          }
+
+          var intervalSetting = _.zipObject(['intervalM', 'value', 'precision'], arr);
+
+          var fmConf = ({
+            m: { mapping: "mm", prefix: "YYYY-MM-DD HH:" },
+            h: { mapping: "HH", prefix: "YYYY-MM-DD " },
+            d: { mapping: "DD", prefix: "YYYY-MM-" },
+            M: { mapping: "MM", prefix: "YYYY-" }
+          })[intervalSetting.precision];
+
+          var intervalType = fmConf.mapping;
+          var mOriginal = moment(returnValue[1]);
+          var interval = Math.trunc(mOriginal.format(intervalType) / intervalSetting.value);
+          interval *= intervalSetting.value;
+
+          var mOriginalFormat = fmConf.prefix + _.padStart(interval, 2, 0);
+          var newMomentFormat = fmConf.prefix + intervalType;
+          var newMoment = moment(mOriginal.format(mOriginalFormat), newMomentFormat);
+
+          returnValue.push(mOriginal.format()); returnValue.push(newMoment.format());
+          returnValue[1] = newMoment.valueOf();
+        }
+
+        return returnValue;
+      }
+    }
+
+    /*
+    function doc2timeseriesHandler1(item) {
+      {
+        var returnValue = _.flatten(_.values(_.pick(item, pick)));
+        //("00"+Math.trunc( moment("2019-05-23 05:30:00").format("mm")/3)*3).substring(1)
+
+        if (false === _.isEmpty(doc2timeseries.intervalM)) {
+          var intervalM = doc2timeseries.intervalM;
+          var m = moment(returnValue[1]);
+          var mm = (Math.trunc(m.format("mm") / intervalM) * intervalM);
+          var fm = "YYYY-MM-DD HH:" + mm;//+":00.000";
+          var newM = moment(m.format(fm), "YYYY-MM-DD HH:mm");
+          // console.log(m.format(), _.padStart(mm, 2, "0"), m.format(fm), newM.format(), newM.valueOf());
+          returnValue.push(m.format()); returnValue.push(newM.format());
+          returnValue[1] = newM.valueOf();
+        }
+
+        return returnValue;
+      }
+    }
+    function doc2timeseriesHandler2(item) {
+      {
+        var returnValue = _.flatten(_.values(_.pick(item, pick)));
+        //("00"+Math.trunc( moment("2019-05-23 05:30:00").format("mm")/3)*3).substring(1)
+
+        if (false === _.isEmpty(doc2timeseries.intervalM)) {
+          var intervalM = doc2timeseries.intervalM;
+
+          var ms = intervalM * 60 * 1000;
+          var newMS = (Math.round(returnValue[1] / ms) * ms);
+          var m = moment(returnValue[1]);
+          var newM = moment(newMS).add(-8, 'h');
+          returnValue.push(m.format()); returnValue.push(newM.format());
+          returnValue[1] = newM.valueOf();
+          // var m = moment(returnValue[1]);
+          // var mm = (Math.trunc(m.format("mm") / intervalM) * intervalM);
+          // var fm = "YYYY-MM-DD HH:" + mm;//+":00.000";
+          // var newM = moment(m.format(fm), "YYYY-MM-DD HH:mm");
+          // // console.log(m.format(), _.padStart(mm, 2, "0"), m.format(fm), newM.format(), newM.valueOf());
+          // returnValue.push(m.format()); returnValue.push(newM.format());
+          // returnValue[1] = newM.valueOf();
+        }
+
+        return returnValue;
+      }
+    }
+    */
     for (var i = 0; i < this.response.responses.length; i++) {
       var response = this.response.responses[i];
       if (response.error) {
@@ -314,6 +400,24 @@ function (_, queryDef) {
 
       if (response.hits && response.hits.hits.length > 0) {
         this.processHits(response.hits, seriesList);
+      }
+
+      var doc2timeseries = this.targets[i].doc2timeseries;
+      if (_.size(seriesList) > 0 && doc2timeseries) {
+        var pick = [doc2timeseries.value, doc2timeseries.timeseries];
+        seriesList[i].datapoints = _.map(seriesList[i].datapoints, doc2timeseriesHandler);
+        delete seriesList[i].type;
+        var overwrite = {
+          "metric": "count",
+          "field": doc2timeseries.value,
+          "props": {},
+          "target": this.targets[i].refId,
+          "targetRefId": this.targets[i].refId,
+          "refId": this.targets[i].refId,
+          "groupKey": this.targets[i].refId + "_count_" + doc2timeseries.value
+        };
+        _.assign(seriesList[i], overwrite);
+        continue;
       }
 
       if (response.aggregations) {
@@ -339,8 +443,13 @@ function (_, queryDef) {
       }
     }
 
+    _.each(seriesList, function (dl) {
+      console.log(_.groupBy(dl.datapoints, function (ll) { return ll[1]; }));
+    });
+
     return { data: seriesList };
   };
 
   return ElasticResponse;
 });
+

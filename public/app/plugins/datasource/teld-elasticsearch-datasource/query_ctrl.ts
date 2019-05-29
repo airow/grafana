@@ -16,6 +16,7 @@ export class ElasticQueryCtrl extends QueryCtrl {
   rawQueryOld: string;
   permissionOptions: any;
   getPermissionOptionsPromise: any;
+  newPlusButton: any;
 
   /** @ngInject **/
   constructor($scope, $injector, private $rootScope, private $timeout, private uiSegmentSrv, private $http) {
@@ -24,6 +25,8 @@ export class ElasticQueryCtrl extends QueryCtrl {
     this.esVersion = this.datasource.esVersion;
     this.target.dataPermission = this.target.dataPermission || [];
     this.queryUpdated();
+
+    this.newPlusButton = uiSegmentSrv.newPlusButton();
 
     this.getPermissionOptionsPromise = (query, callback) => {
       return this.$http({
@@ -149,5 +152,19 @@ export class ElasticQueryCtrl extends QueryCtrl {
       },
       id: (id + 1).toString()
     });
+  }
+
+  addField() {
+
+    var sourceFields = (this.target.sourceFieldsConf = this.target.sourceFieldsConf || []);
+    sourceFields.push(this.newPlusButton.value);
+
+    var plusButton = this.uiSegmentSrv.newPlusButton();
+    this.newPlusButton.html = plusButton.html;
+    this.newPlusButton.value = plusButton.value;
+  }
+
+  removeField(field) {
+    this.target.sourceFieldsConf = _.without(this.target.sourceFieldsConf, field);
   }
 }

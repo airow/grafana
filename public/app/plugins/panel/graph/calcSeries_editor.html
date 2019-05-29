@@ -23,6 +23,7 @@
         <label class="gf-form-label query-keyword width-30">表达式</label>
         <label class="gf-form-label query-keyword width-5">0转null</label>
         <label class="gf-form-label query-keyword width-5">位置</label>
+        <label class="gf-form-label query-keyword width-5">选项</label>
         <label class="gf-form-label">
           <a ng-click="ctrl.panel.calcSeriesConf.push({enable:true,target:''})">
             <i class="fa fa-plus"></i>
@@ -42,6 +43,7 @@
           placeholder="value">
         <input type="text" class="gf-form-input width-5" ng-model="calcSerie.sort" spellcheck="false"
           placeholder="value">
+        <input type="text" class="gf-form-input width-5" ng-model="calcSerie.opts" bs-typeahead="['scatter']" min-length="0" spellcheck="false" placeholder="value">
         <label class="gf-form-label">
           <a ng-click="ctrl.removeItem(ctrl.panel.calcSeriesConf, calcSerie)">
             <i class="pointer fa fa-remove"></i>

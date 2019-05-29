@@ -742,7 +742,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       (this.panel.calcSeriesGropuBar ? graphutils.calcSeriesGropuBar : graphutils.calcSeriesBar)
       : graphutils.calcSeries;
 
-    return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
+    return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables, this.panel);
   }
   dataList: any = [];
 
@@ -761,7 +761,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     this.groupTime(dataList);
 
-    this.groupTimeWithScatter(dataList);
+    if (this.panel.groupTimeWithScatter) {
+      this.groupTimeWithScatter(dataList);
+    }
 
     this.dataList = dataList;
 
@@ -948,8 +950,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       var moment_zhCn = this.get_moment_zhCn;
       _.each(dataList, dl => {
         _.each(dl.datapoints, dp => {
-          // dp[1] = moment_zhCn(dp[1]).startOf('day').valueOf();
-          dp[1] = moment_zhCn(moment_zhCn(dp[1]).format("YYYYMMDDHHmm"),"YYYYMMDDHHmm").valueOf();
+          dp[1] = moment_zhCn(dp[1]).startOf('day').valueOf();
         });
       });
     }
@@ -2084,6 +2085,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
           var s = option.series[param.seriesIndex];
           if (s.isSumLabel) { return; }
+          if (_.isArray(param.value)) {
+            param.value = param.value[1];
+          }
           var tooltipVal = param.value;
           var formatter = _.get(s, 'label.normal.formatter');
           if (_.isNil(formatter)) {
@@ -2108,6 +2112,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.stackSumLabel(option.series);
 
     this.calcMin(option, axis);
+
+    //处理line不连贯
+    _.each(_.filter(option.series, { 'type': 'line' }), itme => {
+      _.remove(itme.data, i => { return i[1] === null; });
+    });
+
     return option;
   }
 
