@@ -319,7 +319,7 @@ define([
           imports: {
             m: {
               _regex: this._regex,
-              _: this._,
+              _: _,
               has: function (variable, expression) {
                 //debugger;
                 var regex = /\$(\w+)|\[\[([\s\S]+?)\]\]/g;
@@ -347,6 +347,10 @@ define([
               moment: moment,
               timeRange: timeRange,
               srv: this,
+              escapeRegExp: function (value) {
+                value = this._.escapeRegExp(value);
+                return value;
+              },
               hasVariable: function (variable, expression) {
                 variable = _.trim(variable, "'" + '"');
                 var variableExists = this.srv.variableExists(variable);
@@ -380,6 +384,7 @@ define([
 
           value = value.replace(/\]\s+\[/g, ']\r\n[');
           value = value.replace(/\[\s*(.[^\s]*)\s*=>\s*(.*)\]/gm, "${m.has(\"$1\", \" $2 \")}");
+          // value = value.replace(/\[\s*(.[^\s]*)\s*=>\s*(.*)\]/gm, "${m.has(\"$1\", \' $2 \')}");
 
           // console.group("expression 解析" + item.name);
           // console.log('    ' + item.query);

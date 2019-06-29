@@ -742,7 +742,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       (this.panel.calcSeriesGropuBar ? graphutils.calcSeriesGropuBar : graphutils.calcSeriesBar)
       : graphutils.calcSeries;
 
-    return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
+    return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables, this.panel);
   }
   dataList: any = [];
 
@@ -761,7 +761,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     this.groupTime(dataList);
 
-    this.groupTimeWithScatter(dataList);
+    if (this.panel.groupTimeWithScatter) {
+      this.groupTimeWithScatter(dataList);
+    }
 
     this.dataList = dataList;
 
@@ -796,6 +798,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
     series = this.seriesSort(series);
 
+    _.remove(series || [], s => _.isNil(s));
     this.ecSeries = series;
 
     this.render();
@@ -805,6 +808,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     if (_.isEmpty(this.panel.baseTS) === false) {
       _.each(dataList, item => {
         if (item !== maxdataListItem) {
+          //从右向左移除0值
           item.datapoints = _.dropRightWhile(item.datapoints, dp => { return dp[0] === 0; });
         }
       });
@@ -822,18 +826,56 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       if (_.size(datapoints) === 0) {
         return;
       }
+      var time = _.union(_.map(datapoints, '1'));
+
       var baseTS = firstTs(datapoints);
-      _.each(dl, item => {
-        var itemDatapoints = item.datapoints;
-        if (_.size(itemDatapoints) === 0) {
-          return;
+      if (this.panel.baseTSConf && this.panel.baseTSConf.strategy) {
+        var endTS = _.last(datapoints)[1];
+        var { confOffset, confOffsetUnit } = this.panel.baseTSConf;
+        confOffset = confOffset || 1;
+        confOffsetUnit = confOffsetUnit || 'days';
+        switch (this.panel.baseTSConf.strategy) {
+          case "按基准时间对齐":
+            _.each(dl, item => {
+              var itemDatapoints = item.datapoints;
+              if (_.size(itemDatapoints) === 0) {
+                return;
+              }
+              _.each(item.datapoints, dp => {
+                var itemTS = dp[1];
+                var mTs = moment(itemTS);
+                if (dp[1] < baseTS) {
+                  mTs.add(confOffset, confOffsetUnit);
+                } else if (dp[1] > endTS) {
+                  mTs.subtract(confOffset, confOffsetUnit);
+                }
+                dp.push(itemTS);
+                dp[1] = mTs.valueOf();
+              });
+
+
+              var itemTime = _.map(item.datapoints, '1');
+              var diffTime = _.difference(time, itemTime);
+              if (_.size(diffTime) > 0) {
+                var newDP = _.map(diffTime, dt => { var rv = [0, dt]; rv['timesOffset'] = true; return rv; });
+                item.datapoints = _.sortBy(_.concat(item.datapoints, newDP), '1');
+              }
+            });
+            break;
         }
-        var offset = baseTS - firstTs(itemDatapoints);
-        _.each(item.datapoints, dp => {
-          dp.push(dp[1]);
-          dp[1] += offset;
+      } else {
+        _.each(dl, item => {
+          var itemDatapoints = item.datapoints;
+          if (_.size(itemDatapoints) === 0) {
+            return;
+          }
+          var offset = baseTS - firstTs(itemDatapoints);
+          _.each(item.datapoints, dp => {
+            dp.push(dp[1]);
+            dp[1] += offset;
+          });
         });
-      });
+      }
     }
   }
 
@@ -948,8 +990,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       var moment_zhCn = this.get_moment_zhCn;
       _.each(dataList, dl => {
         _.each(dl.datapoints, dp => {
-          // dp[1] = moment_zhCn(dp[1]).startOf('day').valueOf();
-          dp[1] = moment_zhCn(moment_zhCn(dp[1]).format("YYYYMMDDHHmm"),"YYYYMMDDHHmm").valueOf();
+          dp[1] = moment_zhCn(dp[1]).startOf('day').valueOf();
         });
       });
     }
@@ -1657,12 +1698,22 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
         let formatTmpl = this.panel.echarts.legend.formatTmpl;
         if (formatTmpl) {
+          // var dashVars = _.map(this.variableSrv.variables, item => { return _.zipObject([item.name], [item.query]); });
+          var dashVars = _.transform(this.variableSrv.variables, (r, item) => {
+            r[item.name] = item.query || item.current.value || item.current.text;
+          }, {});
           let compiled = _.template(formatTmpl, {
             imports: {
-              "_": _
+              "_": _,
+              "helper": {
+                calcPercent: (function (varName, fixed) {
+                  var percent = this.value * 100 / this.vars[varName];
+                  return percent === Infinity ? "/" : (percent).toFixed(fixed);
+                }).bind({ name, percent, value, vars: dashVars })
+              }
             }
           });
-          returnVal = compiled({ name, percent, value });
+          returnVal = compiled({ name, percent, value, vars: dashVars });
         }
         return returnVal;
       } else {
@@ -2084,6 +2135,9 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
           var s = option.series[param.seriesIndex];
           if (s.isSumLabel) { return; }
+          if (_.isArray(param.value)) {
+            param.value = param.value[1];
+          }
           var tooltipVal = param.value;
           var formatter = _.get(s, 'label.normal.formatter');
           if (_.isNil(formatter)) {
@@ -2108,6 +2162,12 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.stackSumLabel(option.series);
 
     this.calcMin(option, axis);
+
+    //处理line不连贯
+    _.each(_.filter(option.series, { 'type': 'line' }), itme => {
+      _.remove(itme.data, i => { return i[1] === null; });
+    });
+
     return option;
   }
 

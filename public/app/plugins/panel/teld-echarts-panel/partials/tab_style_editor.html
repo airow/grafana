@@ -127,7 +127,11 @@
         <input type="text" on-change="ctrl.refresh()" empty-to-null ng-model="ctrl.panel.echarts.legend.formatTmpl"
           class="gf-form-input">
         <label class="gf-form-label">
-          <tip> ${name}=名称 ${percent}=百分比 ${value}=值</tip>
+          <tip> ${name}=名称 ${percent}=百分比 ${value}=值,
+
+            高级用法:
+            1.计算总占比: ${helper.calcPercent(varName, fixed)} varName:变量名,fixed:小数位数
+          </tip>
         </label>
       </div>
       <div class="gf-form">
@@ -351,6 +355,8 @@
             ng-options="serie for serie in ctrl.getSerieType()" ng-change="ctrl.refresh()"></select>
         </div>
       </div>
+      <gf-form-switch ng-if="ctrl.panel.serieType==='scatter'" class="gf-form" label="兼容选项" label-class="query-keyword width-8" checked="ctrl.panel.groupTimeWithScatter">
+      </gf-form-switch>
       <div class="gf-form" ng-if="ctrl.panel.serieType!=='pie'">
         <span class="gf-form-label width-8">xAxisMode</span>
         <div class="gf-form-select-wrapper max-width-8">
@@ -384,6 +390,17 @@
         <input type="text" ng-model="ctrl.panel.baseTS" bs-typeahead="ctrl.metricsTarget" min-length="0"
           class="gf-form-input" placeholder="metric">
       </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-8">对其方式</label>
+        <input type="text" ng-model="ctrl.panel.baseTSConf.strategy" bs-typeahead="['按基准时间对齐']" min-length="0" class="gf-form-input"
+          placeholder="metric">
+      </div>
+      <div class="gf-form" ng-if="ctrl.panel.baseTSConf.strategy">
+        <label class="gf-form-label width-8">调整值</label>
+        <input type="text" ng-model="ctrl.panel.baseTSConf.confOffset" class="gf-form-input" placeholder="调整值">
+        <input type="text" ng-model="ctrl.panel.baseTSConf.confOffsetUnit" bs-typeahead="['days']" min-length="0"
+          class="gf-form-input" placeholder="单位">
+      </div>
     </div>
     <div class="section gf-form-group" ng-if="ctrl.panel.serieType!=='pie'">
       <!-- <h5 class="section-heading">Bar</h5> -->
@@ -393,6 +410,12 @@
         <gf-form-switch class="gf-form" label="按TermValue" label-class="width-8"
           checked="ctrl.panel.groupBarByTermValue" on-change="ctrl.render()" ng-if="ctrl.panel.groupBar">
         </gf-form-switch>
+      </div>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="xAxis按最大值" label-class="width-8" checked="ctrl.panel.xAxisItemWithMaxItem"
+          on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="xAxis并排序" label-class="width-8" checked="ctrl.panel.xAxisItemWithMaxItemOrder"
+          on-change="ctrl.render()"></gf-form-switch>
       </div>
       <gf-form-switch class="gf-form" label="groupBar计算配置" label-class="width-8" checked="ctrl.panel.calcSeriesGropuBar"
         on-change="ctrl.render()"></gf-form-switch>
@@ -447,6 +470,14 @@
         <div class="gf-form">
           <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.seriesSort.size" spellcheck="false"
             placeholder="Size" ng-blur="ctrl.refresh()">
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <gf-form-switch class="gf-form" label="主group" label-class=" width-8" checked="ctrl.panel.groupMaster.enable"
+          on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.groupMaster.targetRefId" spellcheck="false"
+            placeholder="" ng-blur="ctrl.refresh()">
         </div>
       </div>
     </div>

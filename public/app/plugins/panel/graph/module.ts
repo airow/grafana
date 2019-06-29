@@ -184,7 +184,7 @@ class GraphCtrl extends MetricsPanelCtrl {
   }
 
   calcSeries(calcSeriesConf, data, hideMetrics) {
-    return graphutils.calcSeries(calcSeriesConf, data, hideMetrics, this.templateSrv.variables);
+    return graphutils.calcSeries(calcSeriesConf, data, hideMetrics, this.templateSrv.variables, this.panel);
   }
 
   onDataReceived(dataList) {

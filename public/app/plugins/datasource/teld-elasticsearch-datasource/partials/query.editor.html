@@ -1,39 +1,77 @@
 <query-editor-row query-ctrl="ctrl" can-collapse="true">
 
-	<div class="gf-form-inline">
-		<div class="gf-form gf-form--grow">
-			<label class="gf-form-label query-keyword width-7">Query</label>
-			<input type="text" class="gf-form-input" ng-model="ctrl.target.query" spellcheck='false' placeholder="Lucene query" ng-blur="ctrl.refresh()">
-		</div>
-		<div class="gf-form max-width-15">
-			<label class="gf-form-label query-keyword">Alias</label>
-			<input type="text" class="gf-form-input" ng-model="ctrl.target.alias" spellcheck='false' placeholder="alias patterns" ng-blur="ctrl.refresh()">
-		</div>
-	</div>
+  <div class="gf-form-inline">
+    <div class="gf-form gf-form--grow">
+      <label class="gf-form-label query-keyword width-7">Query</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.query" spellcheck='false'
+        placeholder="Lucene query" ng-blur="ctrl.refresh()">
+    </div>
+    <div class="gf-form max-width-15">
+      <label class="gf-form-label query-keyword">Alias</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.alias" spellcheck='false'
+        placeholder="alias patterns" ng-blur="ctrl.refresh()">
+    </div>
+  </div>
 
-	<div ng-repeat="agg in ctrl.target.metrics">
-		<elastic-metric-agg
-			target="ctrl.target" index="$index"
-			get-fields="ctrl.getFields($fieldType)"
-      on-change="ctrl.queryUpdated()"
-      on-addscriptfield="ctrl.addScriptField()"
-			es-version="ctrl.esVersion">
-		</elastic-metric-agg>
-	</div>
+  <div ng-repeat="agg in ctrl.target.metrics">
+    <elastic-metric-agg target="ctrl.target" index="$index" get-fields="ctrl.getFields($fieldType)"
+      on-change="ctrl.queryUpdated()" on-addscriptfield="ctrl.addScriptField()" es-version="ctrl.esVersion">
+    </elastic-metric-agg>
+  </div>
 
-	<div ng-repeat="agg in ctrl.target.bucketAggs">
-		<elastic-bucket-agg
-			target="ctrl.target" index="$index"
-      get-fields="ctrl.getFields($fieldType)"
-			on-change="ctrl.queryUpdated()">
-		</elastic-bucket-agg>
-	</div>
-
+  <div ng-repeat="agg in ctrl.target.bucketAggs">
+    <elastic-bucket-agg target="ctrl.target" index="$index" get-fields="ctrl.getFields($fieldType)"
+      on-change="ctrl.queryUpdated()">
+    </elastic-bucket-agg>
+  </div>
   <div ng-if='ctrl.isRawDocument()' ng-repeat="agg in ctrl.target.scriptFieldsConf">
     <elastic-script-fields target="ctrl.target" index="$index"
       on-addscriptfield="ctrl.addScriptField()"
       on-change="ctrl.queryUpdated()">
     </elastic-script-fields>
+  </div>
+
+  <div ng-if='ctrl.isRawDocument()' >
+    <div class="gf-form-inline offset-width-7" ng-class="{'gf-form-disabled': current.hide}">
+      <div class="gf-form">
+        <label class="gf-form-label width-10">
+          Fields
+        </label>
+      </div>
+
+      <div class="gf-form-inline gf-form--grow">
+        <div class="gf-form" ng-repeat="field in ctrl.target.sourceFieldsConf track by $index">
+          <label class="gf-form-label">
+            <i class="pointer fa fa-remove" ng-click="ctrl.removeField(field)"></i>
+            <span>{{field}}</span>
+          </label>
+        </div>
+        <div class="gf-form">
+          <metric-segment segment="ctrl.newPlusButton" get-options="ctrl.getFields()"
+            on-change="ctrl.addField()"></metric-segment>
+        </div>
+      </div>
+    </div>
+
+    <div class="gf-form-inline offset-width-7" ng-class="{'gf-form-disabled': current.hide}">
+      <div class="gf-form">
+        <label class="gf-form-label width-10">
+          toTimeseries
+        </label>
+      </div>
+      <div class="gf-form">
+        <input type="text" class="gf-form-input max-width-8" placeholder="timeseries" empty-to-null
+          ng-model="ctrl.target.doc2timeseries.timeseries"  ng-model-onblur></input>
+      </div>
+      <div class="gf-form">
+        <input type="text" class="gf-form-input max-width-8" placeholder="value" empty-to-null
+          ng-model="ctrl.target.doc2timeseries.value" ng-model-onblur></input>
+      </div>
+      <div class="gf-form">
+        <input type="text" class="gf-form-input max-width-8" placeholder="Interval 秒" empty-to-null
+          ng-model="ctrl.target.doc2timeseries.intervalM" ng-model-onblur></input>
+      </div>
+    </div>
   </div>
 
   <!-- <elastic-script-fields target="ctrl.target" on-change="ctrl.queryUpdated()">
@@ -47,25 +85,22 @@
     </div>
     <gf-form-switch class="gf-form" label="忽略dash时间" label-class="width-8" checked="ctrl.target.ignoreTimeRange">
     </gf-form-switch>
-    <gf-form-switch class="gf-form"
-      label="Override" label-class=""
-      checked="ctrl.target.timeRange.enable" switch-class="max-width-6" on-change="ctrl.refresh()">
+    <gf-form-switch class="gf-form" label="Override" label-class="" checked="ctrl.target.timeRange.enable"
+      switch-class="max-width-6" on-change="ctrl.refresh()">
     </gf-form-switch>
     <div class="gf-form" ng-show="ctrl.target.timeRange.enable">
       <span class="gf-form-label width-12">Override relative time</span>
       <span class="gf-form-label width-6">Last</span>
 
-      <input type="text" class="gf-form-input max-width-8" placeholder="1h"
-        empty-to-null ng-model="ctrl.target.timeRange.timeFrom" valid-time-span
-        ng-change="ctrl.refresh()" ng-model-onblur></input>
+      <input type="text" class="gf-form-input max-width-8" placeholder="1h" empty-to-null
+        ng-model="ctrl.target.timeRange.timeFrom" valinputid-time-span ng-change="ctrl.refresh()" ng-model-onblur></input>
     </div>
 
     <div class="gf-form" ng-show="ctrl.target.timeRange.enable">
       <span class="gf-form-label width-12">Add time shift</span>
       <span class="gf-form-label width-6">Amount</span>
-      <input type="text" class="gf-form-input max-width-8" placeholder="1h"
-        empty-to-null ng-model="ctrl.target.timeRange.timeShift" valid-time-span
-        ng-change="ctrl.refresh()" ng-model-onblur></input>
+      <input type="text" class="gf-form-input max-width-8" placeholder="1h" empty-to-null
+        ng-model="ctrl.target.timeRange.timeShift" valid-time-span ng-change="ctrl.refresh()" ng-model-onblur></input>
     </div>
   </div>
   <div class="gf-form-inline">
@@ -86,11 +121,12 @@
   </div>
   <div class="gf-form-inline" ng-repeat="permission in ctrl.target.dataPermission">
     <div class="gf-form offset-width-9">
-      <metric-segment-model property="permission.field" get-options="ctrl.getFields()" on-change="onChange()" css-class="width-9"></metric-segment-model>
+      <metric-segment-model property="permission.field" get-options="ctrl.getFields()" on-change="onChange()"
+        css-class="width-9"></metric-segment-model>
     </div>
     <div class="gf-form" ng-repeat="value in permission.values track by $index">
       <input type="text" class="gf-form-input width-10" min-length="0" bs-typeahead='ctrl.getPermissionOptionsPromise'
-       ng-model="permission.values[$index]" ng-change="ctrl.refresh()" ng-model-onblur></input>
+        ng-model="permission.values[$index]" ng-change="ctrl.refresh()" ng-model-onblur></input>
       <label class="gf-form-label">
         <a ng-click="permission.values.splice($index,1)">
           <i class="query-keyword fa fa-remove"></i>

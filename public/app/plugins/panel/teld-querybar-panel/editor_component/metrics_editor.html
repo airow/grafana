@@ -36,6 +36,9 @@
     <gf-form-switch class="gf-form" label="点击查询取数" label-class="query-keyword width-8"
       checked="ctrl.panel.clickQueryBtn2Fetch">
     </gf-form-switch>
+    <gf-form-switch class="gf-form" ng-if="ctrl.panel.clickQueryBtn2Fetch" label="并验证必选项" label-class="query-keyword width-8"
+      checked="ctrl.panel.checkRequiredVariableIsPass">
+    </gf-form-switch>
     <gf-form-switch ng-if="ctrl.panel.clickQueryBtn2Fetch" class="gf-form" label="界面显示"
       label-class="query-keyword width-8" checked="ctrl.panel.showClickQueryBtn2Fetch">
     </gf-form-switch>
@@ -118,6 +121,12 @@
       </div>
       <gf-form-switch class="gf-form" label="后端排序" label-class="query-keyword width-6" checked="target.conf.defOrder">
       </gf-form-switch>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-10">说明</label>
+        <input type="text" class="gf-form-input" ng-model="target.conf.tooltip" spellcheck="false">
+      </div>
     </div>
     <h5 class="section-heading">OrderBy <label
         class="gf-form-label width-10">${{target.conf.variablePrefix}}_orderby</label></h5>
@@ -212,6 +221,8 @@
           placeholder="Template">
         <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleStyle" spellcheck="false"
           placeholder="Style">
+        <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleDivStyle" spellcheck="false"
+            placeholder="Style">
       </div>
     </div>
     <div class="gf-form-inline">

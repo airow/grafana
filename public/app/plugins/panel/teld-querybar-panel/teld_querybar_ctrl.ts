@@ -169,6 +169,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
 
 
+    $scope.$root.onAppEvent('metricePanel-fetch', (data) => {
+      this.quering = false;
+    }, $scope);
     $scope.$root.onAppEvent('teld-fullscreen', function (evt, payload) {
       console.time("teld-fullscreen snapshot querybar");
       this.snapshot = {
@@ -251,6 +254,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       query: '',
       current: { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT }
     });
+    variable.querybarRequired = target.conf.required;
+    variable.confVarValue = { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT };
     _.set(this.querybarVariable, variable.name, variable);
     return variable;
   }
@@ -655,15 +660,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.$scope.$watch(
       () => { return this.$window.innerWidth; },
       (value) => {
-        console.log(1);
+        // console.log(1);
+        console.log(this.panel);
         let slideWidth = this.currentTarget.slideWidth;
         slideWidth = slideWidth || (this.panel.slideWidth || this.panelDefaults.slideWidth);
-        swiper.params.slidesPerView = (value / slideWidth);
-        //swiper.params.slidesPerView = _.floor(value / 325);
-        // swiper.params.slidesPerView = _.floor(value / 250);
-        // if (swiper.params.slidesPerView === 1) {
-        //   swiper.params.slidesPerView = 1.1;
-        // }
+        // swiper.params.slidesPerView = (value / slideWidth);
+        // swiper.params.slidesPerView = Math.round(value / slideWidth / (12 / this.panel.span));
+        swiper.params.slidesPerView = value / slideWidth / (12 / this.panel.span);
         swiper.onResize();
       });
   }
@@ -1071,9 +1074,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       item.labelTop = _.template(target.conf.topTemplate || item.topTitle, templateSettings)(item._original);
 
       item.conf = _.defaultsDeep({}, target.conf);
-      item.conf.topStyle = (new Function('return ' + target.conf.topStyle))();
-      item.conf.titleStyle = (new Function('return ' + target.conf.titleStyle))();
-      item.conf.bottomStyle = (new Function('return ' + target.conf.bottomStyle))();
+      item.conf.topStyle = (new Function('item', 'return ' + target.conf.topStyle))(item._original);
+      item.conf.titleStyle = (new Function('item', 'return ' + target.conf.titleStyle))(item._original);
+      item.conf.titleDivStyle = (new Function('item', 'return ' + target.conf.titleDivStyle))(item._original);
+      item.conf.bottomStyle = (new Function('item', 'return ' + target.conf.bottomStyle))(item._original);
       return item;
     });
 
@@ -1255,15 +1259,31 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   }
 
+  quering = false;
   eh_query() {
+    // if (this.queryCount === 0 && this.panel.stopClickRefresh) {
+    //   this.dashboard.querybarInitFinish = true;
+    // }
     this.queryCount++;
     // debugger;
     console.log('query');
+    this.quering = true;
     this.triggerRefresh = true;
     this.dashboard.meta.hasQuerybarPanel = false;
     if (this.panel.subscribeRefresh) {
 
     } else {
+
+      if (this.panel.clickQueryBtn2Fetch && this.panel.checkRequiredVariableIsPass) {
+        var requiredVariableIsPass = _.find(this.variableSrv.variables, item => item.querybarRequired
+          && item.confVarValue.value === item.current.value);
+
+        if (requiredVariableIsPass) {
+          this.alertSrv.set("警告", `必选项不能为空`, "warning", 2000);
+          return;
+        }
+      }
+
       this.timeSrv.refreshDashboard();
       this.getExprVariables();
       this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'querybar', target: this });

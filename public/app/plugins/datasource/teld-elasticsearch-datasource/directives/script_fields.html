@@ -18,7 +18,6 @@
       </a>
     </label>
   </div>
-
   <div class="gf-form">
     <label class="gf-form-label" ng-if="isFirst">
       <a class="pointer" ng-click="addScriptField()"><i class="fa fa-plus"></i></a>
@@ -35,29 +34,31 @@
     <div class="gf-form">
       <label class="gf-form-label width-10">Name</label>
       <input type="text" class="gf-form-input max-width-12" ng-model="current.name" ng-blur="onChangeInternal()"
-      spellcheck='false'>
+        spellcheck='false'>
     </div>
 
     <div class="gf-form gf-form-label--grow">
       <label class="gf-form-label width-10">Script</label>
-      <input type="text" class="gf-form-input" ng-model="current.script.script.source" ng-blur="onChangeInternal()" placeholder="doc['price'].value * 0.8" spellcheck='false'>
+      <input type="text" class="gf-form-input" ng-model="current.script.script.source" ng-blur="onChangeInternal()"
+        placeholder="doc['price'].value * 0.8" spellcheck='false'>
     </div>
   </div>
 
-  <gf-form-switch class="gf-form" label="排序" label-class="width-10" checked="current.sort" on-change="onChangeInternal()">
+  <gf-form-switch class="gf-form" label="??" label-class="width-10" checked="current.sort"
+    on-change="onChangeInternal()">
   </gf-form-switch>
 
   <div ng-if='current.sort' class="gf-form-inline">
     <div class="gf-form">
       <label class="gf-form-label width-10">order</label>
-      <input type="text" class="gf-form-input max-width-12" ng-model="current.script.order" min-length="0" bs-typeahead="['asc','desc']"
-        ng-blur="onChangeInternal()" spellcheck='false'>
+      <input type="text" class="gf-form-input max-width-12" ng-model="current.script.order" min-length="0"
+        bs-typeahead="['asc','desc']" ng-blur="onChangeInternal()" spellcheck='false'>
     </div>
 
     <div class="gf-form">
       <label class="gf-form-label width-10">type</label>
-      <input type="text" class="gf-form-input max-width-12" ng-model="current.script.type" min-length="0" bs-typeahead="['number','string']"
-        ng-blur="onChangeInternal()" spellcheck='false'>
+      <input type="text" class="gf-form-input max-width-12" ng-model="current.script.type" min-length="0"
+        bs-typeahead="['number','string']" ng-blur="onChangeInternal()" spellcheck='false'>
     </div>
   </div>
 

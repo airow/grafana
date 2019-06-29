@@ -192,38 +192,12 @@ function (queryDef, _) {
   };
 
   ElasticQueryBuilder.prototype.attachScript_fields = function (query, target) {
-    // var mock = [
-    //   {
-    //     name: "scriptfield1",
-    //     sort: true,
-    //     script: {
-    //       "script": {
-    //         "source": "doc['price'].value * 0.8",
-    //         "lang": "painless"
-    //       },
-    //       "type": "number",
-    //       "order": "asc"
-    //     }
-    //   },
-    //   {
-    //     name: "scriptfield2",
-    //     sort: true,
-    //     script: {
-    //       "script": {
-    //         "source": "doc['price'].value * 0.8",
-    //         "lang": "painless"
-    //       },
-    //       "type": "number",
-    //       "order": "asc"
-    //     }
-    //   }
-    // ];
 
     var scriptFieldsConf = _.filter(target.scriptFieldsConf, function (field) {
       return field.hide !== true && false === _.isEmpty(field.script.script.source);
     });
 
-    if (_.size(scriptFieldsConf) === 0) {
+    if (_.size(scriptFieldsConf) === 0 && _.size(target.sourceFieldsConf) === 0) {
       return query;
     }
 
@@ -239,7 +213,13 @@ function (queryDef, _) {
       result[item.name] = { script: item.script.script };
     }, query.script_fields);
 
-    query["_source"] = "*";
+    if (_.size(target.sourceFieldsConf) === 0) {
+      query["_source"] = "*";
+    } else {
+      query.size = 10000;
+      query["_source"] = target.sourceFieldsConf;
+      query.sort[this.timeField] = { order: 'asc', unmapped_type: 'boolean' };
+    }
 
     return query;
   };
@@ -318,7 +298,7 @@ function (queryDef, _) {
       if (metric && metric.type !== 'raw_document') {
         throw {message: 'Invalid query'};
       }
-      if (_.size(target.scriptFieldsConf) > 0) {
+      if (_.size(target.scriptFieldsConf) > 0 || _.size(target.sourceFieldsConf) > 0) {
         return this.documentQuerySort(query, target);
       }
       return this.documentQuery(query, target);
