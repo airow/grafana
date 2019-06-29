@@ -4,13 +4,18 @@
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }"
         style="margin-top: 0px;">
         <li class="gf-tabs-item" ng-hide="target.hide" ng-repeat="target in ctrl.panel.targets">
-          <a class="gf-tabs-link ddd" ng-style="{color:target.conf.required?'red':'inherit'}"
+          <a class="gf-tabs-link ddd" bs-tooltip="target.conf.tooltip" ng-style="{color:target.conf.required?'red':'inherit'}"
             ng-click="ctrl.manualChangeQueryBarTab(target)"
             ng-class="{active: ctrl.currentTargetRefId === target.refId}">
-            {{target.conf.title}}
+            {{target.conf.title}} <i class="fa fa-info-circle" ng-if='ctrl.currentTarget.conf.tooltip && ctrl.currentTarget === target' bs-tooltip="target.conf.tooltip" aria-hidden="true"></i>
             <!-- <i ng-if="target.conf.required" style="color: red;" class="fa fa-asterisk"></i> -->
           </a>
         </li>
+        <!-- <li class="gf-tabs-item" ng-if='ctrl.currentTarget.conf.tooltip'>
+          <a class="gf-tabs-link ddd" style="cursor: default;">
+            ( <i class="fa fa-info" aria-hidden="true"></i> {{ctrl.currentTarget.conf.tooltip}} )
+          </a>
+        </li> -->
       </ul>
     </div>
     <div class="-tabbed-view-body">
@@ -80,7 +85,7 @@
                   <div>
                     <p class="top" ng-style="row.conf.topStyle" ng-class="row.conf.topCls">{{row.labelTop}}</p>
                     <p class="title" ng-style="row.conf.titleStyle" ng-class="row.conf.titleCls">
-                      <div>{{row.label}}</div>
+                      <div ng-style="row.conf.titleDivStyle">{{row.label}}</div>
                     </p>
                     <p class="bottom" ng-style="row.conf.bottomStyle" ng-class="row.conf.bottomCls">{{row.labelBottom}}
                     </p>
@@ -119,7 +124,8 @@
       </div>
       <div class="gf-form filter-button">
         <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.eh_clearCycle();ctrl.eh_query();">
-          <i class="fa fa-search"></i>
+          <i ng-if='!ctrl.quering' class="fa fa-search"></i>
+          <i ng-if='ctrl.quering' class="fa fa-refresh fa-spin"></i>
         </button>
         <button type="button" class="btn gf-form-btn btn-secondary" ng-repeat="cycle in ctrl.getTimeButton()"
           ng-click="ctrl.eh_queryWithCycle(cycle);">

@@ -169,6 +169,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
 
 
+    $scope.$root.onAppEvent('metricePanel-fetch', (data) => {
+      this.quering = false;
+    }, $scope);
     $scope.$root.onAppEvent('teld-fullscreen', function (evt, payload) {
       console.time("teld-fullscreen snapshot querybar");
       this.snapshot = {
@@ -1071,9 +1074,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       item.labelTop = _.template(target.conf.topTemplate || item.topTitle, templateSettings)(item._original);
 
       item.conf = _.defaultsDeep({}, target.conf);
-      item.conf.topStyle = (new Function('return ' + target.conf.topStyle))();
-      item.conf.titleStyle = (new Function('return ' + target.conf.titleStyle))();
-      item.conf.bottomStyle = (new Function('return ' + target.conf.bottomStyle))();
+      item.conf.topStyle = (new Function('item', 'return ' + target.conf.topStyle))(item._original);
+      item.conf.titleStyle = (new Function('item', 'return ' + target.conf.titleStyle))(item._original);
+      item.conf.titleDivStyle = (new Function('item', 'return ' + target.conf.titleDivStyle))(item._original);
+      item.conf.bottomStyle = (new Function('item', 'return ' + target.conf.bottomStyle))(item._original);
       return item;
     });
 
@@ -1255,6 +1259,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   }
 
+  quering = false;
   eh_query() {
     // if (this.queryCount === 0 && this.panel.stopClickRefresh) {
     //   this.dashboard.querybarInitFinish = true;
@@ -1262,6 +1267,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.queryCount++;
     // debugger;
     console.log('query');
+    this.quering = true;
     this.triggerRefresh = true;
     this.dashboard.meta.hasQuerybarPanel = false;
     if (this.panel.subscribeRefresh) {

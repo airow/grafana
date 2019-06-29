@@ -398,11 +398,13 @@ function (_, queryDef, moment) {
         throw this.getErrorFromElasticResponse(this.response, response.error);
       }
 
+      var doc2timeseries = this.targets[i].doc2timeseries;
       if (response.hits && response.hits.hits.length > 0) {
         this.processHits(response.hits, seriesList);
+      } else {
+        if (doc2timeseries) { seriesList.push({ datapoints: [] }); }
       }
 
-      var doc2timeseries = this.targets[i].doc2timeseries;
       if (_.size(seriesList) > 0 && doc2timeseries) {
         var pick = [doc2timeseries.value, doc2timeseries.timeseries];
         seriesList[i].datapoints = _.map(seriesList[i].datapoints, doc2timeseriesHandler);

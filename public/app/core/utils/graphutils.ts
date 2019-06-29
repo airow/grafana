@@ -3,12 +3,33 @@
 import _ from 'lodash';
 import moment from 'moment';
 
+function maxCountToTop(dataList, panel) {
+  if (panel.xAxisItemWithMaxItem) {
+    var groupByTargetRefId = _.groupBy(dataList, 'targetRefId');
+    dataList = _.flatten(_.orderBy(groupByTargetRefId, item => { return item.length; }, ['desc']));
+  }
+  return dataList;
+}
+
+function groupMaster(dataList, panel) {
+  // panel.groupMaster = "A";
+  // var dl = _.cloneDeep(dataList);
+  if (panel.groupMaster && panel.groupMaster.enable) {
+    var groupMaster = panel.groupMaster.targetRefId;
+    var masterGroupKeys = _.map(_.filter(dataList, { targetRefId: groupMaster }), 'target');
+    _.remove(dataList, item => !_.includes(masterGroupKeys, item.target));
+  }
+  return dataList;
+}
+
 export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables, panel) {
   if (_.size(data) === 0) {
     return data;
   }
 
   var dataList = _.cloneDeep(data);
+  dataList = groupMaster(dataList, panel);
+  dataList = maxCountToTop(dataList, panel);
 
   calcSeriesConf = calcSeriesConf || [];
   calcSeriesConf = _.filter(calcSeriesConf, 'enable');
@@ -48,6 +69,9 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables, 
     return o.groupKey;
   });
   var group = _.union(_.map(dataList, 'target'));
+  if (panel.xAxisItemWithMaxItemOrder) {
+    group = _.sortBy(group, item => +item);
+  }
   _.each(calcSeriesConf, (item) => {
 
     var compiled = _.template("${" + item.expression + "}", templateSettings);
@@ -228,7 +252,8 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables, pan
     'variable': ['series'],
     imports: {
       vars: variables,
-      '_': _
+      '_': _,
+      'm': moment
     }
   };
   /** 方案1.去掉datalist值 */
@@ -275,13 +300,20 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables, pan
 
       var timeSeries = master.datapoints[index][1];
 
+      var timeInfo = {
+        moment: moment(timeSeries),
+        isBefore: moment(timeSeries).isBefore(moment()),
+      };
       var contextData = _.transform(dataSource, (result, item, key) => {
         result[key] = item.values[index];
-      }, {});
+      }, { timeInfo });
 
-      var value = 0;
+      var value;
       try {
         value = compiled(contextData);
+        if ("-返回空时忽略-" === item.zeroTo && _.isEmpty(value)) {
+          continue;
+        }
         if (_.isEmpty(item.zeroTo) === false && (_.isEmpty(value) || item.zeroTo === value)) {
           expressionData.datapoints.push([null, timeSeries]);
           continue;
@@ -339,6 +371,9 @@ function additionScatter(dataSourceGroup, dataSource, compiled, expressionData, 
     var value = 0;
     try {
       value = compiled(contextData2);
+      if ("-返回空时忽略-" === item.zeroTo && _.isEmpty(value)) {
+        continue;
+      }
       if (_.isEmpty(item.zeroTo) === false && (_.isEmpty(value) || item.zeroTo === value)) {
         expressionData.datapoints.push([null, contextData2.timeSeries]);
         continue;

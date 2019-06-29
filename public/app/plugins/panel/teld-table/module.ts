@@ -184,6 +184,10 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Variables', 'public/app/plugins/panel/teld-table/partials/variables.html');
   }
 
+  getTitle() {
+    return this.templateSrv.replace(this.panel.teldTableTitle);
+  }
+
   onInitPanelActions(actions) {
     actions.push({ text: 'Export CSV', click: 'ctrl.exportCsv()' });
   }

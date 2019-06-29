@@ -569,6 +569,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
       }
       let compiled = _.template(this._panel.teldtemplatetext, this.templateSettings);
       this._panel.cellHtml = compiled(this.filterDataList);
+      this._panel.cellHtml = this.templateSrv.replace(this._panel.cellHtml);
       this._panel.cellHtml = this.sce.trustAsHtml(this._panel.cellHtml);
     }
     this.render();

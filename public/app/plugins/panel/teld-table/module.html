@@ -4,7 +4,7 @@
     style="position: fixed;margin-top: -2em;display:none;"></div>
   <div ng-if="ctrl.panel.teldtemplate!='default'"
     ng-style="{'font-size':'18px','font-family': 'Microsoft YaHei', 'color':'#1C97D2','text-align': 'center','margin-top':'5px'}">
-    {{ ctrl.panel.teldTableTitle || '近7日快充桩均日均电量排名'}}</div>
+    {{ (ctrl.panel.teldTableTitle | interpolateTemplateVars:this ) || '近7日快充桩均日均电量排名'}}</div>
   <div class="table-panel-scroll" ng-style="{'display':(ctrl.panel.scrollDisplay?'inline-block':'block')}"
     ng-show="ctrl.dataRaw.length>0" style="margin-bottom: -5px;">
     <table class="table-panel-table" ng-style="{'white-space':ctrl.panel.nowrap ? 'nowrap' : 'initial'}">

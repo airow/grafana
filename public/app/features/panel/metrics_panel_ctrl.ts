@@ -109,6 +109,11 @@ class MetricsPanelCtrl extends PanelCtrl {
       return returnValue;
     }
 
+    //配置为“不随dash刷新”直接返回，执行后续的取数
+    if ((this.panel.panelRefresh && this.panel.panelRefresh.enable)) {
+      return returnValue;
+    }
+
     if (_.isUndefined(this.dashboardHasQuerybarPanel)) {
       this.dashboardHasQuerybarPanel = _.findIndex(_.flatten(_.map(this.dashboard.rows, 'panels')), { type: "teld-querybar-panel" }) !== -1;
     }
@@ -345,6 +350,7 @@ class MetricsPanelCtrl extends PanelCtrl {
       result = { data: [] };
     }
 
+    this.$scope.$root.appEvent("metricePanel-fetch", { target: this });
     return this.events.emit('data-received', result.data);
   }
 
