@@ -35,6 +35,8 @@
       <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8" checked="ctrl.panel.IsLocalStorage"
         on-change="ctrl.render()"></gf-form-switch>
     </div>
+    <gf-form-switch class="gf-form" label="隐藏过滤按钮" label-class="width-8" checked="ctrl.panel.hideFilterButton"
+      on-change="ctrl.render()"></gf-form-switch>
   </div>
 
   <div class="section gf-form-group">
@@ -111,6 +113,8 @@
           on-change="ctrl.render()"></gf-form-switch>
         <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8"
           checked="QueryOptions.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label="在顶部显示" label-class="width-8"
+          checked="QueryOptions.toTop" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(ctrl.panel.QueryList,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>

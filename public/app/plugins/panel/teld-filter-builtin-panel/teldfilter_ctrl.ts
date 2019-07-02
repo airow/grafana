@@ -234,6 +234,17 @@ export class TeldfilterCtrl extends PanelCtrl {
     return this.enableCycleConf;
   }
 
+  toTopButtonConf: any[];
+  toTopButton() {
+    this.toTopButtonConf = _.filter(this._panle.QueryList, 'toTop');
+    return this.toTopButtonConf;
+  }
+
+  eh_emitToTopButton() {
+    this.setDashboardVariables();
+    this.fetch();
+  }
+
   formatTime(QueryOption) {
     return moment(QueryOption.ClickValue).format(QueryOption.timeFormat || 'YYYY-MM-DD');
   }
