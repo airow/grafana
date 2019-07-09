@@ -810,6 +810,15 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     return selectedIndex === index ? 'sliderCls-active' : '';
   }
 
+  showExport(target) {
+    var returnValue = false;
+    if (_.get(target, 'conf.exprotConf.enable', false)) {
+      let tabInfo = this.currentTabInfo[target.refId];
+      let selectedIndex = _.get(tabInfo, 'selectedIndex');
+      returnValue = !_.isNil(selectedIndex);
+    }
+    return returnValue;
+  }
 
   swiperSlide_ClickHandler(target, index, selectedItem) {
     if (this.panel.saveVariable) {
@@ -1395,6 +1404,30 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     popupModalScope.$on('modal-shown', function (ve) {
       window.scrollTo(0, scrollY);
       $(".teld-go-to-detail").css('top', scrollY + $(window).height() / 4);
+    });
+  }
+
+  popupExport(targetExport) {
+    var popupModalScope = this.$scope.$new();
+    popupModalScope.$on("$destroy", function () {
+      popupModalScope.dismiss();
+    });
+    popupModalScope.panel = this.panel;
+    popupModalScope.panelCtrl = this;
+    popupModalScope.dashboard = this.dashboard;
+    popupModalScope.targetExport = targetExport;
+
+    var scrollY = window.scrollY;
+    this.$scope.$root.appEvent('show-modal', {
+      modalClass: "teld-popup-export",
+      //src: 'public/app/features/dashboard/partials/shareModal.html',
+      templateHtml: '<teld-popup-export></teld-popup-export>',
+      scope: popupModalScope
+    });
+
+    popupModalScope.$on('modal-shown', function (ve) {
+      window.scrollTo(0, scrollY);
+      $(".teld-popup-export").css('top', scrollY + $(window).height() / 4);
     });
   }
 

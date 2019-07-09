@@ -128,6 +128,22 @@
         <input type="text" class="gf-form-input" ng-model="target.conf.tooltip" spellcheck="false">
       </div>
     </div>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="导出配置" label-class="query-keyword width-6" checked="target.conf.exprotConf.enable">
+      </gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-10">domain</label>
+        <input type="text" class="gf-form-input" ng-model="target.conf.exprotConf.domain" spellcheck="false">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-10">slug</label>
+        <input type="text" class="gf-form-input" ng-model="target.conf.exprotConf.slug" spellcheck="false">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-10">analysis</label>
+        <input type="text" class="gf-form-input" ng-model="target.conf.exprotConf.analysis" spellcheck="false">
+      </div>
+    </div>
     <h5 class="section-heading">OrderBy <label
         class="gf-form-label width-10">${{target.conf.variablePrefix}}_orderby</label></h5>
     <div class="gf-form-inline">

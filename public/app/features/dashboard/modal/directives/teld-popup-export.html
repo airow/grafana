@@ -1,0 +1,51 @@
+<div class="modal-body">
+
+	<!-- <div class="modal-header">
+		<h2 class="modal-header-title">
+			生成报告
+		</h2>
+	</div> -->
+
+
+  <div class="modal-content" style='padding-top: 1rem; padding-bottom: 0px; min-height: auto;' ng-cloak>
+
+    <div style="text-align: right;">
+      <button type="button" class="btn gf-form-btn" ng-click="ctrl.export()">
+        <i class="fa fa-download">生成</i>
+      </button>
+      <button type="button" class="btn gf-form-btn" ng-click="ctrl.getList()">
+        <i class="fa fa-refresh"></i>
+      </button>
+    </div>
+
+    <div ng-include src="'shareLink.html'" class="share-modal-body" style="margin-top: -30px;"></div>
+	</div>
+
+</div>
+
+<script type="text/ng-template" id="shareLink.html">
+	<div class="share-modal-header">
+		<!-- <div class="share-modal-big-icon">
+			<i class="fa fa-link"></i>
+		</div> -->
+		<div class="share-modal-content">
+      <div class="gf-form-inline" style="border-bottom: 1px red solid;">
+        <div class="section gf-form" style="font-size: 1.2rem; width:30%">
+          报告日期
+        </div>
+        <div class="section gf-form" style="font-size: 1.2rem; width:30%">
+          状态
+        </div>
+      </div>
+      <div class="gf-form-inline" ng-repeat="link in ctrl.links">
+        <div class="section gf-form" style="font-size: 1.2rem; width:30%">
+          {{link.name}}
+        </div>
+        <div class="section gf-form" style="font-size: 1.2rem; width:30%">
+          {{link.statusDesc}}
+          <i class="fa fa-refresh fa-spin" ng-if="link.status!=='90'"></i>
+          <a ng-if="link.status==='90'" ng-href="{{ctrl.exportUrl(link)}}" style="font-size: 1.2rem;" target="target"><i class="fa fa-download"></i></a>
+        </div>
+      </div>
+		</div>
+</script>
