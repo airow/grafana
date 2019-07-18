@@ -31,6 +31,7 @@ import { calcSeriesEditorComponent } from '../graph/calcSeries_editor';
 import { seriesTypeEditorComponent } from './editor/seriesType_editor';
 import { seriesDrilldownEditorComponent } from './editor/seriesDrilldown_editor';
 import { cycleEditorComponent } from './editor/cycle_editor';
+import { EchartsOptionEditorCtrl, echartsOptionEditorComponent } from './editor/echartsOption_editor';
 import { cumulativeEditorComponent, cumulative } from '../graph/cumulative_editor';
 import empty_option from './theme/empty_option';
 import SeriesDrilldownParsing from 'app/core/series_drilldown';
@@ -568,6 +569,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Cumulative', cumulativeEditorComponent);
     this.addEditorTab('SerieType', seriesTypeEditorComponent);
     this.addEditorTab('Serie Detail', seriesDrilldownEditorComponent);
+    this.addEditorTab('Echarts Option', echartsOptionEditorComponent);
     this.editorTabIndex = 1;
   }
 
@@ -594,11 +596,19 @@ export class ModuleCtrl extends MetricsPanelCtrl {
   //step.2
   initEcharts() {
 
-    let theme = `${this.panel.serieType}Theme-${this.panel.style.themeName}`;
+    let theme: any = `${this.panel.serieType}Theme-${this.panel.style.themeName}`;
     this.echartColors = _.concat(echartsThemeMap[theme].color, gfColors);
     if (this.panel.customColor) {
       this.echartColors = _.concat(this.panel.echarts.color, this.echartColors);
     }
+
+    if (this.panel.wrapOptionConf && this.panel.wrapOptionConf.theme.enable) {
+      var themeJson = _.get(this.panel, 'wrapOptionConf.theme.themeJson', "");
+      if (false === _.isEmpty(themeJson)) {
+        theme = JSON.parse(themeJson);
+      }
+    }
+
     this.ecConfig = {
       theme: theme,
       //theme: config.bootData.user.lightTheme ? 'light' : 'drak',
@@ -1650,6 +1660,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       if (this.ecInstance) {
         this.ecOption.baseOption = {};
         this.ecInstance.clear();
+        var tableOption = this.useWrapOptionConf({});
+        if (false === _.isEmpty(tableOption)) { this.ecOption.baseOption = tableOption; }
         return;
       }
     }
@@ -1881,6 +1893,8 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //this.ecConfig.theme = this.panel.style.themeName;
     baseOption = this.useSerieTypeConf(baseOption);
     baseOption.color = this.echartColors;
+    // debugger;
+    baseOption = this.useWrapOptionConf(baseOption);
     this.ecOption.baseOption = baseOption;
 
     if (this.ecInstance) {
@@ -1892,6 +1906,28 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     //   this.ecOption.baseOption.legend = undefined;
     // }
 
+  }
+
+  useWrapOptionConf(baseOption) {
+    var wrapOptionConf = this.panel.wrapOptionConf;
+    if (wrapOptionConf && wrapOptionConf.enable) {
+      var functionBody = `
+          var option = originalOpt;
+          ecInstance = ecInstance || {};
+          ${wrapOptionConf.functionBody || ""};
+          return option;
+      `;
+      var wrapOptionFuc = new Function('originalOpt', 'ecSeries', 'dataList', 'series', 'table', 'ecInstance', 'dashVars',
+        '_', 'kbn', functionBody);
+      var series = EchartsOptionEditorCtrl.trySeriesHandler(this.dataList);
+      var table = EchartsOptionEditorCtrl.tryTableHandler(this.dataList);
+      var dashVars = _.transform(this.templateSrv.variables, (result, value, index) => { result[value.name] = value.current; }, {});
+      baseOption = wrapOptionFuc(baseOption, this.ecSeries, this.dataList, series, table, this.ecInstance, dashVars, _, kbn);
+    }
+
+    // this.ecInstance
+
+    return baseOption;
   }
 
   setLegendsConf(option, legendsConf) {
