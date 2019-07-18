@@ -64,7 +64,9 @@ export class TeldServiceGatewayDatasource {
         let { protocol, hostname, port } = window.location;
         let domain = document.domain || hostname;
         var ares = domain.split(':')[0].split('.');
-        ares.shift();
+        if (_.size(ares) > 2) {
+          ares.shift();
+        }
         ares.unshift("");
         domain = ares.join('.');
         // if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
