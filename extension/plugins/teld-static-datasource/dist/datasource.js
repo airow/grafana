@@ -73,6 +73,7 @@ System.register(["lodash", "moment", "./libs/node-where-filter"], function (_exp
               console.log(wherefilter.whereSQL(exprTree));
             }
             var data = [{
+              "refId": target.refId,
               "type": "table",
               columns: _.map(columns, function (col) {
                 return { "text": col };
@@ -86,7 +87,7 @@ System.register(["lodash", "moment", "./libs/node-where-filter"], function (_exp
             if (type === "timeserie") {
               _.pull(columns, 'time_sec');
               data = _.map(columns, function (col) {
-                return { "target": col, datapoints: [] };
+                return { "target": col, "refId": target.refId, datapoints: [] };
               });
               _.each(rows, function (row) {
                 _.each(data, function (dataItem) {

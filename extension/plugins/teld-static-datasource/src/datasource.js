@@ -34,6 +34,7 @@ export class GenericDatasource {
       console.log(wherefilter.whereSQL(exprTree));
     }
     var data = [{
+      "refId": target.refId,
       "type": "table",
       columns: _.map(columns, function (col) { return { "text": col }; }),
       rows: _.map(rows, function (row) {
@@ -42,7 +43,7 @@ export class GenericDatasource {
     }];
     if (type === "timeserie") {
       _.pull(columns, 'time_sec');
-      data = _.map(columns, function (col) { return { "target": col, datapoints: [] }; });
+      data = _.map(columns, function (col) { return { "target": col, "refId": target.refId, datapoints: [] }; });
       _.each(rows, function (row) {
         _.each(data, function (dataItem) {
           var ts = moment(row['time_sec']).valueOf();
