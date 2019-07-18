@@ -82,7 +82,7 @@ function (angular, _, queryDef) {
         case 'terms': {
           settings.order = settings.order || "asc";
           settings.size = settings.size || "10";
-          settings.min_doc_count = settings.min_doc_count || 0;
+          settings.min_doc_count = settings.min_doc_count || 1;
           settings.orderBy = settings.orderBy || "_term";
 
           if (settings.size !== '0') {
