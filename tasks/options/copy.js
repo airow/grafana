@@ -48,6 +48,8 @@ module.exports = function(config) {
         'brace/snippets/text.js',
         'brace/mode/sql.js',
         'brace/snippets/sql.js',
+        'brace/mode/javascript.js',
+        // 'brace/snippets/javascript.js',
         'w3c-blob/**/*',
         'buffer/**/*',
         'base64-js/**/*',

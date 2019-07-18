@@ -1,0 +1,81 @@
+<div class="edit-tab-with-sidemenu">
+  <aside class="edit-sidemenu-aside">
+    <ul class="edit-sidemenu">
+      <li ng-class="{active: ctrl.subTabIndex === 'option'}">
+        <a ng-click="ctrl.subTabIndex = 'option'">Option</a>
+      </li>
+      <li ng-class="{active: ctrl.subTabIndex === 'theme'}">
+        <a ng-click="ctrl.subTabIndex = 'theme'">Theme</a>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="edit-tab-content" ng-if="ctrl.subTabIndex === 'option'">
+    <gf-form-switch class="gf-form" label="启用" label-class="width-5" checked="ctrl.wrapOptionConf.enable"
+      on-change="ctrl.render()">
+    </gf-form-switch>
+    <div class="gf-form-group">
+    <div class="section gf-form-group" style="width: 50%">
+      <div class="gf-form gf-form--grow query-keyword">
+        function(originalOpt,　ecSeries,　dataList,　series,　table,　ecInstance,　dashVars,　<a href="https://www.lodashjs.com/docs/latest">_</a>,　<a href="https://github.com/airow/grafana/blob/teld.4.2.0-master/public/app/core/utils/kbn.js">kbn</a>){<br>
+        　　　　var option = originalOpt;
+      </div>
+      <div class="gf-form gf-form--grow">
+        <code-editor content="ctrl.wrapOptionConf.functionBody" get-completer="ctrl.getCompleter()" on-change="ctrl.refresh()"
+          data-show-gutter data-mode="javascript" data-max-lines=20 style="height: 300px">
+        </code-editor>
+      </div>
+      <div class="gf-form gf-form--grow query-keyword">
+        　　　　return option;<br>
+        }
+      </div>
+    </div>
+    <div class="section gf-form-group" style="width: 40%">
+      <div class="gf-form gf-form--grow query-keyword">
+      <ul class="gf-tabs">
+        <li class="gf-tabs-item" ng-repeat="(key, value) in ctrl.funArgument">
+          <a class="gf-tabs-link" ng-click="ctrl.editorTabIndex=$index;ctrl.debugInfo(key)"
+            ng-class="{active: ctrl.editorTabIndex === $index}">
+            {{key}}
+          </a>
+        </li>
+        <li class="gf-tabs-item">
+          <a class="gf-tabs-link" ng-click="ctrl.editorTabIndex=100;ctrl.debugSeriesInfo(key)"
+            ng-class="{active: ctrl.editorTabIndex === 100}">
+            series
+          </a>
+        </li>
+        <li class="gf-tabs-item">
+          <a class="gf-tabs-link" ng-click="ctrl.editorTabIndex=200;ctrl.debugTableInfo(key)"
+            ng-class="{active: ctrl.editorTabIndex === 200}">
+            table
+          </a>
+        </li>
+        <li class="gf-tabs-item">
+          <a class="gf-tabs-link" ng-click="ctrl.editorTabIndex=300;ctrl.debugDashVarsInfo(key)"
+            ng-class="{active: ctrl.editorTabIndex === 300}">
+            dashVars
+          </a>
+        </li>
+      </ul>
+      </div>
+      <div class="gf-form gf-form--grow">
+        <code-editor content="ctrl.debuggerJson" data-show-gutter data-mode="javascript" data-max-lines=20
+          style="height: 300px">
+        </code-editor>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="edit-tab-content" ng-if="ctrl.subTabIndex === 'theme'">
+    <gf-form-switch class="gf-form" label="启用" label-class="width-5" checked="ctrl.wrapOptionConf.theme.enable"
+      on-change="ctrl.render()">
+    </gf-form-switch>
+    <div class="gf-form gf-form--grow">
+      <code-editor content="ctrl.wrapOptionConf.theme.themeJson" data-show-gutter data-mode="javascript" data-max-lines=20
+        style="height: 300px">
+      </code-editor>
+    </div>
+  </div>
+</div>

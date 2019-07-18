@@ -67,6 +67,8 @@ System.config({
     'brace/snippets/sql': 'vendor/npm/brace/snippets/sql.js',
     'brace/mode/css': 'vendor/npm/brace/mode/css.js',
     'brace/snippets/css': 'vendor/npm/brace/snippets/css.js',
+    'brace/mode/javascript': 'vendor/npm/brace/mode/javascript.js',
+    // 'brace/snippets/javascript': 'vendor/npm/brace/snippets/javascript.js',
     'w3c-blob': 'vendor/npm/w3c-blob/index.js',
     'buffer': 'vendor/npm/buffer/index.js',
     'base64-js': 'vendor/npm/base64-js/index.js',

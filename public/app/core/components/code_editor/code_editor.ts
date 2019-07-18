@@ -38,6 +38,8 @@ import 'brace/mode/sql';
 import 'brace/snippets/sql';
 import 'brace/mode/css';
 import 'brace/snippets/css';
+import 'brace/mode/javascript';
+// import 'brace/snippets/javascript';
 
 const DEFAULT_THEME_DARK = "ace/theme/grafana-dark";
 const DEFAULT_THEME_LIGHT = "ace/theme/textmate";
