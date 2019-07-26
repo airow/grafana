@@ -598,6 +598,17 @@ export class PanelCtrl {
     return '';
   }
 
+  markdownTeldExpression(templateSrv, markdown) {
+    /** 解析 teldExpression */
+    var filterFun = function (item) {
+      return item.type === 'teldExpression' && "es" === (item.filter || "es");
+    };
+    var scopedExpressionVars = templateSrv.teldExpression2ScopedVarsFormCache('TSG', {}, 'lucene', filterFun);
+    markdown = templateSrv.replaceWithText(markdown, scopedExpressionVars);
+    /** end 解析 teldExpression */
+    return markdown;
+  }
+
   getInfoContent(options) {
     var markdown = this.panel.description;
 
@@ -607,6 +618,9 @@ export class PanelCtrl {
 
     var linkSrv = this.$injector.get('linkSrv');
     var templateSrv = this.$injector.get('templateSrv');
+    /** 解析 teldExpression */
+    markdown = this.markdownTeldExpression(templateSrv, markdown);
+     /** end 解析 teldExpression */
     var interpolatedMarkdown = templateSrv.replace(markdown, this.panel.scopedVars);
     var html = '<div class="markdown-html">';
 
@@ -628,6 +642,10 @@ export class PanelCtrl {
     var markdown = _.get(this.panel, 'helpTooltip.description', this.panel.description);
 
     var templateSrv = this.$injector.get('templateSrv');
+
+    /** 解析 teldExpression */
+    markdown = this.markdownTeldExpression(templateSrv, markdown);
+     /** end 解析 teldExpression */
     var interpolatedMarkdown = templateSrv.replace(markdown, this.panel.scopedVars);
 
     var html = '<div class="markdown-tooltip" style="text-align:' + _.get(this.panel.helpTooltip, 'textAlign', "left") + '">';
