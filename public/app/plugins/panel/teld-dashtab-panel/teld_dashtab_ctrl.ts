@@ -25,6 +25,7 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
   alertSrv: any;
   uiSegmentSrv: any;
   device: any;
+  $http: any;
 
   // Set and populate defaults
   panelDefaults = {
@@ -48,6 +49,7 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
     this.variableSrv = $injector.get('variableSrv');
     this.alertSrv = $injector.get('alertSrv');
     this.uiSegmentSrv = $injector.get('uiSegmentSrv');
+    this.$http = $injector.get('$http');
 
     this.device = (function () {
       var ua = window.navigator.userAgent;
@@ -85,6 +87,8 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
       this.onDataReceived(this.panel.injectDataList);
       delete this.panel.injectDataList;
     }
+
+    this.visit();
   }
 
   initLocalStorage() {
@@ -159,6 +163,33 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
     let localStorageKey = _.remove([dashLocalStorage, lskey, "dashtab"]).join("_");
 
     return localStorageKey;
+  }
+
+  visit(target?) {
+    if (true !== this.panel.enableVisit) {
+      return;
+    }
+    target = _.find(this.panel.dashboards, { dash: this.dashboard.meta.slug }) || target;
+    var visitConf = this.panel.visitConf;
+    var url = '/dashtabvisit',
+      data = _.assign({}, visitConf, target),
+      transFn = function (data) {
+        return $.param(data);
+      },
+      config = {
+        // headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        // transformRequest: transFn
+      };
+    this.$http.post(url, data, config).then(function successCallback(response) {
+      // this callback will be called asynchronously
+      // when the response is available
+      console.log(response);
+    }, function errorCallback(response) {
+      // debugger;
+      console.log(response);
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+    });
   }
 
   setLastDash(target) {
