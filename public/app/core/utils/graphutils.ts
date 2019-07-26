@@ -65,7 +65,7 @@ export function calcSeriesBar(calcSeriesConf, data, hideMetrics, dashVariables, 
 
   //dataSource.target = _.groupBy(dataList, 'refId');
   dataSource.target = _.groupBy(dataList, o => {
-    o.groupKey = o.groupKey || `${o.metric}_${o.field}`;
+    o.groupKey = o.groupKey || (o.field ? `${o.metric}_${o.field}` : o.metric);
     return o.groupKey;
   });
   var group = _.union(_.map(dataList, 'target'));
