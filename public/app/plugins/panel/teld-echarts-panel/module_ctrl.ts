@@ -901,7 +901,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     if (_.size(dataList) > 1) {
       var datapoints = _.map(dataList, 'datapoints');
       var flatten_DP = _.flatten(datapoints);
-      var time = _.union(_.map(flatten_DP, '1'));
+      var time = _.map(flatten_DP, '1');
+      if (this.panel.serieType !== 'scatter') {
+        time = _.union(time);
+      }
+
       //var time = _.union(_.transform(flatten_DP, (r, v, k) => { r.push(v[1]); }, []));
 
       _.each(datapoints, (dp, index) => {
