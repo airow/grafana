@@ -780,6 +780,31 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     this.timesOffsetDropRightWhile(dataList, maxdataListItem);
 
     if (this.isSeriesBar() && this.panel.groupBar) {
+
+      if (true !== this.panel.disableBarFilling
+        && true !== _.get(this.panel, 'groupMaster.enable', false)) {
+        //补充缺少的target
+        var groupKey = _.groupBy(dataList, 'groupKey');
+        var maxTarget = _.flatten(_.toArray(groupKey));
+        maxTarget = _.unionBy(maxTarget, 'target');
+        var baseTarget = _.union(_.map(maxTarget, 'target'));
+
+        _.each(groupKey, eachItem => {
+          var itemTarget = _.map(eachItem, 'target');
+          var c = _.first(eachItem);
+          var diff = _.difference(baseTarget, itemTarget);
+          _.each(diff, diffItem => {
+            var find = _.find(maxTarget, { 'target': diffItem });
+            var newItem = _.assign(
+              _.omit(find, ['datapoints', 'refId', 'targetRefId', 'groupKey']),
+              _.pick(c, ['refId', 'targetRefId', 'groupKey']));
+            newItem.datapoints = [[0, find.datapoints[0][1]]];
+            eachItem.push(newItem);
+          });
+        });
+
+        dataList = _.flatten(_.values(groupKey));
+      }
       if (this.panel.groupBarByTermValue) {
         _.each(this.dataList, s => { s.orgTarget = s.target, s.target = s.target.split(' ')[0]; });
       }
