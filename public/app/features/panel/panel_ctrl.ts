@@ -85,7 +85,7 @@ export class PanelCtrl {
 
   refresh() {
     var hide = this.visibility();
-    if (hide && contextSrv.isEditor === false) { return; }
+    if (hide && (contextSrv.isEditor === false || this.dashboard.dyHideLoad !== true)) { return; }
     this.events.emit('refresh', null);
   }
 
