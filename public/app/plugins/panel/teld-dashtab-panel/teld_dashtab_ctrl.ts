@@ -170,6 +170,9 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
       return;
     }
     target = _.find(this.panel.dashboards, { dash: this.dashboard.meta.slug }) || target;
+    if (_.get(target, "ignoreVisit", false)) {
+      return;
+    }
     var visitConf = this.panel.visitConf;
     var url = '/dashtabvisit',
       data = _.assign({}, visitConf, target),
