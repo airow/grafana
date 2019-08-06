@@ -74,6 +74,8 @@ System.config({
     'base64-js': 'vendor/npm/base64-js/index.js',
     'ieee754': 'vendor/npm/ieee754/index.js',
     'isarray': 'vendor/npm/isarray/index.js',
+    'ui-select': 'vendor/ui-select/select.js',
+    'ADM-dateTimePicker': 'vendor/ADM-dateTimePicker/ADM-dateTimePicker.js',
   },
 
   packages: {

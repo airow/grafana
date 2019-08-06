@@ -1,0 +1,35 @@
+<div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
+  <div style="font-size: 9pt;">
+    <span ng-click="ctrl.modifySegments()" style="margin-top: -2px;" class="pointer btn btn-inverse btn-small">&nbsp; 过滤<i ng-hide class="fa fa-cog fa-fw"></i></span>：
+
+    <span class="filter-bar" ng-repeat="segment in ctrl.segments">
+      <span ng-if='!$first' class="AND">AND</span>
+      <span>{{segment.field.name}}</span> <span ng-repeat="exp in segment.expression" ng-if="segment.expression.length>0">
+        <span ng-if="segment.expression.length>1 && $first">(</span>
+        <span ng-if='!$first'><span ng-if='!$first' ng-class="segment.logical">{{segment.logical}}</span></span>
+        <span class="filter">
+          <span class="filter-description">
+            <span>{{exp.field.name}}</span>
+            <span>{{exp.operator.display}}</span>
+            <span 1ng-switch="condition.selected.field.type">
+              <span 1ng-switch-when="string">'{{exp.value}}'</span>
+            </span>
+            <span ng-if='segment.not' style="color: red;    margin-left: 5px;">不成立</span>
+          </span>
+          <div class="filter-actions">
+            <!-- <a class="action filter-toggle" ng-click="disableChange()">
+              <i 2ng-show="filter.meta.disabled" class="fa fa-fw fa-square-o disabled ng-hide"></i>
+              <i 2ng-hide="filter.meta.disabled" class="fa fa-fw fa-check-square-o enabled"></i>
+            </a> -->
+            <a class="action filter-remove" ng-click="ctrl.remove(segment,exp)">
+              <i class="fa fa-fw fa-trash"></i>
+            </a>
+          </div>
+        </span>
+        <span ng-if="segment.expression.length>1 && $last">)</span>
+      </span>
+    </span>
+  </div>
+  <div style="min-height: 7px">
+  </div>
+</div>

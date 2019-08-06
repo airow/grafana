@@ -1,0 +1,179 @@
+<div class="editor-row">
+  <div class="section">
+    <h5>变量</h5>
+    <div class="gf-form-group">
+      <div class="gf-form">
+        <div class="gf-form-label width-9">前缀</div>
+        <input type="text" ng-model="editor.panel.prefix" class="gf-form-input">
+      </div>
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-9">&nbsp;</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-9">Name</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-9">dsType</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-9">joint</label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click="editor.add(editor.panel.variableList, {dsType:'ES',joint:' _exists_:RowKey '})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+    <div class="gf-form-inline" ng-repeat="variable in editor.panel.variableList">
+      <div class="gf-form">
+        <label class="gf-form-label width-9">${{editor.panel.prefix}}_{{variable.variableName}}</label>
+      </div>
+      <div class="gf-form">
+        <input type="text" class="gf-form-input width-9" ng-model="variable.variableName">
+      </div>
+      <div class="gf-form">
+        <input type="text" class="gf-form-input width-9" min-length="0" bs-typeahead="['ES','SQL']"
+          ng-model="variable.dsType">
+      </div>
+      <div class="gf-form">
+        <input type="text" class="gf-form-input width-9" ng-model="variable.joint">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a class="pointer" ng-click="editor.remove(editor.panel.variableList, $index)">
+            <i class="fa fa-trash"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <h5>Fields</h5>
+
+    <div class="gf-form-query" ng-repeat="field in editor.panel.fieldsConf">
+      <div class="gf-form">
+        <label class="gf-form-label">F{{$index+1}}</label>
+      </div>
+
+      <!---->
+      <div class="gf-form-query-content">
+
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-4">Field</label>
+            <input type="text" class="gf-form-input" ng-model="field.name">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-4">Type</label>
+            <select class="gf-form-input" ng-model="field.type" ng-options="f for f in editor.getTypeList()"></select>
+          </div>
+          <div class="gf-form" ng-if="field.type==='date'">
+            <label class="gf-form-label query-keyword width-5">Format</label>
+            <input type="text" class="gf-form-input" ng-model="field.format">
+            <label class="gf-form-label query-keyword width-5">dtpType</label>
+            <select class="gf-form-input" ng-model="field.dtpType" ng-options="f for f in ['date','date&time']"></select>
+          </div>
+          <div class="gf-form gf-form--grow">
+            <label class="gf-form-label gf-form-label--grow">
+              &nbsp;
+            </label>
+          </div>
+        </div>
+
+        <!-- operatorList -->
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-4">op</label>
+          </div>
+          <!-- {{field.operatorList}} -->
+          <div class="gf-form" ng-repeat="option in field.operatorList">
+            <div class="gf-form-select-wrapper">
+              <select class="gf-form-input" ng-model="field.operatorList[$index]" ng-options="c.key as c.display for c in editor.getOpList(field)"></select>
+            </div>
+            <label class="gf-form-label">
+              <a class="pointer" tabindex="1" ng-click="editor.remove(field.operatorList, $index)">
+                <i class="fa fa-trash"></i>
+              </a>
+            </label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <a ng-click="editor.add(field.operatorList)">
+                <i class="fa fa-plus"></i>
+              </a>
+            </label>
+          </div>
+
+          <div class="gf-form gf-form--grow">
+            <div class="gf-form-label gf-form-label--grow"></div>
+          </div>
+        </div>
+
+        <!-- End operatorList -->
+
+        <!-- Bind -->
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-4">Bind</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-9">Variable</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-9">Field</label>
+          </div>
+          <div class="gf-form" ng-if="field.type==='date'">
+            <label class="gf-form-label query-keyword width-9">format</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <a ng-click="field.ds.push({})">
+                <i class="fa fa-plus"></i>
+              </a>
+            </label>
+          </div>
+        </div>
+
+        <div class="gf-form-inline" ng-repeat="ds in field.ds">
+          <div class="gf-form offset-width-4">
+            <input type="text" class="gf-form-input width-9" ng-model="ds.bindVariable">
+          </div>
+          <div class="gf-form">
+            <input type="text" class="gf-form-input width-9" ng-model="ds.field">
+          </div>
+          <div class="gf-form" ng-if="field.type==='date'">
+            <input type="text" class="gf-form-input width-9" ng-model="ds.format">
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <a class="pointer" ng-click="editor.remove(field.ds, $index)">
+                <i class="fa fa-trash"></i>
+              </a>
+            </label>
+          </div>
+        </div>
+        <!-- End Bind -->
+
+      </div>
+      <!---->
+
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a class="pointer" tabindex="1" ng-click="editor.remove(editor.panel.fieldsConf, $index)">
+            <i class="fa fa-trash"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+
+    <div class="gf-form-button-row">
+      <button class="btn btn-inverse" ng-click="editor.addField()" ng-disabled="editor.disabled">
+        <i class="fa fa-plus"></i>&nbsp;Add Field
+      </button>
+    </div>
+  </div>
+</div>

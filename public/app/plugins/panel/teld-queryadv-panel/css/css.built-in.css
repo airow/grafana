@@ -1,0 +1,111 @@
+.filter-bar{
+  /* padding: 5px 6px 3px;
+  background: #ecf0f1;
+  border-bottom: 0; */
+}
+
+.filter-bar .filter
+{
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  /* min-width: calc(5*(1.414em + 13px)); */
+  font-size: 9pt;
+  background-color: #8d9da2;
+  color: #fff;
+  /* margin-right: 4px; */
+  /* margin-bottom: 4px; */
+  max-width: 100%;
+  padding: 4px 8px;
+  border-radius: 9pt;
+  margin-bottom: 2px;
+}
+.teld-popup-segments .row.no-gutter {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.teld-popup-segments .gf-form{
+  margin-top: 0.25rem;
+}
+
+.teld-popup-segments .row.no-gutter > [class*='col-'] {
+    padding-right: 0;
+    padding-left: 0;
+}
+.NOT{
+  background-color: red;
+}
+.UNNOT{
+  background-color: #8d9da2;
+}
+.AND{
+  background-color: #6495ed
+}
+.AND-border-left{
+  border-left:#6495ed 4px solid;
+  border-bottom:#6495ed 2px solid;
+}
+.filter-bar .AND{
+  background-color: #6495ed;
+  border-radius: 5px;
+  position: relative;
+  display: inline-block;
+  min-width: 40px;
+  text-align: center;
+}
+
+
+.OR{
+  background-color:#9acd32;
+}
+.OR-border-left{
+  border-left:#9acd32 4px solid;
+  border-bottom:#9acd32 2px solid;
+}
+.filter-bar .OR{
+  background-color:#9acd32;
+  border-radius: 5px;
+  position: relative;
+  display: inline-block;
+  min-width: 40px;
+  text-align: center;
+}
+
+.filter-bar .filter-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-bar .filter:hover>.filter-description {
+    opacity: .15;
+    background: transparent;
+    overflow: hidden;
+}
+
+.filter-bar .filter>.filter-actions {
+    font-size: 1.1em;
+    line-height: 1.4em;
+    position: absolute;
+    padding: 4px 8px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: none;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.filter-bar .filter a {
+    color: #fff;
+}
+.filter-bar .filter>.filter-actions>* {
+    /* border-right: 1px solid hsla(0,0%,100%,.4); */
+    padding-right: 0;
+    margin-right: 5px;
+}
+
+.filter-bar .filter:hover>.filter-actions {
+    display: block;
+}

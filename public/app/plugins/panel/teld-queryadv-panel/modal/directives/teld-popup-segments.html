@@ -1,0 +1,66 @@
+<div class="modal-body">
+
+  <div class="modal-content" style='padding-top: 1rem; padding-bottom: 1rem; min-height: auto;' ng-cloak>
+    <div ng-include src="'shareLink.html'" class="share-modal-body"></div>
+  </div>
+
+</div>
+
+<script type="text/ng-template" id="shareLink.html">
+		<div class="share-modal-content">
+      <div class="btn-group">
+        <a class="btn btn-small AND" href="#" ng-click="ctrl.addSegment('AND')"><i class="fa fa-plus"></i> 并且</a>
+        <a class="btn btn-small OR" href="#" ng-click="ctrl.addSegment('OR')"><i class="fa fa-tasks"></i> 或者</a>
+      </div>
+      <div style="max-height:300px;overflow:auto;padding-right: 10px; padding-bottom:100px;">
+        <div style='padding-left:5px; margin-top: 5px;' class='container-fluid {{segment.logical}}-border-left' ng-repeat="segment in ctrl.segments">
+          <div style='margin-left: -15px;' class='row no-gutter'>
+            <div class="col-xs-12">
+               <div class="btn-group">
+                <a class="btn btn-small {{segment.logical}}" href="#" ng-click="ctrl.addExpressionWithLogical(segment)"><i class="fa fa-tasks"></i> 或者</a>
+                <a class="btn btn-small" ng-class="{true:'NOT',false:'UNNOT'}[segment.not==true]" href="#" ng-click="segment.not=!(segment.not||false)"><i class="fa fa-tasks"></i> 非</a>
+              </div>
+            </div>
+          </div>
+          <div class='row no-gutter' ng-repeat="exp in segment.expression">
+            <div class="col-xs-8 col-md-4">
+                <div class="gf-form">
+                  <a class="btn btn-small" href="#"><i class="fa fa-eye"></i></a>
+                  <a class="btn btn-small" style='background-color:red;' href="#" ng-click="ctrl.removeExp(segment,exp)"><i class="fa fa-remove"></i></a>
+                  <!-- <input type="text" class="gf-form-input" ng-model="exp.lValue" ng-change="ctrl.render()" ng-model-onblur=""> -->
+                  <ui-select theme="selectize" ng-model="exp.field">
+                    <ui-select-match placeholder="选择或搜索字段">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="field in ctrl.fields | filter: $select.search">
+                      <span ng-bind-html="(field.name) | highlight: $select.search"></span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+            </div>
+            <div class="col-xs-2 col-md-1">
+                <div class="gf-form">
+                  <ui-select theme="selectize" ng-model="exp.operator">
+                    <ui-select-match placeholder="">{{$select.selected.display}}</ui-select-match>
+                    <ui-select-choices repeat="op in ctrl.getOperatorByType(exp) | filter: $select.search">
+                      <span ng-bind-html="(op.display) | highlight: $select.search"></span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-7">
+                <div class="gf-form" ng-switch="exp.field.type">
+                  <input ng-switch-default type="text" class="gf-form-input" ng-model="exp.value"ng-change="ctrl.render()" ng-model-onblur="">
+                  <input ng-switch-when='number' type="number" class="gf-form-input" ng-model="exp.value"ng-change="ctrl.render()" ng-model-onblur="">
+                  <div ng-switch-when='date'>
+                    <adm-dtp ng-model='exp.value' options='ctrl.genADMdtp(exp.field,["format","dtpType"])'></adm-dtp>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gf-form-button-row text-right">
+        <a class="btn btn-success" ng-click="ctrl.submit();">确定</a>
+        <a class="btn-text" ng-click="dismiss();">取消</a>
+      </div>
+</script>

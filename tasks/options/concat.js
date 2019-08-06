@@ -6,6 +6,9 @@ module.exports = function(config) {
       src: [
         '<%= genDir %>/vendor/css/timepicker.css',
         '<%= genDir %>/vendor/css/spectrum.css',
+        '<%= genDir %>/vendor/ui-select/select.css',
+        '<%= genDir %>/vendor/ui-select/selectize.default.css',
+        '<%= genDir %>/vendor/ADM-dateTimePicker/ADM-dateTimePicker.css',
         '<%= genDir %>/css/grafana.dark.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
       ],
@@ -16,6 +19,9 @@ module.exports = function(config) {
       src: [
         '<%= genDir %>/vendor/css/timepicker.css',
         '<%= genDir %>/vendor/css/spectrum.css',
+        '<%= genDir %>/vendor/ui-select/select.css',
+        '<%= genDir %>/vendor/ui-select/selectize.default.css',
+        '<%= genDir %>/vendor/ADM-dateTimePicker/ADM-dateTimePicker.css',
         '<%= genDir %>/css/grafana.light.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
       ],

@@ -2,4 +2,6 @@
 
 import angular from 'angular';
 import 'me-pageloading';
-export default angular.module('grafana.core', ['ngRoute', 'me-pageloading']);
+import 'ui-select';
+import 'ADM-dateTimePicker';
+export default angular.module('grafana.core', ['ngRoute', 'me-pageloading', 'ui.select','ADM-dateTimePicker']);
