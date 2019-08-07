@@ -78,6 +78,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   originalWidth: any;
   device: any;
   rtClickQueryBtn2Fetch: boolean;
+  tabGroup: any;
 
   datasourceNullValue = {
     "teld-servicegateway-datasource": "",
@@ -95,6 +96,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     slideWidth: 250,
     targets: [],
     saveVariable: false,
+    saveTabGroup: false,
     timeRangeConf: {},
     saveVariableLocalStoragePrefix: _.uniqueId('def')
   };
@@ -148,10 +150,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.rtClickQueryBtn2Fetch = this.panel.clickQueryBtn2Fetch;
 
     this.currentTarget = _.find(this.panel.targets, { refId: this.panel.selectTab }) || this.panel.targets[0];
+    // debugger;
+    this.initTabGroup();
+
     this.setCurrentTargetRefId(this.currentTarget);
     this.row.notWatchHeight = true;
 
-    _.each(this.panel.targets, target => {
+    _.each(this.panel.targets, (target, index) => {
       this.initDashboardVariables(target);
     });
     this.localStorage2Variables();
@@ -429,8 +434,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     if (getls) {
       getls = JSON.parse(getls);
       if (_.isNil(getls['timeRange']) === false) {
-        ls['timeRange'] = getls['timeRange'];
+        ls['tagGroup'] = getls['timeRange'];
       }
+      _.each(['tagGroup'], item => {
+        if (_.isNil(getls[item]) === false) {
+          ls[item] = getls[item];
+        }
+      });
     }
     if (enable && this.denyTimeRangeSave() === false) {
       var timeRange = this.timeSrv.timeRange();
@@ -449,6 +459,91 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     window.localStorage.setItem(localStorageKey, JSON.stringify(ls));
   }
 
+  tabGroup2LocalStorage() {
+    var dashLocalStorage = this.dashboard.dashLocalStorage;
+    var localStorageKey = _.remove([dashLocalStorage, this.panel.saveVariableLocalStoragePrefix, "querybar"]).join("_");
+    if (false === this.panel.saveVariable) {
+      window.localStorage.removeItem(localStorageKey);
+      return;
+    }
+
+    // debugger;
+    var lsVariables = ['tagGroup'];
+
+    var ls = {};
+    // var groupBy = groupItem.groupBy;
+    var getls = window.localStorage.getItem(localStorageKey);
+    if (getls) {
+      ls = JSON.parse(getls);
+    }
+
+    _.each(lsVariables, item => {
+      ls[item] = _.transform(this.tabGroup, (result, tabGroupItem, key) => {
+        result[key] = { 'selectTab': tabGroupItem.selectTab };
+      }, {});
+    });
+
+    window.localStorage.setItem(localStorageKey, JSON.stringify(ls));
+  }
+
+  initTabGroup() {
+    var groupBy = _.filter(this.panel.targets, item => { return !_.isEmpty(item.conf.groupBy); });
+    this.tabGroup = _.groupBy(groupBy, 'conf.groupBy');
+
+    _.each(this.tabGroup, (item, key) => {
+      item.selectTab = item[0].refId;
+    });
+
+    this.localStorage2tabGroup();
+    this.overwriteCurrentTargetByGroupBy();
+  }
+
+  overwriteCurrentTargetByGroupBy() {
+    if (false === _.isEmpty(this.currentTarget.conf.groupBy)) {
+      var ctGroup = this.tabGroup[this.currentTarget.conf.groupBy];
+      if (false === _.isNil(ctGroup)) {
+        this.currentTarget = _.find(this.panel.targets, { refId: ctGroup.selectTab });
+      }
+    }
+  }
+
+  localStorage2tabGroup() {
+    // debugger;
+    if (false === this.panel.saveVariable || true !== this.panel.saveTabGroup) {
+      this.tabGroup2LocalStorage();
+      return;
+    }
+
+    var dashLocalStorage = this.dashboard.dashLocalStorage;
+    var localStorageKey = _.remove([dashLocalStorage, this.panel.saveVariableLocalStoragePrefix, "querybar"]).join("_");
+    if (false === this.panel.saveVariable) {
+      window.localStorage.removeItem(localStorageKey);
+      return;
+    }
+
+    var ls = {};
+    // var groupBy = groupItem.groupBy;
+    var getls = window.localStorage.getItem(localStorageKey);
+    if (getls) {
+      ls = JSON.parse(getls);
+    }
+
+    // debugger;
+    if (ls['tagGroup']) {
+      _.each(ls['tagGroup'], (item,key) => {
+        if (this.tabGroup[key]) {
+          this.tabGroup[key].selectTab = item.selectTab;
+          // var size = _.size(this.tabGroup[key]);
+          // var tabItem = _.find(this.tabGroup[key], { refId: item.selectTab });
+          // var index = _.findIndex(this.tabGroup[key], tabItem);
+          // var arrIndex = _.findIndex(this.panel.targets, tabItem);
+          // _.move(this.panel.targets, arrIndex, arrIndex - index);
+        }
+      });
+    }
+  }
+
+
   onInitEditMode() {
     this.addEditorTab('Metrics', metricsEditorComponent);
     // this.addEditorTab('Options', optionsEditorComponent);
@@ -457,6 +552,45 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   onDataError() {
     this.render();
+  }
+
+  isSelectGroupTab(target) {
+    // debugger;
+    var returnValue = true;
+    if (false === _.isEmpty(target.conf.groupBy)) {
+      // debugger;
+      returnValue = this.tabGroup[target.conf.groupBy].selectTab === target.refId;
+    }
+    return returnValue;
+  }
+
+  hideDropdownMenu(target) {
+    if (_.isEmpty(target.conf.groupBy)) { return; }
+    this.tabGroup[target.conf.groupBy].showDDM = false;
+  }
+
+  toggleDropdownMenu(target, $event) {
+    if (_.isEmpty(target.conf.groupBy)) { return; }
+    var showDropdownMenu = this.tabGroup[target.conf.groupBy].showDDM;
+    this.tabGroup[target.conf.groupBy].showDDM = (showDropdownMenu === target.refId ? false : target.refId);
+    if (target === this.currentTarget) {
+      $event.stopPropagation();
+    }
+  }
+
+  changeTabGroup(groupItem, target) {
+    this.eh_clearBindVariables(target, true);
+    this.manualChangeQueryBarTab(groupItem);
+    this.tabGroup[groupItem.conf.groupBy].selectTab = groupItem.refId;
+    this.tabGroup[groupItem.conf.groupBy].showDDM = false;
+    this.undoQuery(groupItem);
+
+    // debugger;
+    this.tabGroup2LocalStorage();
+  }
+
+  isGroupItem(target){
+    return false === _.isEmpty(target.conf.groupBy);
   }
 
   setCurrentTargetRefId(currentTarget) {
@@ -677,6 +811,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   manualChangeQueryBarTab(target) {
+    // this.tabGroup[target.conf.groupBy].showDDM = false;
     if (this.isMultiSyncLinkageModel()) {
       if (this.isFetchData || this.spin) {
         this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000);
@@ -726,8 +861,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     }
   }
 
-  eh_clearBindVariables(target) {
-    if (target.conf.required) {
+  eh_clearBindVariables(target, ignoreRequiredCheck?) {
+    if (ignoreRequiredCheck !== true && target.conf.required) {
       this.alertSrv.set("警告", `${target.conf.title}为必选项`, "warning", 2000);
       return;
     }
