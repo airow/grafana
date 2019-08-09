@@ -499,7 +499,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   overwriteCurrentTargetByGroupBy() {
-    if (false === _.isEmpty(this.currentTarget.conf.groupBy)) {
+    if (this.currentTarget && false === _.isEmpty(this.currentTarget.conf.groupBy)) {
       var ctGroup = this.tabGroup[this.currentTarget.conf.groupBy];
       if (false === _.isNil(ctGroup)) {
         this.currentTarget = _.find(this.panel.targets, { refId: ctGroup.selectTab });
@@ -559,9 +559,35 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     var returnValue = true;
     if (false === _.isEmpty(target.conf.groupBy)) {
       // debugger;
+      if (_.isNil(this.tabGroup[target.conf.groupBy])) {
+        this.tabGroup[target.conf.groupBy] = [target];
+        this.tabGroup[target.conf.groupBy].selectTab = target.refId;
+      }
       returnValue = this.tabGroup[target.conf.groupBy].selectTab === target.refId;
     }
     return returnValue;
+  }
+
+  setTabGroup(target) {
+    // debugger;
+    if (false === _.isEmpty(target.conf.groupBy)) {
+      var group = this.tabGroup[target.conf.groupBy];
+      // debugger;
+      if (_.isNil(group)) {
+        group = this.tabGroup[target.conf.groupBy] = [];
+      }
+      _.each(this.tabGroup, groupItme => {
+        _.remove(groupItme, target);
+        if (_.size(groupItme) > 0) {
+          groupItme.selectTab = groupItme[0].refId;
+        } else {
+          groupItme = null;
+        }
+      });
+      this.tabGroup[target.conf.groupBy].push(target);
+      this.tabGroup[target.conf.groupBy].selectTab = target.refId;
+      this.tabGroup = _.pickBy(this.tabGroup, item => { return _.size(item) > 0; });
+    }
   }
 
   hideDropdownMenu(target) {

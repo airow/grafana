@@ -103,7 +103,7 @@
         <input type="text" class="gf-form-input width-6" ng-model="target.conf.title" spellcheck="false"
           placeholder="Title">
         <label class="gf-form-label query-keyword width-6">分组</label>
-        <input type="text" class="gf-form-input width-6" ng-model="target.conf.groupBy" spellcheck="false" placeholder="group">
+        <input type="text" class="gf-form-input width-6" ng-blur="ctrl.setTabGroup(target)" ng-model="target.conf.groupBy" spellcheck="false" placeholder="group">
         <label class="gf-form-label query-keyword width-6">显示条数</label>
         <input type="text" class="gf-form-input width-5" ng-model="target.conf.displayCount" spellcheck="false"
           placeholder="displayCount">
