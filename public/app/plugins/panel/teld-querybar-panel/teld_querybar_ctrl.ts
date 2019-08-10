@@ -982,6 +982,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   swiperSlide_ClickHandler(target, index, selectedItem) {
+    this.forbiddenRefreshDashboard = false;
     if (this.panel.saveVariable) {
       this.isFirstWithSaveVariable = false;
     }
@@ -1399,7 +1400,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       console.log('Data source query result invalid, missing data field:', result);
       result = { data: [] };
     }
-
+    this.forbiddenRefreshDashboard = true;
     return this.events.emit('data-received', result.data);
   }
 
@@ -1430,6 +1431,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   quering = false;
+  forbiddenRefreshDashboard = false;
   eh_query() {
     // if (this.queryCount === 0 && this.panel.stopClickRefresh) {
     //   this.dashboard.querybarInitFinish = true;
@@ -1437,7 +1439,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.queryCount++;
     // debugger;
     console.log('query');
-    this.quering = true;
+    if (false === this.forbiddenRefreshDashboard) {
+      this.quering = true;
+    }
     this.triggerRefresh = true;
     this.dashboard.meta.hasQuerybarPanel = false;
     if (this.panel.subscribeRefresh) {
@@ -1454,7 +1458,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         }
       }
 
-      this.timeSrv.refreshDashboard();
+      if (false === this.forbiddenRefreshDashboard) {
+        this.timeSrv.refreshDashboard();
+      }
+      this.forbiddenRefreshDashboard = false;
       this.getExprVariables();
       this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'querybar', target: this });
     }
