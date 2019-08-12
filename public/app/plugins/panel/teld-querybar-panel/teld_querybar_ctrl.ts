@@ -844,7 +844,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         return;
       }
     }
-
+    // this.forbiddenRefreshDashboard = true;
     this.changeQueryBarTab(target);
   }
 
@@ -888,6 +888,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   eh_clearBindVariables(target, ignoreRequiredCheck?) {
+    this.forbiddenRefreshDashboard = false;
     if (ignoreRequiredCheck !== true && target.conf.required) {
       this.alertSrv.set("警告", `${target.conf.title}为必选项`, "warning", 2000);
       return;
@@ -982,7 +983,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   swiperSlide_ClickHandler(target, index, selectedItem) {
-    this.forbiddenRefreshDashboard = false;
+    // this.forbiddenRefreshDashboard = false;
     if (this.panel.saveVariable) {
       this.isFirstWithSaveVariable = false;
     }
@@ -990,6 +991,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   }
 
   setQueryBarVariable(target, index, selectedItem) {
+    // this.forbiddenRefreshDashboard = false;
     let tabInfo = this.currentTabInfo[target.refId] || { swiper: { slideTo: _.noop } };
     let conf = target.conf;
     let selectedIndex = tabInfo.selectedIndex;
@@ -999,8 +1001,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         return;
       }
       delete tabInfo.selectedIndex;
+      // this.forbiddenRefreshDashboard = true;
       this.clearTargetBindVariables(target);
     } else {
+      this.forbiddenRefreshDashboard = false;
       _.set(tabInfo, 'selectedIndex', index);
 
       this.setPublishSelectVlaue(target);
@@ -1400,7 +1404,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       console.log('Data source query result invalid, missing data field:', result);
       result = { data: [] };
     }
-    this.forbiddenRefreshDashboard = true;
+    // this.forbiddenRefreshDashboard = true;
     return this.events.emit('data-received', result.data);
   }
 
