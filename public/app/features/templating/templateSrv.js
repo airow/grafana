@@ -331,9 +331,15 @@ define([
                 }
 
                 var data = {};
-                variable = variable.replace(/\./g, '_');
+                variable = variable.replace(/[\.-]/g, '_');
                 data[variable] = variable;
-                var boolString = _.template('${' + variable + '}')(data);
+
+                var boolString;
+                if ((/^\w{8}_\w{4}_\w{4}_\w{4}_\w{12}$/g).test(variable)) {
+                  boolString = _.template('${data["' + variable + '"]}', { variable: "data" })(data);
+                } else {
+                  boolString = _.template('${' + variable + '}')(data);
+                }
                 //var boolString = _.template('${' + variable + '}')();
                 if ((/^false$/i).test(boolString)) {
                   return '';
