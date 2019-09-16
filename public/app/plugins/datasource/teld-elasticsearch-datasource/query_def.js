@@ -48,6 +48,15 @@ function (_) {
       {text: "20", value: '20' },
     ],
 
+    doc2timeseriesSizeOptions: [
+      { text: "1000", value: '1000' },
+      { text: "5000", value: '5000' },
+      { text: "10000", value: '10000' },
+      { text: "15000", value: '15000' },
+      { text: "20000", value: '20000' },
+      { text: "50000", value: '50000' }
+    ],
+
     shardSizeOptions: [
       { text: "100", value: '100' },
       { text: "200", value: '200' },

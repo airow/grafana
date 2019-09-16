@@ -392,20 +392,23 @@ function (_, queryDef, moment) {
       }
     }
     */
+    // debugger;
     for (var i = 0; i < this.response.responses.length; i++) {
       var response = this.response.responses[i];
       if (response.error) {
         throw this.getErrorFromElasticResponse(this.response, response.error);
       }
 
-      var doc2timeseries = this.targets[i].doc2timeseries;
+      var doc2timeseriesConf = this.targets[i].doc2timeseries;
+      var doc2timeseries = _.omit(doc2timeseriesConf, 'size');
+      var isEmptyDoc2timeseries = _.isEmpty(doc2timeseries);
       if (response.hits && response.hits.hits.length > 0) {
         this.processHits(response.hits, seriesList);
       } else {
-        if (doc2timeseries) { seriesList.push({ datapoints: [] }); }
+        if (!isEmptyDoc2timeseries) { seriesList.push({ datapoints: [] }); }
       }
 
-      if (_.size(seriesList) > 0 && doc2timeseries) {
+      if (_.size(seriesList) > 0 && !isEmptyDoc2timeseries) {
         var pick = [doc2timeseries.value, doc2timeseries.timeseries];
         seriesList[i].datapoints = _.map(seriesList[i].datapoints, doc2timeseriesHandler);
         delete seriesList[i].type;

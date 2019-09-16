@@ -71,6 +71,9 @@
         <input type="text" class="gf-form-input max-width-8" placeholder="Interval 秒" empty-to-null
           ng-model="ctrl.target.doc2timeseries.intervalM" ng-model-onblur></input>
       </div>
+      <div class="gf-form">
+        <metric-segment-model property="ctrl.target.doc2timeseries.size" options="ctrl.doc2timeseriesSizeOptions" css-class="width-12"></metric-segment-model>
+      </div>
     </div>
   </div>
 

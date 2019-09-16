@@ -17,6 +17,7 @@ export class ElasticQueryCtrl extends QueryCtrl {
   permissionOptions: any;
   getPermissionOptionsPromise: any;
   newPlusButton: any;
+  doc2timeseriesSizeOptions: any;
 
   /** @ngInject **/
   constructor($scope, $injector, private $rootScope, private $timeout, private uiSegmentSrv, private $http) {
@@ -24,9 +25,13 @@ export class ElasticQueryCtrl extends QueryCtrl {
 
     this.esVersion = this.datasource.esVersion;
     this.target.dataPermission = this.target.dataPermission || [];
+    if (false === _.has(this.target, 'doc2timeseries.size')) {
+      _.set(this.target, 'doc2timeseries.size', '10000');
+    }
     this.queryUpdated();
 
     this.newPlusButton = uiSegmentSrv.newPlusButton();
+    this.doc2timeseriesSizeOptions = queryDef.doc2timeseriesSizeOptions;
 
     this.getPermissionOptionsPromise = (query, callback) => {
       return this.$http({

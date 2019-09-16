@@ -217,6 +217,12 @@ function (queryDef, _) {
       query["_source"] = "*";
     } else {
       query.size = 10000;
+      var doc2timeseriesSize = _.get(target, 'doc2timeseries.size', '0');
+      doc2timeseriesSize = +doc2timeseriesSize;
+      if (doc2timeseriesSize > 0) {
+        query.size = doc2timeseriesSize;
+      }
+
       query["_source"] = target.sourceFieldsConf;
       query.sort[this.timeField] = { order: 'asc', unmapped_type: 'boolean' };
     }
