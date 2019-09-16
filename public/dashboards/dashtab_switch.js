@@ -127,12 +127,15 @@ return function (callback) {
         }
       }, component.mapping);
 
-    var group = component.dashboard.dashLocalStorage;
-    var tab = panel.localStorageKey;
-    var localStorageKey = component.localStorageKey = _.remove([group, tab, "dashtab"]).join("_");
-    var storage = window.localStorage.getItem(localStorageKey) || "{}";
-    component.storage = JSON.parse(storage);
-    component.openDash = component.storage.lastDash || { dash: ARGS.db };
+    component.openDash = { dash: ARGS.db };
+    if (panel.isSaveTabIndex) {
+      var group = component.dashboard.dashLocalStorage;
+      var tab = panel.localStorageKey;
+      var localStorageKey = component.localStorageKey = _.remove([group, tab, "dashtab"]).join("_");
+      var storage = window.localStorage.getItem(localStorageKey) || "{}";
+      component.storage = JSON.parse(storage);
+      component.openDash = component.storage.lastDash || { dash: ARGS.db };
+    }
 
     return panel;
   }
@@ -248,7 +251,8 @@ return function (callback) {
       return item.dash === lastDash;
     });
 
-    openDash.dash = findDash ? findDash.dash : _.first(dashs).dash;
+    var undash = ((ARGS._c == 1 || ARGS._c == 'y' || ARGS._c == 'Y') ? emptyDash : _.first(dashs).dash)
+    openDash.dash = findDash ? findDash.dash : undash;
     return openDash;
   }
 
@@ -276,8 +280,9 @@ return function (callback) {
   }
 
   function isInApp() {
-    return window.navigator.userAgent.indexOf("TeldIosWebView") !== -1
-      || window.navigator.userAgent.indexOf("TeldAndroidWebView") !== -1;
+    return false;
+    // return window.navigator.userAgent.indexOf("TeldIosWebView") !== -1
+    //   || window.navigator.userAgent.indexOf("TeldAndroidWebView") !== -1;
   }
 
   function mockApp(component, getButtonRes) {
