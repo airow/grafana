@@ -25,6 +25,13 @@
             </li>
           </ul>
         </li>
+        <li class="gf-tabs-item queryBtnHide" ng-if='ctrl.panel.showTabDesc'>
+          <a class="gf-tabs-link" bs-tooltip="ctrl.panel.tabDesc" style="cursor: help !important;">
+            <i class="fa fa-info-circle" aria-hidden="true">
+              {{ctrl.getTruncate(ctrl.panel.tabDesc,10)}}
+            </i>
+          </a>
+        </li>
       </ul>
     </div>
     <div class="-tabbed-view-body">

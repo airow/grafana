@@ -83,6 +83,14 @@
     <input type="text" class="gf-form-input width-15" ng-model="ctrl.panel.timeRangeConf.to" spellcheck="false"
       placeholder="结束时间"> -->
   </div>
+  <div class="gf-form-inline">
+    <gf-form-switch class="gf-form" label="Tab说明" label-class="query-keyword width-6" checked="ctrl.panel.showTabDesc">
+    </gf-form-switch>
+    <div class="gf-form gf-form--grow">
+      <input type="text" ng-if="ctrl.panel.showTabDesc" class="gf-form-input" ng-model="ctrl.panel.tabDesc"
+        spellcheck="false" placeholder="">
+    </div>
+  </div>
 </div>
 <hr>
 <div ng-repeat="target in ctrl.panel.targets" ng-class="{'gf-form-disabled': target.hide}">
@@ -110,7 +118,9 @@
       </div>
       <gf-form-switch class="gf-form" label="必选" label-class="query-keyword width-6" checked="target.conf.required">
       </gf-form-switch>
-      <div class="gf-form" ng-if="target.conf.required">
+      <gf-form-switch class="gf-form" label="默认值" label-class="query-keyword width-6" checked="target.conf.defaultVal">
+      </gf-form-switch>
+      <div class="gf-form" ng-if="target.conf.required||target.conf.defaultVal">
         <label class="gf-form-label width-8">索引/表达式<tip>表达式：通过eachItem引用记录，eachItem = {field,fieldValue,_original.xxx}
           </tip></label>
         <input type="text" class="gf-form-input" ng-model="target.conf.predicateValue" spellcheck="false"
@@ -127,7 +137,7 @@
       </gf-form-switch>
     </div>
     <div class="gf-form-inline">
-      <div class="gf-form">
+      <div class="gf-form gf-form--grow">
         <label class="gf-form-label query-keyword width-10">说明</label>
         <input type="text" class="gf-form-input" ng-model="target.conf.tooltip" spellcheck="false">
       </div>
