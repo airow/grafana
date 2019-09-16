@@ -59,7 +59,9 @@ function (angular, _, coreModule, config) {
         self.datasources[name] = instance;
         deferred.resolve(instance);
       }).catch(function(err) {
-        $rootScope.appEvent('alert-error', [dsConfig.name + ' plugin failed', err.toString()]);
+        // $rootScope.appEvent('alert-error', [dsConfig.name + ' plugin failed', err.toString()]);
+        console.log(err.toString());
+        $rootScope.appEvent('alert-error', [dsConfig.name + ' plugin failed', "网络不稳定，请刷新重试。"]);
       });
 
       return deferred.promise;
