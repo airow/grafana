@@ -39,7 +39,8 @@ export class EchartsOptionEditorCtrl {
   funArgument = {
     originalOpt: 'ecOption.baseOption',
     ecSeries: 'ecSeries',
-    dataList: 'dataList'
+    dataList: 'dataList',
+    originaldataList: 'originaldataList'
   };
 
   debugInfo(key?) {

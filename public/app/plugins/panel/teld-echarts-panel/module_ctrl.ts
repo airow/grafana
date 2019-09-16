@@ -755,9 +755,11 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     return calcSeriesFun(calcSeriesConf, data, hideMetrics, this.templateSrv.variables, this.panel);
   }
   dataList: any = [];
+  originaldataList: any = [];
 
 
   onDataReceived(dataList) {
+    this.originaldataList = _.cloneDeep(dataList);
 
     if (_.size(dataList) === 1 && dataList[0].type === 'docs') {
       dataList[0].target = _.get(this.panel.metricsLegend, 'legends[0].legend.name', dataList[0].target);
@@ -1946,12 +1948,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           ${wrapOptionConf.functionBody || ""};
           return option;
       `;
-      var wrapOptionFuc = new Function('originalOpt', 'ecSeries', 'dataList', 'series', 'table', 'ecInstance', 'dashVars',
+      var wrapOptionFuc = new Function('originalOpt', 'ecSeries',
+        'dataList', 'originaldataList', 'series', 'table', 'ecInstance', 'dashVars',
         '_', 'kbn', functionBody);
       var series = EchartsOptionEditorCtrl.trySeriesHandler(this.dataList);
       var table = EchartsOptionEditorCtrl.tryTableHandler(this.dataList);
       var dashVars = _.transform(this.templateSrv.variables, (result, value, index) => { result[value.name] = value.current; }, {});
-      baseOption = wrapOptionFuc(baseOption, this.ecSeries, this.dataList, series, table, this.ecInstance, dashVars, _, kbn);
+      baseOption = wrapOptionFuc(baseOption, this.ecSeries,
+        this.dataList, this.originaldataList,
+        series, table, this.ecInstance, dashVars, _, kbn);
     }
 
     // this.ecInstance
