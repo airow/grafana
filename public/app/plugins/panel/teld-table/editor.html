@@ -257,6 +257,16 @@
         </div>
       </div>
       <div class="gf-form-inline" ng-if="style.type === 'link'">
+        <div class="gf-form offset-width-8">
+          <label class="gf-form-label">faStyle</label>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.faStyle"
+            ng-change="editor.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+      <div class="gf-form-inline" ng-if="style.type === 'link'">
         <div class="gf-form offset-width-8 gf-form--grow">
           <div class="gf-form-label gf-form-label--grow">使用${fieldname}的形式引用记录值</div>
         </div>

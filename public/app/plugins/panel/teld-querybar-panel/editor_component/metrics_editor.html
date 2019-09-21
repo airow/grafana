@@ -33,13 +33,14 @@
     </gf-form-switch>
     <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8"
       ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="">
-    <gf-form-switch ng-if="ctrl.panel.saveVariable"  class="gf-form" label="保存TabGroup" label-class="query-keyword width-8" checked="ctrl.panel.saveTabGroup">
+    <gf-form-switch ng-if="ctrl.panel.saveVariable" class="gf-form" label="保存TabGroup"
+      label-class="query-keyword width-8" checked="ctrl.panel.saveTabGroup">
     </gf-form-switch>
     <gf-form-switch class="gf-form" label="点击查询取数" label-class="query-keyword width-8"
       checked="ctrl.panel.clickQueryBtn2Fetch">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" ng-if="ctrl.panel.clickQueryBtn2Fetch" label="并验证必选项" label-class="query-keyword width-8"
-      checked="ctrl.panel.checkRequiredVariableIsPass">
+    <gf-form-switch class="gf-form" ng-if="ctrl.panel.clickQueryBtn2Fetch" label="并验证必选项"
+      label-class="query-keyword width-8" checked="ctrl.panel.checkRequiredVariableIsPass">
     </gf-form-switch>
     <gf-form-switch ng-if="ctrl.panel.clickQueryBtn2Fetch" class="gf-form" label="界面显示"
       label-class="query-keyword width-8" checked="ctrl.panel.showClickQueryBtn2Fetch">
@@ -111,7 +112,8 @@
         <input type="text" class="gf-form-input width-6" ng-model="target.conf.title" spellcheck="false"
           placeholder="Title">
         <label class="gf-form-label query-keyword width-6">分组</label>
-        <input type="text" class="gf-form-input width-6" ng-blur="ctrl.setTabGroup(target)" ng-model="target.conf.groupBy" spellcheck="false" placeholder="group">
+        <input type="text" class="gf-form-input width-6" ng-blur="ctrl.setTabGroup(target)"
+          ng-model="target.conf.groupBy" spellcheck="false" placeholder="group">
         <label class="gf-form-label query-keyword width-6">显示条数</label>
         <input type="text" class="gf-form-input width-5" ng-model="target.conf.displayCount" spellcheck="false"
           placeholder="displayCount">
@@ -143,7 +145,8 @@
       </div>
     </div>
     <div class="gf-form-inline">
-      <gf-form-switch class="gf-form" label="导出配置" label-class="query-keyword width-6" checked="target.conf.exprotConf.enable">
+      <gf-form-switch class="gf-form" label="导出配置" label-class="query-keyword width-6"
+        checked="target.conf.exprotConf.enable">
       </gf-form-switch>
       <div class="gf-form">
         <label class="gf-form-label query-keyword width-10">domain</label>
@@ -252,7 +255,7 @@
         <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleStyle" spellcheck="false"
           placeholder="Style">
         <input type="text" class="gf-form-input width-25" ng-model="target.conf.titleDivStyle" spellcheck="false"
-            placeholder="Style">
+          placeholder="Style">
       </div>
     </div>
     <div class="gf-form-inline">
@@ -368,6 +371,58 @@
       </div>
     </div>
   </div>
+
+  <!-- 联查 -->
+  <!-- 联查 END -->
+  <div class="editor-row">
+    <h5 class="section-heading">
+      联查
+    </h5>
+
+    <div class="gf-form-group" ng-repeat="link in target.links">
+      <div class="gf-form-inline">
+        <div class="section">
+          <div class="gf-form max-width-25">
+            <div class="gf-form-label width-7">Title</div>
+            <input type="text" ng-model="link.title" class="gf-form-input">
+          </div>
+        </div>
+
+        <div class="section">
+          <gf-form-switch class="gf-form" label-class="width-10" label="Open in new tab " checked="link.targetBlank">
+          </gf-form-switch>
+        </div>
+
+        <div class="section">
+          <div class="gf-form">
+            <button class="btn btn-inverse gf-form-btn" ng-click="editor.deleteLink(target,link)">
+              <i class="fa fa-trash"></i> Remove Link</button>
+          </div>
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form gf-form--grow">
+          <span class="gf-form-label width-7">Url</span>
+          <input type="text" ng-model="link.url" class="gf-form-input">
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="section">
+          <gf-form-switch class="gf-form" label-class="width-7" label="表达式" checked="link.enableExpression">
+          </gf-form-switch>
+        </div>
+        <div class="gf-form gf-form--grow" ng-if='link.enableExpression'>
+          <span class="gf-form-label width-7">return </span>
+          <input type="text" ng-model="link.expression" class="gf-form-input">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-row">
+    <button class="btn btn-inverse" ng-click="editor.addLink(target)"><i class="fa fa-plus"></i> Add link</button>
+  </div>
+
   <hr>
 </div>
 </div>

@@ -760,6 +760,80 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.render();
   }
 
+  slideClick(target, index, selectedItem, $event) {
+    this.slideDrilldown(target, index, selectedItem);
+    $event.stopPropagation();
+  }
+
+  hasFilterLinks(links) {
+    return _.size(links) > 0;
+  }
+
+  filterLinksFun(link) {
+    // debugger;
+    var context = this['context'];
+    var target = this['target'];
+    var index = this['index'];
+    var currentItem = this['selectedItem'];
+    var vars = {};
+    _.transform(context.variableSrv.variables, (result, value, key) => {
+      result[value.name] = value.current.value;
+      // result[value.name].current = value.current;
+      result[value.name + "_text"] = value.current.text;
+      result[value.name + "_value"] = value.current.value;
+    }, vars);
+    var returnValue = true;
+    if (link.enableExpression) {
+      var fun = new Function('context', 'target', ' index', ' item', 'vars', "return  " + link.expression);
+      returnValue = fun(context, target, index, currentItem, vars);
+    }
+    var urlFun = new Function('context', 'target', ' index', ' item', 'vars', "return  `" + link.url + "`");
+    link.url = urlFun(context, target, index, currentItem, vars);
+    return returnValue;
+  }
+
+  filterLinks(target, index, selectedItem) {
+    var links = _.filter(_.cloneDeep(target.links), this.filterLinksFun.bind({
+      context: this,
+      target, index, selectedItem
+    }));
+    return links;
+  }
+
+  slideDrilldown(target, index, selectedItem) {
+    // debugger;
+    var filterLinks = this.filterLinks(target, index, selectedItem);
+    if (false === this.hasFilterLinks(filterLinks)) {
+      return;
+    }
+    var drillConf = {
+      links: filterLinks
+    };
+
+    if (_.size(drillConf.links) === 1) {
+      var linkSrv = this.$injector.get('linkSrv');
+      var link = linkSrv.getPanelLinkAnchorInfo(_.first(drillConf.links), this.panel.scopedVars);
+      var goHref = $("<a>").attr('href', link.href).attr('target', link.target);
+      goHref[0].click();
+      goHref.remove();
+      return;
+    }
+
+    var modalScope = this.$scope.$new();
+    modalScope.panel = { drillConf };
+
+    modalScope.dismiss = function () {
+      this.publishAppEvent('hide-modal');
+      modalScope.$destroy();
+    };
+
+    this.publishAppEvent('show-modal', {
+      src: 'public/app/features/dashboard/partials/drilldown.html',
+      scope: modalScope,
+      backdrop: 'static'
+    });
+  }
+
   getTruncate(val, length) {
     return _.truncate(val, { length: length });
   }

@@ -56,6 +56,15 @@ export class MetricsEditorCtrl {
     this.datasourceName = datasource.name;
     this.datasource = null;
   }
+
+  addLink(target) {
+    if (_.size(target.links) === 0) { target.links = []; }
+    target.links.push({ type: 'absolute', targetBlank: true });
+  }
+
+  deleteLink(target, link) {
+    _.remove(target.links, link);
+  }
 }
 
 /** @ngInject */

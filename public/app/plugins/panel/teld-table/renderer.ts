@@ -111,13 +111,14 @@ export class TableRenderer {
     if (style.type === 'link') {
       let valueFormater = kbn.valueFormats[column.unit || style.unit];
       let url = style.urlTemplate || "https://user.teld.cn";
+      let faStyle = style.faStyle || "";
       let target = style.target || column.text;//"_black";
       let text = (style.text || "联查") + '&nbsp;';
       let iconColor = style.color || "#33B5E5";
       let templateString =
         `<span>
           <a href="${url}" target='${target}'>${text}
-            <i style='color:${iconColor}' class='fa fa-external-link' aria-hidden='true'></i>
+            <i style='color:${iconColor}; ${faStyle}' class='fa fa-external-link' aria-hidden='true'></i>
           </a>
         </span>`;
 
