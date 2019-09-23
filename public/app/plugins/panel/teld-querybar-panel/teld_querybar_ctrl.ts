@@ -966,6 +966,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         return;
       }
     }
+    if (this.spin){
+      this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000);
+      return;
+    }
     // this.forbiddenRefreshDashboard = true;
     this.changeQueryBarTab(target);
   }
