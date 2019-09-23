@@ -18,6 +18,10 @@ export default class TableModel {
     this.rows.sort(function(a, b) {
       a = a[options.col];
       b = b[options.col];
+
+      a = isNaN(a) ? a : +a;
+      b = isNaN(b) ? b : +b;
+
       if (a < b) {
         return -1;
       }
