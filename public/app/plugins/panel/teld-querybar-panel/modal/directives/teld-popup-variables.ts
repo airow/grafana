@@ -8,14 +8,14 @@ import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
 
-export class PopupSegmentsCtrl {
+export class PopupVariablesCtrl {
   alertSrv: any;
   panel: any;
   panelCtrl: any;
   dashboard: any;
   targetExport: any;
   links: any[];
-  segments: any[];
+  variables: any[];
   getListIntervalHandle: any;
   fields: any[];
   ADMdtp: any;
@@ -24,6 +24,8 @@ export class PopupSegmentsCtrl {
   domain: string;
   slug: string;
   analysis: string;
+  variablesGroup: any;
+  selectedTab: any;
   /** @ngInject */
   constructor(alertSrv, private $http, private templateSrv, private $interval, private $scope, private $routeParams, private timeSrv) {
     this.alertSrv = alertSrv;
@@ -31,11 +33,7 @@ export class PopupSegmentsCtrl {
     this.panelCtrl = this.$scope.panelCtrl;
     this.dashboard = this.$scope.dashboard;
     this.targetExport = this.$scope.targetExport;
-    this.segments = _.cloneDeep(this.$scope.segments);
-    this.links = [];
-
-    // this.fields = ['a', 'b', 'c'];
-    this.fields = this.panel.fieldsConf;
+    this.variables = _.cloneDeep(this.$scope.variables);
 
     this.ADMdtp = {
       calType: 'gregorian',
@@ -50,55 +48,35 @@ export class PopupSegmentsCtrl {
       }
     };
 
-    this.OperatorConf = {
-      "string": [
-        { key: "=", display: "等于" },
-        { key: "like", display: "包含" },
-      ],
-      "date": [
-        { key: "=", display: "=" },
-        { key: ">", display: ">" },
-        { key: ">=", display: ">=" },
-        { key: "<", display: "<" },
-        { key: "<=", display: "<=" },
-      ],
-      "number": [
-        { key: "=", display: "=" },
-        { key: ">", display: ">" },
-        { key: ">=", display: ">=" },
-        { key: "<", display: "<" },
-        { key: "<=", display: "<=" },
-      ]
-    };
-
-    // this.OperatorConf = this.panelCtrl.OperatorConf;
-
-    _.values(this.panelCtrl.OperatorConf);
-  }
-
-  getOperatorByType(exp) {
-    if (exp.field) {
-      var operatorList = this.OperatorConf[exp.field.type] || [];
-      if (_.size(exp.field.operatorList) > 0) {
-        operatorList = _.filter(operatorList, item => { return _.includes(exp.field.operatorList, item.key); });
+    _.each(this.variables, item => {
+      if (item.field && item.field.type === 'date') {
+        item.field.ADMdtp = _.assign({}, this.ADMdtp, _.pick(item.field, ["format", "dtpType"]));
       }
-      return operatorList;
-    } else {
-      return [];
-    }
+    });
+
+    // debugger;
+    this.variablesGroup = _.groupBy(this.variables, 'scope');
+    var keys = _.keys(this.variablesGroup);
+    this.groupTabs = _.filter(this.varGroupMapping, (item, index) => {
+      return _.includes(keys, "" + item.scope);
+    });
+    this.selectedTab = _.first(this.groupTabs).name;
   }
 
-  genADMdtp(field, pickFields) {
-    return _.assign(_.clone(this.ADMdtp), _.pick(field, pickFields));
-  }
+  groupTabs: any;
+  varGroupMapping = [
+    { scope: "g", "name": "过滤" },
+    { scope: "dash", "name": "面板过滤" },
+    // { "name": "过滤" }
+  ];
 
   addSegment(logical, segment?) {
     var newSegment = { logical, expression: [{}] };
     if (segment) {
-      var index = _.findIndex(this.segments, segment);
-      this.segments.splice(index + 1, 0, newSegment);
+      var index = _.findIndex(this.variables, segment);
+      this.variables.splice(index + 1, 0, newSegment);
     } else {
-      this.segments.push(newSegment);
+      this.variables.push(newSegment);
     }
   }
 
@@ -123,25 +101,25 @@ export class PopupSegmentsCtrl {
     var expression = segment.expression;
     _.remove(expression, exp);
     if (_.size(expression) === 0) {
-      _.remove(this.segments, segment);
+      _.remove(this.variables, segment);
     }
   }
 
   submit() {
-    this.panelCtrl.fillVariable(this.segments);
-    this.timeSrv.refreshDashboard();
+    this.panelCtrl.fillVariable(this.variables);
+    // this.timeSrv.refreshDashboard();
     this.$scope.dismiss();
   }
 }
 
-export function popupSegmentsDirective() {
+export function popupVariablesDirective() {
   return {
     restrict: 'E',
-    templateUrl: '/public/app/plugins/panel/teld-queryadv-panel/modal/directives/teld-popup-segments.html',
-    controller: PopupSegmentsCtrl,
+    templateUrl: '/public/app/plugins/panel/teld-querybar-panel/modal/directives/teld-popup-variables.html',
+    controller: PopupVariablesCtrl,
     bindToController: true,
     controllerAs: 'ctrl',
   };
 }
 
-coreModule.directive('teldPopupSegments', popupSegmentsDirective);
+coreModule.directive('teldPopupVariables', popupVariablesDirective);

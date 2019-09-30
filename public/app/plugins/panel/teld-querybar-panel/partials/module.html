@@ -4,19 +4,21 @@
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }"
         style="margin-top: 0px;">
         <li class="gf-tabs-item dropdown" ng-class="{'open':ctrl.tabGroup[target.conf.groupBy].showDDM===target.refId}"
-          ng-hide="target.hide || false===ctrl.isSelectGroupTab(target)"
-          ng-repeat="target in ctrl.panel.targets">
-          <a class="gf-tabs-link ddd" bs-tooltip="target.conf.tooltip" ng-style="{color:target.conf.required?'red':'inherit'}"
+          ng-hide="target.hide || false===ctrl.isSelectGroupTab(target)" ng-repeat="target in ctrl.panel.targets">
+          <a class="gf-tabs-link ddd" bs-tooltip="target.conf.tooltip"
+            ng-style="{color:target.conf.required?'red':'inherit'}"
             ng-click="ctrl.forbiddenRefreshDashboard = true;ctrl.manualChangeQueryBarTab(target);ctrl.hideDropdownMenu(target)"
             ng-class="{active: ctrl.currentTargetRefId === target.refId}">
             <i class="fa fa-info-circle" ng-if='ctrl.currentTarget.conf.tooltip && ctrl.currentTarget === target'
               bs-tooltip="target.conf.tooltip" aria-hidden="true"></i>
             {{target.conf.title}}
-            <i class="fa fa-caret-down" ng-click='ctrl.toggleDropdownMenu(target,$event)' ng-if='ctrl.isGroupItem(target)' aria-hidden="true"></i>
+            <i class="fa fa-caret-down" ng-click='ctrl.toggleDropdownMenu(target,$event)'
+              ng-if='ctrl.isGroupItem(target)' aria-hidden="true"></i>
           </a>
           <ul class="dropdown-menu" ng-if='target===ctrl.currentTarget'>
             <li ng-repeat="groupItem in ctrl.tabGroup[target.conf.groupBy]">
-              <a class="pointer" ng-hide='groupItem.hide || groupItem===target' ng-click="ctrl.changeTabGroup(groupItem, target);">
+              <a class="pointer" ng-hide='groupItem.hide || groupItem===target'
+                ng-click="ctrl.changeTabGroup(groupItem, target);">
                 <span ng-style="{color: groupItem.conf.required?'red':'inherit'}" ng-bind="groupItem.conf.title"></span>
                 <span style="float: right;" ng-if='groupItem.conf.tooltip'>
                   <i class="fa fa-info-circle" bs-tooltip="groupItem.conf.tooltip" aria-hidden="true"></i>
@@ -75,7 +77,8 @@
           </div>
           <div class="gf-form" ng-if="ctrl.showExport(target)">
             <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
-              <button type="button" style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
+              <button type="button"
+                style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
                 ng-disabled="ctrl.isLoading()" ng-click='ctrl.popupExport(target)'>
                 <i class="fa fa-download"></i>
                 <span class="queryBtnHide-">生成报告</span>
@@ -101,7 +104,9 @@
             <div ng-if="!row.isNil">
               <div ng-click="ctrl.swiperSlide_ClickHandler(target, $index, row)" style="padding-right:20px;">
                 <div style="z-index:999999; position: absolute;top: 5px;right: 10px;cursor: pointer;">
-                  <i title="联查" ng-if="ctrl.hasFilterLinks(ctrl.filterLinks(target, $index, row))" ng-click='ctrl.slideClick(target, $index, row, $event)' class="fa fa-external-link" style="color: red;" aria-hidden="true"></i>
+                  <i title="联查" ng-if="ctrl.hasFilterLinks(ctrl.filterLinks(target, $index, row))"
+                    ng-click='ctrl.slideClick(target, $index, row, $event)' class="fa fa-external-link"
+                    style="color: red;" aria-hidden="true"></i>
                 </div>
                 <div class="activeflag">
                   <i class="fa fa-check-square-o"></i>
@@ -137,6 +142,32 @@
   </div>
   <div>
     <div class="gf-form-inline">
+      <div class="gf-form-inline" ng-if="ctrl.filterEnable()">
+        <div class="gf-form filter-button">
+          <button title="设置过滤" type="button" class="btn gf-form-btn" ng-click="ctrl.modifyVariables()"
+            style="background-color: transparent;padding-right: 0px;">
+            <i style="font-size: 15px;color: magenta; " class="fa fa-cog"></i>&nbsp;设置
+          </button>
+        </div>
+        <div class="gf-form filter" ng-repeat="(key,item) in ctrl.gVariables">
+          <label
+            style="border: solid 1px;padding: 2px 5px;border-color: silver;padding-top: 3px;/* border-radius: 5px; */border-top-right-radius: 8px;border-bottom-left-radius: 0px;border-top-left-radius: 8px;"
+            class="gf-form-label">{{item.display}}：
+            <span ng-if='item.value'>
+              <span class="filter-value" ng-bind="item.value.name || item.value"></span>
+              <a ng-click="item.value=null; ctrl.fillVariable();"><i class="fa fa-remove"></i></a>
+            </span>
+            <span ng-if='item.valueEnd'>
+              至
+              <span class="filter-value" ng-bind="item.valueEnd"></span>
+              <a ng-click="item.valueEnd=null; ctrl.fillVariable();"><i class="fa fa-remove"></i></a>
+            </span>
+          </label>
+        </div>
+        <button type="button" class="btn gf-form-btn" style="padding-left: 0px; padding-right: 0px; background-color: transparent;">
+          |
+        </button>
+      </div>
       <div class="gf-form filter" ng-repeat="item in ctrl.enableTimeRange()">
         <label bs-tooltip="ctrl.tooltip" ng-click="ctrl.popup()" class="gf-form-label">
           <i class="fa fa-clock-o"></i>
@@ -144,7 +175,13 @@
         </label>
       </div>
       <div class="gf-form filter" ng-repeat="(key,item) in ctrl.exprVariables">
-        <label ng-hide="ctrl.variableIsHide(item.variable)" class="gf-form-label">{{key}}：
+        <label style="
+    border: solid 1px;
+    padding: 2px 5px;
+    border-color: silver;
+    padding-top: 3px;
+    /* border-radius: 8px; */
+" ng-hide="ctrl.variableIsHide(item.variable)" class="gf-form-label">{{key}}：
           <span class="filter-value" ng-bind="item.variable.current.text"></span>
           <a ng-if="!item.target.conf.required" ng-click="ctrl.eh_clearBindVariables(item.target)"><i
               class="fa fa-remove"></i></a>

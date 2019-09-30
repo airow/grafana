@@ -3,6 +3,7 @@
 import { PanelCtrl } from 'app/plugins/sdk';
 import { metricsEditorComponent } from './editor_component/metrics_editor';
 import { optionsEditorComponent } from './editor_component/options_editor';
+import { filterEditorComponent } from './editor_component/filter_editor';
 import $ from 'jquery';
 import _ from 'lodash';
 import async from 'async';
@@ -14,6 +15,7 @@ import moment from 'moment';
 import appEvents from 'app/core/app_events';
 import config from 'app/core/config';
 import './directives/all';
+import './modal/index';
 import { loadPluginCss } from 'app/plugins/sdk';
 import * as rangeUtil from 'app/core/utils/rangeutil';
 
@@ -123,6 +125,32 @@ export class TeldQuerybarCtrl extends PanelCtrl {
         android: android
       };
     })();
+
+    this.variables = [
+      { display: "业务日期", name: "bizDate", scope: "dash",  field: { type: 'date', format: "YYYY-MM-DD" } },
+      { display: "业务日期", name: "bizDate2", field: { type: 'date', hasEndValue: true, format: "YYYY-MM-DD" } },
+      { display: "管理公司", name: "MrgOrgID" },
+      { display: "电站", name: "ddd", field: { type: 'number' } },
+      { display: "开始日期", name: "StartDate", field: { type: 'date', format: "YYYY-MM-DD hh:mm" } },
+      {
+        display: "电站", name: "statId", field: {
+          type: 'select',
+          choices: [{ name: '12', val: '2' }, { name: '123', val: '23' }]
+        }
+      },
+      {
+        display: "电站", name: "statId", scope: 'g', field: {
+          type: 'select',
+          choices: [
+            { name: '12', val: '2' }, { name: '123', val: '23' },
+            { name: '12', val: '2' }, { name: '123', val: '23' },
+            { name: '12', val: '2' }, { name: '123', val: '23' }
+          ]
+        }
+      }
+    ];
+
+    this.variables = this.panel.enableFilter ? _.clone(_.filter(this.panel.filterConf, { enable: true })) : [];
 
     this.querybarPanelStyle = {};
     let panelsWrapper: any;
@@ -546,6 +574,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   onInitEditMode() {
     this.addEditorTab('Metrics', metricsEditorComponent);
+    this.addEditorTab('Filter', filterEditorComponent);
     // this.addEditorTab('Options', optionsEditorComponent);
     //this.editorTabIndex = 1;
   }
@@ -1046,6 +1075,10 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   isFetchData = false;
   queryDelay = false;
   toggleQuery(target) {
+    /* 2019-09-26 页签中过滤按钮不刷新整个面板 {*/
+    var tempforbiddenRefreshDashboard = this.forbiddenRefreshDashboard;
+    this.forbiddenRefreshDashboard = true;
+    /* } 2019-09-26 页签中过滤按钮不刷新整个面板 */
     if (this.isLoading() || this.queryDelay) { return; }
     this.queryDelay = true;
     this.$timeout(() => { this.queryDelay = false; }, 1000);
@@ -1056,7 +1089,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.setCurrentTargetRefId(this.currentTarget);
     }
     delete this.queryResult[this.currentTarget.refId];
-    this.onMetricsPanelRefresh();
+    this.onMetricsPanelRefresh()
+      /* 2019-09-26 页签中过滤按钮不刷新整个面板 {*/
+      // 还原forbiddenRefreshDashboard状态
+      .then(() => { this.forbiddenRefreshDashboard = tempforbiddenRefreshDashboard; });
+      /* } 2019-09-26 页签中过滤按钮不刷新整个面板 */
   }
 
   undoQuery(target) {
@@ -1731,5 +1768,88 @@ export class TeldQuerybarCtrl extends PanelCtrl {
 
   alert(s) {
     window.alert(s);
+  }
+
+  variables = [];
+  modifyVariables(bindData) {
+
+    var popupModalScope = this.$scope.$new();
+    popupModalScope.$on("$destroy", function () {
+      popupModalScope.dismiss();
+    });
+    popupModalScope.panel = this.panel;
+    popupModalScope.panelCtrl = this;
+    popupModalScope.variables = this.variables;
+    popupModalScope.selectedIndex = 0;
+
+    var scrollY = window.scrollY;
+    this.$scope.$root.appEvent('show-modal', {
+      modalClass: "teld-popup-variables",
+      templateHtml: '<teld-popup-variables></teld-popup-variables>',
+      scope: popupModalScope
+    });
+
+    popupModalScope.$on('modal-shown', function (ve) {
+      window.scrollTo(0, scrollY);
+      $(".teld-popup-variables").css('top', scrollY + $(window).height() / 4);
+    });
+  }
+
+  gVariables = [];
+  gVariablesMapping: any;
+  fillVariable(variables) {
+    if (variables) { this.variables = variables; }
+    // debugger;
+    _.each(this.gVariablesMapping, item => {
+      var removeItem = _.remove(this.templateSrv.variables, item);
+    });
+    this.templateSrv.updateTemplateData();
+    this.gVariablesMapping = {};
+    var prefix = this.panel.filterPrefix || "";
+    // if (false === _.isEmpty(this.panel.filterPrefix)) {
+    //   prefix = this.panel.filterPrefix;
+    // }
+    var items = _.filter(this.variables, item => {
+      var returnValue = false === _.isNil(item.value || item.valueEnd);
+      if (returnValue) {
+        var variablePrefix = `${prefix}${_.isNil(item.scope) ? "" : "_" + item.scope}`;
+        variablePrefix = _.trimStart(variablePrefix, "_");
+        var target = { conf: { variablePrefix } };
+        var fieldType = _.get(item, 'field.type');
+        switch (fieldType) {
+          case 'select':
+            if (false === _.isNil(item.value)) {
+              var { val: value, name: text } = item.value;
+              var variableConf = { name: item.name, value: value, text: value };
+              _.set(this.gVariablesMapping, variableConf.name, this.addGeneralVariable(target, variableConf));
+              variableConf = { name: item.name + "Text", value: text, text: text };
+              _.set(this.gVariablesMapping, variableConf.name, this.addGeneralVariable(target, variableConf));
+            }
+            break;
+          default:
+            if (false === _.isNil(item.value)) {
+              var variableConf = { name: item.name, value: item.value, text: item.value };
+              _.set(this.gVariablesMapping, variableConf.name, this.addGeneralVariable(target, variableConf));
+            }
+            if (false === _.isNil(item.valueEnd)) {
+              variableConf = { name: item.name + "End", value: item.valueEnd, text: item.valueEnd };
+              _.set(this.gVariablesMapping, variableConf.name, this.addGeneralVariable(target, variableConf));
+            }
+            break;
+        }
+      }
+      return returnValue;
+    });
+
+    this.gVariables = items;
+    this.templateSrv.updateTemplateData();
+    var clickTarget = _.first(this.panel.targets);
+    this.manualChangeQueryBarTab(clickTarget);
+    this.hideDropdownMenu(clickTarget);
+    this.toggleQuery(clickTarget);
+  }
+
+  filterEnable() {
+    return this.panel.enableFilter && _.size(this.variables) > 0;
   }
 }

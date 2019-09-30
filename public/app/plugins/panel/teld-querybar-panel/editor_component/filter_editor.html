@@ -1,0 +1,127 @@
+<div class="editor-row">
+  <div class="gf-form-inline">
+    <gf-form-switch class="gf-form" label="启用配置" label-class="query-keyword" checked="ctrl.panel.enableFilter">
+    </gf-form-switch>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">变量前缀</label>
+      <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.filterPrefix" spellcheck="false">
+    </div>
+  </div>
+
+  <!-- filterItem Conf -->
+  <div class="gf-form-inline">
+    <h5 class="section-heading">Filter</h5>
+  </div>
+  <div style="border-bottom: 1px black solid; margin-bottom: 20px;" class="gf-form-inline" ng-repeat="filterItem in ctrl.panel.filterConf">
+    <!-- base start-->
+    <div class="gf-form-group">
+      <gf-form-switch class="gf-form width-7" label="{{$index+1}}" label-class="width-7" checked="filterItem.enable"
+        on-change="ctrl.render()">
+      </gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">显示名称</label>
+        <input type="text" class="gf-form-input width-8" ng-model="filterItem.display" spellcheck="false">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">类型</label>
+        <select class="gf-form-input width-8" ng-model="filterItem.field.type" ng-options="item for item in ['string','number','date','select']">
+        </select>
+      </div>
+    </div>
+    <div class="section gf-form-group">
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.filterConf, filterItem)">
+            <i class="pointer fa fa-remove"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$last">
+          <a ng-click="ctrl.move(ctrl.panel.filterConf,$index,$index+1)">
+            <i class="pointer fa fa-arrow-down"></i>
+          </a>
+        </label>
+        <label class="gf-form-label" ng-hide="$first">
+          <a ng-click="ctrl.move(ctrl.panel.filterConf,$index,$index-1)">
+            <i class="pointer fa fa-arrow-up"></i>
+          </a>
+        </label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">变量名</label>
+        <input type="text" class="gf-form-input width-8" ng-model="filterItem.name" spellcheck="false">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-7">作用域</label>
+        <select class="gf-form-input width-8" ng-model="filterItem.scope" ng-options="s for s in ['g','dash']">
+        </select>
+      </div>
+    </div>
+    <!-- base end -->
+
+    <div ng-if="filterItem.field.type" ng-switch="filterItem.field.type">
+      <div ng-switch-default>
+        <!-- <div class="section gf-form-group">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-8">{{filterItem.field.type}}</label>
+          </div>
+        </div> -->
+      </div>
+      <div ng-switch-when="date">
+        <div class="section gf-form-group">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-8">{{filterItem.field.type}}</label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-8">格式</label>
+            <input type="text" class="gf-form-input width-10" ng-model="filterItem.field.format" bs-typeahead="['YYYY-MM-DD','YYYY-MM-DD hh:mm']" min-length="0" spellcheck="false">
+          </div>
+          <gf-form-switch class="gf-form width-8" label="包含结束值" label-class="width-8" checked="filterItem.field.hasEndValue"
+            on-change="ctrl.render()">
+          </gf-form-switch>
+        </div>
+      </div>
+
+      <div ng-switch-when="select">
+        <div class="gf-form-group">
+          <div class="gf-form">
+            <label class="gf-form-label query-keyword width-8">{{filterItem.field.type}}</label>
+            <label class="gf-form-label">
+              <a ng-click="ctrl.addSelectOpts(filterItem,{})">
+                <i class="fa fa-plus"></i>
+              </a>
+            </label>
+          </div>
+          <div class="gf-form" ng-repeat="item in filterItem.field.choices">
+            <input type="text" class="gf-form-input width-8" placeholder="text" ng-model="item.name" spellcheck="false">
+            <input type="text" class="gf-form-input width-8" placeholder="value" ng-model="item.val" spellcheck="false">
+            <div class="gf-form-inline">
+              <label class="gf-form-label">
+                <a ng-click="ctrl.removeItem(filterItem.field.choices, item)">
+                  <i class="pointer fa fa-remove"></i>
+                </a>
+              </label>
+              <label class="gf-form-label" ng-hide="$last">
+                <a ng-click="ctrl.move(filterItem.field.choices,$index,$index+1)">
+                  <i class="pointer fa fa-arrow-down"></i>
+                </a>
+              </label>
+              <label class="gf-form-label" ng-hide="$first">
+                <a ng-click="ctrl.move(filterItem.field.choices,$index,$index-1)">
+                  <i class="pointer fa fa-arrow-up"></i>
+                </a>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- END filterItem Conf -->
+
+  <div class="gf-form-button">
+    <button class="btn btn-inverse" ng-click="ctrl.appendFilterConf()()">
+      <i class="fa fa-plus"></i>&nbsp;Add filter item
+    </button>
+  </div>
+</div>

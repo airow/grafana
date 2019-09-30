@@ -1,0 +1,84 @@
+<div class="modal-body" style="overflow-y: visible">
+
+  <div class="modal-content" style='padding-top: 1rem; padding-bottom: 1rem; min-height: auto;' ng-cloak>
+    <div class="share-modal-body">
+      <div class="share-modal-content">
+        <!-- sdfasdf -->
+        <div class="tabbed-view-header">
+          <ul class="gf-tabs" style="margin-top: 0px;">
+            <li class="gf-tabs-item" ng-repeat="(index,value) in ctrl.groupTabs">
+              <a class="gf-tabs-link ddd"
+                ng-class="{active: ctrl.selectedTab === value.name}"
+                ng-click="ctrl.selectedTab = value.name"
+              >
+                {{value.name}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <div ng-repeat="(index,value) in ctrl.groupTabs" ng-if="ctrl.selectedTab === value.name">
+            <div style1="max-height:300px;overflow:auto;padding-right: 10px; padding-bottom:100px;">
+              <div style='padding-left:5px; margin-top: 5px;' class='container-fluid' ng-repeat="varItem in ctrl.variablesGroup[value.scope]">
+                <div class='row no-gutter'>
+                  <div class="gf-form-inline">
+                    <div class="gf-form gf-form--grow">
+                      <label class="gf-form-label query-keyword width-8">
+                        {{varItem.display}}
+                      </label>
+                      <div class="gf-form gf-form--grow" ng-switch="varItem.field.type">
+                        <input ng-switch-default type="text" class="gf-form-input" ng-model="varItem.value"
+                          ng-change="ctrl.render()" ng-model-onblur="">
+                        <input ng-switch-when='number' type="number" class="gf-form-input width-15" ng-model="varItem.value"
+                          ng-change="ctrl.render()" ng-model-onblur="">
+                        <div ng-switch-when='date'>
+                          <adm-dtp ng-model='varItem.value' options='varItem.field.ADMdtp'></adm-dtp>
+                        </div>
+                        <div class="gf-form-inline width-15" ng-switch-when='select'>
+                          <ui-select theme="selectize" ng-model="varItem.value">
+                            <ui-select-match placeholder="选择或搜索字段">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="field in varItem.field.choices | filter: $select.search">
+                              <span ng-bind-html="(field.name) | highlight: $select.search"></span>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+                        <div class="gf-form" ng-if="varItem.field.type==='select' && varItem.value">
+                          <label class="gf-form-label">
+                            <a ng-click="varItem.value=''">
+                              <i class="pointer fa fa-remove"></i>
+                            </a>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="gf-form" ng-if="varItem.field.hasEndValue">
+                      <label style="background-color: transparent;" class="gf-form-label query-keyword width-8">
+                        ~
+                      </label>
+                      <div class="gf-form gf-form--grow" ng-switch="varItem.field.type">
+                        <input ng-switch-when='number' type="number" class="gf-form-input" ng-model="varItem.valueEnd" ng-change="ctrl.render()"
+                          ng-model-onblur="">
+                        <div ng-switch-when='date'>
+                          <adm-dtp ng-model='varItem.valueEnd' options='varItem.field.ADMdtp'></adm-dtp>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gf-form-button-row text-right">
+        <a class="btn btn-success" ng-click="ctrl.submit();">确定</a>
+        <a class="btn-text" ng-click="dismiss();">取消</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/ng-template" id="shareLink.html">
+
+</script>

@@ -295,7 +295,8 @@ define([
       this.teldExpression2ScopedVarsFormCache = function (cacheSuffix, scopedVars, format, varFilter) {
         var cacheKey = 'teldExpression2ScopedVars.' + cacheSuffix;
         var cache = _.get(window, cacheKey);
-        var isExpiration = cache && cache.timestamp && moment().diff(cache.__timestamp, 'seconds') > 10;
+        var isExpiration = cache && cache.__timestamp && moment().diff(cache.__timestamp, 'seconds') > 3;
+        isExpiration = true;
         if (_.isNil(cache) || isExpiration) {
           cache = this.teldExpression2ScopedVars(scopedVars, format, varFilter);
           cache.__timestamp = moment();
