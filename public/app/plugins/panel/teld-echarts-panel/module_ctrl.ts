@@ -859,7 +859,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     }
     if (_.isEmpty(this.panel.baseTS) === false) {
       var target = this.panel.baseTS;
-      var datapoints = _.find(dl, { target }).datapoints;
+      var datapoints = _.get(_.find(dl, { target }), 'datapoints');
       if (_.size(datapoints) === 0) {
         return;
       }

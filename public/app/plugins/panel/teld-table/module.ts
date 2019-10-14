@@ -269,6 +269,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     _.move(variableArray, index, newIndex);
   }
   selectedIndex: any;
+  selectedObj: any;
   select(index, obj) {
     var isSelect = this.selectedIndex !== index;
 
@@ -281,7 +282,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       }
       this.selectedIndex = null;
     }
-
+    this.selectedObj = obj;
     this.bindPublishVariables(obj, isSelect);
     this.seftRowRefresh = true;
     this.timeSrv.refreshDashboard();
@@ -317,6 +318,8 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     if (this.table.columns[this.panel.sort.col]) {
       this.table.columns[this.panel.sort.col].sort = false;
     }
+
+    this.select(this.selectedIndex, this.selectedObj);
 
     if (this.panel.sort.col === colIndex) {
       if (this.panel.sort.desc) {

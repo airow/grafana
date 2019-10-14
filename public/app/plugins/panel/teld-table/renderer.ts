@@ -162,6 +162,7 @@ export class TableRenderer {
         }
 
         let compiled = _.template(templateString);
+        bindData.rowObj = this.rowObj;
         let returnValue = compiled(bindData);
         return returnValue;
         //return "<span><a href='https://www.baidu.com' target='_black'>asdfasdf</a></span>";
@@ -247,7 +248,7 @@ export class TableRenderer {
     }
 
     var valueFn = (v, i, ci) => {
-      return `<span class='spanRow fa ${i === ci ? "fa-eye text-success" : "fa-eye-slash"}'
+      return `<span style='cursor: pointer;' class='spanRow fa ${i === ci ? "fa-eye text-success" : "fa-eye-slash"}'
        ng-class='{true:"fa-eye text-success",false:"fa-eye-slash"}[ctrl.selectedIndex==${i}]'
        ng-click='ctrl.select(${i},${JSON.stringify(v)})'></span>`;
     };
