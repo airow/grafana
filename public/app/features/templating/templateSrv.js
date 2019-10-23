@@ -296,7 +296,9 @@ define([
         var cacheKey = 'teldExpression2ScopedVars.' + cacheSuffix;
         var cache = _.get(window, cacheKey);
         var isExpiration = cache && cache.__timestamp && moment().diff(cache.__timestamp, 'seconds') > 3;
-        isExpiration = true;
+        /**isExpiration = true;
+         * /*在querybar弹出选择条件功能修改为不进行缓存，带来的问题是严重影响性能。
+         * 2019-10-15重新启用缓存方式，另想办法处理弹出过滤过表达式缓存的方案*/
         if (_.isNil(cache) || isExpiration) {
           cache = this.teldExpression2ScopedVars(scopedVars, format, varFilter);
           cache.__timestamp = moment();
