@@ -119,7 +119,14 @@ function (angular, _, kbn) {
         info.href = this.addParamsToUrl(info.href, params);
 
         if (link.params) {
-          info.href = this.appendToQueryString(info.href, templateSrv.replace(link.params, scopedVars));
+
+          var filterFun = function (item) {
+            return item.type === 'teldExpression' && "es" === (item.filter || "es");
+          };
+          var scopedExpressionVars = templateSrv.teldExpression2ScopedVarsFormCache('linkUrl', {}, 'lucene', filterFun);
+          var stringToAppend = templateSrv.replaceWithText(link.params, scopedExpressionVars);
+          stringToAppend = templateSrv.replace(stringToAppend, scopedVars);
+          info.href = this.appendToQueryString(info.href, stringToAppend);
         }
 
         return info;
