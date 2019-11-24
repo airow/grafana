@@ -1,15 +1,20 @@
 <div class="gf-form-inline">
-	<div class="gf-form">
+	<div class="gf-form" ng-class="{'gf-form-disabled': agg.type === 'date_histogram' && target.ignoreGroupByDateHistogram}">
 		<label class="gf-form-label query-keyword width-7">
 			<span ng-show="isFirst">Group by</span>
-			<span ng-hide="isFirst">Then by</span>
-		</label>
-
+      <span ng-hide="isFirst">Then by</span>
+      <!-- &nbsp; -->
+      <a ng-if="agg.type === 'date_histogram'" ng-click="target.ignoreGroupByDateHistogram=!target.ignoreGroupByDateHistogram"
+        bs-tooltip="'Click to toggle enable / disable date_histogram'">
+        <i class="fa fa-eye" ng-hide="target.ignoreGroupByDateHistogram"></i>
+        <i class="fa fa-eye-slash" ng-show="target.ignoreGroupByDateHistogram"></i>
+      </a>
+    </label>
 		<metric-segment-model property="agg.type" options="bucketAggTypes" on-change="onTypeChanged()" custom="false" css-class="width-10"></metric-segment-model>
 		<metric-segment-model ng-if="agg.field" property="agg.field" get-options="getFieldsInternal()" on-change="onChange()" css-class="width-12"></metric-segment-model>
 	</div>
 
-	<div class="gf-form gf-form--grow">
+	<div class="gf-form gf-form--grow" ng-class="{'gf-form-disabled': agg.type === 'date_histogram' && target.ignoreGroupByDateHistogram}">
 		<label class="gf-form-label gf-form-label--grow">
 			<a ng-click="toggleOptions()">
 				<i class="fa fa-caret-down" ng-show="showOptions"></i>
@@ -49,7 +54,7 @@
 				</info-popover>
 			</label>
 			<input class="gf-form-input max-width-12" type="number" ng-model="agg.settings.trimEdges" ng-change="onChangeInternal()">
-		</div>
+    </div>
 	</div>
 
 	<div ng-if="agg.type === 'terms' || agg.type === 'terms_script'">

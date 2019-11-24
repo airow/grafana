@@ -312,6 +312,11 @@ function (queryDef, _) {
 
     nestedAggs = query;
 
+    var ignoreDate_histogram;
+    if (target.ignoreGroupByDateHistogram) {
+      ignoreDate_histogram = _.remove(target.bucketAggs, { type: 'date_histogram' });
+    }
+
     for (i = 0; i < target.bucketAggs.length; i++) {
       var aggDef = target.bucketAggs[i];
       var esAgg = {};
@@ -342,6 +347,10 @@ function (queryDef, _) {
       nestedAggs.aggs = nestedAggs.aggs || {};
       nestedAggs.aggs[aggDef.id] = esAgg;
       nestedAggs = esAgg;
+    }
+
+    if (ignoreDate_histogram && _.size(ignoreDate_histogram) > 0) {
+      target.bucketAggs.push(ignoreDate_histogram[0]);
     }
 
     nestedAggs.aggs = {};

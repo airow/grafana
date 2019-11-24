@@ -345,54 +345,47 @@ function (_, queryDef, moment) {
       }
     }
 
-    /*
-    function doc2timeseriesHandler1(item) {
-      {
-        var returnValue = _.flatten(_.values(_.pick(item, pick)));
-        //("00"+Math.trunc( moment("2019-05-23 05:30:00").format("mm")/3)*3).substring(1)
+    function fillDateHistogramMock(aggregations, mock_date_histogram) {
+      _.each(aggregations, function (item) {
+        _.each(item.buckets, function (bucket) {
+          _.each(bucket, function (bucketItem, bucketKey) {
+            if (bucketItem.buckets) {
+              var newAgg = _.zipObject([bucketKey], [bucketItem]);
+              fillDateHistogramMock(newAgg, mock_date_histogram);
+              return false;
+            }
+          });
+          var mockBuckets = [_.defaults({ key_as_string: "-28800000", key: -28800000 }, bucket)];
+          bucket[mock_date_histogram.id] = { buckets: mockBuckets };
+        });
+      });
+    }
 
-        if (false === _.isEmpty(doc2timeseries.intervalM)) {
-          var intervalM = doc2timeseries.intervalM;
-          var m = moment(returnValue[1]);
-          var mm = (Math.trunc(m.format("mm") / intervalM) * intervalM);
-          var fm = "YYYY-MM-DD HH:" + mm;//+":00.000";
-          var newM = moment(m.format(fm), "YYYY-MM-DD HH:mm");
-          // console.log(m.format(), _.padStart(mm, 2, "0"), m.format(fm), newM.format(), newM.valueOf());
-          returnValue.push(m.format()); returnValue.push(newM.format());
-          returnValue[1] = newM.valueOf();
-        }
+    function onlyCountMetric(seft,response, target, tmpSeriesList, docs) {
+      var date_histogram = _.find(target.bucketAggs, { "type": "date_histogram" });
+      var rootKey = date_histogram.id;
+      var mockCount = _.zipObject([rootKey], [{
+        "buckets": [{
+          "key_as_string": " - 28800000", "key": -28800000,
+          doc_count: response.hits.total
+        }]
+      }]);
+      seft.processBuckets(mockCount, target, tmpSeriesList, docs, {}, 0);
+      seft.trimDatapoints(tmpSeriesList, target);
+      seft.nameSeries(tmpSeriesList, target);
 
-        return returnValue;
+      for (var y = 0; y < tmpSeriesList.length; y++) {
+        tmpSeriesList[y].targetRefId = target.refId;
+        tmpSeriesList[y].refId = target.refId;
+        tmpSeriesList[y].groupKey = target.refId + '_' + tmpSeriesList[y].metric + '_' + tmpSeriesList[y].field;
+        seriesList.push(tmpSeriesList[y]);
+      }
+
+      if (seriesList.length === 0 && docs.length > 0) {
+        seriesList.push({ target: 'docs', type: 'docs', datapoints: docs });
       }
     }
-    function doc2timeseriesHandler2(item) {
-      {
-        var returnValue = _.flatten(_.values(_.pick(item, pick)));
-        //("00"+Math.trunc( moment("2019-05-23 05:30:00").format("mm")/3)*3).substring(1)
 
-        if (false === _.isEmpty(doc2timeseries.intervalM)) {
-          var intervalM = doc2timeseries.intervalM;
-
-          var ms = intervalM * 60 * 1000;
-          var newMS = (Math.round(returnValue[1] / ms) * ms);
-          var m = moment(returnValue[1]);
-          var newM = moment(newMS).add(-8, 'h');
-          returnValue.push(m.format()); returnValue.push(newM.format());
-          returnValue[1] = newM.valueOf();
-          // var m = moment(returnValue[1]);
-          // var mm = (Math.trunc(m.format("mm") / intervalM) * intervalM);
-          // var fm = "YYYY-MM-DD HH:" + mm;//+":00.000";
-          // var newM = moment(m.format(fm), "YYYY-MM-DD HH:mm");
-          // // console.log(m.format(), _.padStart(mm, 2, "0"), m.format(fm), newM.format(), newM.valueOf());
-          // returnValue.push(m.format()); returnValue.push(newM.format());
-          // returnValue[1] = newM.valueOf();
-        }
-
-        return returnValue;
-      }
-    }
-    */
-    // debugger;
     for (var i = 0; i < this.response.responses.length; i++) {
       var response = this.response.responses[i];
       if (response.error) {
@@ -425,15 +418,50 @@ function (_, queryDef, moment) {
         continue;
       }
 
+      // debugger;
+      var target = this.targets[i];
+      var tmpSeriesList = [];
+      var docs = [];
       if (response.aggregations) {
         var aggregations = response.aggregations;
-        var target = this.targets[i];
-        var tmpSeriesList = [];
-        var docs = [];
 
-        this.processBuckets(aggregations, target, tmpSeriesList, docs, {}, 0);
-        this.trimDatapoints(tmpSeriesList, target);
-        this.nameSeries(tmpSeriesList, target);
+        if (target.ignoreGroupByDateHistogram) {
+          // let mockTarget = target;
+          var mock_date_histogram = null;
+          var date_histogram = _.find(target.bucketAggs, { "type": "date_histogram" });
+          if (_.isNil(date_histogram)) {
+            mock_date_histogram = { "id": "mock_date_histogram", "type": "date_histogram" };
+          }
+
+          var countMetric = _.find(target.metrics, { type: 'count' });
+
+          if (countMetric) {
+            aggregations = _.defaults({ "key_as_string": " - 28800000", "key": -28800000, doc_count: response.hits.total }, aggregations);
+            var rootKey = (mock_date_histogram || date_histogram).id;
+            aggregations = _.zipObject([rootKey], [{ "buckets": [aggregations] }]);
+          } else {
+            if (_.size(target.bucketAggs) === 1 && date_histogram) {
+              fillDateHistogramMock({ "root": { "buckets": [aggregations] } }, mock_date_histogram || date_histogram);
+            } else {
+              fillDateHistogramMock(aggregations, mock_date_histogram || date_histogram);
+            }
+          }
+
+          if (mock_date_histogram) {
+            target.bucketAggs.push(mock_date_histogram);
+          }
+
+          this.processBuckets(aggregations, target, tmpSeriesList, docs, {}, 0);
+          this.trimDatapoints(tmpSeriesList, target);
+          this.nameSeries(tmpSeriesList, target);
+          if (mock_date_histogram) {
+            _.remove(target.bucketAggs, mock_date_histogram);
+          }
+        } else {
+          this.processBuckets(aggregations, target, tmpSeriesList, docs, {}, 0);
+          this.trimDatapoints(tmpSeriesList, target);
+          this.nameSeries(tmpSeriesList, target);
+        }
 
         for (var y = 0; y < tmpSeriesList.length; y++) {
           tmpSeriesList[y].targetRefId = target.refId;
@@ -443,7 +471,13 @@ function (_, queryDef, moment) {
         }
 
         if (seriesList.length === 0 && docs.length > 0) {
-          seriesList.push({target: 'docs', type: 'docs', datapoints: docs});
+          seriesList.push({ target: 'docs', type: 'docs', datapoints: docs });
+        }
+      } else {
+
+        var metricsSize = _.size(target.metrics);
+        if (metricsSize === 1 && target.metrics[0].type === 'count' && target.ignoreGroupByDateHistogram) {
+          onlyCountMetric(this, response, target, tmpSeriesList, docs);
         }
       }
     }
