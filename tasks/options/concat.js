@@ -9,6 +9,8 @@ module.exports = function(config) {
         '<%= genDir %>/vendor/ui-select/select.css',
         '<%= genDir %>/vendor/ui-select/selectize.default.css',
         '<%= genDir %>/vendor/ADM-dateTimePicker/ADM-dateTimePicker.css',
+        '<%= genDir %>/vendor/DataTables/css/dataTables.foundation.css',
+        '<%= genDir %>/vendor/angular-datatables/css/angular-datatables.css',
         '<%= genDir %>/css/grafana.dark.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
       ],
@@ -22,6 +24,8 @@ module.exports = function(config) {
         '<%= genDir %>/vendor/ui-select/select.css',
         '<%= genDir %>/vendor/ui-select/selectize.default.css',
         '<%= genDir %>/vendor/ADM-dateTimePicker/ADM-dateTimePicker.css',
+        '<%= genDir %>/vendor/DataTables/css/dataTables.foundation.css',
+        '<%= genDir %>/vendor/angular-datatables/css/angular-datatables.css',
         '<%= genDir %>/css/grafana.light.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
       ],

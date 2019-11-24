@@ -10,12 +10,14 @@ import timeCycleConf from 'app/features/panel/timeCycleConf';
 
 import kbn from 'app/core/utils/kbn';
 
+import { MetricsPanelCtrl } from 'app/features/panel/metrics_panel_ctrl';
+
 export class FilterEditorCtrl {
   panel: any;
   panelCtrl: any;
   timeSrv: any;
   /** @ngInject */
-  constructor(private $scope, private $q, private templateSrv) {
+  constructor(private $scope, private $q, private templateSrv, private datasourceSrv) {
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.panel.filterConf = this.panel.filterConf || [];
@@ -57,6 +59,47 @@ export class FilterEditorCtrl {
   refresh() {
     this.panelCtrl.refresh();
   }
+
+  fieldChange(filterItem){
+    switch (filterItem.field.type) {
+      case "datasource":
+        if (false === _.has(filterItem.field, 'panelCtrl')) {
+          _.set(filterItem.field, 'panelCtrl', {
+            removeQuery() {
+              if (this.panelCtrl.__collapsedQueryCache) {
+                delete this.panelCtrl.__collapsedQueryCache[this.target.refId];
+              }
+
+              this.panel.targets = _.without(this.panel.targets, this.target);
+              this.panelCtrl.refresh();
+            },
+            setDatasource(datasource) {
+              // switching to mixed
+              if (datasource.meta.mixed) {
+                _.each(this.panel.targets, target => {
+                  target.datasource = this.panel.datasource;
+                  if (!target.datasource) {
+                    target.datasource = config.defaultDatasource;
+                  }
+                });
+              } else if (this.datasource && this.datasource.meta.mixed) {
+                _.each(this.panel.targets, target => {
+                  delete target.datasource;
+                });
+              }
+              this.panel.targets = [{ datasource: datasource.value }];
+              this.panel.datasource = datasource.value;
+              this.datasourceName = datasource.name;
+              // this.datasource = null;
+            }, panel: { targets: [] }
+          });
+        }
+        break;
+    }
+    // debugger;
+  }
+
+
 }
 
 /** @ngInject */

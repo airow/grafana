@@ -24,7 +24,7 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-7">类型</label>
-        <select class="gf-form-input width-8" ng-model="filterItem.field.type" ng-options="item for item in ['string','number','date','select']">
+        <select class="gf-form-input width-8" ng-change="ctrl.fieldChange(filterItem)" ng-model="filterItem.field.type" ng-options="item for item in ['string','number','date','select','datasource']">
         </select>
       </div>
     </div>
@@ -113,6 +113,16 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div ng-switch-when="datasource">
+        <div ng-repeat="target in filterItem.field.panelCtrl.panel.targets">
+          <rebuild-on-change property="target.datasource" show-null="true">
+            <plugin-component type="query-ctrl">
+            </plugin-component>
+          </rebuild-on-change>
+        </div>
+        <metrics-ds-selector panel-ctrl="filterItem.field.panelCtrl"></metrics-ds-selector>
       </div>
 
     </div>

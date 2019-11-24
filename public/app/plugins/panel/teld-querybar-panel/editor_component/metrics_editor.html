@@ -6,6 +6,8 @@
     </select>
     <gf-form-switch class="gf-form" label="默认收起" label-class="query-keyword width-6" checked="ctrl.panel.isCollapse">
     </gf-form-switch>
+    <gf-form-switch class="gf-form" label="隐藏收起按钮" label-class="query-keyword width-8" checked="ctrl.panel.hideCollapseBtn">
+    </gf-form-switch>
     <gf-form-switch class="gf-form" label="禁用选中取数" label-class="query-keyword width-8"
       checked="ctrl.panel.stopClickRefresh">
     </gf-form-switch>
@@ -136,6 +138,8 @@
           placeholder="250">
       </div>
       <gf-form-switch class="gf-form" label="后端排序" label-class="query-keyword width-6" checked="target.conf.defOrder">
+      </gf-form-switch>
+      <gf-form-switch class="gf-form" label="仅取数不显示" label-class="query-keyword width-8" checked="target.conf.onlyLoadData">
       </gf-form-switch>
     </div>
     <div class="gf-form-inline">

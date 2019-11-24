@@ -4,7 +4,7 @@
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }"
         style="margin-top: 0px;">
         <li class="gf-tabs-item dropdown" ng-class="{'open':ctrl.tabGroup[target.conf.groupBy].showDDM===target.refId}"
-          ng-hide="target.hide || false===ctrl.isSelectGroupTab(target)" ng-repeat="target in ctrl.panel.targets">
+          ng-hide="target.hide || false===ctrl.isSelectGroupTab(target) || target.conf.onlyLoadData" ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" bs-tooltip="target.conf.tooltip"
             ng-style="{color:target.conf.required?'red':'inherit'}"
             ng-click="ctrl.forbiddenRefreshDashboard = true;ctrl.manualChangeQueryBarTab(target);ctrl.hideDropdownMenu(target)"
@@ -174,7 +174,7 @@
           <span ng-bind="ctrl.rangeString">近 2 年</span>，
         </label>
       </div>
-      <div class="gf-form filter" ng-repeat="(key,item) in ctrl.exprVariables">
+      <div class="gf-form filter" ng-hide='item.target.conf.onlyLoadData' ng-repeat="(key,item) in ctrl.exprVariables">
         <label style="
     border: solid 1px;
     padding: 2px 5px;
@@ -196,7 +196,7 @@
           ng-click="ctrl.eh_queryWithCycle(cycle);">
           {{cycle.name}}
         </button>
-        <button type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuerySwitch()">
+        <button ng-if='!(ctrl.panel.hideCollapseBtn===true)' type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuerySwitch()">
           <i class="fa" ng-class="{true:'fa-angle-double-up',false:'fa-angle-double-down'}[ctrl.defineQuery]"></i>
         </button>
       </div>

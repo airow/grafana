@@ -162,6 +162,7 @@ export class TableRenderer {
         }
 
         let compiled = _.template(templateString);
+        bindData.rowObj = this.rowObj;
         let returnValue = compiled(bindData);
         return returnValue;
         //return "<span><a href='https://www.baidu.com' target='_black'>asdfasdf</a></span>";

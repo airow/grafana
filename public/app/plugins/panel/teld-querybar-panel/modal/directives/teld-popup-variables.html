@@ -49,6 +49,15 @@
                             </a>
                           </label>
                         </div>
+                        <div class="gf-form-inline width-15" ng-switch-when='datasource'>
+                          <!-- <ui-select theme="selectize" ng-model="varItem.value">
+                            <ui-select-match placeholder="选择或搜索字段">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="field in varItem.field.choices | filter: $select.search">
+                              <span ng-bind-html="(field.name) | highlight: $select.search"></span>
+                            </ui-select-choices>
+                          </ui-select> -->
+                          <button ng-click='ctrl.variablesListModal()'>dddd</button>
+                        </div>
                       </div>
                     </div>
                     <div class="gf-form" ng-if="varItem.field.hasEndValue">

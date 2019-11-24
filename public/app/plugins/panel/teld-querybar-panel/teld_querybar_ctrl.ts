@@ -462,7 +462,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     if (getls) {
       getls = JSON.parse(getls);
       if (_.isNil(getls['timeRange']) === false) {
-        ls['tagGroup'] = getls['timeRange'];
+        ls['timeRange'] = getls['timeRange'];
       }
       _.each(['tagGroup'], item => {
         if (_.isNil(getls[item]) === false) {
@@ -812,12 +812,13 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       result[value.name + "_value"] = value.current.value;
     }, vars);
     var returnValue = true;
+    var m = { 'moment': moment, '_': _ };
     if (link.enableExpression) {
-      var fun = new Function('context', 'target', ' index', ' item', 'vars', "return  " + link.expression);
-      returnValue = fun(context, target, index, currentItem, vars);
+      var fun = new Function('context', 'target', ' index', ' item', 'vars', 'm', "return  " + link.expression);
+      returnValue = fun(context, target, index, currentItem, vars, m);
     }
-    var urlFun = new Function('context', 'target', ' index', ' item', 'vars', "return  `" + link.url + "`");
-    link.url = urlFun(context, target, index, currentItem, vars);
+    var urlFun = new Function('context', 'target', ' index', ' item', 'vars', 'm', "return  `" + link.url + "`");
+    link.url = urlFun(context, target, index, currentItem, vars, m);
     return returnValue;
   }
 
@@ -1538,6 +1539,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     });
 
     var metricsQuery = {
+      inQuerybar: true,
       panelId: this.panel.id,
       //range: this.range,
       range: { raw: this.range.raw, from: this.range.from.clone(), to: this.range.to.clone() },
