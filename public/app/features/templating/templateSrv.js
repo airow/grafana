@@ -292,7 +292,22 @@ define([
         });
       };
 
+      this.getTeldExpressionCacheSuffix = function (options, cacheSuffix) {
+        console.log('inQuerybar', options.inQuerybar);
+        return options.inQuerybar ? false : cacheSuffix;
+      };
+
+      this.teldExpressionInDataSource2ScopedVarsFormCache = function (options, cacheSuffix, scopedVars, format, varFilter) {
+        cacheSuffix = this.getTeldExpressionCacheSuffix(options, cacheSuffix);
+        return this.teldExpression2ScopedVarsFormCache(cacheSuffix, scopedVars, format, varFilter);
+      };
+
       this.teldExpression2ScopedVarsFormCache = function (cacheSuffix, scopedVars, format, varFilter) {
+
+        if (cacheSuffix === false) {
+          return this.teldExpression2ScopedVars(scopedVars, format, varFilter);
+        }
+
         var cacheKey = 'teldExpression2ScopedVars.' + cacheSuffix;
         var cache = _.get(window, cacheKey);
         var isExpiration = cache && cache.__timestamp && moment().diff(cache.__timestamp, 'seconds') > 3;

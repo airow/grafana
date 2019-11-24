@@ -22,6 +22,17 @@ export class MysqlDatasource {
       if (matches) {
         return matches[1];
       }
+
+      let matchesIn = new RegExp("<in=(.+?) />").exec(value);
+      if (matchesIn) {
+        return ` IN ${matchesIn[1]}`;
+      }
+
+      let matchesLike = new RegExp("<like />").exec(value);
+      if (matchesLike) {
+        return ' LIKE \'%\'';
+      }
+
       return '\'' + value + '\'';
     }
 
@@ -29,26 +40,35 @@ export class MysqlDatasource {
       return value;
     }
 
-    var quotedValues = _.map(value, function(val) {
+    var quotedValues = _.map(value, function (val) {
       if (typeof value === 'number') {
         return value;
       }
 
       return '\'' + val + '\'';
     });
-    return  quotedValues.join(',');
+    return quotedValues.join(',');
   }
 
   query(options) {
+
+    var varFilter = { filter: 'sql' };
+    var scopedExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'mssql', options.scopedVars,
+      this.interpolateVariable, varFilter);
+    //console.log(scopedExpressionVars);
+    //debugger;
     var queries = _.filter(options.targets, item => {
       return item.hide !== true;
     }).map(item => {
+      var rawSql = item.rawSql;
+      rawSql = this.templateSrv.replaceScopedVars(rawSql, scopedExpressionVars);
+      rawSql = this.templateSrv.replace(rawSql, options.scopedVars, this.interpolateVariable);
       return {
         refId: item.refId,
         intervalMs: options.intervalMs,
         maxDataPoints: options.maxDataPoints,
         datasourceId: this.id,
-        rawSql: this.templateSrv.replace(item.rawSql, options.scopedVars, this.interpolateVariable),
+        rawSql: rawSql,
         format: item.format,
       };
     });

@@ -25,7 +25,7 @@ export class GenericDatasource {
         return item.type === 'teldExpression' && "es" === (item.filter || "es");
       };
 
-      var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVarsFormCache('Tstatic', options.scopedVars, 'lucene', filterFun);
+      var scopedExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'Tstatic', options.scopedVars, 'lucene', filterFun);
       where = this.templateSrv.replaceScopedVars(where, Object.assign({}, options.scopedVars, scopedExpressionVars));
       where = this.templateSrv.replace(where, Object.assign({}, options.scopedVars, scopedExpressionVars));
       var exprTree = wherefilter.makeTree(where);
