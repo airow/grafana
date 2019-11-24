@@ -108,7 +108,7 @@ export class TeldServiceGatewayDatasource {
         var filterFun = function (item) {
           return item.type === 'teldExpression' && "es" === (item.filter || "es");
         };
-        var scopedExpressionVars = this.templateSrv.teldExpression2ScopedVarsFormCache('TSG',
+        var scopedExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'TSG',
           options.scopedVars, 'lucene', filterFun);
 
         if (param.type === 'object') {
