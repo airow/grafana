@@ -156,6 +156,9 @@ export class DashboardCtrl {
 
       $scope.setWindowTitleAndTheme = function() {
         window.document.title = config.window_title_prefix + $scope.dashboard.title;
+        if (window.location.search.indexOf('&frameset=frameset') > 0) {
+          window.parent.document.title = window.document.title;
+        }
       };
 
       $scope.broadcastRefresh = function() {

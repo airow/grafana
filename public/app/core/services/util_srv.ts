@@ -27,7 +27,9 @@ export class UtilSrv {
 
   showModal(options) {
     if (this.modalScope && this.modalScope.dismiss) {
-      this.modalScope.dismiss();
+      if (options.popup !== true) {
+        this.modalScope.dismiss();
+      }
     }
 
     this.modalScope = options.scope;
