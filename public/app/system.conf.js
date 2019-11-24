@@ -76,6 +76,8 @@ System.config({
     'isarray': 'vendor/npm/isarray/index.js',
     'ui-select': 'vendor/ui-select/select.js',
     'ADM-dateTimePicker': 'vendor/ADM-dateTimePicker/ADM-dateTimePicker.js',
+    'datatables': 'vendor/DataTables/js/jquery.dataTables.js',
+    'angular-datatables': 'vendor/angular-datatables/angular-datatables.js',
   },
 
   packages: {
