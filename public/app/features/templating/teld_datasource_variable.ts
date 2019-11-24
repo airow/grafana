@@ -123,6 +123,7 @@ export class TeldDatasourceVariable implements Variable {
       .then(this.handleQueryResult.bind(this))
       .then(this.handleVariable.bind(this))
       .finally(() => {
+        instanceMetricsPanelCtrl.templateSrv.updateTemplateData();
         initLock.resolve();
       });
   }
