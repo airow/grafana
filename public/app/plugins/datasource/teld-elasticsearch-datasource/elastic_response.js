@@ -435,7 +435,7 @@ function (_, queryDef, moment) {
 
           var countMetric = _.find(target.metrics, { type: 'count' });
 
-          if (countMetric) {
+          if (countMetric && _.size(target.metrics) !== 1) {
             aggregations = _.defaults({ "key_as_string": " - 28800000", "key": -28800000, doc_count: response.hits.total }, aggregations);
             var rootKey = (mock_date_histogram || date_histogram).id;
             aggregations = _.zipObject([rootKey], [{ "buckets": [aggregations] }]);
