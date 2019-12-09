@@ -19,16 +19,123 @@ export class ElasticQueryCtrl extends QueryCtrl {
   newPlusButton: any;
   doc2timeseriesSizeOptions: any;
 
+  formats: any[];
+  dateFormats: any[];
+  mappingConf: any[];
+
+  paramToString(param) {
+    let returnValue = `${param.key}=${angular.toJson(param.value)}`;
+    return returnValue;
+  }
+
   /** @ngInject **/
   constructor($scope, $injector, private $rootScope, private $timeout, private uiSegmentSrv, private $http) {
     super($scope, $injector);
 
+    this.formats = [
+      { text: 'Time series', value: 'time_series' },
+      //{text: 'Time series Objs', value: 'time_series_objs'},
+      { text: 'Table', value: 'table' },
+      { text: 'Series', value: 'series' },
+      //{text: 'Objects', value: 'object'},
+    ];
+    this.dateFormats = [
+      { text: 'Unix ms timestamp', value: 'x' },
+      { text: 'Unix timestamp', value: 'X' },
+      { text: 'YYYYMMDD', value: 'YYYYMMDD' },
+      { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
+      { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
+      { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
+    ];
+
+    this.mappingConf = [
+      { text: '字符串', value: 'string' },
+      { text: '数组', value: 'stringArray' },
+      { text: '对象数组', value: 'objArray' }
+    ];
+
     this.esVersion = this.datasource.esVersion;
     this.target.dataPermission = this.target.dataPermission || [];
+    this.target.attachFilter = this.target.attachFilter || [];
     if (false === _.has(this.target, 'doc2timeseries.size')) {
       _.set(this.target, 'doc2timeseries.size', '10000');
     }
     this.queryUpdated();
+
+    // if (this.target.enableAttachFilter) {
+
+    //   this.target.attachFilter = [
+    //     {
+    //       bool: [
+    //         {
+    //           boolType: "should",
+    //           boolArray: [
+    //             {
+    //               type: "query_string",
+    //               query: "电站类型.keyword:/安徽省/"
+    //             },
+    //             {
+    //               "field": "电站ID.keyword",
+    //               "type": "terms",
+    //               "filterWrap": true,
+    //               "url": "https://sgi.teld.cn/api/invoke?SID=BIDA-GetSalesOrgnizationHelp",
+    //               "filterKey": "filter",
+    //               "format": "table",
+    //               "parameters": [{
+    //                 "key": "Page",
+    //                 "type": "value",
+    //                 "value": "1"
+    //               }, {
+    //                 "defValue": "10",
+    //                 "enableDefValue": true,
+    //                 "key": "Rows",
+    //                 "type": "value",
+    //                 "value": "10"
+    //               }, {
+    //                 "key": "FilterKey",
+    //                 "type": "object",
+    //                 "value": {
+    //                   "DataType": "grafanaPower",
+    //                   "SortField": "0"
+    //                 }
+    //               }
+    //               ]
+    //             }
+    //           ]
+    //         },
+    //         {
+    //           boolType: "must",
+    //           boolArray: [
+    //             {
+    //               type: "query_string",
+    //               query: "电站类型.keyword:/安徽省/"
+    //             },
+    //             {
+    //               "field": "电站ID.keyword",
+    //               "type": "terms",
+    //               "filterWrap": true,
+    //               "url": "https://sgi.teld.cn/api/invoke?SID=BIDA-GetSalesOrgnizationHelp",
+    //               "filterKey": "filter",
+    //               "format": "table",
+    //               "parameters": [{
+    //                 "key": "Page",
+    //                 "type": "value",
+    //                 "value": "1"
+    //               }, {
+    //                 "defValue": "10",
+    //                 "enableDefValue": true,
+    //                 "key": "Rows",
+    //                 "type": "value",
+    //                 "value": "10"
+    //               }
+    //               ]
+    //             }
+    //           ]
+    //         }
+    //       ]
+    //     }
+    //   ];
+    // }
 
     this.newPlusButton = uiSegmentSrv.newPlusButton();
     this.doc2timeseriesSizeOptions = queryDef.doc2timeseriesSizeOptions;

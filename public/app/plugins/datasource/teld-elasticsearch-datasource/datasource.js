@@ -5,12 +5,13 @@ define([
   'app/core/utils/datemath',
   'moment',
   'app/core/utils/kbn',
+  'app/core/config',
   './query_builder',
   './index_pattern',
   './elastic_response',
   './query_ctrl',
 ],
-  function (angular, _, rangeUtil, dateMath, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
+  function (angular, _, rangeUtil, dateMath, moment, kbn, config, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
     'use strict';
 
     /** @ngInject */
@@ -85,6 +86,11 @@ define([
           to: options.range.to.valueOf(),
           format: "epoch_millis",
         };
+
+        // if (target.rangePrecision) {
+        //   range[timeField].from = options.range.from.startOf(target.rangePrecision).valueOf();
+        //   range[timeField].to = options.range.to.endOf(target.rangePrecision).valueOf();
+        // }
 
         var queryInterpolated = templateSrv.replace(queryString, {}, 'lucene');
         var query = {
@@ -289,6 +295,10 @@ define([
           /*附加数据权限*/
           header = attachDataPermission(target, header);
 
+          // debugger;
+          // 附件SG类过滤条件
+          header = this.attachFilter(target, header, options, scopedExpressionVars);
+
           payload += header + '\n';
 
           payload += esQuery + '\n';
@@ -299,8 +309,15 @@ define([
           return $q.when([]);
         }
 
-        payload = payload.replace(/\$timeFrom/g, options.range.from.valueOf());
-        payload = payload.replace(/\$timeTo/g, options.range.to.valueOf());
+        var fromUnix = options.range.from.valueOf();
+        var toUnix = options.range.to.valueOf();
+        if (target.rangePrecision) {
+          fromUnix = options.range.from.startOf(target.rangePrecision).valueOf();
+          toUnix = options.range.to.endOf(target.rangePrecision).valueOf();
+        }
+
+        payload = payload.replace(/\$timeFrom/g, fromUnix);
+        payload = payload.replace(/\$timeTo/g, toUnix);
         payload = templateSrv.replace(payload, options.scopedVars);
 
         // if (target.timeRange && target.timeRange.enable) {
@@ -456,6 +473,143 @@ define([
         }
         return header;
       }
+
+      function replaceScopedVars(value, options, scopedExpressionVars) {
+        value = templateSrv.replaceScopedVars(value, Object.assign({}, options.scopedVars, scopedExpressionVars));
+        value = templateSrv.replaceWithEmpty(value, options.scopedVars, 'lucene');
+        return value;
+      }
+
+      this.imports = {
+        '_': _,
+        'moment': moment,
+        'contextSrv': this.contextSrv,
+        'config': config,
+        'urlHelper': {
+          sghost: function (host) {
+            host = host || 'sgi';
+            var protocol = window.location.protocol;
+            var hostname = window.location.hostname;
+            var domain = document.domain || hostname;
+            var ares = domain.split(':')[0].split('.');
+            if (_.size(ares) > 2) {
+              ares.shift();
+            }
+            ares.unshift("");
+            domain = ares.join('.');
+            // if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
+            if (!/^\.(teld\.(cn|net)+|hfcdgs.com)$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
+            return protocol + "//" + host + domain;
+          }
+        }
+      };
+
+      this.getQueries = function (templateSrv, target, options, item, scopedExpressionVars) {
+        var protocol = window.location.protocol;
+        var hostname = window.location.hostname;
+        var port = window.location.port;
+        var domain = hostname.split('.');
+        if (_.size(domain) >= 2) {
+          var TLDs = domain.pop();
+          var host = domain.pop();
+          domain = [host, TLDs];
+        }
+        var templateSettings = { imports: this.imports, variable: 'bindData' };
+        var bindData = {
+          time: options.range,
+          user: config.bootData.user,
+          url: { protocol: protocol, hostname: hostname, port: port, domain: domain.join(".") }
+        };
+
+        var fromUnix = options.range.from.valueOf();
+        var toUnix = options.range.to.valueOf();
+        if (target.rangePrecision) {
+          fromUnix = options.range.from.startOf(target.rangePrecision).valueOf();
+          toUnix = options.range.to.endOf(target.rangePrecision).valueOf();
+        }
+        var scopedVars = _.defaults({
+          to: { text: toUnix, value: toUnix },
+          from: { text: fromUnix, value: fromUnix }
+        }, options.scopedVars);
+
+        var parameters = _.cloneDeep(item.parameters);
+
+        parameters = _.transform(parameters, function (r, param) {
+          // param.originalVal = param.value;
+          if (param.type === 'object') {
+            param.value = _.transform(param.value, function (result, eachitem) {
+              var originalVal = eachitem.v;
+              var v = eachitem.v || '';
+              v = templateSrv.replaceScopedVars(v, Object.assign({}, options.scopedVars, scopedExpressionVars));
+              v = templateSrv.replace(v, scopedVars, {});
+              var compiled = _.template(v, templateSettings);
+              v = compiled(bindData);
+              if (originalVal === v && _.includes(v, '$')) {
+                if (true !== eachitem.enableDefValue) {
+                  return;
+                }
+                v = eachitem.defValue || "";
+              }
+              result[eachitem.k] = v;
+            }, {});
+            if (_.size(param.value) === 0) {
+              return;
+            }
+          } else {
+            param.value = templateSrv.replaceScopedVars(param.value, Object.assign({}, options.scopedVars, scopedExpressionVars));
+            param.value = templateSrv.replace(param.value, scopedVars, {});
+            var compiled = _.template(param.value, templateSettings);
+            param.value = compiled(bindData);
+            if (param.originalVal === param.value && _.includes(param.value, '$')) {
+              if (true !== param.enableDefValue) {
+                return;
+              }
+              param.value = param.defValue || "";
+            }
+          }
+          r.push(param);
+        }, []);
+
+        var url = templateSrv.replace(item.url, scopedVars, {});
+        url = _.template(url, templateSettings)(bindData);
+
+        item.url = url;
+        item.parameters = parameters;
+        return item;
+      };
+
+      this.attachFilter = function (target, header, options, scopedExpressionVars) {
+        // debugger;
+        if (target.enableAttachFilter && _.size(target.attachFilter) > 0) {
+          var headerJson = angular.fromJson(header);
+          headerJson.attachFilter = target.attachFilter.map(function (item) { return _.omit(item, ['$$hashKey']); });
+          headerJson.attachFilter = _.cloneDeep(headerJson.attachFilter);
+          var that = this;
+          _.each(headerJson.attachFilter, function (filter) {
+            _.each(filter.bool, function (bool) {
+              var boolArray = bool.boolArray || [];
+              _.each(boolArray, function (boolItem) {
+                switch (boolItem.type) {
+                  case "query_string":
+                    // boolItem._ = _.pick(boolItem, ['value']);
+                    boolItem.query = replaceScopedVars(boolItem.query, options, scopedExpressionVars);
+                    _.each(_.difference(_.keys(boolItem), ['type', 'query']), function (item) {
+                      delete boolItem[item];
+                    });
+                    break;
+                  case "SG":
+                  case "terms":
+                    boolItem = that.getQueries(templateSrv, target, options, boolItem, scopedExpressionVars);
+                    break;
+                }
+              });
+            });
+          });
+
+          header = angular.toJson(headerJson);
+        }
+        return header;
+      };
     }
 
     return {

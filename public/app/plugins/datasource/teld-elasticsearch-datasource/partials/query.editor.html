@@ -25,13 +25,12 @@
     </elastic-bucket-agg>
   </div>
   <div ng-if='ctrl.isRawDocument()' ng-repeat="agg in ctrl.target.scriptFieldsConf">
-    <elastic-script-fields target="ctrl.target" index="$index"
-      on-addscriptfield="ctrl.addScriptField()"
+    <elastic-script-fields target="ctrl.target" index="$index" on-addscriptfield="ctrl.addScriptField()"
       on-change="ctrl.queryUpdated()">
     </elastic-script-fields>
   </div>
 
-  <div ng-if='ctrl.isRawDocument()' >
+  <div ng-if='ctrl.isRawDocument()'>
     <div class="gf-form-inline offset-width-7" ng-class="{'gf-form-disabled': current.hide}">
       <div class="gf-form">
         <label class="gf-form-label width-10">
@@ -47,8 +46,8 @@
           </label>
         </div>
         <div class="gf-form">
-          <metric-segment segment="ctrl.newPlusButton" get-options="ctrl.getFields()"
-            on-change="ctrl.addField()"></metric-segment>
+          <metric-segment segment="ctrl.newPlusButton" get-options="ctrl.getFields()" on-change="ctrl.addField()">
+          </metric-segment>
         </div>
       </div>
     </div>
@@ -61,7 +60,7 @@
       </div>
       <div class="gf-form">
         <input type="text" class="gf-form-input max-width-8" placeholder="timeseries" empty-to-null
-          ng-model="ctrl.target.doc2timeseries.timeseries"  ng-model-onblur></input>
+          ng-model="ctrl.target.doc2timeseries.timeseries" ng-model-onblur></input>
       </div>
       <div class="gf-form">
         <input type="text" class="gf-form-input max-width-8" placeholder="value" empty-to-null
@@ -72,7 +71,8 @@
           ng-model="ctrl.target.doc2timeseries.intervalM" ng-model-onblur></input>
       </div>
       <div class="gf-form">
-        <metric-segment-model property="ctrl.target.doc2timeseries.size" options="ctrl.doc2timeseriesSizeOptions" css-class="width-12"></metric-segment-model>
+        <metric-segment-model property="ctrl.target.doc2timeseries.size" options="ctrl.doc2timeseriesSizeOptions"
+          css-class="width-12"></metric-segment-model>
       </div>
     </div>
   </div>
@@ -96,8 +96,18 @@
       <span class="gf-form-label width-6">Last</span>
 
       <input type="text" class="gf-form-input max-width-8" placeholder="1h" empty-to-null
-        ng-model="ctrl.target.timeRange.timeFrom" valinputid-time-span ng-change="ctrl.refresh()" ng-model-onblur></input>
+        ng-model="ctrl.target.timeRange.timeFrom" valinputid-time-span ng-change="ctrl.refresh()"
+        ng-model-onblur></input>
     </div>
+    <gf-form-switch class="gf-form" label="忽略dash时间" label-class="width-8" checked="ctrl.target.ignoreTimeRange">
+    </gf-form-switch>
+
+    <div class="gf-form">
+      <span class="gf-form-label width-12">时间精度</span>
+      <input type="text" class="gf-form-input width-10" min-length="0" bs-typeahead='["year","month","day","hour","minute"]'
+        ng-model="ctrl.target.rangePrecision" ng-change="ctrl.refresh()" ng-model-onblur></input>
+    </div>
+
 
     <div class="gf-form" ng-show="ctrl.target.timeRange.enable">
       <span class="gf-form-label width-12">Add time shift</span>
@@ -159,6 +169,340 @@
           <i class="pointer fa fa-arrow-up"></i>
         </a>
       </label>
+    </div>
+  </div>
+  <div class="gf-form-inline">
+    <gf-form-switch class="gf-form" label="Attach SG" label-class="query-keyword width-7"
+      checked="ctrl.target.enableAttachFilter" switch-class="max-width-7" on-change="ctrl.refresh()">
+    </gf-form-switch>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target.attachFilter.push({bool:[{boolType: 'should',boolArray:[]}]})">
+          <i class="fa fa-plus"></i>
+        </a>
+      </label>
+    </div>
+    <!-- <div class="gf-form">
+      <label class="gf-form-label gf-form-query-letter-cell">
+        <a class="pointer" tabindex="1" ng-click="ctrl.collapsedAttachFilter=!ctrl.collapsedAttachFilter">
+          <span class="gf-form-query-letter-cell-carret">
+            <i class="fa fa-caret-down" ng-hide="ctrl.collapsedAttachFilter"></i>
+            <i class="fa fa-caret-right ng-hide" ng-show="ctrl.collapsedAttachFilter"></i>
+          </span>
+        </a>
+      </label>
+    </div> -->
+  </div>
+  <div ng-repeat="attach in ctrl.target.attachFilter">
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label query-keyword width-7">
+          <span>Bool</span>
+        </label>
+        <label class="gf-form-label">
+          <a ng-click='attach.bool.push({boolType: "must", boolArray: []})'>
+            <i class="fa fa-plus">&nbsp; AND</i>
+          </a>
+        </label>
+        <label class="gf-form-label">
+          <a ng-click='attach.bool.push({boolType: "should", boolArray: []})'>
+            <i class="fa fa-plus">&nbsp; OR</i>
+          </a>
+        </label>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.target.attachFilter, attach)">
+            <i class="fa fa-trash"></i>
+          </a>
+        </label>
+      </div>
+
+      <div class="gf-form gf-form--grow">
+        <label class="gf-form-label gf-form-label--grow">
+
+        </label>
+      </div>
+    </div>
+
+    <div class="gf-form">
+      <div>
+        <div ng-repeat="bool in attach.bool">
+          <div class="gf-form offset-width-2">
+            <label class="gf-form-label">
+              <a ng-click="ctrl.removeItem(attach.bool, bool)">
+                <i class="fquery-keyword fa fa-remove"></i>
+              </a>
+            </label>
+            <label class="gf-form-label query-keyword">
+              <span>{{bool.boolType==='must'?"AND":"OR"}}</span>
+            </label>
+            <label class="gf-form-label">
+              <a ng-click='bool.boolArray.push({field:"",url:"${urlHelper.sghost(\"sgi\")}/api/invoke?SID=","format": "table",parameters:[]})'>
+                <i class="query-keyword fa fa-plus"></i>
+              </a>
+            </label>
+          </div>
+          <div ng-repeat="boolItem in bool.boolArray">
+            <div class="gf-form offset-width-2">
+              <div class="gf-form-inline">
+                <label class="gf-form-label">
+                  <a ng-click="ctrl.removeItem(bool.boolArray, boolItem)">
+                    <i class="pointer fa fa-trash"></i>
+                  </a>
+                </label>
+                <label class="gf-form-label query-keyword width-3">{{$index+1}}</label>
+                <input type="text" class="gf-form-input width-10" placeholder="type" min-length="0"
+                  bs-typeahead='["query_string","terms"]' ng-model="boolItem.type" ng-change="ctrl.refresh()"
+                  ng-model-onblur></input>
+                <div class="gf-form-inline" ng-if='boolItem.type==="query_string"'>
+                  <div class="gf-form gf-form--grow">
+                    <label class="gf-form-label width-5">query</label>
+                    <input type="text" class="gf-form-input width-15" ng-model="boolItem.query">
+                  </div>
+                </div>
+                <div ng-if='boolItem.type==="terms"'>
+                  <div class="gf-form-inline">
+                    <div class="gf-form">
+                      <label class="gf-form-label width-5">field</label>
+                      <metric-segment-model property="boolItem.field" get-options="ctrl.getFields()"
+                        on-change="onChange()" css-class="width-10"></metric-segment-model>
+                    </div>
+                    <div class="gf-form">
+                      <label class="gf-form-label width-5">url</label>
+                      <input type="text" class="gf-form-input width-15" ng-model="boolItem.url">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ng-if='boolItem.type==="terms"'>
+              <div class="gf-form offset-width-5">
+                <div class="gf-form-inline">
+                  <div class="gf-form">
+                    <label class="gf-form-label query-keyword width-7">Format as</label>
+                    <div class="gf-form-select-wrapper width-8">
+                      <select class="gf-form-input gf-size-auto" ng-model="boolItem.format"
+                        ng-options="f.value as f.text for f in ctrl.formats" ng-change="ctrl.refresh()"></select>
+                    </div>
+                  </div>
+                  <div class="gf-form" ng-if="ctrl.target.format=='time_series'">
+                    <label class="gf-form-label query-keyword width-7">时间列</label>
+                    <input type="text" class="gf-form-input width-7" ng-model="boolItem.time_sec" spellcheck='false'
+                      ng-blur="ctrl.refresh()">
+                    <label class="gf-form-label query-keyword width-10">原始时间列格式<tip>moment#format
+                        http://momentjs.cn/docs/#/parsing/string-format/</tip></label>
+                    <metric-segment-model property="boolItem.time_sec_format" options="ctrl.dateFormats"
+                      on-change="ctrl.refresh()" custom="true"></metric-segment-model>
+                  </div>
+                </div>
+              </div>
+              <div class="gf-form offset-width-5">
+                <div class="gf-form-inline">
+                  <div class="gf-form">
+                    <label class="gf-form-label query-keyword width-7">返回值映射</label>
+                    <div class="gf-form-select-wrapper width-8">
+                      <select class="gf-form-input gf-size-auto" ng-model="boolItem.mapping"
+                        ng-options="f.value as f.text for f in ctrl.mappingConf "></select>
+                    </div>
+                  </div>
+                  <div class="gf-form" ng-if="boolItem.mapping=='string'">
+                    <label class="gf-form-label query-keyword width-7">分隔符</label>
+                    <input type="text" class="gf-form-input width-7" ng-model="boolItem.mappingStringSplit" spellcheck='false'>
+                  </div>
+                  <div class="gf-form" ng-if="boolItem.mapping=='objArray'">
+                    <label class="gf-form-label query-keyword width-7">field</label>
+                    <input type="text" class="gf-form-input width-7" ng-model="boolItem.mappingObjArrayFiled" spellcheck='false'
+                      >
+                  </div>
+                </div>
+              </div>
+              <div class="gf-form offset-width-5">
+                <div class="gf-form-inline">
+                  <div class="gf-form">
+                    <label class="gf-form-label query-keyword width-7">全部权限</label>
+                    <input type="text" class="gf-form-input width-7" ng-model="boolItem.AllValue" spellcheck='false'>
+                  </div>
+                  <div class="gf-form">
+                    <label class="gf-form-label query-keyword width-7">无权限</label>
+                    <input type="text" class="gf-form-input width-7" ng-model="boolItem.withoutValue" spellcheck='false'>
+                  </div>
+                </div>
+              </div>
+              <div class="gf-form offset-width-5">
+                <div class="gf-form-inline">
+                  <div class="gf-form">
+                    <label class="gf-form-label query-keyword width-7">参数</label>
+                  </div>
+                  <div class="gf-form">
+                    <label class="gf-form-label query-keyword width-8">类型</label>
+                    <label class="gf-form-label query-keyword width-10">键</label>
+                    <label class="gf-form-label query-keyword width-15">值</label>
+                  </div>
+                  <div class="gf-form">
+                    <label class="gf-form-label">
+                      <a ng-click="boolItem.parameters.push({type:'value',key:'',value:''})">
+                        <i class="fa fa-plus">Value</i>
+                      </a>
+                    </label>
+                    <label class="gf-form-label">
+                      <a ng-click="boolItem.parameters.push({type:'object',key:'',value:[{}]})">
+                        <i class="fa fa-plus">Object</i>
+                      </a>
+                    </label>
+                    <label class="gf-form-label" ng-if="false">
+                      <a ng-click="boolItem.parameters.push({type:'raw',key:'',value:''})">
+                        <i class="fa fa-plus">Raw</i>
+                      </a>
+                    </label>
+                  </div>
+                  <gf-form-switch class="gf-form" label="filter" label-class="query-keyword width-6"
+                    checked="boolItem.filterWrap">
+                  </gf-form-switch>
+                  <div class="gf-form" ng-if="boolItem.filterWrap">
+                    <input type="text" class="gf-form-input" ng-model="boolItem.filterKey" spellcheck="false"
+                      placeholder="">
+                  </div>
+                </div>
+              </div>
+              <div class="gf-form offset-width-5" ng-repeat="param in boolItem.parameters">
+                <div ng-switch="param.type">
+                  <div class="gf-form" ng-switch-default>
+                    <div class="gf-form offset-width-7">
+                      <label class="gf-form-label width-8" ng-bind="param.type">
+                      </label>
+                    </div>
+                    <div class="gf-form">
+                      <input type="text" class="gf-form-input width-10" ng-model="param.key" spellcheck='false' placeholder=""
+                        ng-blur="ctrl.refresh()">
+                    </div>
+                    <div class="gf-form">
+                      <input type="text" class="gf-form-input width-15" ng-model="param.value" spellcheck='false'
+                        ng-blur="ctrl.refresh()">
+                    </div>
+                    <gf-form-switch class="gf-form" label="启用缺省值" label-class="width-7" checked="param.enableDefValue">
+                    </gf-form-switch>
+                    <div class="gf-form">
+                      <input type="text" ng-disabled="!param.enableDefValue" class="gf-form-input width-7" placeholder="缺省值"
+                        ng-model="param.defValue" spellcheck="false" placeholder="">
+                    </div>
+                    <div class="gf-form">
+                      <label class="gf-form-label">
+                        <a ng-click="ctrl.removeItem(boolItem.parameters, param)">
+                          <i class="pointer fa fa-trash"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label" ng-hide="$last">
+                        <a ng-click="ctrl.moveItem(boolItem.parameters,$index,$index+1)">
+                          <i class="pointer fa fa-arrow-down"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label" ng-hide="$first">
+                        <a ng-click="ctrl.moveItem(boolItem.parameters,$index,$index-1)">
+                          <i class="pointer fa fa-arrow-up"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label">
+                        {{ctrl.paramToString(param)}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="gf-form" ng-switch-when="raw">
+                    <div class="gf-form offset-width-7">
+                      <label class="gf-form-label width-8" ng-bind="param.type">
+                      </label>
+                    </div>
+                    <div class="gf-form">
+                      <input type="text" class="gf-form-input width-15" ng-model="param.value" spellcheck='false'
+                        ng-blur="ctrl.refresh()">
+                    </div>
+                    <div class="gf-form">
+                      <label class="gf-form-label">
+                        <a ng-click="ctrl.removeItem(boolItem.parameters, param)">
+                          <i class="pointer fa fa-trash"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label" ng-hide="$last">
+                        <a ng-click="ctrl.moveItem(boolItem.parameters,$index,$index+1)">
+                          <i class="pointer fa fa-arrow-down"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label" ng-hide="$first">
+                        <a ng-click="ctrl.moveItem(boolItem.parameters,$index,$index-1)">
+                          <i class="pointer fa fa-arrow-up"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label">
+                        {{ctrl.paramToString(param)}}
+                      </label>
+                    </div>
+                  </div>
+                  <!-- param.type == 'object'  -->
+                  <div class="gf-form" ng-switch-when="object">
+                    <div class="gf-form offset-width-7">
+                      <label class="gf-form-label width-8" ng-bind="param.type">
+                      </label>
+                    </div>
+                    <div class="gf-form">
+                      <input type="text" class="gf-form-input width-10" ng-model="param.key" spellcheck='false' placeholder=""
+                       >
+                    </div>
+                    <div class="gf-form">
+                      <label class="gf-form-label width-15">
+                        <a ng-click="param.value.push({k:'',v:''})">
+                          <i class="fa fa-plus"></i>
+                        </a>
+                      </label>
+                    </div>
+                    <div class="gf-form">
+                      <label class="gf-form-label">
+                        <a ng-click="ctrl.removeItem(boolItem.parameters, param)">
+                          <i class="pointer fa fa-trash"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label" ng-hide="$last">
+                        <a ng-click="ctrl.moveItem(boolItem.parameters,$index,$index+1)">
+                          <i class="pointer fa fa-arrow-down"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label" ng-hide="$first">
+                        <a ng-click="ctrl.moveItem(boolItem.parameters,$index,$index-1)">
+                          <i class="pointer fa fa-arrow-up"></i>
+                        </a>
+                      </label>
+                      <label class="gf-form-label">
+                        {{ctrl.paramToString(param)}}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="gf-form" ng-switch-when="object" ng-repeat="item in param.value">
+                    <div class="gf-form offset-width-15">
+                      <input type="text" class="gf-form-input width-10" ng-model="item.k" spellcheck='false' placeholder=""
+                        ng-blur="ctrl.refresh()">
+                    </div>
+                    <div class="gf-form">
+                      <input type="text" class="gf-form-input width-15" ng-model="item.v" spellcheck='false' placeholder=""
+                        ng-blur="ctrl.refresh()">
+                    </div>
+                    <gf-form-switch class="gf-form" label="启用缺省值" label-class="width-7" checked="item.enableDefValue">
+                    </gf-form-switch>
+                    <div class="gf-form">
+                      <input type="text" ng-disabled="!item.enableDefValue" class="gf-form-input width-7" placeholder="缺省值"
+                        ng-model="item.defValue" spellcheck="false" placeholder="">
+                    </div>
+                    <div class="gf-form">
+                      <label class="gf-form-label">
+                        <a ng-click="ctrl.removeItem(param.value, item)">
+                          <i class="pointer fa fa-trash"></i>
+                        </a>
+                      </label>
+                    </div>
+                  </div>
+                  <!-- END param.type == 'object'  -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </query-editor-row>
