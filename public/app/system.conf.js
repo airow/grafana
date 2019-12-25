@@ -76,8 +76,16 @@ System.config({
     'isarray': 'vendor/npm/isarray/index.js',
     'ui-select': 'vendor/ui-select/select.js',
     'ADM-dateTimePicker': 'vendor/ADM-dateTimePicker/ADM-dateTimePicker.js',
-    'datatables': 'vendor/DataTables/js/jquery.dataTables.js',
-    'angular-datatables': 'vendor/angular-datatables/angular-datatables.js',
+    'datatables.net': "vendor/DataTables/DataTables-1.10.20/js/jquery.dataTables.js",
+    'datatables.net.responsive': "vendor/DataTables/Responsive-2.2.3/js/dataTables.responsive.js",
+    'datatables.net.select': "vendor/DataTables/Select-1.3.1/js/dataTables.select.js",
+    'datatables.net.scroller': "vendor/DataTables/Scroller-2.0.1/js/dataTables.scroller.js",
+    'datatables.net.fixedHeader': "vendor/DataTables/FixedHeader-3.1.6/js/dataTables.fixedHeader.js",
+    'datatables.net.fixedColumns': "vendor/DataTables/FixedColumns-3.3.0/js/dataTables.fixedColumns.js",
+    'images/sort_both.png':"vendor/DataTables/DataTables-1.10.20/images/sort_both.png",
+    'images/sort_desc.png': "vendor/DataTables/DataTables-1.10.20/images/sort_desc.png"
+    // 'datatables': 'vendor/DataTables/js/jquery.dataTables.js',
+    // 'angular-datatables': 'vendor/angular-datatables/angular-datatables.js'
   },
 
   packages: {

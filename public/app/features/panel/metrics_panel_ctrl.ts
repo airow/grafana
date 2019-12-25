@@ -38,6 +38,7 @@ class MetricsPanelCtrl extends PanelCtrl {
   panelIntervalHandle: any;
 
   enablePanelRefresh: boolean;
+  triggerRefresh: boolean;
   thiskbn = kbn;
   constructor($scope, $injector) {
     super($scope, $injector);
@@ -126,6 +127,8 @@ class MetricsPanelCtrl extends PanelCtrl {
 
 
   onMetricsPanelRefresh() {
+    if (this.triggerRefresh) { this.triggerRefresh = false; return; }
+    this.triggerRefresh = false;
     if (this.dashboard.meta.hasQuerybarPanel && this.dashboard.meta.fromScript) {
       return;
     }
