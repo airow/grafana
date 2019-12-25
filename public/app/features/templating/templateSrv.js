@@ -322,6 +322,21 @@ define([
         return cache;
       };
 
+      this.getLodashTemplateBindVars = function (cacheSuffix, scopedVars, format, varFilter) {
+        // debugger;
+        cacheSuffix = cacheSuffix || "LodashTemplateBindVars";
+        scopedVars = scopedVars || {};
+        format = format || "lucene";
+        varFilter = varFilter || function (item) {
+          return item.type === 'teldExpression' && "es" === (item.filter || "es");
+        };
+        var expressionScopedVars = this.teldExpression2ScopedVarsFormCache(cacheSuffix, scopedVars, format, varFilter);
+        // _.defaults(expressionScopedVars || {}, this.variables);
+        var returnValue = _.transform(this.variables, function (result, variable) { result[variable.name] = variable.current.value; }, {});
+        returnValue = _.transform(expressionScopedVars, function (result, variable, name) { result[name] = variable.value; }, returnValue);
+        return returnValue;
+      };
+
       this.teldExpression2ScopedVars = function (scopedVars, format, varFilter) {
         varFilter = varFilter || {};
         if (_.isPlainObject(varFilter)) {
