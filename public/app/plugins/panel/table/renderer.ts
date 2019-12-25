@@ -121,7 +121,7 @@ export class TableRenderer {
           </a>
         </span>`;
 
-      if (this['isRenderValues'] ) {
+      if (this['isRenderValues'] || style.type === 'calc') {
         text = text.replace('&nbsp;', '');
         templateString = `${text}`;
       }
@@ -161,7 +161,39 @@ export class TableRenderer {
           }
         }
 
-        let compiled = _.template(templateString);
+        let templateOptions = {
+          imports: {
+            _: _,
+            m: moment,
+            helper: {
+              mapEach: function (prefix, suffix) {
+                return function (item) {
+                  return `${prefix || ""}${item}${suffix || ""}`;
+                };
+              },
+              _StandardModel: function (item) {
+                return "(term:(StandardModel:(value:'" + item + "'),conf:(operatorKey:string_equal)))";
+              }
+            },
+            kbn: kbn,
+            'valueFormats': (function (kbn) {
+              let bindContext = {
+                // kbn,
+                // valueFormats: kbn.valueFormats,
+                // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
+                valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
+                  result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
+                }, {})
+              };
+
+              return function (unitFormatName, size, decimals) {
+                return this.valueFormats[unitFormatName](size, decimals);
+              }.bind(bindContext);
+            })(kbn)
+          }
+        };
+
+        let compiled = _.template(templateString, templateOptions);
         bindData.rowObj = this.rowObj;
         let returnValue = compiled(bindData);
         return returnValue;

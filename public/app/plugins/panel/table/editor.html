@@ -210,6 +210,25 @@
           <div class="gf-form-label gf-form-label--grow">使用${fieldname}的形式引用记录值</div>
         </div>
       </div>
+      <div class="gf-form-inline" ng-if="style.type === 'calc'">
+        <div class="gf-form offset-width-8">
+          <label class="gf-form-label">Text</label>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.text"
+            ng-change="editor.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+      <div class="gf-form-inline" ng-if="style.type === 'calc' || style.type === 'link'">
+        <div class="gf-form offset-width-8">
+          <label class="gf-form-label">_,kbn,valueFormats('none',val,0),m,helper.mapEach(prefix, suffix)</label>
+          <label class="gf-form-label">vars.xxxx</label>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="gf-form-button">
