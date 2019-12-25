@@ -1,0 +1,19 @@
+.teld-datatables-panel div.dataTables_scrollHead{
+  background-color: #ececec;
+}
+
+.teld-datatables-panel .paginate_button.current{
+  background:initial !important;
+  /* border-width: 0px !important; */
+  /* color: #7d83dd !important; */
+}
+
+.teld-datatables-panel .dataTables_filter{
+  margin-bottom: 15px;
+  float:initial;
+  text-align:initial;
+}
+
+.teld-datatables-panel .dataTables_filter input{
+  width: 30%;
+}

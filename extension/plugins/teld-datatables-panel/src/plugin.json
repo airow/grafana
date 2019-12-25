@@ -1,0 +1,33 @@
+{
+    "type": "panel",
+    "name": "Teld Datatables",
+    "id": "teld-datatables-panel",
+
+    "info": {
+        "description": "Teld Datatables panel for grafana",
+        "author": {
+            "name": "Teld",
+            "url": "https://teld.cn"
+        },
+        "keywords": ["Datatables", "panel"],
+        "logos": {
+            "small": "img/nav-dt.png",
+            "large": "img/nav-dt.png"
+        },
+        "links": [
+            { "name": "Project site", "url": "https://github.com/grafana/rich-documents" },
+            { "name": "MIT License", "url": "https://github.com/grafana/rich-documents/blob/master/LICENSE" }
+        ],
+        "screenshots": [
+            { "name": "Showcase", "path": "img/nav-dt.png" },
+            { "name": "Options", "path": "img/nav-dt.png" }
+        ],
+        "version": "0.0.9",
+        "updated": "2017-03-18"
+    },
+
+    "dependencies": {
+        "grafanaVersion": "3.x.x",
+        "plugins": []
+    }
+}

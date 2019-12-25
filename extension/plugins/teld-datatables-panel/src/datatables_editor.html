@@ -1,0 +1,31 @@
+<div class="editor-row">
+  <div class="section">
+    <h5 class="section-heading">Table Options</h5>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label-class="width-6" label="行号" checked="ctrl.panel.rowNumbersEnabled" />
+      <gf-form-switch class="gf-form" label-class="width-6" label="过滤框" checked="ctrl.panel.searchEnabled" />
+      <gf-form-switch class="gf-form" label-class="width-6" label="单元格边框" checked="ctrl.panel.showCellBorders"
+        on-change="ctrl.showCellBordersChanged()" />
+      <gf-form-switch class="gf-form" label-class="width-6" label="行边框" checked="ctrl.panel.showRowBorders" />
+
+
+      <gf-form-switch class="gf-form" label-class="width-6" label="各行变色" checked="ctrl.panel.stripedRowsEnabled" />
+
+      <gf-form-switch class="gf-form" label-class="width-6" label="排序" checked="ctrl.panel.orderColumnEnabled" />
+      <gf-form-switch class="gf-form" label-class="width-6" label="鼠标滑过" checked="ctrl.panel.hoverEnabled" />
+
+      <gf-form-switch class="gf-form" label-class="width-6" label="弹出详情" checked="ctrl.panel.responsiveModal"  />
+    </div>
+    <div class="gf-form-inline">
+      <div class="gf-form">
+        <label class="gf-form-label">冻结列</label>
+        <input type="number" class="gf-form-input" ng-model="ctrl.panel.fixedColumns.leftColumns">
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label">分页数</label>
+        <input type="number" class="gf-form-input" ng-model="ctrl.panel.pageLength">
+      </div>
+      <gf-form-switch class="gf-form" label-class="width-8" label="刷新销毁模式" tooltip="适配导航刷新动态字段造成的重新绑定报错，采用销毁后重新初始化的方式" checked="ctrl.panel.destroyModel" />
+    </div>
+  </div>
+</div>
