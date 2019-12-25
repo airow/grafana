@@ -91,7 +91,14 @@
         <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
           placeholder="请输入表达式1；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression1"
           ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label width-4">href1</label>
+          <input style="width: 600px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入链接地址1"
+            ng-model="ctrl.panel.href1" ng-change="ctrl.render()" ng-model-onblur />
       </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-9">说明</label>
+        <label class="gf-form-label">请输入表达式1；${(BindData['Count0'].Max/100000).toFixed(2)}</label>
+        <label class="gf-form-label">获取dashboard中的变量通过vars支持表达式变量 如${vars.变量名}</label>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=2">
       <label class="gf-form-label width-9">title2</label>
@@ -132,6 +139,9 @@
         <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
           placeholder="请输入表达式2；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression2"
           ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label width-4">href1</label>
+          <input style="width: 600px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入链接地址2"
+            ng-model="ctrl.panel.href2" ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=3">
@@ -173,6 +183,9 @@
         <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
           placeholder="请输入表达式3；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression3"
           ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label width-4">href3</label>
+          <input style="width: 600px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入链接地址3"
+            ng-model="ctrl.panel.href3" ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=4">
@@ -214,6 +227,9 @@
         <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
           placeholder="请输入表达式4；${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression4"
           ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label width-4">href4</label>
+          <input style="width: 600px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入链接地址4"
+            ng-model="ctrl.panel.href4" ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form" ng-if="ctrl.panel.IsShow>=5">
@@ -255,6 +271,54 @@
         <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
           placeholder="请输入表达式5；例：${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression5"
           ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label width-4">href5</label>
+          <input style="width: 600px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入链接地址5"
+            ng-model="ctrl.panel.href5" ng-change="ctrl.render()" ng-model-onblur />
+      </div>
+    </div>
+
+    <div class="gf-form" ng-if="ctrl.panel.IsShow>=6">
+      <label class="gf-form-label width-9">title6</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入标题title6"
+        ng-model="ctrl.panel.title6" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9" ng-if="!ctrl.panel.IsDataSource">value6</label>
+      <input type="text" class="input-small gf-form-input max-width-9" ng-if="!ctrl.panel.IsDataSource"
+        placeholder="请输入值6" ng-model="ctrl.panel.sum6" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">percent6</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入单位6"
+        ng-model="ctrl.panel.percent6" ng-change="ctrl.render()" ng-model-onblur />
+      <gf-form-switch class="gf-form" label="千位符" label-class="width-8" checked="ctrl.panel.thousandSeparator6"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="万" label-class="width-8" checked="ctrl.panel.isthousand6"
+        on-change="ctrl.render()"></gf-form-switch>
+      <gf-form-switch class="gf-form" label="四舍五入" label-class="width-8" checked="ctrl.panel.Isround6"
+        on-change="ctrl.render()"></gf-form-switch>
+      <label class="gf-form-label width-9">decimals</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入小数点位数"
+        ng-model="ctrl.panel.decimals6" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">SumFontColor6</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.sumFontColor6" ng-change="ctrl.render()" ng-model-onblur />
+      <label class="gf-form-label width-9">titleFontColor6</label>
+      <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入数字字体颜色"
+        ng-model="ctrl.panel.titleFontColor6" ng-change="ctrl.render()" ng-model-onblur />
+      <!-- <label class="gf-form-label width-9">expression5</label>
+      <input type="text" class="input-small gf-form-input max-width-31" placeholder="请输入表达式5" ng-model="ctrl.panel.expression5"
+        ng-change="ctrl.render()" ng-model-onblur /> -->
+      <!-- <gf-form-switch class="gf-form" label="isvariable5" label-class="width-8" checked="ctrl.panel.isvariable5" on-change="ctrl.render()"></gf-form-switch>
+      <label ng-if="ctrl.panel.isvariable5" class="gf-form-label width-9">variableTitle5</label>
+      <input ng-if="ctrl.panel.isvariable5" type="text" class="input-small gf-form-input max-width-9" placeholder="请输入变量名称5" ng-model="ctrl.panel.variableTitle5"
+        ng-change="ctrl.render()" ng-model-onblur /> -->
+    </div>
+    <div class="gf-form-inline" ng-if="ctrl.panel.IsShow>=6">
+      <div class="gf-form">
+        <label class="gf-form-label width-9">expression6</label>
+        <input style="width: 1000px;" type="text" class="input-small gf-form-input max-width-31"
+          placeholder="请输入表达式6；例：${(BindData['Count0'].Max/100000).toFixed(2)}" ng-model="ctrl.panel.expression6"
+          ng-change="ctrl.render()" ng-model-onblur />
+          <label class="gf-form-label width-4">href6</label>
+          <input style="width: 600px;" type="text" class="input-small gf-form-input max-width-31" placeholder="请输入链接地址6"
+            ng-model="ctrl.panel.href6" ng-change="ctrl.render()" ng-model-onblur />
       </div>
     </div>
     <div class="gf-form-inline">
@@ -298,7 +362,7 @@
       <div class="gf-form">
         <label class="gf-form-label width-10">expression helper</label>
         <label class="max-width-31">helper.m, helper._, helper.kbn, helper.valueFormats。
-          helper.valueFormats('千分位',4967999.22,2)</label>
+          helper.valueFormats('千分位',4967999.22,2), 获取dashboard中的变量通过vars支持表达式变量</label>
       </div>
     </div>
     <div class="gf-form-inline" ng-show="ctrl.panel.teldtemplate!='default'">

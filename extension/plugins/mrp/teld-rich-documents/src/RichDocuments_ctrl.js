@@ -49,46 +49,61 @@ const panelDefaults = {
   title3: "title3",
   title4: "title4",
   title5: "title5",
+  title6: "title6",
   percent1: "单位1",
   percent2: "单位2",
   percent3: "单位3",
   percent4: "单位4",
   percent5: "单位5",
+  percent6: "单位6",
   expression1: "",//表达式
   expression2: "",
   expression3: "",
   expression4: "",
   expression5: "",
+  expression6: "",
+  href1:"",//超链接
+  href2:"",
+  href3:"",
+  href4:"",
+  href5:"",
+  href6:"",
   sumFontColor1: "#333333",//字体颜色
   sumFontColor2: "#666",
   sumFontColor3: "#666",
   sumFontColor4: "#666",
   sumFontColor5: "#666",
+  sumFontColor6: "#666",
   titleFontColor1: "#999999",
   titleFontColor2: "#999999",
   titleFontColor3: "#999999",
   titleFontColor4: "#999999",
   titleFontColor5: "#999999",
+  titleFontColor6: "#999999",
   isthousand1: false,
   isthousand2: false,
   isthousand3: false,
   isthousand4: false,
   isthousand5: false,
+  isthousand6: false,
   Isround1: false,
   Isround2: false,
   Isround3: false,
   Isround4: false,
   Isround5: false,
+  Isround6: false,
   decimals1: 2,
   decimals2: 2,
   decimals3: 2,
   decimals4: 2,
   decimals5: 2,
+  decimals6: 2,
   thousandSeparator1: false,
   thousandSeparator2: false,
   thousandSeparator3: false,
   thousandSeparator4: false,
   thousandSeparator5: false,
+  thousandSeparator6: false,
   // isvariable1: false,//是否变量
   // isvariable2: false,
   // isvariable3: false,
@@ -222,6 +237,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
       this.events.on('data-received', this.onDataReceived.bind(this));
       this.events.on('data-error', this.onDataError.bind(this));
       this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
+      this.events.on('hrefClick',this.hrefClick.bind(this));
     }
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-initialized', this.render.bind(this));
@@ -251,6 +267,11 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
         scope.ctrl._panel.sum5_v = "0";
       }
     });
+    var watch6 = $scope.$watch('ctrl._panel.sum6', function (newValue, oldValue, scope) {
+      if (scope.ctrl._panel.sum6_v != "0") {
+        scope.ctrl._panel.sum6_v = "0";
+      }
+    });
     this.filterDataList = {};
     this.filterData = [];
     this.dataTaget = "";
@@ -261,6 +282,32 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
   }
   onDataError(err) {
     this.onDataReceived([]);
+  }
+  hrefClick(type){
+    var _url="";
+    switch(type){
+          case 1:
+          _url=this._panel.href1;
+          break;
+          case 2:
+          _url=this._panel.href2;
+          break;
+          case 3:
+          _url=this._panel.href3;
+          break;
+          case 4:
+          _url=this._panel.href4;
+          break;
+          case 5:
+          _url=this._panel.href5;
+          break;
+          case 6:
+          _url=this._panel.href6;
+          break;
+    }
+    if(_url !=""){
+      window.open(_url);
+    }
   }
   onRender() {
     console.log('onRender');
@@ -287,7 +334,27 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
     return variable;
   }
 
+  getLodashTemplateBindVars(cacheSuffix, scopedVars, format, varFilter) {
+    debugger;
+    if (this.templateSrv.getLodashTemplateBindVars) {
+      return this.templateSrv.getLodashTemplateBindVars(cacheSuffix, scopedVars, format, varFilter);
+    }
+    cacheSuffix = cacheSuffix || "LodashTemplateBindVars";
+    scopedVars = scopedVars || {};
+    format = format || "lucene";
+    varFilter = varFilter || function (item) {
+      return item.type === 'teldExpression' && "es" === (item.filter || "es");
+    };
+    var expressionScopedVars = this.templateSrv.teldExpression2ScopedVarsFormCache(cacheSuffix, scopedVars, format, varFilter);
+    // _.defaults(expressionScopedVars || {}, this.variables);
+    var returnValue = _.transform(this.templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
+    returnValue = _.transform(expressionScopedVars, (result, variable, name) => { result[name] = variable.value; }, returnValue);
+    return returnValue;
+  }
+
   onDataReceived(dataList) {
+    this.filterData=[];
+    var bindVars = this.getLodashTemplateBindVars();
     if (this.panel.teldtemplate == "default") {
       const data = {};
       let sumint = 1;
@@ -296,6 +363,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
       this._panel.sum3_v = "";
       this._panel.sum4_v = "";
       this._panel.sum5_v = "";
+      this._panel.sum6_v = "";
       this.dataTaget = "";
       this.rowObj = [];
       if (dataList.length > 0 && dataList[0].type === 'table') {
@@ -313,6 +381,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           }
         }
         this.filterDataList = {
+          "vars": bindVars,
           "BindData": this.rowObj
         }
 
@@ -335,6 +404,10 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
         if (this._panel.sum5_v == "") {
           this._panel.sum5 = 0;
           this._panel.sum5_v = '0';
+        }
+        if (this._panel.sum6_v == "") {
+          this._panel.sum6 = 0;
+          this._panel.sum6_v = '0';
         }
       } else {
         this.dataType = 'timeseries';
@@ -371,6 +444,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           };
         }
         this.filterDataList = {
+          "vars": bindVars,
           "BindData": this.filterData
         }
         if (this._panel.sum1_v == "") {
@@ -393,6 +467,10 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           this._panel.sum5 = 0;
           this._panel.sum5_v = '0';
         }
+        if (this._panel.sum6_v == "") {
+          this._panel.sum6 = 0;
+          this._panel.sum6_v = '0';
+        }
       }
       if (this._panel.expression1) {
         this._panel.sum1 = _.template(this._panel.expression1)(this.filterDataList);
@@ -408,6 +486,9 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
       }
       if (this._panel.expression5) {
         this._panel.sum5 = _.template(this._panel.expression5)(this.filterDataList);
+      }
+      if (this._panel.expression6) {
+        this._panel.sum6 = _.template(this._panel.expression6)(this.filterDataList);
       }
       if (this._panel.isthousand1) {
         if (this._panel.percent1.indexOf("万") > -1) {
@@ -454,6 +535,15 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           this._panel.percent5 = "万" + this._panel.percent5;
         }
       }
+      if (this._panel.isthousand6) {
+        if (this._panel.percent6.indexOf("万") > -1) {
+          this._panel.percent6 = this._panel.percent6.replace("万", "")
+        }
+        if (this._panel.sum6 >= 10000) {
+          this._panel.sum6 = this._panel.sum6 / 10000;
+          this._panel.percent6 = "万" + this._panel.percent6;
+        }
+      }
       if (this._panel.Isround1) {
         this._panel.sum1 = (Math.round((+this._panel.sum1) * 100) / 100).toFixed(this._panel.decimals1);
       } else {
@@ -489,6 +579,26 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           this._panel.sum5 = (+this._panel.sum5).toFixed(this._panel.decimals5);
         }
       }
+      if (this._panel.Isround6) {
+        this._panel.sum6 = (Math.round((+this._panel.sum6) * 100) / 100).toFixed(this._panel.decimals6);
+      } else {
+        if (this._panel.decimals6 !== "string") {
+          this._panel.sum6 = (+this._panel.sum6).toFixed(this._panel.decimals6);
+        }
+      }
+      var filterFun = function (item) {
+        return item.type === 'teldExpression' && "es" === (item.filter || "es");
+      };
+      debugger;
+       //标题中替换变量的值
+       var templateSrv_value = this.templateSrv.teldExpression2ScopedVarsFormCache('ABCD', {}, 'lucene', filterFun);
+      //超链接中的变量替换成参数值
+      this._panel.href1=this.templateSrv.replace(this.toTrim(this.panel.href1),templateSrv_value);
+      this._panel.href2=this.templateSrv.replace(this.toTrim(this.panel.href2),templateSrv_value);
+      this._panel.href3=this.templateSrv.replace(this.toTrim(this.panel.href3),templateSrv_value);
+      this._panel.href4=this.templateSrv.replace(this.toTrim(this.panel.href4),templateSrv_value);
+      this._panel.href5=this.templateSrv.replace(this.toTrim(this.panel.href5),templateSrv_value);
+      this._panel.href6=this.templateSrv.replace(this.toTrim(this.panel.href6),templateSrv_value);
       if (this._panel.sum1 == "NaN") {
         this._panel.sum1 = 0;
       }
@@ -503,6 +613,9 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
       }
       if (this._panel.sum5 == "NaN") {
         this._panel.sum5 = 0;
+      }
+      if (this._panel.sum6 == "NaN") {
+        this._panel.sum6 = 0;
       }
       if (this._panel.thousandSeparator1) {
         this._panel.sum1 = this.toThousands(this._panel.sum1);
@@ -519,6 +632,9 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
       if (this._panel.thousandSeparator5) {
         this._panel.sum5 = this.toThousands(this._panel.sum5);
       }
+      if (this._panel.thousandSeparator6) {
+        this._panel.sum6 = this.toThousands(this._panel.sum6);
+      }
     } else if (this._panel.teldtemplate == "teldboard") {
       if (dataList.length > 0 && dataList[0].type === 'table') {
         this.dataType = 'table';
@@ -534,6 +650,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           }
         }
         this.filterDataList = {
+          "vars": bindVars,
           "BindData": this.rowObj
         }
       } else {
@@ -564,6 +681,7 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
           };
         }
         this.filterDataList = {
+          "vars": bindVars,
           "BindData": this.filterData
         }
       }
@@ -574,7 +692,9 @@ export class RichDocumentsCtrl extends MetricsPanelCtrl {
     }
     this.render();
   }
-
+  toTrim(text){
+    return text.replace(/(^\s*)|(\s*$)/g, "");
+  }
   toThousands(num, separator) {
     var parts;
     num = num + "";

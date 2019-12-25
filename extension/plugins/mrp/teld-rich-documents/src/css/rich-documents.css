@@ -15,7 +15,10 @@
     height: 16px;
     display: inline-block;
 }
-
+.rich_doc_Href{
+    cursor: pointer;
+    text-decoration:underline;
+}
 .Wait_Parent {
     position: relative;
 }
@@ -221,11 +224,6 @@
     font-size: 12px;
     background-color: #FFF;
     padding-right: 5px;
-}
-
-.turnover_Content_right_title_percent>span {
-    margin-right: -3px;
-    margin-left: -3px;
 }
 
 .turnover_Content_left_percent>span {

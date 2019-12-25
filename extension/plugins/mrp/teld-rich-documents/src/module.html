@@ -6,7 +6,7 @@
   <div class="turnover_Content_main">
     <div class="turnover_Content_left" ng-class="{ turnover_Content_left0: ctrl._panel.IsShow=='1' }">
       <div class="turnover_Content_left_sum">
-        <span ng-class="{ manageWait: ctrl._panel.sum1_v=='' }" ng-bind="ctrl._panel.sum1" ng-style="{'color':ctrl._panel.sumFontColor1}">
+        <span  ng-click="ctrl.hrefClick(1)" ng-class="{ manageWait: ctrl._panel.sum1_v=='',rich_doc_Href:ctrl._panel.href1 !='' }" ng-bind="ctrl._panel.sum1" ng-style="{'color':ctrl._panel.sumFontColor1}">
 
         </span>
       </div>
@@ -16,8 +16,12 @@
         （<span ng-bind="ctrl._panel.percent1"></span>）
        </span>
       </div>
-      <div class="turnover_Content_left_percent" style="display: none;">
-
+      <div class="turnover_Content_left_percent" ng-if="ctrl._panel.IsShow>='6'">
+        <div class="turnover_Content_left_title" ng-style="{'color':ctrl._panel.titleFontColor6}">
+          <span ng-bind="ctrl._panel.title6"></span>
+          <span  ng-click="ctrl.hrefClick(6)" ng-class="{ manageWait: ctrl._panel.sum6_v=='',rich_doc_Href:ctrl._panel.href6 !='' }" ng-bind="ctrl._panel.sum6" ng-style="{'color':ctrl._panel.sumFontColor6}"></span>
+          <span ng-bind="ctrl._panel.percent6"></span>
+        </div>
       </div>
     </div>
     <div class="turnover_Content_right" ng-if="ctrl._panel.IsShow>='2'">
@@ -27,7 +31,7 @@
         </div>
         <div class="turnover_Content_right_content" ng-if="ctrl._panel.IsShow>='2'">
           <div class="turnover_Content_right_sum">
-            <span ng-class="{ manageWait: ctrl._panel.sum2_v=='' }" ng-bind="ctrl._panel.sum2"  ng-style="{'color':ctrl._panel.sumFontColor2}">
+            <span ng-click="ctrl.hrefClick(2)" ng-class="{ manageWait: ctrl._panel.sum2_v=='',rich_doc_Href:ctrl._panel.href2 !='' }" ng-bind="ctrl._panel.sum2"  ng-style="{'color':ctrl._panel.sumFontColor2}">
 
             </span>
           </div>
@@ -41,7 +45,7 @@
         </div>
         <div class="turnover_Content_right_content" ng-if="ctrl._panel.IsShow>='4'">
           <div class="turnover_Content_right_sum">
-            <span ng-class="{ manageWait: ctrl._panel.sum4_v=='' }" ng-bind="ctrl._panel.sum4"  ng-style="{'color':ctrl._panel.sumFontColor4}">
+            <span ng-click="ctrl.hrefClick(4)" ng-class="{ manageWait: ctrl._panel.sum4_v=='',rich_doc_Href:ctrl._panel.href4 !='' }" ng-bind="ctrl._panel.sum4"  ng-style="{'color':ctrl._panel.sumFontColor4}">
 
             </span>
           </div>
@@ -59,7 +63,7 @@
         </div>
         <div class="turnover_Content_right_content" ng-if="ctrl._panel.IsShow>='3'">
           <div class="turnover_Content_right_sum">
-            <span ng-class="{ manageWait: ctrl._panel.sum3_v=='' }" ng-bind="ctrl._panel.sum3"  ng-style="{'color':ctrl._panel.sumFontColor3}">
+            <span ng-click="ctrl.hrefClick(3)" ng-class="{ manageWait: ctrl._panel.sum3_v=='',rich_doc_Href:ctrl._panel.href3 !='' }" ng-bind="ctrl._panel.sum3"  ng-style="{'color':ctrl._panel.sumFontColor3}">
 
             </span>
           </div>
@@ -73,9 +77,9 @@
         </div>
         <div class="turnover_Content_right_content" ng-if="ctrl._panel.IsShow=='4'">
         </div>
-        <div class="turnover_Content_right_content" ng-if="ctrl._panel.IsShow=='5'">
+        <div class="turnover_Content_right_content" ng-if="ctrl._panel.IsShow>='5'">
           <div class="turnover_Content_right_sum">
-            <span ng-class="{ manageWait: ctrl._panel.sum5_v=='' }" ng-bind="ctrl._panel.sum5"  ng-style="{'color':ctrl._panel.sumFontColor5}">
+            <span ng-click="ctrl.hrefClick(5)" ng-class="{ manageWait: ctrl._panel.sum5_v=='',rich_doc_Href:ctrl._panel.href5 !='' }" ng-bind="ctrl._panel.sum5"  ng-style="{'color':ctrl._panel.sumFontColor5}">
 
             </span>
           </div>
