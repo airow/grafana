@@ -1,7 +1,7 @@
 <div class="row" style="position: relative;">
-  <div class="OrerationTitleHeightKH">
+  <div class="OrerationTitleHeightKH" style='float: left;display: inherit;'>
     <span>&nbsp;&nbsp;</span>
-    <span ng-repeat="QueryOptions in ctrl._panle.QueryList" ng-if='!QueryOptions.toTop'>
+    <span ng-class="{'OrerationTitleHeightKH':!QueryOptions.alwaysShow}" ng-repeat="QueryOptions in ctrl._panle.QueryList" ng-if='!QueryOptions.toTop'>
       <span
         ng-if="QueryOptions.Querytype!='date' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow"
         style="color:black" ng-class="{teldfilterbuiltinpanelIsLocalStorage:QueryOptions.IsLocalStorage}">
@@ -33,17 +33,17 @@
       </span>
     </span>
   </div>
-  <div ng-hide="ctrl.panel.hideFilterButton" ng-click="ctrl.divOperationFilter()" class="btnFilterKH" style="margin-right: 11px;">筛选
+  <div ng-hide="ctrl.panel.hideFilterButton" ng-click="ctrl.divOperationFilter()" class="btnFilterKH" style="float: right;margin-top: 0px;margin-right: 11px;">筛选
     <span ng-if="ctrl.btnFilterKHRed" class="btnFilterKHRed"></span>
   </div>
-  <div class="cycle-filter" ng-if='ctrl.getTimeButton().length>0'>
+  <div class="cycle-filter" style="margin-top: 0px;" ng-if='ctrl.getTimeButton().length>0'>
     <div ng-class='{"currentCycle-filter":ctrl.currentCycle===cycle}'
       style="height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;"
       ng-click="ctrl.eh_emitCycle(cycle)" class="btnFilterKH" ng-repeat="cycle in ctrl.enableCycleConf;">
       {{cycle.name}}
     </div>
   </div>
-  <div ng-if='!ctrl.KwHuTuCaoDropDown' class="cycle-filter" ng-repeat="QueryOptions in ctrl.toTopButton();">
+  <div ng-if='!ctrl.KwHuTuCaoDropDown' class="cycle-filter" style="margin-top: 0px;" ng-repeat="QueryOptions in ctrl.toTopButton();">
     <div  ng-repeat="QueryOption in QueryOptions.QueryOptions.slice().reverse();"
       style="height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;"
       ng-click="ctrl.selectVariable(QueryOptions,QueryOption.OptionName,QueryOption.ClickValue);ctrl.eh_emitToTopButton();" class="btnFilterKH"

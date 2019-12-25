@@ -95,6 +95,10 @@
         <label class="gf-form-label width-9">QueryTitle{{$index+1}}</label>
         <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入名称"
           ng-model="QueryOptions.QueryTitle" ng-change="ctrl.render()" ng-model-onblur />
+        <gf-form-switch ng-if="QueryOptions.Querytype=='date'" class="gf-form" label="始终显示" label-class="width-8"  checked="QueryOptions.alwaysShow"
+          ></gf-form-switch>
+        <gf-form-switch ng-if="QueryOptions.Querytype!='date'" class="gf-form" label="解析表达式" label-class="width-8"
+          checked="QueryOptions.expression" tooltip="启用url参数初始化, ${qs && qs.cw ? decodeURIComponent(qs.cw) : '同比'}, url中的中文需要解码"></gf-form-switch>
         <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9"
           placeholder="请输入默认选项名称" ng-model="QueryOptions.QueryClickName" ng-change="ctrl.render()" ng-model-onblur />
         <input type="text" ng-if="QueryOptions.Querytype!='date'" class="input-small gf-form-input max-width-9"

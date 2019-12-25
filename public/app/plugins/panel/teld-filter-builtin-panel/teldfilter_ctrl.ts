@@ -117,6 +117,12 @@ export class TeldfilterCtrl extends PanelCtrl {
             );
           }
         }
+      } else if (this._panle.QueryList[i].expression) {
+        // debugger;
+        this._panle.QueryList[i].QueryClickName = _.template(this._panle.QueryList[i].QueryClickName,
+          { 'imports': { m: this.datemoment } })();
+        this._panle.QueryList[i].QueryClickVal = _.template(this._panle.QueryList[i].QueryClickVal,
+          { 'imports': { m: this.datemoment } })();
       }
     }
     //m.moment is not a function
