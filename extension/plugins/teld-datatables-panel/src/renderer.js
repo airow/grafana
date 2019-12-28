@@ -515,9 +515,9 @@ export class DatatableRenderer {
 
     const tableHolderId = '#datatable-panel-table-' + this.panel.id;
 
-    if (this.panel.emptyData) {
-      return;
-    }
+    // if (this.panel.emptyData) {
+    //   return;
+    // }
     const columns = [];
     const columnDefs = [];
     const _this = this;
@@ -687,12 +687,12 @@ export class DatatableRenderer {
     // sanity check
     // annotations come back as 4 items in an array per row. If the first row content is undefined, then modify to empty
     // since datatables.net throws errors
-    if (this.table.rows[0].length === 4) {
-      if (this.table.rows[0][0] === undefined) {
-        // detected empty annotations
-        this.table.rows = [];
-      }
-    }
+    // if (this.table.rows[0].length === 4) {
+    //   if (this.table.rows[0][0] === undefined) {
+    //     // detected empty annotations
+    //     this.table.rows = [];
+    //   }
+    // }
 
 
     if (this.panel.rowNumbersEnabled) {
