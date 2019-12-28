@@ -14,7 +14,7 @@ module.exports = function(config) {
 
         '<%= genDir %>/vendor/DataTables/dataTables.css',
 
-        '<%= genDir %>/css/grafana.light.css',
+        '<%= genDir %>/css/grafana.dark.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
       ],
       dest: '<%= genDir %>/css/grafana.dark.min.css'
