@@ -5,13 +5,14 @@ define([
   'app/core/utils/datemath',
   'moment',
   'app/core/utils/kbn',
+  'app/core/utils/graftrace',
   'app/core/config',
   './query_builder',
   './index_pattern',
   './elastic_response',
   './query_ctrl',
 ],
-  function (angular, _, rangeUtil, dateMath, moment, kbn, config, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
+  function (angular, _, rangeUtil, dateMath, moment, kbn, graftrace, config,  ElasticQueryBuilder, IndexPattern, ElasticResponse) {
     'use strict';
 
     /** @ngInject */
@@ -30,7 +31,7 @@ define([
         esVersion: this.esVersion,
       });
 
-      this._request = function (method, url, data) {
+      this._request = function (method, url, data, _graftrace_) {
         var options = {
           url: this.url + "/" + url,
           method: method,
@@ -46,6 +47,17 @@ define([
           };
         }
 
+        if (_graftrace_) {
+          graftrace.setGraftraceHeaders(this, options, data, _graftrace_);
+          // // debugger;
+          // var headers = options.headers || (options.headers = {}, options.headers);
+          // _graftrace_.DSType = "ElasticDatasource";
+          // _graftrace_.DSName = this.name;
+          // _graftrace_.Context = data;
+          // headers["_graftrace_"] = btoa(encodeURIComponent(JSON.stringify(_graftrace_)));
+          // console.log(_graftrace_);
+          // console.log(headers["_graftrace_"]);
+        }
         return backendSrv.datasourceRequest(options);
       };
 
@@ -65,8 +77,8 @@ define([
         }
       };
 
-      this._post = function (url, data) {
-        return this._request('POST', url, data).then(function (results) {
+      this._post = function (url, data, _graftrace_) {
+        return this._request('POST', url, data, _graftrace_).then(function (results) {
           results.data.$$config = results.config;
           return results.data;
         });
@@ -341,7 +353,8 @@ define([
         //   }
         // }
 
-        return this._post('_msearch', payload).then(function (res) {
+        // payload._graftrace_ = options._graftrace_;
+        return this._post('_msearch', payload, options._graftrace_).then(function (res) {
           return new ElasticResponse(sentTargets, res).getTimeSeries();
         });
       };
