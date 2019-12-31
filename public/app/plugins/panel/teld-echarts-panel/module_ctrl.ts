@@ -935,14 +935,29 @@ export class ModuleCtrl extends MetricsPanelCtrl {
 
       //var time = _.union(_.transform(flatten_DP, (r, v, k) => { r.push(v[1]); }, []));
 
-      _.each(datapoints, (dp, index) => {
-        var itemTime = _.map(dp, '1');
-        var diffTime = _.difference(time, itemTime);
-        if (_.size(diffTime) > 0) {
-          var newDP = _.map(diffTime, dt => { var rv = [0, dt]; rv['alignment'] = true; return rv; });
-          dataList[index].datapoints = _.sortBy(_.concat(dp, newDP), '1');
-        }
-      });
+      if (this.panel.serieType !== 'scatter') {
+        _.each(datapoints, (dp, index) => {
+          var itemTime = _.map(dp, '1');
+          var diffTime = _.difference(time, itemTime);
+          if (_.size(diffTime) > 0) {
+            var newDP = _.map(diffTime, dt => { var rv = [0, dt]; rv['alignment'] = true; return rv; });
+            dataList[index].datapoints = _.sortBy(_.concat(dp, newDP), '1');
+          }
+        });
+      } else {
+        var tempdl = _.transform(dataList, (r, dlItem) => {
+          _.each(dlItem.datapoints, dpItem => {
+            dpItem.target = dlItem.target;
+            r.push(dpItem);
+          });
+        }, []);
+        tempdl = _.sortBy(tempdl, '1');
+        _.each(dataList, dlItem => {
+          dlItem.datapoints = _.map(tempdl, item => {
+            return item.target === dlItem.target ? item : [null, item[1]];
+          });
+        });
+      }
     }
   }
 

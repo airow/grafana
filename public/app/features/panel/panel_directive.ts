@@ -156,6 +156,14 @@ module.directive('grafanaPanel', function ($rootScope, $document) {
             // if (docHeight > fillHeight) {
             //   fillHeight -= (docHeight - fillHeight);
             // }
+
+            var querybarHeight = $(".teld-querybar-panel").height() || 0;
+            var dashRowHeaderHeight = panelContainer.closest(".panels-wrapper").siblings(".dash-row-header").height() || 0;
+            var teldFilterHeight = $("panel-plugin-teld-filter-panel .panel-container").height() || 0;
+            var dashnavHeight = $('dashnav').height() || 0;
+            var offset = (querybarHeight + dashRowHeaderHeight + teldFilterHeight + dashnavHeight + 70);
+
+            fillHeight -= offset;
           }
 
           panelContainer.css({ minHeight: fillHeight });
