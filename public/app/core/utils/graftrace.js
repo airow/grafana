@@ -36,8 +36,8 @@ function(_) {
           _graftrace_.Context = context;
         }
         headers["_graftrace_"] = btoa(encodeURIComponent(JSON.stringify(_graftrace_)));
-        console.log(_graftrace_);
-        console.log(headers["_graftrace_"]);
+        // console.log(_graftrace_);
+        // console.log(headers["_graftrace_"]);
       }
     }
   };
