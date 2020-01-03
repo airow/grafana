@@ -493,6 +493,7 @@ function setColumnAlias(panel, model) {
       var regex = kbn.stringToJsRegex(style.pattern);
       if (column.text.match(regex)) {
         if (style.alias) {
+          column.ismatch = true;
           column.alias = style.alias;
           column.aliasExpression = style.alias;
         }
@@ -505,7 +506,11 @@ function setColumnAlias(panel, model) {
       var regex = kbn.stringToJsRegex(style.pattern);
       if (column.text.match(regex)) {
         if (_.isEmpty(style.width) === false) {
+          column.ismatch = true;
           column.width = style.width;
+        }
+        if (column.ismatch != true && style.pattern === "/.*/" && style.type === 'hidden') {
+          column.hidden = true;
         }
       }
     });
