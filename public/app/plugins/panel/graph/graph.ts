@@ -98,6 +98,14 @@ coreModule.directive('grafanaGraph', function ($rootScope, timeSrv, contextSrv, 
       function setElementHeight() {
         try {
           var height = ctrl.height - getLegendHeight(ctrl.height);
+          var offset = 0;
+          if (ctrl.fullscreen && ctrl.panel.allowViewModeFilter) {
+            var panelContainer = elem.closest(".panel-container");
+            var querybarHeight = $(".teld-querybar-panel").height() || 0;
+            var teldFilterHeight = $("panel-plugin-teld-filter-panel .panel-container").height() || 0;
+            offset = (querybarHeight + teldFilterHeight);
+          }
+          height -= offset;
           elem.css('height', height + 'px');
 
           return true;
