@@ -115,6 +115,7 @@ export class TeldDatasourceVariable implements Variable {
       'calculateInterval', 'issueQueries'
     ];
     var instanceMetricsPanelCtrl = _.pick(MetricsPanelCtrl.prototype, pickMethods);
+    instanceMetricsPanelCtrl.dsVarable = { name: this['name'] };
     _.assign(instanceMetricsPanelCtrl, _.pick(this, ['panel', 'timeSrv', 'templateSrv', 'dashboard']));
     //instanceMetricsPanelCtrl.updateTimeRange.bind(this)();
     instanceMetricsPanelCtrl.updateTimeRange();

@@ -3,12 +3,13 @@ define([
   'lodash',
   'moment',
   'app/core/utils/kbn',
+  'app/core/utils/graftrace',
   './query_builder',
   './index_pattern',
   './elastic_response',
   './query_ctrl',
 ],
-function (angular, _, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
+  function (angular, _, moment, kbn, graftrace, ElasticQueryBuilder, IndexPattern, ElasticResponse) {
   'use strict';
 
   /** @ngInject */
@@ -27,7 +28,7 @@ function (angular, _, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticRes
       esVersion: this.esVersion,
     });
 
-    this._request = function(method, url, data) {
+    this._request = function (method, url, data, _graftrace_) {
       var options = {
         url: this.url + "/" + url,
         method: method,
@@ -41,6 +42,10 @@ function (angular, _, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticRes
         options.headers = {
           "Authorization": this.basicAuth
         };
+      }
+
+      if (_graftrace_) {
+        graftrace.setGraftraceHeaders(this, options, data, _graftrace_);
       }
 
       return backendSrv.datasourceRequest(options);
@@ -62,8 +67,8 @@ function (angular, _, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticRes
       }
     };
 
-    this._post = function(url, data) {
-      return this._request('POST', url, data).then(function(results) {
+    this._post = function (url, data, _graftrace_) {
+      return this._request('POST', url, data, _graftrace_).then(function(results) {
         results.data.$$config = results.config;
         return results.data;
       });
@@ -218,7 +223,7 @@ function (angular, _, moment, kbn, ElasticQueryBuilder, IndexPattern, ElasticRes
       payload = payload.replace(/\$timeTo/g, options.range.to.valueOf());
       payload = templateSrv.replace(payload, options.scopedVars);
 
-      return this._post('_msearch', payload).then(function(res) {
+      return this._post('_msearch', payload, options._graftrace_).then(function(res) {
         return new ElasticResponse(sentTargets, res).getTimeSeries();
       });
     };

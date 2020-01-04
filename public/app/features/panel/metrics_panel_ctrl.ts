@@ -6,6 +6,7 @@ import _ from 'lodash';
 import angular from 'angular';
 import moment from 'moment';
 import kbn from 'app/core/utils/kbn';
+import graftrace from 'app/core/utils/graftrace';
 import { PanelCtrl } from './panel_ctrl';
 
 import * as rangeUtil from 'app/core/utils/rangeutil';
@@ -312,7 +313,10 @@ class MetricsPanelCtrl extends PanelCtrl {
       "dash_dateTo": { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
     });
 
+    var _graftrace_ = graftrace.gen(this);
+
     var metricsQuery = {
+      _graftrace_: _graftrace_,
       panelId: this.panel.id,
       //range: this.range,
       range: { raw: this.range.raw, from: this.range.from.clone(), to: this.range.to.clone() },
@@ -330,7 +334,7 @@ class MetricsPanelCtrl extends PanelCtrl {
       metricsQuery.range.from.startOf(this.panel.fromStartOf);
     }
 
-
+    // debugger;
     return datasource.query(metricsQuery);
   }
 
