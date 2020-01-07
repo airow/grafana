@@ -35,9 +35,13 @@ function(_) {
         if (context) {
           _graftrace_.Context = context;
         }
-        headers["_graftrace_"] = btoa(encodeURIComponent(JSON.stringify(_graftrace_)));
-        // console.log(_graftrace_);
-        // console.log(headers["_graftrace_"]);
+        debugger;
+        if (window && window.location && window.location.hostname === "localhost") {
+          console.log(_graftrace_);
+          // console.log(headers["_graftrace_"]);
+        } else {
+          headers["_graftrace_"] = btoa(encodeURIComponent(JSON.stringify(_graftrace_)));
+        }
       }
     }
   };
