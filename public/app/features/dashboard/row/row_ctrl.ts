@@ -13,14 +13,20 @@ export class DashRowCtrl {
   row: any;
   dropView: number;
   draggable: true;
+  activeIndex: number;
 
   /** @ngInject */
   constructor(private $scope, private $rootScope, private $timeout, contextSrv) {
     this.row.title = this.row.title || 'Row title';
     this.draggable = contextSrv.isEditor;
+    this.activeIndex = 0;
     if (this.row.isNew) {
       this.dropView = 1;
     }
+  }
+
+  size(panels) {
+    return _.size(panels);
   }
 
   onDrop(panelId, dropTarget) {

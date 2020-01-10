@@ -287,6 +287,75 @@ class MetricsPanelCtrl extends PanelCtrl {
     }
   };
 
+
+  // addBindVariable(variableSrv, bindVariable, nullValue): any {
+  //   let variable = variableSrv.addVariable({
+  //     hide: 2,
+  //     type: 'teldCustom',
+  //     name: `${target.conf.variablePrefix}_${bindVariable.name}`,
+  //     query: '',
+  //     current: { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT }
+  //   });
+  //   variable.querybarRequired = target.conf.required;
+  //   variable.confVarValue = { value: bindVariable.nullValue || nullValue, text: bindVariable.nullText || this.ALL_TEXT };
+  //   _.set(this.querybarVariable, variable.name, variable);
+  //   return variable;
+  // }
+  replaceVariableValue(str: any, variablePrefix: any, replacement: any): any {
+    var returnValue = _.replace(str, new RegExp(_.escapeRegExp("$" + variablePrefix), 'g'), "$" + replacement);
+    return returnValue;
+  }
+
+  metricsQueryTargets(ctrl): any {
+    console.log(this === ctrl);
+    var dynaCondPrefix = "_dynaCond_";
+
+    var targets = _.cloneDeep(ctrl.panel.targets);
+    // var row = _.find(ctrl.dashboard.rows, { "ShadowContainer": true });
+    var row = this.dashboard.ShadowContainerRow;
+    if (row) {
+      var dynaCondArray = _.filter(ctrl.templateSrv.variables, item => {
+        return _.startsWith(item.name, dynaCondPrefix);
+      });
+
+
+      _.each(row.panels, (clonePanel, index) => {
+        if (index === 0) {
+          _.each(targets, cloneTarget => {
+            cloneTarget.refId = `shadow_${clonePanel.id}_${clonePanel.dynamCondTitle}`;
+          });
+          return;
+        }
+
+        var panelIdPrefix = `vs${clonePanel.id}`;
+        _.each(ctrl.panel.targets, target => {
+          var cloneTarget = _.cloneDeep(target);
+          cloneTarget.refId = `shadow_${clonePanel.id}_${clonePanel.dynamCondTitle}`;
+
+          // if (cloneTarget.alias) {
+          //   cloneTarget.alias = clonePanel.title;
+          // }
+
+          if (cloneTarget.query) {
+            //target.query = _.replace(target.query, new RegExp(_.escapeRegExp("$" + dynaCondPrefix), 'g'), "$" + dynaCondPrefix + "sync");
+
+            _.each(dynaCondArray, globalVariable => {
+              // debugger;
+              var replacement = `${panelIdPrefix}_${globalVariable.name}`;
+              cloneTarget.query = this.replaceVariableValue(cloneTarget.query, globalVariable.name, replacement);
+            });
+
+            cloneTarget.query = this.replaceVariableValue(cloneTarget.query, dynaCondPrefix, dynaCondPrefix);
+          }
+
+          targets.push(cloneTarget);
+        });
+      });
+    }
+    // ctrl.templateSrv.updateTemplateData();
+    return targets;
+  }
+
   issueQueries(datasource) {
     this.datasource = datasource;
 
@@ -314,6 +383,13 @@ class MetricsPanelCtrl extends PanelCtrl {
     });
 
     var _graftrace_ = graftrace.gen(this);
+    // debugger;
+    // this.metricsQueryTargets(this);
+
+    var targets = this.panel.targets;
+    if (this.metricsQueryTargets) {
+      targets = this.metricsQueryTargets(this) || targets;
+    }
 
     var metricsQuery = {
       _graftrace_: _graftrace_,
@@ -323,7 +399,7 @@ class MetricsPanelCtrl extends PanelCtrl {
       rangeRaw: this.rangeRaw,
       interval: this.interval,
       intervalMs: this.intervalMs,
-      targets: this.panel.targets,
+      targets: targets,
       format: this.panel.renderer === 'png' ? 'png' : 'json',
       maxDataPoints: this.resolution,
       scopedVars: scopedVars,

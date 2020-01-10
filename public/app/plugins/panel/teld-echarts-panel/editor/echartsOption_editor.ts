@@ -40,7 +40,9 @@ export class EchartsOptionEditorCtrl {
     originalOpt: 'ecOption.baseOption',
     ecSeries: 'ecSeries',
     dataList: 'dataList',
-    originaldataList: 'originaldataList'
+    originaldataList: 'originaldataList',
+    dashboard: 'dashboard',
+    panel: 'panel'
   };
 
   debugInfo(key?) {

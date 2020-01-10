@@ -128,6 +128,18 @@ export class DashboardModel {
     //  sort clone
     copy = sortByKeys(copy);
 
+    /** 去掉动态条件querybar后保存 */
+    if (copy.ShadowContainerRow) {
+      delete copy.ShadowContainerRow;
+      _.each(copy.rows, itemRow => {
+        _.remove(itemRow.panels, 'isShadowInstance');
+        _.each(itemRow.panels, p => {
+          delete p.dynamCondTitle;
+          delete p.dynamCondRT;
+        });
+      });
+    }
+
     // restore properties
     this.events = events;
     this.meta = meta;

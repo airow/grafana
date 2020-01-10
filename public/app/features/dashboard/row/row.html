@@ -55,8 +55,36 @@
       <i class="fa fa-ellipsis-v"></i>
     </div>
   </div>
+  <!-- {{ctrl.size(ctrl.row.panels)}}
+  <div ng-repeat="target in ctrl.row.panels">
+    {{target.id}}
+  </div> -->
+  <div ng-if='ctrl.row.tabGroup'>
+    <div class="tabbed-view-header">
+      <ul class="gf-tabs" style="margin-top: 0px;">
+        <li class="gf-tabs-item dropdown" ng-class="{'open':ctrl.tabGroup[target.conf.groupBy].showDDM===target.refId}"
+          ng-repeat="target in ctrl.row.panels">
+          <a class="gf-tabs-link ddd" ng-click="ctrl.activeIndex=$index" ng-class="{active: ctrl.activeIndex===$index}">
+            {{target.id}}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="-tabbed-view-body">
+      <div ng-repeat="target in ctrl.row.panels" ng-show="ctrl.activeIndex===$index"
+        style3="margin-top: 0px;border: 1px #52b1d5 solid;border-top-width: 0px;padding: 5px;padding-top: 5px;">
+        <!-- {{target.id}} -->
+        <div ng-hide="panel.dyHide" ng-repeat="panel in [target] track by panel.id" ng-class="[panel.colx]"
+          ui-draggable="!ctrl.dashboard.meta.fullscreen && ctrl.draggable" drag="panel.id"
+          ui-on-drop="ctrl.onDrop($data, panel)" drag-handle-class="drag-handle" panel-width>
+          <plugin-component type="panel" class="panel-margin">
+          </plugin-component>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <div ng-hide="panel.dyHide" ng-repeat="panel in ctrl.row.panels track by panel.id" ng-class="[panel.colx]" class="panel" ui-draggable="!ctrl.dashboard.meta.fullscreen && ctrl.draggable" drag="panel.id" ui-on-drop="ctrl.onDrop($data, panel)" drag-handle-class="drag-handle" panel-width>
+  <div ng-if='!ctrl.row.tabGroup' ng-hide="panel.dyHide" ng-repeat="panel in ctrl.row.panels track by panel.id" class="panel" ng-class="[panel.colx]" ui-draggable="!ctrl.dashboard.meta.fullscreen && ctrl.draggable" drag="panel.id" ui-on-drop="ctrl.onDrop($data, panel)" drag-handle-class="drag-handle" panel-width>
     <plugin-component type="panel" class="panel-margin">
     </plugin-component>
   </div>

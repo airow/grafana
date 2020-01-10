@@ -4,6 +4,7 @@ import { PanelCtrl } from 'app/plugins/sdk';
 import { metricsEditorComponent } from './editor_component/metrics_editor';
 import { optionsEditorComponent } from './editor_component/options_editor';
 import { filterEditorComponent } from './editor_component/filter_editor';
+import { dynamicCondEditorComponent } from './editor_component/dynamicCond_editor';
 import $ from 'jquery';
 import _ from 'lodash';
 import async from 'async';
@@ -575,6 +576,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   onInitEditMode() {
     this.addEditorTab('Metrics', metricsEditorComponent);
     this.addEditorTab('Filter', filterEditorComponent);
+    this.addEditorTab('Condition', dynamicCondEditorComponent);
     // this.addEditorTab('Options', optionsEditorComponent);
     //this.editorTabIndex = 1;
   }
@@ -1583,6 +1585,142 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     variableArray.splice(index, 1);
   }
 
+  replaceVariableValue(str, variablePrefix, replacement) {
+    var returnValue = _.replace(str, new RegExp(_.escapeRegExp("$" + variablePrefix), 'g'), "$" + replacement);
+    return returnValue;
+  }
+
+  replacDSValue(target, variablePrefix, replacement) {
+    /* SQL */
+    if (target.rawSql) {
+      target.rawSql = this.replaceVariableValue(target.rawSql, variablePrefix, replacement);
+    }
+
+    /* elasticsearch */
+    if (target.query) {
+      target.query = this.replaceVariableValue(target.query, variablePrefix, replacement);
+    }
+  }
+
+  replaceVariablePrefix(shadowVariableArray, dynaCondArray, target, panelIdPrefix, variablePrefix, replacementVariablePrefix) {
+    this.replacDSValue(target, variablePrefix, replacementVariablePrefix);
+
+    /** 替换全家变量内的 */
+    _.each(shadowVariableArray, shadowVariable => {
+      if (shadowVariable.query) {
+        shadowVariable.query = this.replaceVariableValue(shadowVariable.query, variablePrefix, replacementVariablePrefix);
+      }
+      if (shadowVariable.current) {
+        if (shadowVariable.current.text) {
+          shadowVariable.current.text = this.replaceVariableValue(shadowVariable.current.text, variablePrefix, replacementVariablePrefix);
+        }
+        if (shadowVariable.current.value) {
+          shadowVariable.current.value = this.replaceVariableValue(shadowVariable.current.value, variablePrefix, replacementVariablePrefix);
+        }
+      }
+      var dynaCondPrefix = "_dynaCond_";
+      switch (shadowVariable.type) {
+        case "teldDatasource":
+          _.each(shadowVariable.panel.targets, dstarget => {
+            // debugger;
+            _.each(dynaCondArray, globalVariable => {
+              // debugger;
+              console.log(shadowVariable.name, dstarget.query);
+              var replacement = `${panelIdPrefix}_${globalVariable.name}`;
+              this.replacDSValue(dstarget, globalVariable.name, replacement);
+              console.log(shadowVariable.name, dstarget.query);
+            });
+            dstarget.query = this.replaceVariableValue(dstarget.query, variablePrefix, target.conf.variablePrefix);
+          });
+          break;
+      }
+    });
+  }
+
+  shadowInstanceDuplicate() {
+    if (this.quering) { this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000); return; }
+    // debugger;
+    this.dashboard.ShadowContainerRow = this.row;
+    var clonePanel = this.dashboard.duplicatePanel(this.panel, this.row);
+    _.each(this.row.panels, panel => {
+      panel.span = 6;
+    });
+    clonePanel.isShadowInstance = true;
+
+    /** 用于控制复制的querybar不进行查询 使用位置 eh_query 方法
+     *  查找关键子 if (this.panel.shadowInitialized) {
+    */
+    clonePanel.shadowInitialized = false;
+
+    delete clonePanel.isMasterInstance;
+    delete clonePanel.dynamCondRT;
+
+    var dynaCondPrefix = this.panel.dynaCondPrefix || "_dynaCond_";
+    var dynaCondArray = _.filter(this.templateSrv.variables, item => {
+      return _.startsWith(item.name, dynaCondPrefix);
+    });
+
+    var panelIdPrefix = `vs${clonePanel.id}`;
+    var shadowVariableArray = [];
+    _.each(dynaCondArray, globalVariable => {
+      // debugger;
+      var shadowPickModel = _.pick(globalVariable, ['hide', 'type', 'name', 'query', 'current', 'panel']);
+      shadowPickModel = _.cloneDeep(shadowPickModel);
+      shadowPickModel.name = `${panelIdPrefix}_${shadowPickModel.name}`;
+      shadowPickModel.canSaved = false;
+      this.templateSrv.removeVariable("$" + shadowPickModel.name);
+      var shadowVariable = this.variableSrv.addVariable(shadowPickModel);
+      shadowVariableArray.push(shadowVariable);
+      switch (globalVariable.type) {
+        case "teldDatasource":
+          // shadowVariable.panel = _.cloneDeep(globalVariable.panel);
+          break;
+      }
+    });
+
+
+    var originalVariablePrefixArray = _.map(this.panel.targets, 'conf.variablePrefix');
+    _.each(clonePanel.targets, target => {
+      var variablePrefix = target.conf.variablePrefix;
+      var replacementVariablePrefix = target.conf.variablePrefix = `${panelIdPrefix}_${variablePrefix}`;
+
+      this.replaceVariablePrefix(shadowVariableArray, dynaCondArray, target, panelIdPrefix, variablePrefix, replacementVariablePrefix);
+
+      _.each(originalVariablePrefixArray, originalVariablePrefix => {
+        var replacementVariablePrefix = `${panelIdPrefix}_${originalVariablePrefix}`;
+        this.replaceVariablePrefix(shadowVariableArray, dynaCondArray, target,
+          panelIdPrefix, originalVariablePrefix, replacementVariablePrefix);
+      });
+    });
+    this.templateSrv.updateTemplateData();
+
+    // debugger;
+    _.each(this.row.panels, (eachPanel, index) => {
+      if (eachPanel.isMasterInstance) {
+        eachPanel.dynamCondTitle = eachPanel.title;
+        if (_.isEmpty(eachPanel.dynamCondTitle)) {
+          eachPanel.dynamCondTitle = `条件${String.fromCharCode(65 + index)}`;
+        }
+      } else {
+        eachPanel.dynamCondTitle = `条件${String.fromCharCode(65 + index)}`;
+      }
+    });
+  }
+
+  shadowInstanceRemove() {
+    if (this.quering) { this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000); return; }
+    // debugger;
+    this.row.removePanel(this.panel);
+    if (_.size(this.row.panels) === 2) {
+      // this.panel.span = 12;
+      // delete this.row.ShadowContainer;
+      delete this.dashboard.ShadowContainerRow;
+      delete this.row.panels[0].dynamCondTitle;
+      delete this.row.panels[0].dynamCondRT;
+      // this.row.panels[0].span = 12;
+    }
+  }
+
   move(variableArray, index, newIndex) {
     _.move(variableArray, index, newIndex);
   }
@@ -1628,7 +1766,15 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       }
 
       if (false === this.forbiddenRefreshDashboard) {
-        this.timeSrv.refreshDashboard();
+        if (this.panel.isShadowInstance) {
+          if (this.panel.shadowInitialized) {
+            this.timeSrv.refreshDashboard();
+          } else {
+            this.panel.shadowInitialized = true;
+          }
+        } else {
+          this.timeSrv.refreshDashboard();
+        }
       }
       this.forbiddenRefreshDashboard = false;
       this.getExprVariables();

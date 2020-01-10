@@ -18,7 +18,7 @@ define([
           '<span ng-show="(!ctrl.timeInfo || ctrl.isPlotClick) && ctrl.panel.showTimeRange">' +
           '<span ng-bind="ctrl.rangeStringPanel"></span> &nbsp;' +
           '</span>' +
-          '<span ng-bind="ctrl.panel.title | interpolateTemplateVars:this"></span>' +
+          '<span ng-bind="(ctrl.panel.dynamCondTitle || ctrl.panel.title) | interpolateTemplateVars:this"></span>' +
           '<i style="margin-left: 5px;" ng-show="ctrl.panel.drillConf.links.length>0" class="fa fa-link"></i>' +
           //'{{ctrl.panel.title | interpolateTemplateVars:this}}' +
           '</span>' +

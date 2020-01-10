@@ -1,10 +1,12 @@
 <div class="teld-querybar-panel" ng-style="ctrl.querybarPanelStyle" style="margin-bottom: -7px;">
   <div ng-show="ctrl.defineQuery">
+
     <div class="tabbed-view-header">
       <ul ng-hide="ctrl.panel.hiddenTabbedVieHheader" class="gf-tabs" ng-class="{'tabsilver': ctrl.isLoading() }"
         style="margin-top: 0px;">
         <li class="gf-tabs-item dropdown" ng-class="{'open':ctrl.tabGroup[target.conf.groupBy].showDDM===target.refId}"
-          ng-hide="target.hide || false===ctrl.isSelectGroupTab(target) || target.conf.onlyLoadData" ng-repeat="target in ctrl.panel.targets">
+          ng-hide="target.hide || false===ctrl.isSelectGroupTab(target) || target.conf.onlyLoadData"
+          ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" bs-tooltip="target.conf.tooltip"
             ng-style="{color:target.conf.required?'red':'inherit'}"
             ng-click="ctrl.forbiddenRefreshDashboard = true;ctrl.manualChangeQueryBarTab(target);ctrl.hideDropdownMenu(target)"
@@ -164,7 +166,8 @@
             </span>
           </label>
         </div>
-        <button type="button" class="btn gf-form-btn" style="padding-left: 0px; padding-right: 0px; background-color: transparent;">
+        <button type="button" class="btn gf-form-btn"
+          style="padding-left: 0px; padding-right: 0px; background-color: transparent;">
           |
         </button>
       </div>
@@ -187,7 +190,7 @@
               class="fa fa-remove"></i></a>
         </label>
       </div>
-      <div class="gf-form filter-button">
+      <div class="gf-form filter-button" ng-if="ctrl.panel.isShadowInstance!==true">
         <button type="button" class="btn gf-form-btn btn-secondary" ng-click="ctrl.eh_clearCycle();ctrl.eh_query();">
           <i ng-if='!ctrl.quering' class="fa fa-search"></i>
           <i ng-if='ctrl.quering' class="fa fa-refresh fa-spin"></i>
@@ -196,9 +199,41 @@
           ng-click="ctrl.eh_queryWithCycle(cycle);">
           {{cycle.name}}
         </button>
-        <button ng-if='!(ctrl.panel.hideCollapseBtn===true)' type="button" class="btn gf-form-btn" ng-click="ctrl.defineQuerySwitch()">
+        <button ng-if='!(ctrl.panel.hideCollapseBtn===true)' type="button" class="btn gf-form-btn"
+          ng-click="ctrl.defineQuerySwitch()">
           <i class="fa" ng-class="{true:'fa-angle-double-up',false:'fa-angle-double-down'}[ctrl.defineQuery]"></i>
         </button>
+      </div>
+      <!-- <div ng-if='ctrl.dashboard.ShadowContainerRow' style="margin-top: 7px;">
+        <input type="text" class="gf-form-input" style="padding-top: 2px; padding-bottom: 2px;" ng-model="ctrl.panel.dynamCondTitle" spellcheck="false">
+      </div> -->
+      <div style=" margin-right: 10px;">
+        <div class="gf-form filter-button">
+          <button class="btn gf-form-btn" ng-if="ctrl.panel.isMasterInstance" ng-click="ctrl.shadowInstanceDuplicate()">
+            <i class="fa fa-plus"></i>条件
+          </button>
+          <button type="button" ng-if="ctrl.panel.isShadowInstance" class="btn gf-form-btn"
+            ng-click="ctrl.shadowInstanceRemove()">
+            <i class="fa fa-trash"></i>
+          </button>
+          <button type="button" ng-if="ctrl.dashboard.ShadowContainerRow" class="btn gf-form-btn btn-secondary"
+            ng-click="ctrl.dashboard.dynamicRT=!ctrl.dashboard.dynamicRT">
+            <i class="fa" ng-class="{true:'fa-angle-double-up',false:'fa-angle-double-down'}[!!ctrl.dashboard.dynamicRT]"></i>设置
+          </button>
+        </div>
+      </div>
+    </div>
+    <div ng-if="ctrl.dashboard.ShadowContainerRow" ng-show='ctrl.dashboard.dynamicRT'>
+      <div class="gf-form-inline">
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-5">名称</label>
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.dynamCondTitle" spellcheck="false">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label query-keyword width-5">y轴</label>
+          <input type="text" class="gf-form-input width-8" ng-model="ctrl.panel.dynamCondRT.AttachYAxis" min-length="0"
+            bs-typeahead="['区域轴']" spellcheck="false">
+        </div>
       </div>
     </div>
   </div>

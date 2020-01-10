@@ -15,9 +15,11 @@
       on-change="ctrl.render()">
     </gf-form-switch>
     <div class="gf-form-group">
-    <div class="section gf-form-group" style="width: 50%">
+    <div class="section gf-form-group" style="width: 100%">
       <div class="gf-form gf-form--grow query-keyword">
-        function(originalOpt,　ecSeries,　dataList,　originaldataList,　series,　table,　ecInstance,　dashVars,　<a href="https://www.lodashjs.com/docs/latest">_</a>,　<a href="https://github.com/airow/grafana/blob/teld.4.2.0-master/public/app/core/utils/kbn.js">kbn</a>){
+        function(dashboard, panel, originalOpt,　ecSeries,　dataList,　originaldataList,　series,　table,　ecInstance,　dashVars,
+        <br>
+        <a href="https://www.lodashjs.com/docs/latest">_</a>,　<a href="https://github.com/airow/grafana/blob/teld.4.2.0-master/public/app/core/utils/kbn.js">kbn</a>, <a href="https://github.com/airow/grafana/blob/teld.4.2.0-master/public/app/core/utils/dynamicCond.js">dynamicCond</a>){
       </div>
       <div class="gf-form gf-form--grow query-keyword">
         　　　　var option = originalOpt;
@@ -32,7 +34,7 @@
         }
       </div>
     </div>
-    <div class="section gf-form-group" style="width: 40%">
+    <div class="section gf-form-group" style="width: 100%">
       <div class="gf-form gf-form--grow query-keyword">
       <ul class="gf-tabs">
         <li class="gf-tabs-item" ng-repeat="(key, value) in ctrl.funArgument">

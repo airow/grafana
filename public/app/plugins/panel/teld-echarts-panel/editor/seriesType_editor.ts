@@ -23,7 +23,8 @@ export class SeriesTypeEditorCtrl {
 
   metricsTarget() {
     var filterDataList = this.panelCtrl.dataList;
-    var refId = [] || _.map(this.panel.targets, 'refId');
+    //var refId = [] || _.map(this.panel.targets, 'refId');
+    var refId = _.map(this.panel.targets, 'refId');
     var groupKey = _.map(filterDataList, 'groupKey');
     var dataTaget = _.map(filterDataList, 'target');
     var calcSeriesTaget = _.map(this.panel.calcSeriesConf, 'target');

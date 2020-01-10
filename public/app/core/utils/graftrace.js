@@ -35,7 +35,7 @@ function(_) {
         if (context) {
           _graftrace_.Context = context;
         }
-        debugger;
+        // debugger;
         if (window && window.location && window.location.hostname === "localhost") {
           console.log(_graftrace_);
           // console.log(headers["_graftrace_"]);

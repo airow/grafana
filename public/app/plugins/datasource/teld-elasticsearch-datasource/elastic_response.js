@@ -482,9 +482,9 @@ function (_, queryDef, moment) {
       }
     }
 
-    _.each(seriesList, function (dl) {
-      console.log(_.groupBy(dl.datapoints, function (ll) { return ll[1]; }));
-    });
+    // _.each(seriesList, function (dl) {
+    //   console.log(_.groupBy(dl.datapoints, function (ll) { return ll[1]; }));
+    // });
 
     return { data: seriesList };
   };

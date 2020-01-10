@@ -27,6 +27,7 @@ export class DashboardRow {
     fullScreenShow: false,
     bgcolor: { enabled: false, color: '#0C2D4A' },
     hideRow: false,
+    tabGroup: false,
     align: { enabled: false },
   };
 

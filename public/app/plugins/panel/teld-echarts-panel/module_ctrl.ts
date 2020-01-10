@@ -35,6 +35,7 @@ import { EchartsOptionEditorCtrl, echartsOptionEditorComponent } from './editor/
 import { cumulativeEditorComponent, cumulative } from '../graph/cumulative_editor';
 import empty_option from './theme/empty_option';
 import SeriesDrilldownParsing from 'app/core/series_drilldown';
+import dynamicCond from 'app/core/utils/dynamicCond';
 
 loadPluginCss({
   dark: '/public/app/plugins/panel/teld-echarts-panel/css/style.built-in.css',
@@ -1963,15 +1964,16 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           ${wrapOptionConf.functionBody || ""};
           return option;
       `;
-      var wrapOptionFuc = new Function('originalOpt', 'ecSeries',
+
+      var wrapOptionFuc = new Function('dashboard', 'panel', 'originalOpt', 'ecSeries',
         'dataList', 'originaldataList', 'series', 'table', 'ecInstance', 'dashVars',
-        '_', 'kbn', functionBody);
+        '_', 'kbn', 'dynamicCond', functionBody);
       var series = EchartsOptionEditorCtrl.trySeriesHandler(this.dataList);
       var table = EchartsOptionEditorCtrl.tryTableHandler(this.dataList);
       var dashVars = _.transform(this.templateSrv.variables, (result, value, index) => { result[value.name] = value.current; }, {});
-      baseOption = wrapOptionFuc(baseOption, this.ecSeries,
+      baseOption = wrapOptionFuc(this.dashboard, this.panel, baseOption, this.ecSeries,
         this.dataList, this.originaldataList,
-        series, table, this.ecInstance, dashVars, _, kbn);
+        series, table, this.ecInstance, dashVars, _, kbn, dynamicCond);
     }
 
     // this.ecInstance
