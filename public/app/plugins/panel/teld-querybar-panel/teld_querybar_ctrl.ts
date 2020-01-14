@@ -1748,6 +1748,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     console.log('query');
     if (false === this.forbiddenRefreshDashboard) {
       this.quering = true;
+      if (this.panel.shadowInitialized === false) {
+        this.quering = false;
+      }
     }
     this.triggerRefresh = true;
     this.dashboard.meta.hasQuerybarPanel = false;
