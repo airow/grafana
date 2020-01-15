@@ -42,3 +42,5 @@ profile.cov
 /pkg/cmd/grafana-server/grafana-server
 /examples/*/dist
 /pkg/cmd/grafana-server/debug
+#去掉tfs元数据文件夹
+/$tf
