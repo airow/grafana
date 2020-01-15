@@ -12,7 +12,7 @@ export class TeldServiceGatewayDatasource {
   responseParser: ResponseParser;
 
   /** @ngInject **/
-  constructor(instanceSettings, private backendSrv, private $q, private templateSrv, private contextSrv) {
+  constructor(instanceSettings, private backendSrv, private $q, private templateSrv, private contextSrv, private alertSrv) {
     this.name = instanceSettings.name;
     this.id = instanceSettings.id;
     this.responseParser = new ResponseParser(this.$q);
@@ -201,7 +201,7 @@ export class TeldServiceGatewayDatasource {
     //debugger;
     //alert(embed_teldapp.inIOS);
     var deviceInfo = "";
-    if (embed_teldapp.isInApp) {
+    if (embed_teldapp.isInApp()) {
       if (embed_teldapp.inIOS) {
         embed_teldapp.askForDeviceInfoIOS(embed_teldapp);
         var promise = new Promise(this.iosDevTimeout).then(deviceInfo => {
@@ -212,6 +212,12 @@ export class TeldServiceGatewayDatasource {
         return promise;
       } else {
         deviceInfo = embed_teldapp.askForDeviceInfo();
+      }
+    } else {
+      var telda = embed_teldapp.readCookie('telda'), teldb = embed_teldapp.readCookie('teldb');
+      if ((!telda || !teldb)) {
+        this.alertSrv.set("会话超时", "会话超时", "warning", 4000);
+        return this.$q.when({ data: [] });
       }
     }
     return this.getQuery(options, deviceInfo);
