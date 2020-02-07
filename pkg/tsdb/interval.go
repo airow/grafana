@@ -2,11 +2,16 @@ package tsdb
 
 import (
 	"fmt"
+	"strings"
 	"time"
+
+	"github.com/grafana/grafana/pkg/components/simplejson"
+	"github.com/grafana/grafana/pkg/models"
 )
 
 var (
-	defaultRes  int64         = 1500
+  defaultRes  int64         = 1500
+  defaultMinInterval       = time.Millisecond * 1
 	minInterval time.Duration = 1 * time.Millisecond
 	year        time.Duration = time.Hour * 24 * 365
 	day         time.Duration = time.Hour * 24 * 365
@@ -147,4 +152,101 @@ func roundInterval(interval time.Duration) time.Duration {
 	default:
 		return time.Millisecond * 31536000000 // 1y
 	}
+}
+
+type intervalCalculator struct {
+	minInterval time.Duration
+}
+
+type IntervalCalculator interface {
+	Calculate(timeRange *TimeRange, minInterval time.Duration) Interval
+}
+
+type IntervalOptions struct {
+	MinInterval time.Duration
+}
+
+func NewIntervalCalculator(opt *IntervalOptions) *intervalCalculator {
+	if opt == nil {
+		opt = &IntervalOptions{}
+	}
+
+	calc := &intervalCalculator{}
+
+	if opt.MinInterval == 0 {
+		calc.minInterval = defaultMinInterval
+	} else {
+		calc.minInterval = opt.MinInterval
+	}
+
+	return calc
+}
+
+func (ic *intervalCalculator) Calculate(timerange *TimeRange, minInterval time.Duration) Interval {
+	to := timerange.MustGetTo().UnixNano()
+	from := timerange.MustGetFrom().UnixNano()
+	interval := time.Duration((to - from) / defaultRes)
+
+	if interval < minInterval {
+		return Interval{Text: FormatDuration(minInterval), Value: minInterval}
+	}
+
+	rounded := roundInterval(interval)
+	return Interval{Text: FormatDuration(rounded), Value: rounded}
+}
+
+// FormatDuration converts a duration into the kbn format e.g. 1m 2h or 3d
+func FormatDuration(inter time.Duration) string {
+	if inter >= year {
+		return fmt.Sprintf("%dy", inter/year)
+	}
+
+	if inter >= day {
+		return fmt.Sprintf("%dd", inter/day)
+	}
+
+	if inter >= time.Hour {
+		return fmt.Sprintf("%dh", inter/time.Hour)
+	}
+
+	if inter >= time.Minute {
+		return fmt.Sprintf("%dm", inter/time.Minute)
+	}
+
+	if inter >= time.Second {
+		return fmt.Sprintf("%ds", inter/time.Second)
+	}
+
+	if inter >= time.Millisecond {
+		return fmt.Sprintf("%dms", inter/time.Millisecond)
+	}
+
+	return "1ms"
+}
+
+func GetIntervalFrom(dsInfo *models.DataSource, queryModel *simplejson.Json, defaultInterval time.Duration) (time.Duration, error) {
+	interval := queryModel.Get("interval").MustString("")
+
+	if interval == "" && dsInfo.JsonData != nil {
+		dsInterval := dsInfo.JsonData.Get("timeInterval").MustString("")
+		if dsInterval != "" {
+			interval = dsInterval
+		}
+	}
+
+	if interval == "" {
+		return defaultInterval, nil
+	}
+
+	interval = strings.Replace(strings.Replace(interval, "<", "", 1), ">", "", 1)
+	parsedInterval, err := time.ParseDuration(interval)
+	if err != nil {
+		return time.Duration(0), err
+	}
+
+	return parsedInterval, nil
+}
+
+func (i *Interval) Milliseconds() int64 {
+	return i.Value.Nanoseconds() / int64(time.Millisecond)
 }
