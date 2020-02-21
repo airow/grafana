@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
+	"sync"
 	"testing"
 	"time"
 )
@@ -43,7 +45,7 @@ func expectEvent(t *testing.T, eventch <-chan ListenerEventType, et ListenerEven
 		}
 		return nil
 	case <-time.After(1500 * time.Millisecond):
-		return fmt.Errorf("timeout")
+		panic("expectEvent timeout")
 	}
 }
 
@@ -121,6 +123,9 @@ func TestConnUnlisten(t *testing.T) {
 	}
 
 	_, err = db.Exec("NOTIFY notify_test")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	err = expectNotification(t, channel, "notify_test", "")
 	if err != nil {
@@ -157,6 +162,9 @@ func TestConnUnlistenAll(t *testing.T) {
 	}
 
 	_, err = db.Exec("NOTIFY notify_test")
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	err = expectNotification(t, channel, "notify_test", "")
 	if err != nil {
@@ -208,6 +216,66 @@ func TestConnPing(t *testing.T) {
 	if err != errListenerConnClosed {
 		t.Fatalf("expected errListenerConnClosed; got %v", err)
 	}
+}
+
+// Test for deadlock where a query fails while another one is queued
+func TestConnExecDeadlock(t *testing.T) {
+	l, _ := newTestListenerConn(t)
+	defer l.Close()
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	go func() {
+		l.ExecSimpleQuery("SELECT pg_sleep(60)")
+		wg.Done()
+	}()
+	runtime.Gosched()
+	go func() {
+		l.ExecSimpleQuery("SELECT 1")
+		wg.Done()
+	}()
+	// give the two goroutines some time to get into position
+	runtime.Gosched()
+	// calls Close on the net.Conn; equivalent to a network failure
+	l.Close()
+
+	defer time.AfterFunc(10*time.Second, func() {
+		panic("timed out")
+	}).Stop()
+	wg.Wait()
+}
+
+// Test for ListenerConn being closed while a slow query is executing
+func TestListenerConnCloseWhileQueryIsExecuting(t *testing.T) {
+	l, _ := newTestListenerConn(t)
+	defer l.Close()
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		sent, err := l.ExecSimpleQuery("SELECT pg_sleep(60)")
+		if sent {
+			panic("expected sent=false")
+		}
+		// could be any of a number of errors
+		if err == nil {
+			panic("expected error")
+		}
+		wg.Done()
+	}()
+	// give the above goroutine some time to get into position
+	runtime.Gosched()
+	err := l.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer time.AfterFunc(10*time.Second, func() {
+		panic("timed out")
+	}).Stop()
+	wg.Wait()
 }
 
 func TestNotifyExtra(t *testing.T) {

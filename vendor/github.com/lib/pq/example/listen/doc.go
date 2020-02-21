@@ -1,6 +1,6 @@
 /*
 
-Below you will find a self-contained Go program which uses the LISTEN / NOTIFY
+Package listen is a self-contained Go program which uses the LISTEN / NOTIFY
 mechanism to avoid polling the database while waiting for more work to arrive.
 
     //
@@ -18,11 +18,11 @@ mechanism to avoid polling the database while waiting for more work to arrive.
     package main
 
     import (
-        "github.com/lib/pq"
-
         "database/sql"
         "fmt"
         "time"
+
+        "github.com/lib/pq"
     )
 
     func doWork(db *sql.DB, work int64) {
@@ -51,21 +51,15 @@ mechanism to avoid polling the database while waiting for more work to arrive.
     }
 
     func waitForNotification(l *pq.Listener) {
-        for {
-            select {
-                case <-l.Notify:
-                    fmt.Println("received notification, new work available")
-                    return
-                case <-time.After(90 * time.Second):
-                    go func() {
-                        l.Ping()
-                    }()
-                    // Check if there's more work available, just in case it takes
-                    // a while for the Listener to notice connection loss and
-                    // reconnect.
-                    fmt.Println("received no work for 90 seconds, checking for new work")
-                    return
-            }
+        select {
+            case <-l.Notify:
+                fmt.Println("received notification, new work available")
+            case <-time.After(90 * time.Second):
+                go l.Ping()
+                // Check if there's more work available, just in case it takes
+                // a while for the Listener to notice connection loss and
+                // reconnect.
+                fmt.Println("received no work for 90 seconds, checking for new work")
         }
     }
 
@@ -83,7 +77,9 @@ mechanism to avoid polling the database while waiting for more work to arrive.
             }
         }
 
-        listener := pq.NewListener(conninfo, 10 * time.Second, time.Minute, reportProblem)
+        minReconn := 10 * time.Second
+        maxReconn := time.Minute
+        listener := pq.NewListener(conninfo, minReconn, maxReconn, reportProblem)
         err = listener.Listen("getwork")
         if err != nil {
             panic(err)
@@ -99,4 +95,4 @@ mechanism to avoid polling the database while waiting for more work to arrive.
 
 
 */
-package listen_example
+package listen

@@ -79,7 +79,7 @@ export default class PostgresQuery {
     return escapedValues.join(',');
   }
 
-  render(interpolate?: any) {
+  render(interpolate?: any, scopedExpressionVars?: any) {
     const target = this.target;
 
     // new query with no table set yet
@@ -89,6 +89,10 @@ export default class PostgresQuery {
 
     if (!target.rawQuery) {
       target.rawSql = this.buildQuery();
+    }
+
+    if (scopedExpressionVars) {
+      target.rawSql = this.templateSrv.replaceScopedVars(target.rawSql, scopedExpressionVars);
     }
 
     if (interpolate) {

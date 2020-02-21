@@ -66,6 +66,7 @@ export class PostgresQueryCtrl extends QueryCtrl {
         this.target.rawSql = 'SELECT 1';
         this.target.rawQuery = true;
       } else {
+        this.target.rawQuery = true;
         this.target.rawSql = defaultQuery;
         this.datasource.metricFindQuery(this.metaBuilder.findMetricTable()).then((result: any) => {
           if (result.length > 0) {
@@ -189,7 +190,7 @@ export class PostgresQueryCtrl extends QueryCtrl {
     this.selectMenu.push({ text: 'Column', value: 'column' });
   }
 
-  toggleEditorMode() {
+  toggleEditorMode_BAK() {
     // if (this.target.rawQuery) {
     //   appEvents.emit(CoreEvents.showConfirmModal, {
     //     title: 'Warning',
@@ -203,6 +204,10 @@ export class PostgresQueryCtrl extends QueryCtrl {
     // } else {
     //   this.target.rawQuery = !this.target.rawQuery;
     // }
+  }
+
+  toggleEditorMode() {
+    this.target.rawQuery = !this.target.rawQuery;
   }
 
   resetPlusButton(button: { html: any; value: any }) {

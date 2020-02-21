@@ -33,6 +33,23 @@ export class PostgresDatasource {
 
   interpolateVariable = (value: string, variable: { multi: any; includeAll: any }) => {
     if (typeof value === 'string') {
+
+      let regExp = new RegExp("<orderby='(.+?)'/>");
+      let matches = regExp.exec(value);
+      if (matches) {
+        return matches[1];
+      }
+
+      let matchesIn = new RegExp("<in=(.+?) />").exec(value);
+      if (matchesIn) {
+        return ` IN ${matchesIn[1]}`;
+      }
+
+      let matchesLike = new RegExp("<like />").exec(value);
+      if (matchesLike) {
+        return ' LIKE \'%\'';
+      }
+
       if (variable.multi || variable.includeAll) {
         return this.queryModel.quoteLiteral(value);
       } else {
@@ -66,17 +83,22 @@ export class PostgresDatasource {
   }
 
   query(options: any) {
+
+    var varFilter = { filter: 'sql' };
+    var scopedExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'postgres', options.scopedVars,
+      this.interpolateVariable, varFilter);
+
     const queries = _.filter(options.targets, target => {
       return target.hide !== true;
     }).map(target => {
       const queryModel = new PostgresQuery(target, this.templateSrv, options.scopedVars);
-
+      var rawSql = queryModel.render(this.interpolateVariable, scopedExpressionVars);
       return {
         refId: target.refId,
         intervalMs: options.intervalMs,
         maxDataPoints: options.maxDataPoints,
         datasourceId: this.id,
-        rawSql: queryModel.render(this.interpolateVariable),
+        rawSql: rawSql,
         format: target.format,
       };
     });
