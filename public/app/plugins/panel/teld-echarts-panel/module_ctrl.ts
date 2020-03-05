@@ -189,6 +189,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
     fontSize: '100%',
     sort: { col: 0, desc: true },
     filterNull: false,
+    scatterMetrics: []
   };
 
   $parse: any;
