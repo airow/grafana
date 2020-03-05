@@ -83,4 +83,25 @@
       </div>
     </div>
   </div>
+  <div class="section">
+    <h5 class="section-heading">scatter Metrics refId</h5>
+    <div class="gf-form-inline">
+      <div class="gf-form" ng-repeat="metric in ctrl.panel.scatterMetrics">
+        <select class="gf-form-input" ng-model="metric.target" ng-options="f for f in ctrl.metricsTargetRefId()">
+        </select>
+        <label class="gf-form-label">
+          <a ng-click="ctrl.removeItem(ctrl.panel.scatterMetrics, metric)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </label>
+      </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.panel.scatterMetrics.push({})">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>
+      </div>
+    </div>
+  </div>
 </div>

@@ -28,6 +28,10 @@ export class CalcSeriesEditorCtrl {
     return _.union(refId, groupKey, dataTaget, dataMetric);
   }
 
+  metricsTargetRefId() {
+    return _.map(this.panel.targets, 'refId');
+  }
+
 
   dashVars() {
     return graphutils.dashVars(this.templateSrv.variables);
