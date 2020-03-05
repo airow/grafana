@@ -259,24 +259,39 @@ export function calcSeries(calcSeriesConf, data, hideMetrics, dashVariables, pan
   /** 方案1.去掉datalist值 */
   if (_.find(calcSeriesConf, { opts: 'scatter' })) {
     // debugger;
-    _.each(dataList, dl => {
-      var g = _.groupBy(dl.datapoints, i => { return i[1]; });
-      g = _.filter(g, item => { return item.length > 1; });
-      var g2 = _.map(g, item => { return _.remove(item, (v, i) => { return i > 0; }); });
+    if (_.size(panel.scatterMetrics) === 0) {
+      _.each(dataList, dl => {
+        var g = _.groupBy(dl.datapoints, i => { return i[1]; });
+        g = _.filter(g, item => { return item.length > 1; });
+        var g2 = _.map(g, item => { return _.remove(item, (v, i) => { return i > 0; }); });
 
-      dl.datapoints = _.unionBy(dl.datapoints, i => { return i[1]; });
-      dl.goupDP = _.flatten(g2);
-    });
+        dl.datapoints = _.unionBy(dl.datapoints, i => { return i[1]; });
+        dl.goupDP = _.flatten(g2);
+      });
 
-    var dataSourceGroup = _.transform(dataList, (result, n) => {
-      if (_.size(n.goupDP) === 0) { return; }
-      var values = n.goupDP.map(item => { return item[0]; });
-      var times = n.goupDP.map(item => { return item[1]; });
-      result[n.target] = _.zipObject(['values', 'time'], [values, times]);
-      if (n.groupKey) {
-        result[n.groupKey] = result[n.target];
-      }
-    }, {});
+      var dataSourceGroup = _.transform(dataList, (result, n) => {
+        if (_.size(n.goupDP) === 0) { return; }
+        var values = n.goupDP.map(item => { return item[0]; });
+        var times = n.goupDP.map(item => { return item[1]; });
+        result[n.target] = _.zipObject(['values', 'time'], [values, times]);
+        if (n.groupKey) {
+          result[n.groupKey] = result[n.target];
+        }
+      }, {});
+    } else {
+      _.each(dataList, dl => {
+        if (_.find(panel.scatterMetrics, scatterMetric => { return dl.target === scatterMetric.target; })) {
+          return;
+        }
+        var g = _.groupBy(dl.datapoints, '[1]');
+        g = _.filter(g, item => { return item.length > 1; });
+        _.each(g, item => {
+          var s = _.sumBy(item, '[0]');
+          console.log(s);
+          _.each(item, ccc => { ccc[0] = s; });
+        });
+      });
+    }
   }
   var dataSource = _.transform(dataList, (result, n) => {
     var values = n.datapoints.map(item => { return item[0]; });
