@@ -512,6 +512,9 @@ function setColumnAlias(panel, model) {
         if (column.ismatch != true && style.pattern === "/.*/" && style.type === 'hidden') {
           column.hidden = true;
         }
+        if (style.pattern !== "/.*/") {
+          column.notExportField = style.notExportField;
+        }
       }
     });
   });

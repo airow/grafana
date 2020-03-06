@@ -1727,6 +1727,12 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   triggerRefresh = false;
 
   queryCount = 0;
+
+  emitPostgfilterFetchEvent() {
+    // debugger;
+    this.$scope.$root.appEvent("post-gfilter-fetch", { panelType: 'querybar', target: this });
+  }
+
   query() {
     /*查看面板Json是虽然包含querybarInitFinish属性，但不会影响程序逻辑，在为执行到这里是，querybarInitFinish为undefined*/
     this.dashboard.querybarInitFinish = true;
@@ -1740,6 +1746,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
   quering = false;
   forbiddenRefreshDashboard = false;
   eh_query() {
+    this.emitPostgfilterFetchEvent();
     // if (this.queryCount === 0 && this.panel.stopClickRefresh) {
     //   this.dashboard.querybarInitFinish = true;
     // }

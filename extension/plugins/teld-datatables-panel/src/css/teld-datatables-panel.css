@@ -17,3 +17,11 @@
 .teld-datatables-panel .dataTables_filter input{
   width: 30%;
 }
+
+.teld-datatables-panel .dataTables_text-align_center{
+  text-align: center;
+}
+
+.teld-datatables-panel.hidequery .dataTables_filter{
+  display: none;
+}

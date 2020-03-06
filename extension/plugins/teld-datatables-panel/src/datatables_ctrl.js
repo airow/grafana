@@ -2,6 +2,7 @@ import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import moment from 'moment';
 import _ from 'lodash';
 import kbn from 'app/core/utils/kbn';
+import * as FileExport from 'app/core/utils/file_export';
 import './css/teld-datatables-panel.css!';
 import { transformDataToTable } from './transformers';
 import { DatatableRenderer } from './renderer';
@@ -120,6 +121,31 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
     this.sce = $sce;
 
     _.defaults(this.panel, panelDefaults);
+    this.defaultHideSearch = this.panel.searchEnabled && this.panel.defaultHideSearch;
+    this.gfilterFetchHandler = this.$scope.$root.onAppEvent("post-gfilter-fetch", (evt, payload) => {
+      // alert(1);
+      debugger;
+      this.clearPublishVariables();
+      console.log('post-gfilter-fetch', payload);
+    }, this.$scope);
+
+    this.gfilterFetchHandler2 = this.$scope.$root.onAppEvent("clear-datatables-Variables", (evt, payload) => {
+      debugger;
+      // alert(2);
+      this.ignoreOtherPublishEventLoadDataFlag = false;
+      console.log('clear-datatables-Variables', payload);
+      if (payload.target !== this) {
+        if (this.panel.publishVariables.enable) {
+          let ignoreArray = _.split(this.panel.publishVariables.ignoreOtherPublishEvent || "", ",");
+          let ignoreEvnet = _.includes(ignoreArray, payload.target.panel.publishVariables.prefixVariables)
+          if (ignoreEvnet) {
+            this.ignoreOtherPublishEventLoadDataFlag = true;
+            return;
+          }
+        }
+        this.clearPublishVariables();
+      }
+    }, this.$scope);
 
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
@@ -163,6 +189,34 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
 
   onInitPanelActions(actions) {
     actions.push({ text: 'Export CSV', click: 'ctrl.exportCsv()' });
+    actions.push({ text: 'Export Excel XML', click: 'ctrl.exportExcel()' });
+    // if (this.panel.searchEnabled) {
+    //   actions.push({ text: '搜索', click: 'ctrl.toggleSearchText()' });
+    // }
+  }
+
+  exportCsv() {
+    var renderer = new DatatableRenderer(this, this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    FileExport.exportTableDataToCsv(renderer.render_values_visible());
+  }
+
+  exportExcel() {
+    var renderer = new DatatableRenderer(this, this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    FileExport.exportTableDataToExcelXML(renderer.render_values_visible());
+  }
+
+  toggleSearchText() {
+    this.defaultHideSearch = !this.defaultHideSearch;
+
+    if (this.defaultHideSearch) {
+      const tableHolderId = '#datatable-panel-table-' + this.panel.id;
+      const $datatable = $(tableHolderId).DataTable();
+      if ($datatable) {
+        $datatable.search('').draw();
+      }
+    }
+
+    $event.stopPropagation();
   }
 
   render() {
@@ -196,7 +250,17 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
     this.timeSrv.refreshDashboard();
   }
 
-  bindPublishVariables(obj, isSelect) {
+  clearPublishVariables() {
+    this.selectedObj = null;
+    this.selectedIndex = null;
+    this.bindPublishVariables({}, false, false);
+  }
+
+  bindPublishVariables(obj, isSelect, emitClearEvent) {
+    if (emitClearEvent !== false) {
+      this.$scope.$root.appEvent("clear-datatables-Variables", { panelType: 'datatables', target: this });
+    }
+
     _.each(this.panel.publishVariables.variablesConf, conf => {
       var name = conf.name || conf.field;
       var varName = `${this.panel.publishVariables.prefixVariables}_${name}`;
@@ -305,7 +369,7 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
       rootElem.css({ 'max-height': panel.scroll ? getTableHeight() : '' });
     }
     function renderPanel() {
-      debugger;
+      //debugger;
       const renderer = new DatatableRenderer(ctrl, panel, ctrl.table, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize);
       // renderer.renderTest();
       renderer.render();

@@ -22,6 +22,10 @@ define([
           '<i style="margin-left: 5px;" ng-show="ctrl.panel.drillConf.links.length>0" class="fa fa-link"></i>' +
           //'{{ctrl.panel.title | interpolateTemplateVars:this}}' +
           '</span>' +
+          '<span ng-click="ctrl.toggleSearchText();$event.stopPropagation();" '+
+          'style="margin-left: 10px;" ng-if="ctrl.panel.searchEnabled && ctrl.panel.defaultHideSearch">'+
+          '<i class="fa fa-search" aria-hidden="true"></i>'+
+          '</span>' +
           '<span style="padding-left:10px;" ng-show="ctrl.panel.panelState">' +
           '<i class="fa" ng-class="{true:\'fa-window-restore\',false:\'fa-window-minimize\'}[ctrl.action_panelstate.isMin]" ' +
           ' ng-click="ctrl.changePanelState($event);"></i>' +
@@ -87,6 +91,10 @@ define([
             var timeout = null;
             var $menu = null;
             var teather;
+
+            // ctrl.se = function () {
+            //   this.defaultHideSearch = !this.defaultHideSearch;
+            // }
 
             ctrl.titledblclick = function () {
               if (this.dblclick) { this.dblclick(); }

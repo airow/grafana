@@ -128,6 +128,13 @@ class MetricsPanelCtrl extends PanelCtrl {
 
 
   onMetricsPanelRefresh() {
+    // debugger;
+    if (this.panel.type === "teld-datatables-panel") {
+      if (this['ignoreOtherPublishEventLoadDataFlag']) {
+        this['ignoreOtherPublishEventLoadDataFlag'] = false;
+        return;
+      }
+    }
     if (this.triggerRefresh) { this.triggerRefresh = false; return; }
     this.triggerRefresh = false;
     if (this.dashboard.meta.hasQuerybarPanel && this.dashboard.meta.fromScript) {

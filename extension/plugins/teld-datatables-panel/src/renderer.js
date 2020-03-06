@@ -172,156 +172,155 @@ export class DatatableRenderer {
    */
   createColumnFormatter(style, column) {
 
-      if (!style) {
-        return this.defaultCellFormatter;
-      }
+    if (!style) {
+      return this.defaultCellFormatter;
+    }
 
-      if (style.type === 'hidden') {
-        return v => {
-          return "_hidden_";
-        };
-      }
+    if (style.type === 'hidden') {
+      return v => {
+        return "_hidden_";
+      };
+    }
 
-      if (style.type === 'date') {
-        return v => {
-          if (v === undefined || v === null) {
-            return '-';
-          }
-          //_.isNaN(+"2017-12-58")==true,_.isNaN(+"20171258")==false
-          //将时间戳字符串转为数值型
-          if (_.isNaN(+v) === false) {
-            v = +v;
-          }
-          if (_.isArray(v)) { v = v[0]; }
-          var date = moment(v);
-          if (this.isUtc) {
-            date = date.utc();
-          }
-          if (style.dateUTCOffset) {
-            date = date.add(style.dateUTCOffset, 'h');//UTC和local格式都支持增加
-            // date = date.utcOffset(style.dateUTCOffset);//加上丢掉的8个时区数，必须是UTC格式的才管用
-          }
-          return date.format(style.dateFormat);
-        };
-      }
+    if (style.type === 'date') {
+      return v => {
+        if (v === undefined || v === null) {
+          return '-';
+        }
+        //_.isNaN(+"2017-12-58")==true,_.isNaN(+"20171258")==false
+        //将时间戳字符串转为数值型
+        if (_.isNaN(+v) === false) {
+          v = +v;
+        }
+        if (_.isArray(v)) { v = v[0]; }
+        var date = moment(v);
+        if (this.isUtc) {
+          date = date.utc();
+        }
+        if (style.dateUTCOffset) {
+          date = date.add(style.dateUTCOffset, 'h');//UTC和local格式都支持增加
+          // date = date.utcOffset(style.dateUTCOffset);//加上丢掉的8个时区数，必须是UTC格式的才管用
+        }
+        return date.format(style.dateFormat);
+      };
+    }
 
-      if (style.type === 'number') {
-        let valueFormater = kbn.valueFormats[column.unit || style.unit];
+    if (style.type === 'number') {
+      let valueFormater = kbn.valueFormats[column.unit || style.unit];
 
-        return v => {
-          if (v === null || v === void 0) {
-            return '-';
-          }
+      return v => {
+        if (v === null || v === void 0) {
+          return '-';
+        }
 
-          if (_.isNaN(+v) && _.isString(v)) {
-            return this.defaultCellFormatter(v, style);
-          }
+        if (_.isNaN(+v) && _.isString(v)) {
+          return this.defaultCellFormatter(v, style);
+        }
 
-          if (style.colorMode) {
-            this.colorState[style.colorMode] = this.getColorForValue(v, style);
-          }
+        if (style.colorMode) {
+          this.colorState[style.colorMode] = this.getColorForValue(v, style);
+        }
 
-          return valueFormater(v, style.decimals, null);
-        };
-      }
+        return valueFormater(v, style.decimals, null);
+      };
+    }
 
     if (style.type === 'link' || style.type === 'calc') {
-        let valueFormater = kbn.valueFormats[column.unit || style.unit];
-        let url = style.urlTemplate || "https://user.teld.cn";
-        let faStyle = style.faStyle || "";
-        let target = style.target || column.text;//"_black";
-        let text = (style.text || "联查") + '&nbsp;';
-        let iconColor = style.color || "#33B5E5";
-        let templateString =
-          `<span>
-          <a href="${url}" target='${target}'>${text}
-            <i style='color:${iconColor}; ${faStyle}' class='fa fa-external-link' aria-hidden='true'></i>
-          </a>
-        </span>`;
+      let valueFormater = kbn.valueFormats[column.unit || style.unit];
+      let url = style.urlTemplate || "https://user.teld.cn";
+      let faStyle = style.faStyle || "";
+      let target = style.target || column.text;//"_black";
+      let text = (style.text || "联查") + '&nbsp;';
+      let iconColor = style.color || "#33B5E5";
+      let templateString =
+        `<span>
+            ${text}
+            <a href="${url}" target='${target}'><i style='color:${iconColor}; ${faStyle}' class='fa fa-external-link' aria-hidden='true'></i></a>
+          </span>`;
 
       if (this['isRenderValues'] || style.type === 'calc') {
         text = text.replace('&nbsp;', '');
         templateString = `${text}`;
       }
 
-        return v => {
-          let bindData = _.assign({
-            timestamp: (new Date()).valueOf(),
-            currentUser: config.bootData.user
-          }, this.rowObj);
+      return v => {
+        let bindData = _.assign({
+          timestamp: (new Date()).valueOf(),
+          currentUser: config.bootData.user
+        }, this.rowObj);
 
-          if (style.calcDateRange) {
-            let time = this.rowObj[style.timeField];
-            let m = moment(time);
+        if (style.calcDateRange) {
+          let time = this.rowObj[style.timeField];
+          let m = moment(time);
 
-            if (moment.isMoment(m)) {
-              let start = moment(time).subtract(5, 'm');
-              let end = moment(time).add(5, 'm');
+          if (moment.isMoment(m)) {
+            let start = moment(time).subtract(5, 'm');
+            let end = moment(time).add(5, 'm');
 
-              if (style.timeRangeField) {
-                let timeRange = this.rowObj[style.timeRangeField];
-                if (_.isNumber(timeRange) && timeRange > 0) {
-                  let timeRangeFieldUnit = style.timeRangeFieldUnit || 'm';
+            if (style.timeRangeField) {
+              let timeRange = this.rowObj[style.timeRangeField];
+              if (_.isNumber(timeRange) && timeRange > 0) {
+                let timeRangeFieldUnit = style.timeRangeFieldUnit || 'm';
 
-                  start = moment(time).subtract(timeRange, timeRangeFieldUnit);
-                  end = moment(time).add(5, timeRangeFieldUnit);
-                }
-              }
-
-              bindData[`${style.timeField}Start`] = start.toISOString();
-              bindData[`${style.timeField}End`] = end.toISOString();
-
-              if (style.enableFormat) {
-                bindData[`${style.timeField}Start`] = start.format(style.dateFormat);
-                bindData[`${style.timeField}End`] = end.format(style.dateFormat);
+                start = moment(time).subtract(timeRange, timeRangeFieldUnit);
+                end = moment(time).add(5, timeRangeFieldUnit);
               }
             }
+
+            bindData[`${style.timeField}Start`] = start.toISOString();
+            bindData[`${style.timeField}End`] = end.toISOString();
+
+            if (style.enableFormat) {
+              bindData[`${style.timeField}Start`] = start.format(style.dateFormat);
+              bindData[`${style.timeField}End`] = end.format(style.dateFormat);
+            }
           }
+        }
 
-          // let templateOptions = {
-          //   imports: {
-          //     _: _,
-          //     m: moment,
-          //     helper: {
-          //       mapEach: function (prefix, suffix) {
-          //         return function (item) {
-          //           return `${prefix || ""}${item}${suffix || ""}`;
-          //         };
-          //       },
-          //       _StandardModel: function (item) {
-          //         return "(term:(StandardModel:(value:'" + item + "'),conf:(operatorKey:string_equal)))";
-          //       }
-          //     },
-          //     kbn: kbn,
-          //     'valueFormats': (function (kbn) {
-          //       let bindContext = {
-          //         // kbn,
-          //         // valueFormats: kbn.valueFormats,
-          //         // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
-          //         valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
-          //           result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
-          //         }, {})
-          //       };
+        // let templateOptions = {
+        //   imports: {
+        //     _: _,
+        //     m: moment,
+        //     helper: {
+        //       mapEach: function (prefix, suffix) {
+        //         return function (item) {
+        //           return `${prefix || ""}${item}${suffix || ""}`;
+        //         };
+        //       },
+        //       _StandardModel: function (item) {
+        //         return "(term:(StandardModel:(value:'" + item + "'),conf:(operatorKey:string_equal)))";
+        //       }
+        //     },
+        //     kbn: kbn,
+        //     'valueFormats': (function (kbn) {
+        //       let bindContext = {
+        //         // kbn,
+        //         // valueFormats: kbn.valueFormats,
+        //         // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
+        //         valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
+        //           result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
+        //         }, {})
+        //       };
 
-          //       return function (unitFormatName, size, decimals) {
-          //         return this.valueFormats[unitFormatName](size, decimals);
-          //       }.bind(bindContext);
-          //     })(kbn)
-          //   }
-          // };
-          let compiled = _.template(templateString, this.templateOptions);
-          bindData.rowObj = this.rowObj;
-          bindData.vars = _.transform(this.panelCtrl.templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
-          let returnValue = compiled(bindData);
-          return returnValue;
-          //return "<span><a href='https://www.baidu.com' target='_black'>asdfasdf</a></span>";
-        };
-      }
-
-      return (value) => {
-        return this.defaultCellFormatter(value, style);
+        //       return function (unitFormatName, size, decimals) {
+        //         return this.valueFormats[unitFormatName](size, decimals);
+        //       }.bind(bindContext);
+        //     })(kbn)
+        //   }
+        // };
+        let compiled = _.template(templateString, this.templateOptions);
+        bindData.rowObj = this.rowObj;
+        bindData.vars = _.transform(this.panelCtrl.templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
+        let returnValue = compiled(bindData);
+        return returnValue;
+        //return "<span><a href='https://www.baidu.com' target='_black'>asdfasdf</a></span>";
       };
     }
+
+    return (value) => {
+      return this.defaultCellFormatter(value, style);
+    };
+  }
 
   /**
    * [formatColumnValue description]
@@ -330,7 +329,7 @@ export class DatatableRenderer {
    * @param  {[type]} value    [description]
    * @return {[type]}          [description]
    */
-  formatColumnValue(colIndex, rowIndex, value) {
+  formatColumnValue(colIndex, rowIndex, value, isCSV) {
     // taken from @grafana/data
     function stringToJsRegex(str) {
       if (str[0] !== '/') {
@@ -344,19 +343,31 @@ export class DatatableRenderer {
     }
 
     if (!this.formatters[colIndex]) {
-      for (let i = 0; i < this.panel.styles.length; i++) {
-        const style = this.panel.styles[i];
+      var newStyle = this.panel.styles;
+      for (let i = 0; i < newStyle.length; i++) {
+        const style = newStyle[i];
         const column = this.table.columns[colIndex];
         const regex = stringToJsRegex(style.pattern);
         if (column.match !== true && column.text.match(regex)) {
           column.match = true;
           this.formatters[colIndex] = this.createColumnFormatter(style, column);
+          if (isCSV) {
+            //导出CSV时，对link\cale字段原样输出
+            if (style.type == 'link' || style.type == 'calc') {
+              this.formatters[colIndex] = this.defaultCellFormatter;
+            }
+          }
         }
       }
     }
 
     if (!this.formatters[colIndex]) {
       this.formatters[colIndex] = this.defaultCellFormatter;
+    }
+
+    if (isCSV) {
+      const columns = _.map(this.table.columns, 'text');
+      this.rowObj = _.zipObject(columns, this.table.rows[rowIndex]);
     }
 
     let v = this.formatters[colIndex](value);
@@ -395,7 +406,7 @@ export class DatatableRenderer {
         cellData.push(value);
       }
       if (this.panel.rowNumbersEnabled) {
-        cellData.unshift('rowCounter');
+        cellData.unshift('_rn_');
       }
       formattedRowData.push(cellData);
     }
@@ -525,14 +536,18 @@ export class DatatableRenderer {
     if (this.panel.rowNumbersEnabled) {
       rowNumberOffset = 1;
       columns.push({
-        title: '',
+        title: '序号',
         type: 'number',
+        searchable: false,
+        orderable: false,
+        className: "dataTables_text-align_center",
+        width: '35px'
       });
       columnDefs.push({
         searchable: false,
         orderable: false,
         targets: 0,
-        width: '1%',
+        width: '35px',
       });
     }
 
@@ -744,6 +759,7 @@ export class DatatableRenderer {
       scrollX: true,
       scrollY: panelHeight,
       dom: 'Bfrtip',
+      "ordering": this.panel.orderColumnEnabled === true,
       // buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
       data: formattedData,
       columns: columns,
@@ -766,7 +782,7 @@ export class DatatableRenderer {
         // rightColumns: 1
       }
     };
-
+debugger;
     if (this.panel.responsiveModal) {
       tableOptions.responsive = {
         details: {
@@ -780,7 +796,7 @@ export class DatatableRenderer {
           // renderer: $.fn.dataTable.Responsive.renderer.tableAll()
           renderer: function (api, rowIdx, columns) {
             var data = $.map(columns, function (col) {
-              if (col.data === 'rowCounter' || col.data === '_hidden_') { return; }
+              if (col.data === '_rn_' || col.data === '_hidden_') { return; }
               return '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
                 '<td style="padding: 5px; background-color: #f1f1f1;font-size: 1rem;border: 1px solid silver;">' + col.title + ':' + '</td> ' +
                 '<td style="padding: 5px; font-size: 1rem;border: 1px solid silver;">' + col.data + '</td>' +
@@ -860,6 +876,8 @@ export class DatatableRenderer {
       }
       if (this.panel.orderColumnEnabled) {
         $datatable.addClass('order-column');
+      } else {
+        $datatable.removeClass('order-column');
       }
       // these two are mutually exclusive
       if (this.panel.showCellBorders) {
@@ -872,11 +890,14 @@ export class DatatableRenderer {
       // function to display row numbers
       if (this.panel.rowNumbersEnabled) {
         dtInstance
-          .on('order.dt search.dt', () => {
+          .on('draw.dt order.dt search.dt', () => {
             dtInstance
               .column(0, { search: 'applied', order: 'applied' })
               .nodes()
               .each((cell, i) => {
+                cell.style.textAlign = 'center';
+                // cell.style.paddingRight = '18px';
+                // cell.style.paddingLeft = '18px';
                 cell.innerHTML = i + 1;
               });
           })
@@ -898,6 +919,44 @@ export class DatatableRenderer {
     }
     return {
       columns: this.table.columns,
+      rows: rows,
+    };
+  }
+
+  render_values_visible() {
+    debugger;
+    let columns = [];
+    var bindVars = this.panelCtrl.templateSrv.getLodashTemplateBindVars();
+    for (let i = 0; i < this.table.columns.length; i++) {
+      // const columnAlias = this.getColumnAlias(this.table.columns[i].text);
+      // const columnWidthHint = this.getColumnWidthHint(this.table.columns[i].text);
+
+      const column = this.table.columns[i];
+      // const columnAlias = column.alias || column.text;
+      const columnAlias = this.getColumnAlias(column, bindVars);
+      this.table.columns[i].match = false;
+      columns.push({
+        title: columnAlias,
+        visible: this.table.columns[i].hidden !== true,
+        notExportField: this.table.columns[i].notExportField != true,
+        isExport: this.table.columns[i].hidden !== true && this.table.columns[i].notExportField != true
+      });
+    }
+
+    const rows = [];
+
+    for (let y = 0; y < this.table.rows.length; y++) {
+      const row = this.table.rows[y];
+      const newRow = [];
+      for (let i = 0; i < this.table.columns.length; i++) {
+        if (columns[i].isExport) {
+          newRow.push(this.formatColumnValue(i, y, row[i], true));
+        }
+      }
+      rows.push(newRow);
+    }
+    return {
+      columns: _.map(_.filter(columns, 'isExport'), item => { return { text: item.title } }),
       rows: rows,
     };
   }

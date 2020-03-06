@@ -67,6 +67,38 @@ export function exportTableDataToCsv(table) {
     // saveSaveBlob(text, 'grafana_data_export.csv');
 };
 
+export function exportTableDataToExcelXML(table) {
+
+  var header = _.map(table.columns, column => { return `<Cell><Data ss:Type="String">${column.text}</Data></Cell>`; });
+
+  var rows = _.transform(table.rows, (result, row, key) => {
+    result.push('<Row>');
+    _.each(row, value => {
+      result.push(`<Cell><Data ss:Type="String">${value}</Data></Cell>`);
+    });
+    result.push('</Row>');
+  }, []);
+
+  var text = `<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <Worksheet ss:Name="Sheet1">
+  <Table>
+   <Row>
+    ${header.join("\r\n")}
+   </Row>
+   ${rows.join("\r\n")}
+  </Table>
+ </Worksheet>
+</Workbook>`;
+  var blob = new Blob([text], { type: "application/vnd.ms-excel;charset=utf-8" });
+  window.saveAs(blob, 'grafana_data_export.xml');
+};
+
 function exportTableDataToCsvzh_CN(table) {
   var text = '\uFEFF';
   // add header

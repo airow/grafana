@@ -1,4 +1,4 @@
-<div class="datatables-wrapper teld-datatables-panel">
+<div class="datatables-wrapper teld-datatables-panel" ng-class="{'hidequery' : ctrl.defaultHideSearch}">
   <table id="datatable-panel-table-{{ctrl.panel.id}}" class="display nowrap" style="width:100%">
   </table>
   <div ng-if="ctrl.panel.emptyData" class="nodata-message">

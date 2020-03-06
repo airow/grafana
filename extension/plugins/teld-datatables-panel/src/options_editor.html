@@ -139,6 +139,7 @@
           </div>
         </div>
         <gf-form-switch class="gf-form" label-class="width-8" label="别名解析"" checked="style.aliasExpression"></gf-form-switch>
+        <gf-form-switch class="gf-form" label-class="width-8" label="不导出"" checked=" style.notExportField"></gf-form-switch>
         <div class="gf-form" ng-if='false'>
           <label class="gf-form-label">Width</label>
           <div class="gf-form-select-wrapper">
@@ -219,7 +220,7 @@
       <div class="gf-form-inline" ng-if="style.type === 'link'">
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">Text</label>
-          <input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.text"
+          <input type="text" class="gf-form-input" data-placement="right" ng-model="style.text"
             ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form">
