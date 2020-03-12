@@ -188,7 +188,7 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
   }
 
   onInitPanelActions(actions) {
-    actions.push({ text: 'Export CSV', click: 'ctrl.exportCsv()' });
+    // actions.push({ text: 'Export CSV', click: 'ctrl.exportCsv()' });
     actions.push({ text: 'Export Excel XML', click: 'ctrl.exportExcel()' });
     // if (this.panel.searchEnabled) {
     //   actions.push({ text: '搜索', click: 'ctrl.toggleSearchText()' });
@@ -197,12 +197,12 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
 
   exportCsv() {
     var renderer = new DatatableRenderer(this, this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
-    FileExport.exportTableDataToCsv(renderer.render_values_visible());
+    FileExport.exportTableDataToCsv(renderer.render_values_visible(true));
   }
 
   exportExcel() {
     var renderer = new DatatableRenderer(this, this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
-    FileExport.exportTableDataToExcelXML(renderer.render_values_visible());
+    FileExport.exportTableDataToExcelXML(renderer.render_values_visible(false));
   }
 
   toggleSearchText() {
