@@ -81,7 +81,7 @@ module.exports = (grunt) => {
     compress: {
       release: {
         options: {
-          archive: '../../../dist/<%= grunt.template.today("yyyy-mm-dd hhMM") %> <%= grafPlugin.id %>-<%= pkg.version %>.zip'
+          archive: '../../../dist/<%= grunt.template.today("yyyy-mm-dd HHMM") %> <%= grafPlugin.id %>-<%= pkg.version %>.zip'
         },
         files: [
           {
