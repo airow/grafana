@@ -514,6 +514,7 @@ function setColumnAlias(panel, model) {
         }
         if (style.pattern !== "/.*/") {
           column.notExportField = style.notExportField;
+          column.style = style;
         }
       }
     });

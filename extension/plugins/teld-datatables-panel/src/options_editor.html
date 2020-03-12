@@ -41,7 +41,7 @@
       <div class="gf-form">
         <label class="gf-form-label width-8">Rows per page</label>
         <input type="number" class="gf-form-input width-6" placeholder="100" data-placement="right"
-          ng-model="editor.panel.pageSize" ng-change="editor.render()" ng-model-onblur>
+          ng-model="editor.panel.pageSize" del-ng-change="editor.render()" ng-model-onblur>
       </div>
       <gf-form-switch class="gf-form" label-class="width-4" label="Scroll" checked="editor.panel.scroll"
         on-change="editor.render()"></gf-form-switch>
@@ -49,7 +49,7 @@
         <label class="gf-form-label width-6">Font size</label>
         <div class="gf-form-select-wrapper max-width-15">
           <select class="gf-form-input" ng-model="editor.panel.fontSize" ng-options="f for f in editor.fontSizes"
-            ng-change="editor.render()"></select>
+            del-ng-change="editor.render()"></select>
         </div>
       </div>
       <gf-form-switch ng-show="editor.panel.transform==='json'" class="gf-form" label-class="width-6" label="Row 2 Col"
@@ -128,7 +128,7 @@
           <label class="gf-form-label">Type</label>
           <div class="gf-form-select-wrapper">
             <select class="gf-form-input" ng-model="style.type"
-              ng-options="c.value as c.text for c in editor.columnTypes" ng-change="editor.render()"></select>
+              ng-options="c.value as c.text for c in editor.columnTypes" del-ng-change="editor.render()"></select>
           </div>
         </div>
         <div class="gf-form">
@@ -140,6 +140,12 @@
         </div>
         <gf-form-switch class="gf-form" label-class="width-8" label="别名解析"" checked="style.aliasExpression"></gf-form-switch>
         <gf-form-switch class="gf-form" label-class="width-8" label="不导出"" checked=" style.notExportField"></gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label">制定排序列</label>
+          <div class="gf-form-select-wrapper">
+            <input type="text" class="gf-form-input width-6" ng-model="style.sortBy" ng-blur="editor.render()">
+          </div>
+        </div>
         <div class="gf-form" ng-if='false'>
           <label class="gf-form-label">Width</label>
           <div class="gf-form-select-wrapper">
@@ -151,7 +157,7 @@
           <metric-segment-model property="style.dateFormat" options="editor.dateFormats" on-change="editor.render()"
             custom="true"></metric-segment-model>
           <input type="number" class="gf-form-input width-6" placeholder="8" data-placement="right"
-            ng-model="style.dateUTCOffset" ng-change="editor.render()" ng-model-onblur>
+            ng-model="style.dateUTCOffset" del-ng-change="editor.render()" ng-model-onblur>
         </div>
         <gf-form-switch class="gf-form" label-class="width-8" ng-if="style.type === 'string'" label="Sanitize HTML"
           checked="style.sanitize" change="editor.render()"></gf-form-switch>
@@ -164,9 +170,46 @@
               <i class="fa fa-trash"></i>
             </a>
           </label>
+          <label class="gf-form-label">
+            <a ng-click="!$last && editor.moveColumnStyle(editor.panel.styles,$index,$index+1)">
+              <i class="fa fa-arrow-down" ng-class="{'not-allowed':$last}"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a ng-click="!$first && editor.moveColumnStyle(editor.panel.styles,$index,$index-1)">
+              <i class="fa fa-arrow-up" ng-class="{'not-allowed':$first}"></i>
+            </a>
+          </label>
         </div>
       </div>
-
+      <div class="gf-form-inline">
+        <div class="gf-form offset-width-8">
+          <label class="gf-form-label">表头对齐</label>
+          <div class="gf-form-select-wrapper">
+            <select class="gf-form-input" ng-model="style.thStyle.textAlign"
+              ng-options="c.value as c.text for c in editor.columnAlign" del-ng-change="editor.render()"></select>
+          </div>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">表头divStyle</label>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.thStyle.divStyle"
+            del-ng-change="editor.render()" ng-model-onblur>
+        </div>
+      </div>
+      <div class="gf-form-inline">
+        <div class="gf-form offset-width-8">
+          <label class="gf-form-label">对齐</label>
+          <div class="gf-form-select-wrapper">
+            <select class="gf-form-input" ng-model="style.textAlign" ng-options="c.value as c.text for c in editor.columnAlign"
+              del-ng-change="editor.render()"></select>
+          </div>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">divStyle</label>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.divStyle"
+            del-ng-change="editor.render()" ng-model-onblur>
+        </div>
+      </div>
       <div class="gf-form-inline" ng-if="style.type === 'number'">
         <div class="gf-form offset-width-8">
           <label class="gf-form-label width-8">Unit</label>
@@ -178,13 +221,13 @@
         <div class="gf-form">
           <label class="gf-form-label">Decimals</label>
           <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="style.decimals"
-            ng-change="editor.render()" ng-model-onblur>
+            del-ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form">
           <label class="gf-form-label">Coloring</label>
           <div class="gf-form-select-wrapper">
             <select class="gf-form-input" ng-model="style.colorMode"
-              ng-options="c.value as c.text for c in editor.colorModes" ng-change="editor.render()"></select>
+              ng-options="c.value as c.text for c in editor.colorModes" del-ng-change="editor.render()"></select>
           </div>
         </div>
         <div class="gf-form gf-form--grow">
@@ -201,13 +244,13 @@
         <div class="gf-form">
           <label class="gf-form-label width-5">Colors</label>
           <span class="gf-form-label">
-            <spectrum-picker ng-model="style.colors[0]" ng-change="editor.render()"></spectrum-picker>
+            <spectrum-picker ng-model="style.colors[0]" del-ng-change="editor.render()"></spectrum-picker>
           </span>
           <span class="gf-form-label">
-            <spectrum-picker ng-model="style.colors[1]" ng-change="editor.render()"></spectrum-picker>
+            <spectrum-picker ng-model="style.colors[1]" del-ng-change="editor.render()"></spectrum-picker>
           </span>
           <span class="gf-form-label">
-            <spectrum-picker ng-model="style.colors[2]" ng-change="editor.render()"></spectrum-picker>
+            <spectrum-picker ng-model="style.colors[2]" del-ng-change="editor.render()"></spectrum-picker>
           </span>
         </div>
         <div class="gf-form gf-form--grow">
@@ -220,13 +263,13 @@
       <div class="gf-form-inline" ng-if="style.type === 'link'">
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">Text</label>
-          <input type="text" class="gf-form-input" data-placement="right" ng-model="style.text"
-            ng-change="editor.render()" ng-model-onblur>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.text"
+            del-ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-5">Color</label>
           <span class="gf-form-label">
-            <spectrum-picker ng-model="style.color" ng-change="editor.render()"></spectrum-picker>
+            <spectrum-picker ng-model="style.color" del-ng-change="editor.render()"></spectrum-picker>
           </span>
         </div>
         <div class="gf-form">
@@ -247,16 +290,16 @@
             ng-model-onblur>
           <div class="gf-form-select-wrapper" ng-show="style.timeRangeField">
             <select class="gf-form-input" ng-model="style.timeRangeFieldUnit"
-              ng-options="c.value as c.text for c in editor.timeRangeUnits" ng-change="editor.render()"></select>
+              ng-options="c.value as c.text for c in editor.timeRangeUnits" del-ng-change="editor.render()"></select>
           </div>
           <span class="gf-form-label" ng-show="style.timeField">
             {{style.timeField}}Start - {{style.timeField}}End
           </span>
         </div>
-        <div class="gf-form ng-hide">
+        <div class="gf-form">
           <label class="gf-form-label">Target</label>
           <input type="text" class="gf-form-input width-9" data-placement="right" ng-model="style.target"
-            ng-change="editor.render()" ng-model-onblur>
+            del-ng-change="editor.render()" ng-model-onblur data-min-length=0 bs-typeahead="['_blank']" >
         </div>
         <div class="gf-form gf-form--grow">
           <div class="gf-form-label gf-form-label--grow"></div>
@@ -267,7 +310,7 @@
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">UrlTemplate</label>
           <input type="text" class="gf-form-input" style="width:800px;" data-placement="right"
-            ng-model="style.urlTemplate" ng-change="editor.render()" ng-model-onblur>
+            ng-model="style.urlTemplate" del-ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form gf-form--grow">
           <div class="gf-form-label gf-form-label--grow"></div>
@@ -277,10 +320,20 @@
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">faStyle</label>
           <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.faStyle"
-            ng-change="editor.render()" ng-model-onblur>
+            del-ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form gf-form--grow">
-          <div class="gf-form-label gf-form-label--grow"></div>
+        </div>
+      </div>
+      <div class="gf-form-inline" ng-if="style.type === 'link'">
+        <div class="gf-form offset-width-8">
+          <label class="gf-form-label">spanStyle</label>
+          <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.spanStyle"
+            del-ng-change="editor.render()" ng-model-onblur>
+        </div>
+        <div class="gf-form gf-form--grow">
+          <gf-form-switch class="gf-form" label-class="width-10" label="运行换行" checked="style.wrap" on-change="editor.render()">
+          </gf-form-switch>
         </div>
       </div>
       <div class="gf-form-inline" ng-if="style.type === 'link'">
@@ -293,10 +346,11 @@
         <div class="gf-form offset-width-8">
           <label class="gf-form-label">Text</label>
           <input type="text" class="gf-form-input" style="width:800px;" data-placement="right" ng-model="style.text"
-            ng-change="editor.render()" ng-model-onblur>
+            del-ng-change="editor.render()" ng-model-onblur>
         </div>
         <div class="gf-form gf-form--grow">
-          <div class="gf-form-label gf-form-label--grow"></div>
+          <gf-form-switch class="gf-form" label-class="width-10" label="运行换行" checked="style.wrap" on-change="editor.render()">
+          </gf-form-switch>
         </div>
       </div>
       <div class="gf-form-inline" ng-if="style.type === 'calc' || style.type === 'link'">

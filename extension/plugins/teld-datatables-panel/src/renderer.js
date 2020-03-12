@@ -4,6 +4,32 @@ import config from 'app/core/config';
 import moment from 'moment';
 import _ from 'lodash';
 
+$.fn.dataTable.ext.order['teld-dom-text'] = function (settings, col) {
+  return this.api().column(col, { order: 'index' }).nodes().map(function (td, i) {
+    var rawVal = $('div', td).data('rawval');
+    console.log(rawVal);
+    return (parseInt(rawVal) || rawVal || 0);
+  });
+}
+
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+  "teld-warpRowColumn-pre": function (a) {
+    // debugger;
+    var x = (a == "-") ? 0 : a.replace(/,/, ".");
+    return +$(a).data('rawval') || a;
+  },
+
+  "teld-warpRowColumn-asc": function (a, b) {
+    debugger;
+    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+  },
+
+  "teld-warpRowColumn-desc": function (a, b) {
+    debugger;
+    return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+  }
+});
+
 export class DatatableRenderer {
 
   loadPlugins() {
@@ -156,12 +182,26 @@ export class DatatableRenderer {
     if (style && style.sanitize) {
       return this.sanitize(v);
     } else if (style && style.link && cellTemplate && column.text === style.column) {
-      return '<a href="' + cellTemplate.replace(/\{\}|\$__cell/g, v) + '" target="_blank">' + v + '</a>';
+      return '<a onclick="event.stopPropagation();" href="' + cellTemplate.replace(/\{\}|\$__cell/g, v) + '" target="_blank">' + v + '</a>';
     } else if (style && style.link) {
-      return '<a href="' + v + '" target="_blank">' + v + '</a>';
+      return '<a onclick="event.stopPropagation();" href="' + v + '" target="_blank">' + v + '</a>';
     } else {
       return _.escape(v);
     }
+  }
+
+  warpRowColumn(rawVal, style, val) {
+    style = style || {};
+    var textAlign = style.textAlign || "";
+    var divStyle = style.divStyle || (style.type === 'number' ? "text-align:right;" : "");
+    var dataVal = style.type === 'number' ? `data-val="${val}"` : "";
+    var dataRawVal = rawVal ? `data-rawVal=${rawVal}` : "";
+    return `<div ${dataRawVal} ${dataVal} data-type="${style.type}" style="${divStyle}${textAlign}">${val}</div>`;
+  }
+
+  warpHeader(rawVal, style, val) {
+    style = style || {};
+    return this.warpRowColumn(rawVal, style.thStyle, val);
   }
 
   /**
@@ -201,7 +241,7 @@ export class DatatableRenderer {
           date = date.add(style.dateUTCOffset, 'h');//UTC和local格式都支持增加
           // date = date.utcOffset(style.dateUTCOffset);//加上丢掉的8个时区数，必须是UTC格式的才管用
         }
-        return date.format(style.dateFormat);
+        return this.warpRowColumn(v, style, date.format(style.dateFormat));
       };
     }
 
@@ -210,18 +250,17 @@ export class DatatableRenderer {
 
       return v => {
         if (v === null || v === void 0) {
-          return '-';
+          return this.warpRowColumn(v, style, '-');
         }
 
         if (_.isNaN(+v) && _.isString(v)) {
-          return this.defaultCellFormatter(v, style);
+          return this.warpRowColumn(v, style, this.defaultCellFormatter(v, style));
         }
 
         if (style.colorMode) {
           this.colorState[style.colorMode] = this.getColorForValue(v, style);
         }
-
-        return valueFormater(v, style.decimals, null);
+        return this.warpRowColumn(v, style, valueFormater(v, style.decimals, null));
       };
     }
 
@@ -229,14 +268,18 @@ export class DatatableRenderer {
       let valueFormater = kbn.valueFormats[column.unit || style.unit];
       let url = style.urlTemplate || "https://user.teld.cn";
       let faStyle = style.faStyle || "";
+      let spanStyle = style.spanStyle || "";
+      let spanWrapStyle = style.wrap ? "display: inline-block;word-wrap: break-word;white-space: pre-wrap;" : "";
       let target = style.target || column.text;//"_black";
-      let text = (style.text || "联查") + '&nbsp;';
+      let text = (style.text || "联查");
       let iconColor = style.color || "#33B5E5";
+      debugger;
+      //点击a标签，取消事件冒泡，防止与表格行选择冲突
+      if (_.get(this.panel, 'publishVariables.enable', false) && text.indexOf('<a ') > -1 && $(text).is('a[href]')) {
+        text = text.replace(/<a/g, "<a onclick='event.stopPropagation();'");
+      }
       let templateString =
-        `<span>
-            ${text}
-            <a href="${url}" target='${target}'><i style='color:${iconColor}; ${faStyle}' class='fa fa-external-link' aria-hidden='true'></i></a>
-          </span>`;
+        `<span style='${spanWrapStyle}${spanStyle}'>${text}<a style='margin-left: 5px;' onclick='event.stopPropagation();' href="${url}" target='${target}'><i style='color:${iconColor}; ${faStyle}' class='fa fa-external-link' aria-hidden='true'></i></a></span>`;
 
       if (this['isRenderValues'] || style.type === 'calc') {
         text = text.replace('&nbsp;', '');
@@ -276,49 +319,18 @@ export class DatatableRenderer {
             }
           }
         }
-
-        // let templateOptions = {
-        //   imports: {
-        //     _: _,
-        //     m: moment,
-        //     helper: {
-        //       mapEach: function (prefix, suffix) {
-        //         return function (item) {
-        //           return `${prefix || ""}${item}${suffix || ""}`;
-        //         };
-        //       },
-        //       _StandardModel: function (item) {
-        //         return "(term:(StandardModel:(value:'" + item + "'),conf:(operatorKey:string_equal)))";
-        //       }
-        //     },
-        //     kbn: kbn,
-        //     'valueFormats': (function (kbn) {
-        //       let bindContext = {
-        //         // kbn,
-        //         // valueFormats: kbn.valueFormats,
-        //         // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
-        //         valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
-        //           result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
-        //         }, {})
-        //       };
-
-        //       return function (unitFormatName, size, decimals) {
-        //         return this.valueFormats[unitFormatName](size, decimals);
-        //       }.bind(bindContext);
-        //     })(kbn)
-        //   }
-        // };
         let compiled = _.template(templateString, this.templateOptions);
         bindData.rowObj = this.rowObj;
         bindData.vars = _.transform(this.panelCtrl.templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
         let returnValue = compiled(bindData);
-        return returnValue;
-        //return "<span><a href='https://www.baidu.com' target='_black'>asdfasdf</a></span>";
+        debugger;
+        let rawVal = this.rowObj[style.sortBy] || this.rowObj[style.pattern] || v;
+        return this.warpRowColumn(rawVal, style, returnValue);
       };
     }
 
     return (value) => {
-      return this.defaultCellFormatter(value, style);
+      return this.warpRowColumn(value, style, this.defaultCellFormatter(value, style));
     };
   }
 
@@ -365,7 +377,7 @@ export class DatatableRenderer {
       this.formatters[colIndex] = this.defaultCellFormatter;
     }
 
-    if (isCSV) {
+    if (false === _.isUndefined(isCSV)) {
       const columns = _.map(this.table.columns, 'text');
       this.rowObj = _.zipObject(columns, this.table.rows[rowIndex]);
     }
@@ -447,6 +459,46 @@ export class DatatableRenderer {
     if (cellData === null || cellData === undefined || cellData.split === undefined) {
       return null;
     }
+    // const items = cellData.split(/([^0-9.,]+)/);
+    const type = $(cellData).data('type');
+    if (type !== 'number') { return null; }
+
+    // only color cell if the content is a number?
+    let bgColor = null;
+    let bgColorIndex = null;
+    let color = null;
+    let colorIndex = null;
+    let colStyle = this.getStyleForColumn(columnNumber);
+    let value = $(cellData).data('val');
+
+    if (colStyle !== null && colStyle.colorMode != null) {
+      // check color for either cell or row
+      if (colorState.cell || colorState.row || colorState.rowcolumn) {
+        // bgColor = _this.colorState.cell;
+        bgColor = this.getColorForValue(value, colStyle);
+        bgColorIndex = this.getColorIndexForValue(value, colStyle);
+        color = 'white';
+      }
+      // just the value color is set
+      if (colorState.value) {
+        //color = _this.colorState.value;
+        color = this.getColorForValue(value, colStyle);
+        colorIndex = this.getColorIndexForValue(value, colStyle);
+      }
+    }
+    return {
+      bgColor: bgColor,
+      bgColorIndex: bgColorIndex,
+      color: color,
+      colorIndex: colorIndex,
+    };
+  }
+
+  getCellColors_bak(colorState, columnNumber, cellData) {
+    // return null;
+    if (cellData === null || cellData === undefined || cellData.split === undefined) {
+      return null;
+    }
     const items = cellData.split(/([^0-9.,]+)/);
     // only color cell if the content is a number?
     let bgColor = null;
@@ -454,7 +506,7 @@ export class DatatableRenderer {
     let color = null;
     let colorIndex = null;
     let colStyle = null;
-    let value = null;
+    let value = $(cellData).data('val');
     // check if the content has a numeric value after the split
     if (!isNaN(items[0])) {
       // run value through threshold function
@@ -550,7 +602,6 @@ export class DatatableRenderer {
         width: '35px',
       });
     }
-
     // pass the formatted rows into the datatable
     const formattedData = this.generateFormattedData(this.table.rows);
     var bindVars = this.panelCtrl.templateSrv.getLodashTemplateBindVars();
@@ -560,7 +611,9 @@ export class DatatableRenderer {
 
       const column = this.table.columns[i];
       // const columnAlias = column.alias || column.text;
-      const columnAlias = this.getColumnAlias(column, bindVars);
+      let columnAlias = this.getColumnAlias(column, bindVars);
+      // debugger;
+      let warpColumnAlias = this.warpHeader(column.text, column.style, columnAlias);
 
       const columnWidthHint = this.getColumnWidthHint(column.text);
 
@@ -568,12 +621,15 @@ export class DatatableRenderer {
       // with full width
       /* jshint loopfunc: true */
       columns.push({
-        title: columnAlias,
+        // "orderDataType": "teld-dom-text",
+        columnAlias: columnAlias,
+        title: warpColumnAlias,
         type: this.table.columns[i].type,
         visible: this.table.columns[i].hidden !== true,
         width: this.table.columns[i].width || columnWidthHint,
       });
       columnDefs.push({
+        // "type": "teld-warpRowColumn",
         targets: i + rowNumberOffset,
         createdCell: (td, cellData, rowData, row, col) => {
           // hidden columns have null data
@@ -699,6 +755,18 @@ export class DatatableRenderer {
       });
     }
 
+    // $.fn.dataTable.ext.type.order['innerOrder'] = function (d) {
+    //   debugger;
+    //   switch (d) {
+    //     case 'Low': return 1;
+    //     case 'Medium': return 2;
+    //     case 'High': return 3;
+    //   }
+    //   console.log(d);
+    //   return 0;
+    // };
+
+
     // sanity check
     // annotations come back as 4 items in an array per row. If the first row content is undefined, then modify to empty
     // since datatables.net throws errors
@@ -772,7 +840,7 @@ export class DatatableRenderer {
         smart: false,
       },
       order: _.transform(this.panel.sortByColumns, (result, value, key) => {
-        let index = _.findIndex(columns, { title: value.name });
+        let index = _.findIndex(columns, { columnAlias: value.name });
         if (index > -1) {
           result.push([index, value.sortMethod]);
         }
@@ -798,7 +866,7 @@ debugger;
             var data = $.map(columns, function (col) {
               if (col.data === '_rn_' || col.data === '_hidden_') { return; }
               return '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                '<td style="padding: 5px; background-color: #f1f1f1;font-size: 1rem;border: 1px solid silver;">' + col.title + ':' + '</td> ' +
+                '<td style="padding: 5px; background-color: #f1f1f1;font-size: 1rem;border: 1px solid silver;">' + col.title + '</td> ' +
                 '<td style="padding: 5px; font-size: 1rem;border: 1px solid silver;">' + col.data + '</td>' +
                 '</tr>';
             }).join('');
@@ -923,7 +991,7 @@ debugger;
     };
   }
 
-  render_values_visible() {
+  render_values_visible(isCSV) {
     debugger;
     let columns = [];
     var bindVars = this.panelCtrl.templateSrv.getLodashTemplateBindVars();
@@ -950,7 +1018,7 @@ debugger;
       const newRow = [];
       for (let i = 0; i < this.table.columns.length; i++) {
         if (columns[i].isExport) {
-          newRow.push(this.formatColumnValue(i, y, row[i], true));
+          newRow.push(this.formatColumnValue(i, y, row[i], isCSV));
         }
       }
       rows.push(newRow);

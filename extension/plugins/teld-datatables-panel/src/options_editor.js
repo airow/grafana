@@ -52,6 +52,12 @@ export class optionsEditorCtrl {
       { text: 'Descending', value: 'desc' }
     ];
 
+    this.columnAlign = [
+      { text: '左对齐', value: 'text-align:left;' },
+      { text: '居中', value: 'text-align:center;' },
+      { text: '右对齐', value: 'text-align:right;' },
+    ];
+
     this.addColumnSegment = uiSegmentSrv.newPlusButton();
 
     // this is used from bs-typeahead and needs to be instance bound
@@ -144,6 +150,10 @@ export class optionsEditorCtrl {
 
   removeColumnStyle(style) {
     this.panel.styles = _.without(this.panel.styles, style);
+  }
+
+  moveColumnStyle(style, index, newIndex) {
+    _.move(style, index, newIndex);
   }
 
   invertColorOrder(index) {
