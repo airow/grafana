@@ -207,16 +207,15 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
 
   toggleSearchText() {
     this.defaultHideSearch = !this.defaultHideSearch;
-
-    if (this.defaultHideSearch) {
-      const tableHolderId = '#datatable-panel-table-' + this.panel.id;
-      const $datatable = $(tableHolderId).DataTable();
-      if ($datatable) {
+    debugger;
+    const tableHolderId = '#datatable-panel-table-' + this.panel.id;
+    const $datatable = $(tableHolderId).DataTable();
+    if ($datatable) {
+      //$(tableHolderId).closest('.datatables-wrapper').find('.dataTables_filter input[type=search]').focus();
+      if (this.defaultHideSearch) {
         $datatable.search('').draw();
       }
     }
-
-    $event.stopPropagation();
   }
 
   render() {

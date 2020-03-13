@@ -16,6 +16,7 @@
 
 .teld-datatables-panel .dataTables_filter input{
   width: 30%;
+  -webkit-appearance: searchfield-cancel-button;
 }
 
 .teld-datatables-panel .dataTables_text-align_center{
