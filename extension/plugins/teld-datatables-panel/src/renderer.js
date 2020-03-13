@@ -191,11 +191,12 @@ export class DatatableRenderer {
   }
 
   warpRowColumn(rawVal, style, val) {
+    if (this.skipWarpRowColumn === true) { return val; }
     style = style || {};
     var textAlign = style.textAlign || "";
     var divStyle = style.divStyle || (style.type === 'number' ? "text-align:right;" : "");
     var dataVal = style.type === 'number' ? `data-val="${val}"` : "";
-    var dataRawVal = rawVal ? `data-rawVal=${rawVal}` : "";
+    var dataRawVal = rawVal ? `data-rawVal="${rawVal}"` : "";
     return `<div ${dataRawVal} ${dataVal} data-type="${style.type}" style="${divStyle}${textAlign}">${val}</div>`;
   }
 
@@ -273,7 +274,6 @@ export class DatatableRenderer {
       let target = style.target || column.text;//"_black";
       let text = (style.text || "联查");
       let iconColor = style.color || "#33B5E5";
-      debugger;
       //点击a标签，取消事件冒泡，防止与表格行选择冲突
       if (_.get(this.panel, 'publishVariables.enable', false) && text.indexOf('<a ') > -1 && $(text).is('a[href]')) {
         text = text.replace(/<a/g, "<a onclick='event.stopPropagation();'");
@@ -323,7 +323,6 @@ export class DatatableRenderer {
         bindData.rowObj = this.rowObj;
         bindData.vars = _.transform(this.panelCtrl.templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
         let returnValue = compiled(bindData);
-        debugger;
         let rawVal = this.rowObj[style.sortBy] || this.rowObj[style.pattern] || v;
         return this.warpRowColumn(rawVal, style, returnValue);
       };
@@ -574,7 +573,6 @@ export class DatatableRenderer {
    * @return {[Boolean]} True if loaded without errors
    */
   render() {
-    debugger;
 
     const tableHolderId = '#datatable-panel-table-' + this.panel.id;
 
@@ -755,29 +753,6 @@ export class DatatableRenderer {
       });
     }
 
-    // $.fn.dataTable.ext.type.order['innerOrder'] = function (d) {
-    //   debugger;
-    //   switch (d) {
-    //     case 'Low': return 1;
-    //     case 'Medium': return 2;
-    //     case 'High': return 3;
-    //   }
-    //   console.log(d);
-    //   return 0;
-    // };
-
-
-    // sanity check
-    // annotations come back as 4 items in an array per row. If the first row content is undefined, then modify to empty
-    // since datatables.net throws errors
-    // if (this.table.rows[0].length === 4) {
-    //   if (this.table.rows[0][0] === undefined) {
-    //     // detected empty annotations
-    //     this.table.rows = [];
-    //   }
-    // }
-
-
     if (this.panel.rowNumbersEnabled) {
       // shift the data to the right
     }
@@ -922,6 +897,14 @@ debugger;
           dtInstance_selectHandler.call(bindCotext);
         });
 
+      dtInstance.off('preInit.dt').on('preInit.dt', function (e, settings) {
+        var api = new $.fn.dataTable.Api(settings);
+        $('<i style="margin-left: 10px;" class="fa fa-close" aria-hidden="true"></i>').click(function () {
+          api.search("").draw();
+        }).appendTo($(e.target).closest('.datatables-wrapper').find('.dataTables_filter label'));
+        console.log('New DataTable created:');
+      });
+
       // // hide columns that are marked hidden
       for (let i = 0; i < this.table.columns.length; i++) {
         if (this.table.columns[i].hidden) {
@@ -992,7 +975,7 @@ debugger;
   }
 
   render_values_visible(isCSV) {
-    debugger;
+    this.skipWarpRowColumn = true;
     let columns = [];
     var bindVars = this.panelCtrl.templateSrv.getLodashTemplateBindVars();
     for (let i = 0; i < this.table.columns.length; i++) {
@@ -1023,6 +1006,7 @@ debugger;
       }
       rows.push(newRow);
     }
+    delete this.skipWarpRowColumn;
     return {
       columns: _.map(_.filter(columns, 'isExport'), item => { return { text: item.title } }),
       rows: rows,
