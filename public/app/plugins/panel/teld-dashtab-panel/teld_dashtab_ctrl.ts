@@ -76,7 +76,9 @@ export class TeldDashtabCtrl extends MetricsPanelCtrl {
 
     this.events.on('refresh', () => {
       /*只进行一次数据请求，防止dashboard刷新面板再次请求数据*/
-      this.events.removeAllListeners('refresh');
+      if (_.size(this.tabs) > 0) {
+        this.events.removeAllListeners('refresh');
+      }
     });
 
 
