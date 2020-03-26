@@ -38,7 +38,7 @@ const panelDefaults = {
   columns: [],
   scroll: false,
   fontSize: '100%',
-  sort: { col: 0, desc: true },
+  // sort: { col: 0, desc: true },
   filterNull: false,
   columnWidthHints: [],
   sortByColumnsData: [[0, 'desc']],
@@ -220,7 +220,7 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
 
   render() {
     this.table = transformDataToTable(this.dataRaw, this.panel);
-    this.table.sort(this.panel.sort);
+    // this.table.sort(this.panel.sort);
     this.panel.emptyData = this.table.rows.length === 0 || this.table.columns.length === 0;
     // if (this.triggerRefresh) {
     //   this.triggerRefresh = false;
