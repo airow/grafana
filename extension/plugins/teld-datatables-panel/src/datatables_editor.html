@@ -22,6 +22,8 @@
         <label class="gf-form-label">冻结列</label>
         <input type="number" class="gf-form-input" ng-model="ctrl.panel.fixedColumns.leftColumns">
       </div>
+      <gf-form-switch class="gf-form" label-class="width-8" label="隐藏页面" checked="ctrl.panel.hideInfo" />
+      <gf-form-switch class="gf-form" label-class="width-6" label="不分页" checked="ctrl.panel.notPaging" />
       <div class="gf-form">
         <label class="gf-form-label">分页数</label>
         <input type="number" class="gf-form-input" ng-model="ctrl.panel.pageLength">

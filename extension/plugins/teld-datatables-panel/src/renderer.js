@@ -801,6 +801,8 @@ export class DatatableRenderer {
       scrollCollapse: true,
       scrollX: true,
       scrollY: panelHeight,
+      info: this.panel.hideInfo !== true,
+      paging: this.panel.notPaging !== true,
       dom: 'Bfrtip',
       "ordering": this.panel.orderColumnEnabled === true,
       // buttons: ['copy', 'excel', 'csv', 'pdf', 'print'],
