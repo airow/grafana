@@ -9,13 +9,13 @@ import embed_teldapp from 'app/core/embed_teldapp';
 export class TeldServiceGatewayDatasource {
   id: any;
   name: any;
-  responseParser: ResponseParser;
+  // responseParser: ResponseParser;
 
   /** @ngInject **/
   constructor(instanceSettings, private backendSrv, private $q, private templateSrv, private contextSrv, private alertSrv) {
     this.name = instanceSettings.name;
     this.id = instanceSettings.id;
-    this.responseParser = new ResponseParser(this.$q);
+    // this.responseParser = new ResponseParser(this.$q);
   }
 
   interpolateVariable(value) {
@@ -230,6 +230,8 @@ export class TeldServiceGatewayDatasource {
       return this.$q.when({ data: [] });
     }
 
+    var responseParser = new ResponseParser(this.$q);
+    responseParser.setQueries(queries);
     return this.backendSrv.datasourceRequest({
       url: '/callteldsg/_sg',
       method: 'POST',
@@ -238,7 +240,7 @@ export class TeldServiceGatewayDatasource {
         to: options.range.to.valueOf().toString(),
         queries: queries,
       }
-    }).then(this.responseParser.setQueries(queries).processQueryResult.bind(this.responseParser));
+    }).then(responseParser.processQueryResult.bind(responseParser));
   }
 
   metricFindQuery(query, optionalOptions) {
@@ -253,7 +255,7 @@ export class TeldServiceGatewayDatasource {
       rawSql: this.templateSrv.replace(query, {}, this.interpolateVariable),
       format: 'table',
     };
-
+    var responseParser = new ResponseParser(this.$q);
     return this.backendSrv.datasourceRequest({
       url: '/api/tsdb/query',
       method: 'POST',
@@ -261,7 +263,7 @@ export class TeldServiceGatewayDatasource {
         queries: [interpolatedQuery],
       }
     })
-      .then(data => this.responseParser.parseMetricFindQueryResult(refId, data));
+      .then(data => responseParser.parseMetricFindQueryResult(refId, data));
   }
 
   testDatasource() {
