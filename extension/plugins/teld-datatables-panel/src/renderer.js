@@ -197,6 +197,7 @@ export class DatatableRenderer {
     var divStyle = style.divStyle || (style.type === 'number' ? "text-align:right;" : "");
     var dataVal = style.type === 'number' ? `data-val="${val}"` : "";
     var dataRawVal = rawVal ? `data-rawVal="${rawVal}"` : "";
+    dataRawVal = "";
     return `<div ${dataRawVal} ${dataVal} data-type="${style.type}" style="${divStyle}${textAlign}">${val}</div>`;
   }
 
