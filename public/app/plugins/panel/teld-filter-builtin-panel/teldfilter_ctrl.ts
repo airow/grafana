@@ -108,23 +108,7 @@ export class TeldfilterCtrl extends PanelCtrl {
     this.datemoment = {
       moment: moment
     };
-    for (var i = 0; i < this._panle.QueryList.length; i++) {
-      if (this._panle.QueryList[i].Querytype === "date") {
-        for (var j = 0; j < this._panle.QueryList[i].QueryOptions.length; j++) {
-          if (this._panle.QueryList[i].QueryOptions[j].TimeClickValue) {
-            this._panle.QueryList[i].QueryOptions[j].ClickValue = new Date(
-              _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })()
-            );
-          }
-        }
-      } else if (this._panle.QueryList[i].expression) {
-        // debugger;
-        this._panle.QueryList[i].QueryClickName = _.template(this._panle.QueryList[i].QueryClickName,
-          { 'imports': { m: this.datemoment } })();
-        this._panle.QueryList[i].QueryClickVal = _.template(this._panle.QueryList[i].QueryClickVal,
-          { 'imports': { m: this.datemoment } })();
-      }
-    }
+    this.qsDefaultValue();
     //m.moment is not a function
     // for (var i = 0; i < this.panel.VariableList.length; i++) {
     //   if (this.panel.VariableList[i].VariableName) {
@@ -228,6 +212,35 @@ export class TeldfilterCtrl extends PanelCtrl {
       this.eh_emitCycle(this.snapshot.currentCycle);
       this.variableSrv.templateSrv.updateTemplateData();
     }.bind(this), $scope);
+  }
+
+  qsDefaultValue() {
+    // debugger;
+    for (var i = 0; i < this._panle.QueryList.length; i++) {
+      if (this._panle.QueryList[i].Querytype === "date") {
+        for (var j = 0; j < this._panle.QueryList[i].QueryOptions.length; j++) {
+          if (this._panle.QueryList[i].QueryOptions[j].TimeClickValue) {
+            this._panle.QueryList[i].QueryOptions[j].ClickValue = new Date(
+              _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })()
+            );
+          }
+        }
+      } else if (this._panle.QueryList[i].expression) {
+        // debugger;
+        this._panle.QueryList[i].QueryClickName = _.template(this._panle.QueryList[i].QueryClickName,
+          { 'imports': { m: this.datemoment } })();
+        this._panle.QueryList[i].QueryClickVal = _.template(this._panle.QueryList[i].QueryClickVal,
+          { 'imports': { m: this.datemoment } })();
+
+        if (this._panle.QueryList[i].MultiClick) {
+          var qcName = _.split(this._panle.QueryList[i].QueryClickName, ",");
+          var qcVal = _.split(this._panle.QueryList[i].QueryClickVal, " OR ");
+          _.each(this._panle.QueryList[i].QueryOptions, item => {
+            item.isClick = (_.includes(qcName, item.OptionName) || _.includes(qcVal, item.ClickValue));
+          });
+        }
+      }
+    }
   }
 
   //获取配置的年、月、日等按钮
@@ -513,17 +526,18 @@ export class TeldfilterCtrl extends PanelCtrl {
   }
   Filterreset() {
     this._panle.QueryList = _.cloneDeep(this.panel.QueryList);
-    for (var i = 0; i < this._panle.QueryList.length; i++) {
-      if (this._panle.QueryList[i].Querytype === "date") {
-        for (var j = 0; j < this._panle.QueryList[i].QueryOptions.length; j++) {
-          if (this._panle.QueryList[i].QueryOptions[j].TimeClickValue) {
-            this._panle.QueryList[i].QueryOptions[j].ClickValue = new Date(
-              _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })()
-            );
-          }
-        }
-      }
-    }
+    this.qsDefaultValue();
+    // for (var i = 0; i < this._panle.QueryList.length; i++) {
+    //   if (this._panle.QueryList[i].Querytype === "date") {
+    //     for (var j = 0; j < this._panle.QueryList[i].QueryOptions.length; j++) {
+    //       if (this._panle.QueryList[i].QueryOptions[j].TimeClickValue) {
+    //         this._panle.QueryList[i].QueryOptions[j].ClickValue = new Date(
+    //           _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })()
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
     if (document.getElementsByClassName("teldfilterbuiltinpanelIsLocalStorage").length > 0) {
       this.btnFilterKHRed = true;
     } else {
