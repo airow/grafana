@@ -167,7 +167,7 @@
           on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form" ng-if="QueryOptions.yesterdayConf.enable">
           <label class="gf-form-label width-9">周期</label>
-          <input type="text" class="input-small gf-form-input max-width-9" placeholder=""
+          <input type="text" class="input-small gf-form-input max-width-9" placeholder="days"
             ng-model="QueryOptions.yesterdayConf.step" ng-change="ctrl.render()" ng-model-onblur />
         </div>
       </div>
@@ -176,7 +176,8 @@
           on-change="ctrl.render()"></gf-form-switch>
         <div class="gf-form" ng-if="QueryOptions.tomorrowConf.enable">
           <label class="gf-form-label width-9">周期</label>
-          <input type="text" class="input-small gf-form-input max-width-9" ng-model="QueryOptions.tomorrowConf.step"
+          <input type="text" class="input-small gf-form-input max-width-9"  placeholder="days"
+            ng-model="QueryOptions.tomorrowConf.step"
             ng-change="ctrl.render()" ng-model-onblur />
         </div>
       </div>
