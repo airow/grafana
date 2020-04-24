@@ -123,7 +123,8 @@ function (queryDef, _) {
     esAgg.format = "epoch_millis";
 
     if (esAgg.interval === 'auto') {
-      esAgg.interval = "$__interval";
+      // esAgg.interval = "$__interval";
+      esAgg.interval = "1d";
     }
 
     if (settings.missing) {
@@ -138,13 +139,15 @@ function (queryDef, _) {
     var settings = aggDef.settings || {};
     esAgg.interval = settings.interval;
     esAgg.field = this.timeField;
-    esAgg.min_doc_count = settings.min_doc_count || 0;
+    // esAgg.min_doc_count = settings.min_doc_count || 0;
+    esAgg.min_doc_count = !_.isNil(settings.min_doc_count) ? settings.min_doc_count : 1;
     //esAgg.extended_bounds = {min: "$timeFrom", max: "$timeTo"};
     esAgg.time_zone = "Asia/Shanghai";
     esAgg.format = "epoch_millis";
 
     if (esAgg.interval === 'auto') {
       esAgg.interval = "$__interval";
+      // esAgg.interval = "1d";
     }
 
     if (settings.missing) {
@@ -269,7 +272,7 @@ function (queryDef, _) {
     // make sure query has defaults;
     target.metrics = target.metrics || [{ type: 'count', id: '1' }];
     target.dsType = 'elasticsearch';
-    target.bucketAggs = target.bucketAggs || [{type: 'date_histogram', id: '2', settings: {interval: 'auto'}}];
+    target.bucketAggs = target.bucketAggs || [{ type: 'date_histogram', id: '2', settings: { interval: '1d', min_doc_count: 1 } }];
     target.timeField =  this.timeField;
 
     var i, nestedAggs, metric;
@@ -320,7 +323,7 @@ function (queryDef, _) {
     for (i = 0; i < target.bucketAggs.length; i++) {
       var aggDef = target.bucketAggs[i];
       var esAgg = {};
-
+      // debugger;
       switch(aggDef.type) {
         case 'date_histogram': {
           esAgg["date_histogram"] = this.getDateHistogramAggTime_zoneShanghai(aggDef);

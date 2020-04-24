@@ -16,7 +16,7 @@ define([
     'use strict';
 
     /** @ngInject */
-    function ElasticDatasource(instanceSettings, $q, backendSrv, templateSrv, timeSrv, variableSrv) {
+    function ElasticDatasource(instanceSettings, $q, backendSrv, templateSrv, timeSrv, variableSrv, alertSrv) {
       this.basicAuth = instanceSettings.basicAuth;
       this.withCredentials = instanceSettings.withCredentials;
       this.url = instanceSettings.url;
@@ -330,6 +330,35 @@ define([
 
         payload = payload.replace(/\$timeFrom/g, fromUnix);
         payload = payload.replace(/\$timeTo/g, toUnix);
+        /** 忽略面板时间，且为auto模式，interval不能小于1小时，禁止查询 */
+        // debugger;
+        var data_hit = _.find(target.bucketAggs, { type: "date_histogram" });
+        if (target.ignoreTimeRange
+          && (true !== target.ignoreGroupByDateHistogram)
+          && options.scopedVars.__interval_ms
+          && options.scopedVars.__interval_ms
+          && options.scopedVars.__interval_ms.value < 3600000) {
+          if (data_hit) {
+            if (data_hit.settings.interval === 'auto') {
+              alertSrv.set("检查Date Histogram设置", "忽略面板日期状态下，Date Histogram的Interval不能设置为auto,且面板右上方日期差大于24h", "warning", 4000);
+              return $q.when([]);
+            } else if (data_hit.settings.interval.indexOf("m") > 0
+              ||
+              data_hit.settings.interval.indexOf("s") > 0) {
+              alertSrv.set("检查Date Histogram设置", "忽略面板日期状态下，Date Histogram的Interval不能是指为分钟级一下", "warning", 4000);
+              return $q.when([]);
+            }
+          }
+        } else {
+          if (data_hit) {
+            if (data_hit.settings.interval.indexOf("m") > 0
+              ||
+              data_hit.settings.interval.indexOf("s") > 0) {
+              alertSrv.set("检查Date Histogram设置", "忽略面板日期状态下，Date Histogram的Interval不能是指为分钟级一下", "warning", 4000);
+              return $q.when([]);
+            }
+          }
+        }
         payload = templateSrv.replace(payload, options.scopedVars);
 
         // if (target.timeRange && target.timeRange.enable) {

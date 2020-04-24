@@ -79,14 +79,15 @@ function (_) {
     ],
 
     intervalOptions: [
-      {text: 'auto', value: 'auto'},
-      {text: '10s', value: '10s'},
-      {text: '1m', value: '1m'},
-      {text: '5m', value: '5m'},
-      {text: '10m', value: '10m'},
+      // {text: 'auto', value: 'auto'},
+      // {text: '10s', value: '10s'},
+      // {text: '1m', value: '1m'},
+      // {text: '5m', value: '5m'},
+      // {text: '10m', value: '10m'},
       {text: '20m', value: '20m'},
       {text: '1h', value: '1h'},
       {text: '1d', value: '1d'},
+      {text: '1M', value: '1M'},
     ],
 
     movingAvgModelOptions: [

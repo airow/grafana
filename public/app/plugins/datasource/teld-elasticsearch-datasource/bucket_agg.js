@@ -144,8 +144,7 @@ function (angular, _, queryDef) {
           break;
         }
         case 'date_histogram': {
-          settings.interval = settings.interval || 'auto';
-          settings.min_doc_count = settings.min_doc_count || 0;
+          settings.interval = settings.interval || '1d';
           $scope.agg.field = $scope.target.timeField;
           settingsLinkText = 'Interval: ' + settings.interval;
 
