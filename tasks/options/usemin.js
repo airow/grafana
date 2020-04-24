@@ -12,6 +12,18 @@ module.exports = function() {
         css: [
           [/(\.css)/, 'Replacing reference to image.png']
         ]
+      },
+      blockReplacements: {
+        js: function (block) {
+          var src = block.dest;
+          switch (src) {
+            case '[[.AppSubUrl]]/public/app/boot.js':
+              src += ("?v=" + new Date().valueOf());
+              // src += ("?v=" + grunt.template.today("isoDateTime"));
+              break;
+          }
+          return '<script src="' + src + '"><\/script>';//次处为js标签的定制
+        }
       }
       // blockReplacements: {
       //   css: function (block) {
