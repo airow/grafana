@@ -87,6 +87,16 @@
               </button>
             </label>
           </div>
+          <div class="gf-form" ng-if='ctrl.showButton(target,btnConf)' ng-repeat="btnConf in target.conf.tabButtonGroup">
+            <label class="gf-form-label" style="padding-top: 2px; padding-bottom: 2px;">
+              <button type="button" style="outline: none;border: 0px;margin: 0px;padding: 0px;background-color: transparent;"
+                ng-disabled="ctrl.isLoading()" ng-click='ctrl.buttonGroupHandler(btnConf)'>
+                <i class="fa" ng-class="btnConf.icon"></i>
+                <span class="queryBtnHide-">{{btnConf.name}}</span>
+              </button>
+            </label>
+          </div>
+
           <gf-form-switch ng-if="ctrl.panel.showClickQueryBtn2Fetch" class="gf-form" label="点击查询取数"
             label-class="width-8" checked="ctrl.rtClickQueryBtn2Fetch">
           </gf-form-switch>

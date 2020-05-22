@@ -245,6 +245,167 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.defineQuery = false;
     }
   }
+  selectedBtn = 'none';
+  selectedGBtn = "body";
+  showButton(target, bntConf) {
+    if (bntConf.selected === false) { return true; }
+    var returnValue = false;
+    let tabInfo = this.currentTabInfo[target.refId];
+    let selectedIndex = _.get(tabInfo, 'selectedIndex');
+    returnValue = !_.isNil(selectedIndex);
+    return returnValue;
+  }
+
+  addButtonGroup(target) {
+    // debugger;
+    target.conf.tabButtonGroupShow = true;
+    let tabButtonGroup = _.get(target, 'conf.tabButtonGroup');
+    if (_.size(tabButtonGroup) === 0) {
+      target.conf.tabButtonGroup = tabButtonGroup = [];
+    }
+    let newButton = {
+      icon: "",
+      name: "",
+      fun: {
+        isPromise: false,
+        ajaxPromise: {
+          done: `
+          /*
+          * done
+          */`,
+          fail: `
+          /*
+          * fail
+          */`,
+          always: `
+          /*
+          * always
+          */`,
+          then: `
+          /*
+          * then
+          */`
+        },
+        body: `
+        /*
+         * 按钮click事件处理函数
+         * 参数：function(btnConf, m, dashVars, sgHelper)
+         * 提示：this.alertSrv.set("任务提交中2", '', 'success', 3000);
+         */        
+        `,
+        warpResultMsg: `
+        /*
+         * 用于非Promise模式下操作成功后的确认提示
+         * 返回结构 1. return {success:true,message:'成功|失败'};
+         *         2. return false; //返回false忽略默认提示
+         */ 
+        return {success:true,message:'成功|失败'}
+        `
+      }
+    };
+    tabButtonGroup.push(newButton);
+  }
+
+  buttonGroupHandler(btnConf) {
+
+    let sgHelper = {
+      $: $,
+      _: _,
+      alertSrv: this.alertSrv,
+      sghost: function (host, SID) {
+        var protocol = window.location.protocol;
+        var hostname = window.location.hostname;
+        var domain = document.domain || hostname;
+        var ares = domain.split(':')[0].split('.');
+        if (_.size(ares) > 2) {
+          ares.shift();
+        }
+        ares.unshift("");
+        domain = ares.join('.');
+        //if (!/^\.teld\.(cn|net)+$/i.test(domain)) { domain += ':7777'; }//准生产加端口号
+        if (!new RegExp("^\.(teld\.(cn|net)+|hfcdgs.com)$", "i").test(domain)) { domain += ':7777'; }//准生产加端口号
+        return protocol + '//' + host + domain + '/api/invoke?SID=' + SID;
+      },
+      isInApp: function () {
+        return false;
+      },
+      callSG: function (sid, parameters, options) {
+        options = options || {};
+        var data = {
+          "queries": [{
+            "refId": "TSG",
+            "format": "table",
+            "url": this.sghost('sgi', sid),
+            "filterKey": options.filterKey,
+            "filterWrap": !!options.filterKey,
+            "parameters": parameters
+          }]
+        };
+
+        // debugger;
+        if (this.isInApp()) {
+          var dtd = $.Deferred();
+          dtd.resolve(false);
+          return dtd;
+        }
+
+        var callAjax = $.ajax({
+          method: 'POST', url: 'callteldsg/_sg',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(data)
+        });
+        callAjax.alertSrv = this.alertSrv;
+        return callAjax;
+      }
+    };
+
+    var dashVars = _.transform(this.templateSrv.variables, (result, value, index) => { result[value.name] = value.current; }, {});
+    var returnValue = true;
+    var m = { 'moment': moment, '_': _ };
+
+    // debugger;
+    let funBindObj = { alertSrv: this.alertSrv };
+    let butHandler = new Function("btnConf", "m", "dashVars", "sgHelper", "alertSrv", btnConf.fun.body).bind(funBindObj);
+    let funHandler = butHandler(btnConf, m, dashVars, sgHelper, this.alertSrv);
+    if (btnConf.fun.isPromise) {
+      let ajaxPromise = btnConf.ajaxPromise;
+      _.each(ajaxPromise, (funBody, funName) => {
+        let fun = new Function();
+        switch (funName) {
+          case 'done':
+            fun = new Function('data', 'textStatus', 'jqXHR', funBody);
+            break;
+          case 'fail':
+            fun = new Function('jqXHR', 'textStatus', 'errorThrown', funBody);
+            break;
+          case 'always':
+            fun = new Function('data, textStatus, jqXHR', funBody);
+            break;
+          case 'then':
+            fun = new Function('data', 'textStatus', 'jqXHR', funBody);
+            break;
+        }
+        funHandler[funName](fun.bind(funBindObj));
+      });
+      funHandler.then((function () {
+        // debugger;
+        console.log("调用成功");
+        // this.alertSrv.set("aaa", '', 'success', 3000);
+      }).bind(funBindObj));
+    } else {
+      let resultMsgFun = new Function("btnConf", "m", "dashVars", "sgHelper", "result", btnConf.fun.warpResultMsg).bind(funBindObj);
+      let resultMsg = resultMsgFun(btnConf, m, dashVars, sgHelper, funHandler);
+      if (resultMsg !== false) {
+        if (resultMsg.success) {
+          this.alertSrv.set("", resultMsg.message || "成功", 'success', 3000);
+        } else {
+          this.alertSrv.set("", resultMsg.message || "异常", 'warning', 3000);
+        }
+      }
+    }
+    return;
+  }
 
   addDsQueryVariable(target, dsQueryVariable, nullValue) {
     let variable = this.variableSrv.addVariable({
