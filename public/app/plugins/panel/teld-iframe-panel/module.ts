@@ -353,7 +353,7 @@ export class TeldIframePanelCtrl extends PanelCtrl {
 
     let dash = this.dashboardSrv.getCurrent();
 
-    let href = angular.element("link[href$='/public/css/grafana.light.min.css']").attr('href');
+    let href = angular.element("link[href^='/public/css/grafana.light.min']").attr('href');
 
     let dashStyle = 'dark';
     if (href) {
