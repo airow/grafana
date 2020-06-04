@@ -828,6 +828,9 @@ export class DatatableRenderer {
         // rightColumns: 1
       }
     };
+    if (_.size(columns) == 0) {
+      delete tableOptions.fixedColumns;
+    }
 debugger;
     if (this.panel.responsiveModal) {
       tableOptions.responsive = {
