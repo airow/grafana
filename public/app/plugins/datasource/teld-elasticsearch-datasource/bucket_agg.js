@@ -89,7 +89,7 @@ function (angular, _, queryDef) {
           settings.order = settings.order || "asc";
           settings.size = settings.size || "10";
           settings.shard_size = settings.shard_size || "100";
-          settings.min_doc_count = settings.min_doc_count || 1;
+          settings.min_doc_count = settings.min_doc_count === undefined ? 1 : settings.min_doc_count;
           settings.orderBy = settings.orderBy || "_term";
 
           if (settings.size !== '0') {
@@ -112,7 +112,7 @@ function (angular, _, queryDef) {
           settings.order = settings.order || "asc";
           settings.size = settings.size || "10";
           settings.shard_size = settings.shard_size || "100";
-          settings.min_doc_count = settings.min_doc_count || 1;
+          settings.min_doc_count = settings.min_doc_count === undefined ? 1 : settings.min_doc_count;
           settings.orderBy = settings.orderBy || "_term";
 
           if (settings.size !== '0') {
