@@ -114,8 +114,15 @@ export class DatatableRenderer {
       return null;
     }
     for (let i = style.thresholds.length; i > 0; i--) {
-      if (value >= style.thresholds[i - 1]) {
-        return style.colors[i];
+      if (style.type == 'number') {
+        let val = value.replace ? value.replace(/,/g, "") : value;
+        if (+val >= style.thresholds[i - 1]) {
+          return style.colors[i];
+        }
+      } else {
+        if (value >= style.thresholds[i - 1]) {
+          return style.colors[i];
+        }
       }
     }
     return _.first(style.colors);
