@@ -379,8 +379,10 @@ class MetricsPanelCtrl extends PanelCtrl {
 
     var from = this.range.from.clone();
     var to = this.range.to.clone();
-    var fromYYYMMDD = moment(from.format("YYYYMMDD"));
-    var toYYYYMMDD = moment(to.format("YYYYMMDD"));
+    // var fromYYYMMDD = moment(from.format("YYYYMMDD"));
+    // var toYYYYMMDD = moment(to.format("YYYYMMDD"));
+    var fromYYYMMDD = moment(from.valueOf()).startOf('day');
+    var toYYYYMMDD = moment(to.format()).startOf('day');
     Object.assign(scopedVars, {
       "dash_timeFrom": { text: from.valueOf(), value: from.valueOf() },
       "dash_timeTo": { text: to.valueOf(), value: to.valueOf() },
