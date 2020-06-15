@@ -206,11 +206,15 @@ define([
           return ws.readyState;
         },
         send: function (message) {
-          if (angular.isString(message)) {
-            ws.send(message);
-          }
-          else if (angular.isObject(message)) {
-            ws.send(JSON.stringify(message));
+          if (ws) {
+            if (angular.isString(message)) {
+              ws.send(message);
+            }
+            else if (angular.isObject(message)) {
+              ws.send(JSON.stringify(message));
+            }
+          } else {
+            alertSrv.set("ws simulation", "send", "success", 2000);
           }
         },
         sendTo: function (to, message) {
@@ -220,10 +224,18 @@ define([
           }
 
           var sendMessage = to + "|" + message;
-          ws.send(sendMessage);
+          if (ws) {
+            ws.send(sendMessage);
+          } else {
+            alertSrv.set("ws simulation", "sendTo", "success", 2000);
+          }
         },
         sendToAll: function (message, cb) {
-
+          if (ws) { console.log('sendToAll'); }
+          else {
+            ws = { send: function (m) { console.log('simulation sendToAll', m); } };
+            alertSrv.set("ws simulation", "sendToAll", "success", 2000);
+          }
           console.group('wsAcrossScreen.sendToAll');
           console.log(username, 'send', message);
           var messageStr;
