@@ -15,6 +15,11 @@
   //移除panel的margin-bottom值
   //应该在最外层和dash-row此类并列加上remove_mb此类名才有效
   .panel-margin{
-    margin:0 0.4rem !important;
+    // margin:0 0.4rem !important;
+    margin:0 !important;
   }
+}
+
+.panel-margin {
+  margin: 0 0.1rem 0.1rem 0.1rem;
 }
