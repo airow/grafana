@@ -1767,7 +1767,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
               "_": _,
               "helper": {
                 calcPercent: (function (varName, fixed) {
-                  var percent = this.value * 100 / this.vars[varName];
+                  var percent = this.value / this.vars[varName] * 100;
                   return percent === Infinity ? "/" : (percent).toFixed(fixed);
                 }).bind({ name, percent, value, vars: dashVars })
               }
