@@ -113,6 +113,75 @@ define([
             }
             return option;
           }
+        },
+
+        Terms2FieldsBarStack: {
+          _: "ES2个字段Group分组堆叠图",
+          exec: function ddd(originalOpt, originaldataList, group1WithAxis, group2, reverse) {
+            var legendConf = _.uniq(_.map(originaldataList, "props." + group2));
+            var data = _.transform(_.groupBy(originaldataList, 'props.' + group1WithAxis), function (result, value, key) {
+              var vc = (result[key] || (result[key] = _.zipObject(legendConf, new Array(legendConf.length).fill(0))), result[key]);
+              _.each(value, function (valItem) {
+                vc[valItem.props[group2]] = valItem.datapoints[0][0];
+              });
+            }, {});
+
+            originalOpt.series = [];
+            _.each(legendConf, function (val) {
+              var serie = {
+                "label": {
+                  "normal": {
+                    "position": ["50%", "35%"],
+                    "color": '#fff',
+                    "show": true
+                  }
+                },
+                "type": "bar",
+                "stack": "stack",
+                "name": val,
+                data: _.map(data, function (dataItem) {
+                  return {
+                    value: dataItem[val] === 0 ? null : dataItem[val]
+                  };
+                })
+              };
+              if (reverse) {
+                serie.data = _.reverse(serie.data);
+              }
+              originalOpt.series.push(serie);
+            });
+
+            originalOpt.yAxis.data = _.keys(data);
+            if (reverse) {
+              originalOpt.yAxis.data = _.reverse(originalOpt.yAxis.data);
+            }
+            originalOpt.legend.data = _.map(originalOpt.series, 'name');
+
+            originalOpt.series.push({
+              "label": {
+                "normal": {
+                  "position": ['100%', '100%'],
+                  "show": true
+                }
+              },
+              barWidth: '5',
+              //itemStyle:{normal:{color:'transparent'}},
+              barGap: '-100%',
+              "type": "bar",
+              "name": '总数',
+              data: _.map(originalOpt.yAxis.data, function (item) {
+                return {
+                  value: _.sum(_.values(data[item]))
+                };
+              })
+            });
+
+            originalOpt.legend.data.push('总数');
+
+            // originalOpt.yAxis.data = _.reverse(originalOpt.yAxis.data);
+
+            return originalOpt;
+          }
         }
       }
     };
