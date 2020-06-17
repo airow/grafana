@@ -158,7 +158,11 @@ export class TeldDatasourceVariable implements Variable {
   }
 
   aggregationTableRows(result) {
-    var rowsTables = _.filter(result.data, function (o) { return o.type === "table" && _.size(o.rows) > 1; });
+    // var rowsTables = _.filter(result.data, function (o) { return o.type === "table" && _.size(o.rows) > 1; });
+    var rowsTables = _.filter(result.data, (o) => {
+      return o.type === "table"
+        && (_.size(o.rows) > 1 || this.panel.valueName === "join");
+    });
     if (_.size(rowsTables) > 0) {
       switch (this.panel.valueName) {
         case 'join':
