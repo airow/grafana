@@ -1,0 +1,263 @@
+<query-editor-row query-ctrl="ctrl" can-collapse="false">
+  <div class="gf-form-inline">
+		<div class="gf-form gf-form--grow">
+			<code-editor content="ctrl.ESSql.value" data-mode="sql">
+			</code-editor>
+		</div>
+  </div>
+  
+  <div class="gf-form-inline">
+    <div class="gf-form gf-form--grow">
+      <label class="gf-form-label query-keyword width-7">URL</label>
+      <label class="gf-form-label gf-form-label--grow" ng-bind='ctrl.target.url'></label>
+    </div>
+    <div class="gf-form max-width-15">
+      <label class="gf-form-label query-keyword">Alias</label>
+      <input type="text" class="gf-form-input" ng-model="ctrl.target.alias" spellcheck='false' placeholder="alias patterns" ng-blur="ctrl.refresh()">
+    </div>
+  </div>
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">Format as</label>
+      <div class="gf-form-select-wrapper width-8">
+        <select class="gf-form-input gf-size-auto" ng-model="ctrl.target.format" ng-options="f.value as f.text for f in ctrl.formats"
+          ng-change="ctrl.refresh()"></select>
+      </div>
+    </div>
+    <div class="gf-form" ng-if="ctrl.target.format=='time_series'">
+      <label class="gf-form-label query-keyword width-7">时间列</label>
+      <input type="text" class="gf-form-input width-7" ng-model="ctrl.target.time_sec" spellcheck='false' ng-blur="ctrl.refresh()">
+      <label class="gf-form-label query-keyword width-10">原始时间列格式<tip>moment#format http://momentjs.cn/docs/#/parsing/string-format/</tip></label>
+      <metric-segment-model property="ctrl.target.time_sec_format" options="ctrl.dateFormats" on-change="ctrl.refresh()" custom="true"></metric-segment-model>
+    </div>
+  </div>
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-7">参数</label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword width-8">类型</label>
+      <label class="gf-form-label query-keyword width-10">键</label>
+      <label class="gf-form-label query-keyword width-15">值</label>
+    </div>
+    <div class="gf-form">
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target.parameters.push({type:'value',key:'',value:''})">
+          <i class="fa fa-plus">Value</i>
+        </a>
+      </label>
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target.parameters.push({type:'object',key:'',value:[{}]})">
+          <i class="fa fa-plus">Object</i>
+        </a>
+      </label>
+      <label class="gf-form-label" ng-if="false">
+        <a ng-click="ctrl.target.parameters.push({type:'raw',key:'',value:''})">
+          <i class="fa fa-plus">Raw</i>
+        </a>
+      </label>
+    </div>
+    <gf-form-switch class="gf-form" ng-if="false" label="filter" label-class="query-keyword width-6" checked="ctrl.target.filterWrap">
+    </gf-form-switch>
+    <div class="gf-form" ng-if="ctrl.target.filterWrap">
+      <input type="text" ng-readonly='true' class="gf-form-input" ng-model="ctrl.target.filterKey" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+    </div>
+  </div>
+
+  <div class="gf-form-inline" ng-repeat="param in ctrl.target.parameters">
+    <div ng-if="param.uiHide!=true" ng-switch="param.type">
+      <div class="gf-form" ng-switch-default>
+        <div class="gf-form offset-width-7">
+          <label class="gf-form-label width-8" ng-bind="param.type">
+          </label>
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-10" ng-readonly="param.required" ng-model="param.key" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <metric-segment-model class="width-15" ng-if='param.key=="ESGroup"' property="param.value" options="ctrl.GroupKey" custom="true"></metric-segment-model>
+          <input type="text" ng-if='param.key!="ESGroup"' class="gf-form-input width-15" ng-model="param.value" spellcheck='false' ng-blur="ctrl.refresh()">
+        </div>
+        <gf-form-switch class="gf-form" label="启用缺省值" label-class="width-7" checked="param.enableDefValue">
+        </gf-form-switch>
+        <div class="gf-form">
+          <input type="text" ng-disabled="!param.enableDefValue" class="gf-form-input width-7" placeholder="缺省值" ng-model="param.defValue" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label" ng-if="param.required!=true" >
+            <a ng-click="ctrl.removeItem(ctrl.target.parameters, param)">
+              <i class="pointer fa fa-trash"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$last">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index+1)">
+              <i class="pointer fa fa-arrow-down"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$first">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index-1)">
+              <i class="pointer fa fa-arrow-up"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            {{ctrl.paramToString(param)}}
+          </label>
+        </div>
+      </div>
+      <div class="gf-form" ng-switch-when="raw">
+        <div class="gf-form offset-width-7">
+          <label class="gf-form-label width-8" ng-bind="param.type">
+          </label>
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-15" ng-model="param.value" spellcheck='false' ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeItem(ctrl.target.parameters, param)">
+              <i class="pointer fa fa-trash"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$last">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index+1)">
+              <i class="pointer fa fa-arrow-down"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$first">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index-1)">
+              <i class="pointer fa fa-arrow-up"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            {{ctrl.paramToString(param)}}
+          </label>
+        </div>
+      </div>
+      <!-- param.type == 'object'  -->
+      <div class="gf-form" ng-switch-when="object">
+        <div class="gf-form offset-width-7">
+          <label class="gf-form-label width-8" ng-bind="param.type">
+          </label>
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-10" ng-model="param.key" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label width-15">
+            <a ng-click="param.value.push({k:'',v:''})">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label" ng-if="param.required!=true">
+            <a ng-click="ctrl.removeItem(ctrl.target.parameters, param)">
+              <i class="pointer fa fa-trash"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$last">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index+1)">
+              <i class="pointer fa fa-arrow-down"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$first">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index-1)">
+              <i class="pointer fa fa-arrow-up"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            {{ctrl.paramToString(param)}}
+          </label>
+        </div>
+      </div>
+      <div class="gf-form" ng-switch-when="object" ng-repeat="item in param.value">
+        <div class="gf-form offset-width-15">
+          <input type="text" class="gf-form-input width-10" ng-model="item.k" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-15" ng-model="item.v" spellcheck='false' placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <gf-form-switch class="gf-form" label="启用缺省值" label-class="width-7" checked="item.enableDefValue">
+        </gf-form-switch>
+        <div class="gf-form">
+          <input type="text" ng-disabled="!item.enableDefValue" class="gf-form-input width-7" placeholder="缺省值" ng-model="item.defValue" spellcheck="false" placeholder="" ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeItem(param.value, item)">
+              <i class="pointer fa fa-trash"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <!-- END param.type == 'object'  -->
+    </div>
+  </div>
+
+  <div class="gf-form-inline">
+    <div class="gf-form">
+      <label class="gf-form-label query-keyword" ng-click="ctrl.showHelp = !ctrl.showHelp">
+        Show Help
+        <i class="fa fa-caret-down" ng-show="ctrl.showHelp"></i>
+        <i class="fa fa-caret-right" ng-hide="ctrl.showHelp"></i>
+      </label>
+    </div>
+    <div class="gf-form" ng-show="ctrl.lastQueryMeta">
+      <label class="gf-form-label query-keyword" ng-click="ctrl.showLastQuerySQL = !ctrl.showLastQuerySQL">
+        Generated SQL
+        <i class="fa fa-caret-down" ng-show="ctrl.showLastQuerySQL"></i>
+        <i class="fa fa-caret-right" ng-hide="ctrl.showLastQuerySQL"></i>
+      </label>
+    </div>
+    <div class="gf-form gf-form--grow">
+      <div class="gf-form-label gf-form-label--grow"></div>
+    </div>
+  </div>
+
+  <div class="gf-form" ng-show="ctrl.showLastQuerySQL">
+      <pre class="gf-form-pre">{{ctrl.lastQueryMeta.sql}}</pre>
+    </div>
+
+    <div class="gf-form"  ng-show="ctrl.showHelp">
+      <pre class="gf-form-pre alert alert-info">
+  Resultset structure:
+  - 返回结果通过data属性返回结果，data为对象数组。
+  - data:[{key1:value1},{key1:value1}]
+
+  Time series:
+  例： data: [
+      {'time_sec': 1532534400000, 'metric1': value1, 'metric2': value1}
+      {'time_sec': 1532620800000, 'metric1': value2, 'metric2': value2}
+    ]
+  - 默认时间字段 time_sec , 可以通过 ‘时间列’ 进行制定，‘原始时间列格式’ 返回数据的时间格式。
+  - 除时间字段外的其他值，作为 metric 处理。 key为metric。
+
+
+  Macros:
+  - 有两种应用变量方式 $dashboardVarName 和 ${bindData.xxxx}
+  - dashboard 时间范围
+    1. ${bindData.time.from} - ${bindData.time.to} 为 moment 对象， .format()格式化，.unix() 时间戳
+    2. $from $to 这两个值为Unix ms timestamp
+
+  - grafana 用户信息 ${bindData.user.xxxx}
+    xxxx 取值 email、login、name、orgId、orgName、timezone
+
+  - url  ${bindData.url.xxxx}
+    xxxx 取值 protocol、 domain、 hostname、 port
+
+  - 工具类
+    ${_.xxxxx} lodash
+    ${moment}  momentjs
+    ${urlHelper.sghost(host)}
+      </pre>
+    </div>
+
+    </div>
+
+    <div class="gf-form" ng-show="ctrl.lastQueryError">
+      <pre class="gf-form-pre alert alert-error">{{ctrl.lastQueryError}}</pre>
+    </div>
+
+</query-editor-row>

@@ -1,0 +1,20 @@
+{
+  "type": "datasource",
+  "name": "Teld Service Gateway ESSQL",
+  "id": "teld-servicegateway-essql-datasource",
+
+  "info": {
+    "author": {
+      "name": "Teld BDP",
+      "url": "https://teld.cn"
+    },
+    "logos": {
+      "small": "img/TeldESSQL_logo.svg",
+      "large": "img/TeldESSQL_logo.svg"
+    }
+  },
+
+  "alerting": true,
+  "annotations": true,
+  "metrics": true
+}

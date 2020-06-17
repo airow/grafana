@@ -12,7 +12,7 @@ export class TeldServiceGatewayDatasource {
   // responseParser: ResponseParser;
 
   /** @ngInject **/
-  constructor(instanceSettings, private backendSrv, private $q, private templateSrv, private contextSrv, private alertSrv) {
+  constructor(instanceSettings, private backendSrv, private $q, protected templateSrv, private contextSrv, private alertSrv) {
     this.name = instanceSettings.name;
     this.id = instanceSettings.id;
     // this.responseParser = new ResponseParser(this.$q);
@@ -76,7 +76,20 @@ export class TeldServiceGatewayDatasource {
     }
   };
 
+
+  setScopedExpression(scopedExpressionVars, options) {
+    var filterFun = function (item) {
+      return item.type === 'teldExpression' && "es" === (item.filter || "es");
+    };
+    var teldExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'TSG',
+      options.scopedVars, 'lucene', filterFun);
+    _.defaults(scopedExpressionVars, teldExpressionVars);
+    return scopedExpressionVars;
+  };
+
+
   getQueries(options, deviceInfo) {
+    console.log(this.name);
     let { protocol, hostname, port } = window.location;
     let domain = hostname.split('.');
     if (_.size(domain) >= 2) {
@@ -105,11 +118,14 @@ export class TeldServiceGatewayDatasource {
 
       parameters = _.transform(parameters, (r, param) => {
         param.originalVal = param.value;
-        var filterFun = function (item) {
-          return item.type === 'teldExpression' && "es" === (item.filter || "es");
-        };
-        var scopedExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'TSG',
-          options.scopedVars, 'lucene', filterFun);
+        // var filterFun = function (item) {
+        //   return item.type === 'teldExpression' && "es" === (item.filter || "es");
+        // };
+        // var scopedExpressionVars = this.templateSrv.teldExpressionInDataSource2ScopedVarsFormCache(options, 'TSG',
+        //   options.scopedVars, 'lucene', filterFun);
+        // debugger;
+        var scopedExpressionVars = {};
+        this.setScopedExpression(scopedExpressionVars, options);
 
         if (param.type === 'object') {
           param.value = _.transform(param.value, (result, eachitem) => {
@@ -215,7 +231,7 @@ export class TeldServiceGatewayDatasource {
       }
     } else {
       var telda = embed_teldapp.readCookie('telda'), teldb = embed_teldapp.readCookie('teldb');
-      if ((!telda || !teldb)) {
+      if ((!telda || !teldb) && window.location.hostname !== 'localhost') {
         this.alertSrv.set("会话超时", "会话超时", "warning", 4000);
         return this.$q.when({ data: [] });
       }
