@@ -115,7 +115,7 @@ export class DatatableRenderer {
     }
     for (let i = style.thresholds.length; i > 0; i--) {
       if (style.type == 'number') {
-        let val = value.replace ? value.replace(/,/g, "") : value;
+        let val = value.replace ? value.replace(/[,%]/g, "") : value;
         if (+val >= style.thresholds[i - 1]) {
           return style.colors[i];
         }
