@@ -2,6 +2,7 @@
 import { PanelCtrl, loadPluginCssPath } from 'app/plugins/sdk';
 import moment from 'moment';
 import _ from 'lodash';
+import kbn from 'app/core/utils/kbn';
 import timeCycleConf from 'app/features/panel/timeCycleConf';
 import appEvents from 'app/core/app_events';
 
@@ -213,7 +214,9 @@ export class TeldfilterCtrl extends PanelCtrl {
       this.variableSrv.templateSrv.updateTemplateData();
     }.bind(this), $scope);
   }
-
+  addCycleConf() {
+    this.panel.cycleConf.push({ custom: true });
+  }
   qsDefaultValue() {
     // debugger;
     for (var i = 0; i < this._panle.QueryList.length; i++) {
@@ -255,6 +258,7 @@ export class TeldfilterCtrl extends PanelCtrl {
 
   toTopButtonConf: any[];
   toTopButton() {
+    // debugger;
     this.toTopButtonConf = _.filter(this._panle.QueryList, 'toTop');
     return this.toTopButtonConf;
   }
@@ -361,6 +365,33 @@ export class TeldfilterCtrl extends PanelCtrl {
     this.fetch();
   }
 
+  imports = {
+    '_': _,
+    'kbn': kbn,
+    'valueFormats': (function (kbn) {
+      let bindContext = {
+        // kbn,
+        // valueFormats: kbn.valueFormats,
+        // kbnMap: _.mapKeys(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), (value) => { return value.text; }),
+        valueFormats: _.transform(_.flatten(_.map(kbn.getUnitFormats(), 'submenu')), function (result, unitFormatConf, index) {
+          result[unitFormatConf.text] = kbn.valueFormats[unitFormatConf.value];
+        }, {})
+      };
+
+      return function (unitFormatName, size, decimals) {
+        return this.valueFormats[unitFormatName](size, decimals);
+      }.bind(bindContext);
+    })(kbn)
+  };
+
+  goLink(QueryOption) {
+    let url = QueryOption.linkURL;
+    let dashVars = _.transform(this.variableSrv.templateSrv.variables, (result, value, index) => {
+      result[value.name] = value.current;
+    }, {});
+    url = _.template(url, { imports: this.imports })({ dashVars });
+    window.open(url, null);
+  }
   removeVariable(variableArray, variable) {
     var index = _.indexOf(variableArray, variable);
     variableArray.splice(index, 1);

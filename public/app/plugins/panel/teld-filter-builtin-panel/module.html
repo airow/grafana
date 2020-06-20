@@ -43,17 +43,24 @@
       {{cycle.name}}
     </div>
   </div>
-  <div ng-if='!ctrl.KwHuTuCaoDropDown' class="cycle-filter" style="margin-top: 0px;" ng-repeat="QueryOptions in ctrl.toTopButton();">
-    <div  ng-repeat="QueryOption in QueryOptions.QueryOptions.slice().reverse();"
+  <div ng-switch="QueryOptions.Querytype" ng-if='!ctrl.KwHuTuCaoDropDown' class="cycle-filter" style="margin-top: 0px;"
+    ng-repeat="QueryOptions in ctrl.toTopButton();"
+    ng-style1="{'border-width':QueryOptions.Querytype=='link'?'0px':'inherit'}">
+    <div ng-switch-when="link" ng-repeat="QueryOption in QueryOptions.QueryOptions.slice().reverse();"
+      style="width: auto; cursor: pointer; height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;padding: 0px 5px;"
+      class="btnFilterKH" ng-click="ctrl.goLink(QueryOption)">
+      {{QueryOption.linkName}} <i style="color:#33B5E5; " class="fa fa-external-link" aria-hidden="true"></i>
+    </div>
+    <div ng-switch-default ng-repeat="QueryOption in QueryOptions.QueryOptions.slice().reverse();"
       style="height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;"
-      ng-click="ctrl.selectVariable(QueryOptions,QueryOption.OptionName,QueryOption.ClickValue);ctrl.eh_emitToTopButton();" class="btnFilterKH"
-      ng-class='{"currentCycle-filter":QueryOptions.QueryClickName==QueryOption.OptionName}'>
+      ng-click="ctrl.selectVariable(QueryOptions,QueryOption.OptionName,QueryOption.ClickValue);ctrl.eh_emitToTopButton();"
+      class="btnFilterKH" ng-class='{"currentCycle-filter":QueryOptions.QueryClickName==QueryOption.OptionName}'>
       {{QueryOption.OptionName}}
     </div>
   </div>
   <div ng-click='ctrl.closeDatepickerShow()' class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-6 col-md-offset-4"
     ng-show="ctrl.KwHuTuCaoDropDown">
-    <div style="display:inline-block;width:100%" ng-repeat="QueryOptions in ctrl._panle.QueryList">
+    <div style="display:inline-block;width:100%" ng-hide="QueryOptions.Querytype=='link'" ng-repeat="QueryOptions in ctrl._panle.QueryList">
       <div id="YunMonthOffTitle" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanal"
         style="line-height:30px !important;" ng-if="QueryOptions.QueryTitle">
         <span class="yunClass">{{QueryOptions.QueryTitle}}：</span>
