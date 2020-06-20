@@ -7,8 +7,18 @@
       <label class="gf-form-label">$interval_{{ctrl.panel.cycleVarSuffix}}</label>
     </div>
   </div>
+  <div class="gf-form-inline gf-form-group">
+    <gf-form-switch class="gf-form" label="反序显示" label-class="width-6" checked="ctrl.panel.cycleReverseDisplay"
+      on-change="ctrl.render()"></gf-form-switch>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <a ng-click="ctrl.addCycleConf()">
+            <i class="fa fa-plus"></i>
+          </a>
+        </label>        
+      </div>
+  </div>
 
-  <gf-form-switch class="gf-form" label="反序显示" label-class="width-6" checked="ctrl.panel.cycleReverseDisplay" on-change="ctrl.render()"></gf-form-switch>
   <!-- cycleConf -->
 
   <div class="gf-form-inline" ng-repeat="cycle in ctrl.panel.cycleConf">
@@ -57,7 +67,14 @@
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-5">Interval</label>
-          <label class="gf-form-label width-3">{{cycle.interval}}</label>
+          <label ng-if='!cycle.custom' class="gf-form-label width-3">{{cycle.interval}}</label>
+          <input ng-if='cycle.custom' type="text" class="gf-form-input width-11" placeholder="{{cycle.interval}}" ng-model="cycle.interval"
+            min-length="0" ec-valwrap>
+        </div>
+        <div ng-if='cycle.custom' class="gf-form">
+          <label class="gf-form-label width-5">key</label>
+          <input type="text" class="gf-form-input width-11" placeholder="{{cycle.key}}" ng-model="cycle.key"
+            min-length="0" ec-valwrap>
         </div>
       </div>
     </div>

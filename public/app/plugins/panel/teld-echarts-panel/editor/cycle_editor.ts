@@ -37,6 +37,10 @@ export class CycleEditorCtrl {
     this.refresh();
   }
 
+  addCycleConf() {
+    this.panel.cycleConf.push({ custom: true });
+  }
+
   move(itemArray, index, newIndex) {
     _.move(itemArray, index, newIndex);
     this.refresh();
