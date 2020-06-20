@@ -336,13 +336,12 @@ define([
         if (target.ignoreTimeRange
           && (true !== target.ignoreGroupByDateHistogram)
           && options.scopedVars.__interval_ms
-          && options.scopedVars.__interval_ms
           && options.scopedVars.__interval_ms.value < 3600000) {
           if (data_hit) {
             if (data_hit.settings.interval === 'auto') {
               alertSrv.set("检查Date Histogram设置", "忽略面板日期状态下，Date Histogram的Interval不能设置为auto,且面板右上方日期差大于24h", "warning", 4000);
               return $q.when([]);
-            } else if (new RegExp("^[0-9]+[s|m]$").test(data_hit.settings.interval)
+            } else if (new RegExp("^[0-9]+[s]$").test(data_hit.settings.interval)
               ||
               new RegExp("^[0-9]+(ms)?$").test(data_hit.settings.interval)) {
               alertSrv.set("检查Date Histogram设置", "忽略面板日期状态下，Date Histogram的Interval不能是指为分钟级一下", "warning", 4000);
@@ -351,7 +350,7 @@ define([
           }
         } else {
           if (data_hit) {
-            if (new RegExp("^[0-9]+[s|m]$").test(data_hit.settings.interval)
+            if (new RegExp("^[0-9]+[s]$").test(data_hit.settings.interval)
               ||
               new RegExp("^[0-9]+(ms)?$").test(data_hit.settings.interval)) {
               alertSrv.set("检查Date Histogram设置", "忽略面板日期状态下，Date Histogram的Interval不能是指为分钟级一下", "warning", 4000);
