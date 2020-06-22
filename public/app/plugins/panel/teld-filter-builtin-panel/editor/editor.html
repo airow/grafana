@@ -130,7 +130,6 @@
             <label class="gf-form-label width-9">IsShow</label>
             <input type="number" class="input-small gf-form-input width-9" ng-model="ctrl.panel.IsShow" ng-model-onblur />
         </div> -->
-        {{ctrl.panel.QueryList}}
     <div ng-repeat="QueryOptions in ctrl.panel.QueryList">
       <div class="gf-form">
         <label class="gf-form-label width-9">QueryTitle{{$index+1}}</label>
@@ -254,12 +253,12 @@
           <gf-form-switch ng-if="QueryOptions.Querytype=='date'" class="gf-form" label="IsLocalStorage" label-class="width-8"
             checked="QueryOption.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         </div>
-        <div class="gf-form" ng-if="QueryOptions.Querytype=='link'">
+        <div class="gf-form gf-form--grow" ng-if="QueryOptions.Querytype=='link'">
           <label class="gf-form-label width-9">链接名</label>
           <input type="text" class="input-small gf-form-input max-width-9" placeholder="链接名" ng-model="QueryOption.linkName"
             ng-change="ctrl.render()" ng-model-onblur />
           <label class="gf-form-label width-9">URL</label>
-          <input type="text" class="input-small gf-form-input max-width-9" placeholder="URL" ng-model="QueryOption.linkURL"
+          <input type="text" class="input-small gf-form-input" placeholder="URL" ng-model="QueryOption.linkURL"
             ng-change="ctrl.render()" ng-model-onblur />
         </div>
         <label class="gf-form-label" ng-hide="$last">
