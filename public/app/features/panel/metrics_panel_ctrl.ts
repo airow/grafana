@@ -135,6 +135,20 @@ class MetricsPanelCtrl extends PanelCtrl {
         return;
       }
     }
+    // debugger;
+    console.log(this.panel.title, "this.dashboard.dt_defaultSelected@@@@", this.dashboard.dt_defaultSelected);
+    console.log(this.panel.title, "this.dashboard.dt_defaultSelected@@@@defaultSelected",
+      _.get(this.panel, 'publishVariables.defaultSelected'));
+    // let panels = _.map(this.dashboard.rows, 'panels');
+    // let dddd = _.filter(_.flatten(panels), 'publishVariables.defaultSelected');
+    // if (this.dashboard.dt_defaultSelected && false === _.includes(dddd, this.panel)) {
+    // if (this.dashboard.dt_defaultSelected && this.panel.title === '电站明细列表【按快充装机功率前2000】') {
+    // if (this.dashboard.dt_defaultSelected && this.panel.type === "teld-datatables-panel") {
+    if (this.dashboard.dt_defaultSelected && _.get(this.panel, 'publishVariables.defaultSelected', false) === false) {
+      console.log(this.panel.title, "this.dashboard.dt_defaultSelected@return", this.dashboard.dt_defaultSelected);
+      return;
+    }
+    console.log(this.panel.title, "this.dashboard.dt_defaultSelected@@@@END", this.dashboard.dt_defaultSelected);
     if (this.triggerRefresh) { this.triggerRefresh = false; return; }
     this.triggerRefresh = false;
     if (this.dashboard.meta.hasQuerybarPanel && this.dashboard.meta.fromScript) {
