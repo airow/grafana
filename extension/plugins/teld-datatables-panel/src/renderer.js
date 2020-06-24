@@ -567,6 +567,16 @@ export class DatatableRenderer {
     return columnWidth;
   }
 
+  dtInstance_selectHandler() {
+    let { indexes, dtInstance, panelCtrl, table } = this;
+    // alert(dtInstance);
+    let index = _.first(indexes);
+    console.log('deselect dtInstance.debounce');
+    panelCtrl.triggerRefresh = true;
+    panelCtrl.select(index, _.zipObject(_.map(table.columns, 'text'), table.rows[index]));
+    dtInstance.draw(false);
+    delete dtInstance.debounce;
+  }
   /**
    * Construct table using Datatables.net API
    *  multiple types supported
@@ -873,7 +883,7 @@ debugger;
 
     {
 
-      function dtInstance_selectHandler() {
+      function dtInstance_selectHandler2() {
         let { indexes, dtInstance, panelCtrl, table } = this;
         // alert(dtInstance);
         let index = _.first(indexes);
@@ -889,17 +899,26 @@ debugger;
         $(tableHolderId).DataTable().destroy();
         $(tableHolderId).empty();
       }
+      //*debugger_alert*/alert('renderer.render');
+      // tableOptions["drawCallback"] = (function (settings) {
+      //   debugger;
+      //   alert('DataTables has redrawn the table');       
+      // }).bind(this);
 
       const dtInstance = $datatable.DataTable(tableOptions);
+      // dtInstance.off('draw').on('draw', function () {
+      //   alert(1);
+      // });
       dtInstance.off('deselect').off('select')///** 与固定行头冲突 */.off('draw')
         .on('deselect', (e, dt, type, indexes) => {
           console.log('===deselect===');
           let bindCotext = _.pick(this, ['panelCtrl', 'table']);
           bindCotext = _.defaults({ indexes, dtInstance }, bindCotext);
-          dtInstance.debounce = _.debounce(dtInstance_selectHandler.bind(bindCotext), 150);
+          dtInstance.debounce = _.debounce(this.dtInstance_selectHandler.bind(bindCotext), 150);
           dtInstance.debounce();
         })
         .on('select', (e, dt, type, indexes) => {
+          console.log(this.panel.title, "dashboard.dt_defaultSelected", "datatables select");
           console.log('===select===');
           if (dtInstance.debounce) {
             console.log('select dtInstance.debounce.cancel');
@@ -907,7 +926,7 @@ debugger;
           }
           let bindCotext = _.pick(this, ['panelCtrl', 'table']);
           bindCotext = _.defaults({ indexes, dtInstance }, bindCotext);
-          dtInstance_selectHandler.call(bindCotext);
+          this.dtInstance_selectHandler.call(bindCotext);
         });
 
       dtInstance.off('preInit.dt').on('preInit.dt', function (e, settings) {
@@ -967,6 +986,18 @@ debugger;
           })
           .draw();
       }
+
+      // let bindCotext = _.pick(this, ['panelCtrl', 'table']);
+      // bindCotext = _.defaults({ indexes: [0], dtInstance }, bindCotext);
+      // _.debounce(this.dtInstance_selectHandler.bind(bindCotext), 150)();
+      debugger;
+      // dtInstance.Rows().row(0);
+      if (_.get(this.panel, 'publishVariables.defaultSelected', false)) {
+        this.panelCtrl.dashboard.dt_defaultSelected = false;
+        console.log(this.panel.title, "dashboard.dt_defaultSelected", "renderer");
+        dtInstance.row(':eq(0)', { page: 'current' }).select();
+      }
+      // dtInstance.row().select();
     }
   }
 

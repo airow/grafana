@@ -118,13 +118,15 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     this.variableSrv = $injector.get('variableSrv');
     this.alertSrv = $injector.get('alertSrv');
-    this.sce = $sce;
+    this.sce = $sce;    
+    this.setDash_dt_defaultSelected();
+    console.log(this.panel.title, 'dashboard.dt_defaultSelected', 'DatatablesCtrl', this.dashboard.dt_defaultSelected);
 
     _.defaults(this.panel, panelDefaults);
     this.defaultHideSearch = this.panel.searchEnabled && this.panel.defaultHideSearch;
     this.gfilterFetchHandler = this.$scope.$root.onAppEvent("post-gfilter-fetch", (evt, payload) => {
       // alert(1);
-      debugger;
+      debugger;      
       this.clearPublishVariables();
       console.log('post-gfilter-fetch', payload);
     }, this.$scope);
@@ -153,10 +155,13 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
   }
-
+  
   onDataReceived(dataList) {
+    debugger;
+    //*debugger_alert*/alert('datatables_ctrl.onDataReceived');
     this.dataRaw = dataList;
     this.pageIndex = 0;
+    this.seftRowRefresh = false;
 
     // automatically correct transform mode based on data
     if (this.dataRaw && this.dataRaw.length) {
@@ -219,6 +224,11 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
   }
 
   render() {
+    //*debugger_alert*/alert('datatables_ctrl.render');
+    if (this.seftRowRefresh) {
+      this.seftRowRefresh = false;
+      return;
+    }
     this.table = transformDataToTable(this.dataRaw, this.panel);
     // this.table.sort(this.panel.sort);
     this.panel.emptyData = this.table.rows.length === 0 || this.table.columns.length === 0;
@@ -232,6 +242,7 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
 
 
   select(index, obj) {
+    //*debugger_alert*/alert('select(index, obj)')
     var isSelect = this.selectedIndex !== index;
 
     if (isSelect) {
@@ -249,7 +260,16 @@ export class DatatablesCtrl extends MetricsPanelCtrl {
     this.timeSrv.refreshDashboard();
   }
 
+  setDash_dt_defaultSelected() {
+    if (_.get(this.panel, 'publishVariables.defaultSelected', false)) {
+      this.dashboard.dt_defaultSelected = true;
+    }
+  }
+
   clearPublishVariables() {
+    debugger;
+    this.setDash_dt_defaultSelected();
+    
     this.selectedObj = null;
     this.selectedIndex = null;
     this.bindPublishVariables({}, false, false);
