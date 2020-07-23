@@ -214,7 +214,8 @@ define([
               ws.send(JSON.stringify(message));
             }
           } else {
-            alertSrv.set("ws simulation", "send", "success", 2000);
+            //*武汉客户要求去掉给提示*/alertSrv.set("ws simulation", "send", "success", 2000);
+            console.log('ws simulation', 'success', 'send');
           }
         },
         sendTo: function (to, message) {
@@ -227,14 +228,16 @@ define([
           if (ws) {
             ws.send(sendMessage);
           } else {
-            alertSrv.set("ws simulation", "sendTo", "success", 2000);
+            //*武汉客户要求去掉给提示*/alertSrv.set("ws simulation", "sendTo", "success", 2000);
+            console.log('ws simulation', 'success', 'sendTo');
           }
         },
         sendToAll: function (message, cb) {
           if (ws) { console.log('sendToAll'); }
           else {
             ws = { send: function (m) { console.log('simulation sendToAll', m); } };
-            alertSrv.set("ws simulation", "sendToAll", "success", 2000);
+            //*武汉客户要求去掉给提示*/alertSrv.set("ws simulation", "sendToAll", "success", 2000);
+            console.log('ws simulation', 'success', 'sendToAll');
           }
           console.group('wsAcrossScreen.sendToAll');
           console.log(username, 'send', message);
