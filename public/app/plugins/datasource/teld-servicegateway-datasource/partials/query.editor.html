@@ -47,6 +47,11 @@
           <i class="fa fa-plus">Object</i>
         </a>
       </label>
+      <label class="gf-form-label">
+        <a ng-click="ctrl.target.parameters.push({type:'list',key:'',columns:[{}],  value:[{}]})">
+          <i class="fa fa-plus">List</i>
+        </a>
+      </label>
       <label class="gf-form-label" ng-if="false">
         <a ng-click="ctrl.target.parameters.push({type:'raw',key:'',value:''})">
           <i class="fa fa-plus">Raw</i>
@@ -186,6 +191,101 @@
         </div>
       </div>
       <!-- END param.type == 'object'  -->
+      <!-- param.type == 'list'  -->
+      <div class="gf-form" ng-switch-when="list">
+        <div class="gf-form offset-width-7">
+          <label class="gf-form-label width-8" ng-bind="param.type">
+          </label>
+        </div>
+        <div class="gf-form">
+          <input type="text" class="gf-form-input width-10" ng-model="param.key" spellcheck='false' placeholder=""
+            ng-blur="ctrl.refresh()">
+        </div>
+        <div class="gf-form width-15">          
+          <label class="gf-form-label gf-form-label--grow"></label>          
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label" ng-if="param.required!=true">
+            <a ng-click="ctrl.removeItem(ctrl.target.parameters, param)">
+              <i class="pointer fa fa-trash"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$last">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index+1)">
+              <i class="pointer fa fa-arrow-down"></i>
+            </a>
+          </label>
+          <label class="gf-form-label" ng-hide="$first">
+            <a ng-click="ctrl.moveItem(ctrl.target.parameters,$index,$index-1)">
+              <i class="pointer fa fa-arrow-up"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            {{ctrl.paramToString(param)}}
+          </label>
+        </div>
+      </div>
+      <div class="gf-form" ng-switch-when="list">
+        <div class="gf-form offset-width-7">
+          <label class="gf-form-label width-8">
+            字段
+          </label>
+        </div>
+        <div class="gf-form" ng-repeat="column in param.columns track by $index">   
+          <a style="position: absolute;left: 6px">
+            <i class="fa" ng-class='{true:"fa-sort-numeric-asc",false:"fa-text-height"}[column.type==="number"]'></i>
+          </a>       
+          <input style="padding-left: 20px;padding-right: 15px;"
+            class="gf-form-input width-10 query-keyword" ng-model='param.columns[$index].name'></input>
+          <a style="position: absolute;right: 6px"
+            ng-click="ctrl.removeItem(param.columns, column)">
+            <i class="fa fa-remove"></i>
+          </a>
+        </div>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="param.columns.push({})">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+          <label class="gf-form-label">
+            <a ng-click="ctrl.addColumns(param.columns)">
+              <i class="fa fa-text-height"></i>
+            </a></label>
+          <label class="gf-form-label">
+            <a ng-click="ctrl.addColumns(param.columns,'number')">
+              <i class="fa fa-sort-numeric-asc"></i>
+            </a></label>
+          <label class="gf-form-label">
+            <a ng-click="param.value.push({})">
+              <i class="fa fa-list"></i>
+            </a>
+          </label>    
+        </div>            
+      </div>
+      <div class="gf-form" ng-switch-when="list" ng-repeat="row in param.value">
+        <div class="gf-form offset-width-7">
+          <label class="gf-form-label width-8">{{$index+1}}</label>
+        </div>
+        <div class="gf-form" ng-repeat="column in param.columns track by $index">
+          <a style="position: absolute;left: 6px">
+            <i class="fa" ng-class='{true:"fa-sort-numeric-asc",false:"fa-text-height"}[column.type==="number"]'></i>
+          </a>
+          <input style="padding-left: 20px;padding-right: 15px;" type="text"
+            class="gf-form-input width-10" ng-model='row[column.name]'></input>
+          <a ng-if='row[column.name]' style="position: absolute;right: 6px" ng-click="ctrl.delColumn(row,column.name)">
+            <i class="fa fa-remove"></i>
+          </a>          
+        </div>        
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.removeItem(param.value, row)">
+              <i class="pointer fa fa-trash"></i>
+            </a>
+          </label>
+        </div>
+      </div>
+      <!-- END param.type == 'list'  -->
     </div>
   </div>
 

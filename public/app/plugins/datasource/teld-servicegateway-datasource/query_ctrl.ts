@@ -34,7 +34,7 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
   /** @ngInject **/
   constructor($scope, $injector) {
     super($scope, $injector);
-
+    this.target.url = this.target.url || "${urlHelper.sghost('sgi')}/api/invoke?SID=";
     this.target.format = this.target.format || 'time_series';
     this.target.time_sec = this.target.time_sec || 'time_sec';
     this.target.time_sec_format = this.target.time_sec_format || 'x';
@@ -96,6 +96,14 @@ export class TeldServiceGatewayQueryCtrl extends QueryCtrl {
 
   moveItem(itemArray, index, newIndex) {
     _.move(itemArray, index, newIndex);
+  }
+
+  addColumns(columns, type) {
+    columns.push({ name: "", type: type });
+  }
+
+  delColumn(obj, key) {
+    delete obj[key];
   }
 
   getCollapsedText() {

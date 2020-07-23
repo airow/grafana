@@ -14,7 +14,8 @@ td{
 .btnFilterKH {
   height: 27px;
   line-height: 25px;
-  width: 50px;
+  padding: 0 3px; 
+  min-width: 50px;
   background-color: #fff;
   border: 1px solid #d7d9db;
   border-radius: 4px;

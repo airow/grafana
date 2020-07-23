@@ -5,6 +5,7 @@ import moment from 'moment';
 import config from 'app/core/config';
 import ResponseParser from './response_parser';
 import embed_teldapp from 'app/core/embed_teldapp';
+import graftrace from 'app/core/utils/graftrace';
 
 export class TeldServiceGatewayDatasource {
   id: any;
@@ -146,6 +147,36 @@ export class TeldServiceGatewayDatasource {
           if (_.size(param.value) === 0) {
             return;
           }
+        } else if (param.type === 'list') {
+          var columns = _.map(param.columns, 'name');
+          var numberCols = _.map(_.filter(param.columns, { type: 'number' }), 'name');
+          param.value = _.transform(param.value, (result, eachitem) => {
+            var val = _.pick(eachitem, columns);
+            _.each(val, (v, key) => {
+              var isNumber = _.includes(numberCols, key);
+              v = "" + v;
+              var originalVal = v;
+              v = this.templateSrv.replaceScopedVars(v, Object.assign({}, options.scopedVars, scopedExpressionVars));
+              v = this.templateSrv.replace(v, scopedVars, this.interpolateVariable);
+              let compiled = _.template(v, templateSettings);
+              v = compiled(bindData);
+              if (originalVal === v && _.includes(v, '$')) {
+                if (true !== eachitem.enableDefValue) {
+                  return;
+                }
+                v = eachitem.defValue || "";
+              }
+              if (isNumber) {
+                v = _.toNumber(v);
+              }
+              val[key] = v;
+              console.log(val);
+            });
+            result.push(val);
+          }, []);
+          if (_.size(param.value) === 0) {
+            return;
+          }
         } else {
           param.value = this.templateSrv.replaceScopedVars(param.value, Object.assign({}, options.scopedVars, scopedExpressionVars));
           param.value = this.templateSrv.replace(param.value, scopedVars, this.interpolateVariable);
@@ -167,6 +198,7 @@ export class TeldServiceGatewayDatasource {
         refId: item.refId,
         intervalMs: options.intervalMs,
         maxDataPoints: options.maxDataPoints,
+        // _graftrace_: options._graftrace_,
         datasourceId: this.id,
         url: url,
         deviceInfo: deviceInfo,
@@ -245,10 +277,9 @@ export class TeldServiceGatewayDatasource {
     if (queries.length === 0) {
       return this.$q.when({ data: [] });
     }
-
     var responseParser = new ResponseParser(this.$q);
     responseParser.setQueries(queries);
-    return this.backendSrv.datasourceRequest({
+    var reqOptions = {
       url: '/callteldsg/_sg',
       method: 'POST',
       data: {
@@ -256,7 +287,19 @@ export class TeldServiceGatewayDatasource {
         to: options.range.to.valueOf().toString(),
         queries: queries,
       }
-    }).then(responseParser.processQueryResult.bind(responseParser));
+    };
+    if (options._graftrace_) {
+      if ("teld-servicegateway-essql-datasource" === _.get(this, 'meta.id')) {
+        var esSQL = _.find(_.flatten(_.map(queries, 'parameters')), { key: "ESSql" });
+        var context = null;
+        if (esSQL.value) {
+          context = esSQL.value;
+        }
+        graftrace.setGraftraceHeaders(this, reqOptions, context, options._graftrace_);
+      }
+      delete options._graftrace_;
+    }
+    return this.backendSrv.datasourceRequest(reqOptions).then(responseParser.processQueryResult.bind(responseParser));
   }
 
   metricFindQuery(query, optionalOptions) {

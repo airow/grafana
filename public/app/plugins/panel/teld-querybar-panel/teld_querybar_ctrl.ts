@@ -11,6 +11,7 @@ import async from 'async';
 import numeral from 'numeral';
 import angular from 'angular';
 import kbn from 'app/core/utils/kbn';
+import graftrace from 'app/core/utils/graftrace';
 import * as dateMath from 'app/core/utils/datemath';
 import moment from 'moment';
 import appEvents from 'app/core/app_events';
@@ -1702,8 +1703,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       "dash_dateFrom": { text: fromYYYMMDD.valueOf(), value: fromYYYMMDD.valueOf() },
       "dash_dateTo": { text: toYYYYMMDD.valueOf(), value: toYYYYMMDD.valueOf() }
     });
-
+    var _graftrace_ = graftrace.gen(this);
     var metricsQuery = {
+      _graftrace_: _graftrace_,
       inQuerybar: true,
       panelId: this.panel.id,
       //range: this.range,

@@ -25,6 +25,7 @@ export class TeldESSQLQueryCtrl extends TeldServiceGatewayQueryCtrl {
       { text: 'ESLog', value: 'ESLog' },
       { text: 'ESLog2', value: 'ESLog2' }
     ];
+    // this.target.url = this.target.url || "${urlHelper.sghost('sgi')}/api/invoke?SID=BIDA-GetEsData";
     this.target.url = "${urlHelper.sghost('sgi')}/api/invoke?SID=BIDA-GetEsData";
     this.target.filterWrap = true;
     this.target.filterKey = 'filter';

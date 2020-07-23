@@ -1029,9 +1029,10 @@ debugger;
       const column = this.table.columns[i];
       // const columnAlias = column.alias || column.text;
       const columnAlias = this.getColumnAlias(column, bindVars);
+      const colAlias = $(columnAlias).text();
       this.table.columns[i].match = false;
       columns.push({
-        title: columnAlias,
+        title: colAlias || columnAlias,
         visible: this.table.columns[i].hidden !== true,
         notExportField: this.table.columns[i].notExportField != true,
         isExport: this.table.columns[i].hidden !== true && this.table.columns[i].notExportField != true
