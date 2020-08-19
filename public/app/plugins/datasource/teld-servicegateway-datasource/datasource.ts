@@ -264,7 +264,14 @@ export class TeldServiceGatewayDatasource {
     } else {
       var telda = embed_teldapp.readCookie('telda'), teldb = embed_teldapp.readCookie('teldb');
       if ((!telda || !teldb) && window.location.hostname !== 'localhost') {
-        this.alertSrv.set("会话超时", "会话超时", "warning", 4000);
+        // this.alertSrv.set("会话超时", "会话超时", "warning", 4000);
+        // debugger;
+        if (window === top) {
+          this.alertSrv.set("会话超时", "会话超时", "warning", 4000);
+        } else {
+          window.top.postMessage("gotoLogin", "*");
+        }
+
         return this.$q.when({ data: [] });
       }
     }
