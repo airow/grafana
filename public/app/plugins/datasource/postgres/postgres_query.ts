@@ -81,6 +81,30 @@ export default class PostgresQuery {
 
   render(interpolate?: any, scopedExpressionVars?: any) {
     const target = this.target;
+    let rawSql = target.rawSql;
+
+    // new query with no table set yet
+    if (!this.target.rawQuery && !('table' in this.target)) {
+      return '';
+    }
+
+    if (!target.rawQuery) {
+      rawSql = this.buildQuery();
+    }
+
+    if (scopedExpressionVars) {
+      rawSql = this.templateSrv.replaceScopedVars(rawSql, scopedExpressionVars);
+    }
+
+    if (interpolate) {
+      return this.templateSrv.replace(rawSql, this.scopedVars, this.interpolateQueryStr);
+    } else {
+      return rawSql;
+    }
+  }
+
+  render_bak(interpolate?: any, scopedExpressionVars?: any) {
+    const target = this.target;
 
     // new query with no table set yet
     if (!this.target.rawQuery && !('table' in this.target)) {
