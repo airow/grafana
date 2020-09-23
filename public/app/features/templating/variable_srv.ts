@@ -88,7 +88,8 @@ export class VariableSrv {
 
   processTeldSqlVariable(variable) {
     if (window.document.cookie.indexOf("telda") === -1) {
-      variable.current = { text: '<like />', value: '<like />' };
+      // variable.current = { text: '<like />', value: '<like />' };
+      variable.current = { text: "<in=('') />", value: "<in=('') />" };
       variable.initLock.resolve();
       return;
     }
