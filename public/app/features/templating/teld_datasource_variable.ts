@@ -56,7 +56,8 @@ export class TeldDatasourceVariable implements Variable {
     includeAll: false,
     multi: false,
     canSaved: true,
-    panel: teldDatasourceConf.getPanel()
+    panel: teldDatasourceConf.getPanel(),
+    condition: ""
   };
 
   /** @ngInject **/
@@ -104,10 +105,54 @@ export class TeldDatasourceVariable implements Variable {
     this.timer.cancel(this.refreshTimer);
   };
 
+  skipMetricsPanelCtrl() {
+    // debugger;
+    // var contextSrv = this.$injector.get('contextSrv');
+    if (this['condition']) {
+      var templateSrv = this.$injector.get('templateSrv');
+      var compiled = _.template('${' + this['condition'] + "}", {
+        'variable': ['vars'],
+        imports: {
+          '_': _,
+          'moment': moment,
+          device: (function () {
+            var ua = window.navigator.userAgent;
+            var android = ua.match(/(Android);?[\s\/]+([\d.]+)?/);
+            var ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
+            var ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/);
+            var iphone = !ipad && ua.match(/(iPhone\sOS|iOS)\s([\d_]+)/);
+            return {
+              ios: ipad || iphone || ipod,
+              android: android
+            };
+          })()
+        }
+      });
+
+      var contextData = _.transform(templateSrv.variables, (result, variable) => { result[variable.name] = variable.current.value; }, {});
+      var skip = compiled(contextData) === 'true';
+
+      return skip;
+    }
+  }
+
+  calcCondition() {
+    if (this['condition']) {
+      return this.skipMetricsPanelCtrl();
+    } else {
+      return false;
+    }
+  }
+
   processTeldVariable(initLock, isVariableSrvCall?) {
     // debugger;
     if (this.panel.onDashboardRefresh && isVariableSrvCall) {
       // alert(1);
+      initLock.resolve();
+      return Promise.resolve();
+    }
+    // 更具条件判定是否取数
+    if (this.calcCondition()) {
       initLock.resolve();
       return Promise.resolve();
     }

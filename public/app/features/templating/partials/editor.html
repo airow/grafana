@@ -427,6 +427,12 @@
             </div>
           </div>
         </div>
+
+        <div class="gf-form">
+          <span class="gf-form-label">禁用条件</span>
+          <input type="text" class="gf-form-input" ng-model='current.condition' ng-blur="runQuery()"
+            placeholder="your expression"></input>
+        </div>
       </div>
 
       <div class="section gf-form-group" ng-show="variableTypes[current.type].supportsMulti">
