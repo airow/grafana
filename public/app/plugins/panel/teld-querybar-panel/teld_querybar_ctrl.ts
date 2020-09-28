@@ -179,30 +179,11 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     //this.currentTarget = _.head(this.panel.targets);
     this.rtClickQueryBtn2Fetch = this.panel.clickQueryBtn2Fetch;
 
-    this.currentTarget = _.find(this.panel.targets, { refId: this.panel.selectTab }) || this.panel.targets[0];
-    // debugger;
-    this.initTabGroup();
-
-    this.setCurrentTargetRefId(this.currentTarget);
-    this.row.notWatchHeight = true;
-
-    _.each(this.panel.targets, (target, index) => {
-      this.initDashboardVariables(target);
-    });
-    this.localStorage2Variables();
-
-    if (this.panel.subscribeRefresh) {
-      this.events.on('refresh', this.onRefresh.bind(this));
-    } else {
-      this.changeQueryBarTab(this.currentTarget);
-    }
-
     this.events.on('render', this.onRender.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-
 
     $scope.$root.onAppEvent('metricePanel-fetch', (data) => {
       this.quering = false;
@@ -219,7 +200,6 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       };
       console.timeEnd("teld-fullscreen snapshot querybar");
     }.bind(this), $scope);
-
     $scope.$root.onAppEvent('teld-exitFullscreen', function (evt, payload) {
       if (this.snapshot) {
         _.each(this.snapshot.querybarVariable, item => {
@@ -241,6 +221,27 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.eh_query();
     }.bind(this), $scope);
 
+    if (this.panel.hidenoload && this.visibility()) {
+      return;
+    }
+
+    this.currentTarget = _.find(this.panel.targets, { refId: this.panel.selectTab }) || this.panel.targets[0];
+    // debugger;
+    this.initTabGroup();
+
+    this.setCurrentTargetRefId(this.currentTarget);
+    this.row.notWatchHeight = true;
+
+    _.each(this.panel.targets, (target, index) => {
+      this.initDashboardVariables(target);
+    });
+    this.localStorage2Variables();
+
+    if (this.panel.subscribeRefresh) {
+      this.events.on('refresh', this.onRefresh.bind(this));
+    } else {
+      this.changeQueryBarTab(this.currentTarget);
+    }
     if (this.panel.isCollapse) {
       this.row.height = 1;
       this.defineQuery = false;

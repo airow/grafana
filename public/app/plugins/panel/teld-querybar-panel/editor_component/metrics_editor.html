@@ -33,6 +33,8 @@
   <div class="gf-form">
     <gf-form-switch class="gf-form" label="保存条件" label-class="query-keyword width-6" checked="ctrl.panel.saveVariable">
     </gf-form-switch>
+    <gf-form-switch class="gf-form" label="隐藏不加载" label-class="query-keyword width-7" checked="ctrl.panel.hidenoload">
+    </gf-form-switch>
     <input type="text" ng-if="ctrl.panel.saveVariable" class="gf-form-input width-8"
       ng-model="ctrl.panel.saveVariableLocalStoragePrefix" spellcheck="false" placeholder="">
     <gf-form-switch ng-if="ctrl.panel.saveVariable" class="gf-form" label="保存TabGroup"
