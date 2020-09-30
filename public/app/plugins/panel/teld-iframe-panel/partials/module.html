@@ -3,7 +3,7 @@
 </div>-->
 <div ng-show="ctrl.isloaded" ng-style="ctrl.panel.containerStyle" style='position: absolute; margin: 30px 0px 20px; top: 0px; left: 0px; right: 0px; bottom: 0px;'>
   <div ng-if='ctrl.panel.websocketConf.teldlogo.enable' style="position: absolute; top:0px; left:0px;" ng-style="ctrl.panel.websocketConf.teldlogo.style">
-    <div class="teldlogo" ng-style="ctrl.panel.websocketConf.teldlogo.customStyle" ng-class="ctrl.currentScene.titleCls">{{ctrl.currentScene.title}}</div>
+    <div style="display: none;" class="teldlogo" ng-style="ctrl.panel.websocketConf.teldlogo.customStyle" ng-class="ctrl.currentScene.titleCls">{{ctrl.currentScene.title}}</div>
   </div>
   <div ng-if='ctrl.panel.websocketConf.clocks.enable' style="position: absolute; top:50px; right:50px; color: #FFF;"
     ng-style="ctrl.panel.websocketConf.clocks.style">
@@ -20,7 +20,7 @@
       <button class="btnScene" ng-class="button.cls" ng-click="ctrl.changeScene(button.to)">{{button.text}}</button>
     </span>
     <span ng-repeat="scene in ctrl.panel.websocketConf.scene" ng-if="ctrl.panel.websocketConf.btnLayout2">
-      <button class="btnLayout2 gotoScene{{$index+1}}" ng-style='ctrl.panel.websocketConf.btnLayout2Style' ng-class="{true:'currentScene',false: ''}[scene===ctrl.currentScene]"
+      <button style="display: none;" class="btnLayout2 gotoScene{{$index+1}}" ng-style='ctrl.panel.websocketConf.btnLayout2Style' ng-class="{true:'currentScene',false: ''}[scene===ctrl.currentScene]"
         ng-click="ctrl.changeScene(scene.name)">{{scene.text}}</button>
     </span>
     <span class="gotoSwitch" ng-if='ctrl.panel.websocketConf.showGotoButton'>
