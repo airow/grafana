@@ -105,6 +105,16 @@ class SingleStatCtrl extends MetricsPanelCtrl {
       this.dataType = 'table';
       const tableData = dataList.map(this.tableHandler.bind(this));
       this.setTableValues(tableData, data);
+    } else if (dataList.length > 0 && dataList[0].type === 'docs') {
+      this.dataType = 'table';
+      const docs2table = _.map(dataList, dl => {
+        return {
+          columns: _.map(_.keys(dl.datapoints[0]), item => { return { text: item }; }),
+          rows: _.map(dl.datapoints, item => { return _.values(item); })
+        };
+      });
+      const tableData = docs2table.map(this.tableHandler.bind(this));
+      this.setTableValues(tableData, data);
     } else {
       this.dataType = 'timeseries';
       this.series = dataList.map(this.seriesHandler.bind(this));
