@@ -28,6 +28,8 @@ export class DashboardRow {
     bgcolor: { enabled: false, color: '#0C2D4A' },
     hideRow: false,
     tabGroup: false,
+    hideRowExpress: false,
+    hideRowExpressString: "",
     align: { enabled: false },
   };
 

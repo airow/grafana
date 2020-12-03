@@ -65,7 +65,7 @@
         <li class="gf-tabs-item dropdown" ng-class="{'open':ctrl.tabGroup[target.conf.groupBy].showDDM===target.refId}"
           ng-repeat="target in ctrl.row.panels">
           <a class="gf-tabs-link ddd" ng-click="ctrl.activeIndex=$index" ng-class="{active: ctrl.activeIndex===$index}">
-            {{target.id}}
+            {{target.title}}
           </a>
         </li>
       </ul>

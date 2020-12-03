@@ -1,52 +1,62 @@
 <div class="dash-row-dropview">
-	<a class="dash-row-dropview-close pointer" ng-click="ctrl.rowCtrl.closeDropView();">
-		<i class="fa fa-remove"></i>
-	</a>
+    <a class="dash-row-dropview-close pointer" ng-click="ctrl.rowCtrl.closeDropView();">
+        <i class="fa fa-remove"></i>
+    </a>
 
-	<div>
-		<div class="section">
-			<div class="gf-form">
-				<span class="gf-form-label width-6">Title</span>
-				<input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.title'></input>
-			</div>
-			<div class="gf-form-inline">
-				<div class="gf-form">
-					<label class="gf-form-label width-6">Size</label>
-					<div class="gf-form-select-wrapper">
-						<select class="input-small gf-form-input" ng-model="ctrl.row.titleSize" ng-options="f for f in ctrl.fontSizes"></select>
-					</div>
-				</div>
-				<gf-form-switch class="gf-form" label="Show" checked="ctrl.row.showTitle">
-        </gf-form-switch>
-        <gf-form-switch class="gf-form" label="Full Show" checked="ctrl.row.fullScreenShow">
-				</gf-form-switch>
-			</div>
-		</div>
-		<div class="section">
-			<div class="gf-form">
-				<span class="gf-form-label width-7">Height</span>
-				<input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.height'></input>
-			</div>
-			<div class="gf-form">
-				<span class="gf-form-label width-7">Repeat for</span>
-				<dash-repeat-option model="ctrl.row"></dash-repeat-option>
-			</div>
+    <div>
+        <div class="section">
+            <div class="gf-form">
+                <span class="gf-form-label width-6">Title</span>
+                <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.title'></input>
+            </div>
+            <div class="gf-form-inline">
+                <div class="gf-form">
+                    <label class="gf-form-label width-6">Size</label>
+                    <div class="gf-form-select-wrapper">
+                        <select class="input-small gf-form-input" ng-model="ctrl.row.titleSize"
+                            ng-options="f for f in ctrl.fontSizes"></select>
+                    </div>
+                </div>
+                <gf-form-switch class="gf-form" label="Show" checked="ctrl.row.showTitle">
+                </gf-form-switch>
+                <gf-form-switch class="gf-form" label="Full Show" checked="ctrl.row.fullScreenShow">
+                </gf-form-switch>
+            </div>
+        </div>
+        <div class="section">
+            <div class="gf-form">
+                <span class="gf-form-label width-7">Height</span>
+                <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.height'></input>
+            </div>
+            <div class="gf-form">
+                <span class="gf-form-label width-7">Repeat for</span>
+                <dash-repeat-option model="ctrl.row"></dash-repeat-option>
+            </div>
+        </div>
+        <div class="section">
+            <div class="gf-form-inline">
+                <gf-form-switch class="gf-form" label="bgcolor" checked="ctrl.row.bgcolor.enabled"></gf-form-switch>
+                <div class="gf-form" ng-show="ctrl.row.bgcolor.enabled">
+                    <spectrum-picker ng-model="ctrl.row.bgcolor.color" ng-change="refresh()"></spectrum-picker>
+                    <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.bgcolor.color'></input>
+                </div>
+                <gf-form-switch class="gf-form" label="hide" checked="ctrl.row.hideRow"></gf-form-switch>
+                <gf-form-switch class="gf-form" label="center" checked="ctrl.row.align.enabled"></gf-form-switch>
+                <div class="gf-form" ng-if="false">
+                    <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.title'></input>
+                    <input type="text" ng-model="ctrl.row.align.value" bs-typeahead="['teldCenter']"
+                        class="gf-form-input">
+                </div>
+                <gf-form-switch class="gf-form" label="页签模式" checked="ctrl.row.tabGroup">
+                </gf-form-switch>                
+            </div>
+        </div>
+        <div class="section">
+            <gf-form-switch class="gf-form" label="表达式隐藏" checked=" ctrl.row.hideRowExpress"></gf-form-switch>
+            <div class="gf-form">
+                <span class="gf-form-label width-7">表达式</span>
+                <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.hideRowExpressString'></input>
+            </div>
+        </div>
     </div>
-    <div class="section">
-      <div class="gf-form-inline">
-        <gf-form-switch class="gf-form" label="bgcolor" checked="ctrl.row.bgcolor.enabled"></gf-form-switch>
-        <div class="gf-form" ng-show="ctrl.row.bgcolor.enabled">
-          <spectrum-picker ng-model="ctrl.row.bgcolor.color" ng-change="refresh()"></spectrum-picker>
-          <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.bgcolor.color'></input>
-        </div>
-        <gf-form-switch class="gf-form" label="hide" checked="ctrl.row.hideRow"></gf-form-switch>
-        <gf-form-switch class="gf-form" label="center" checked="ctrl.row.align.enabled"></gf-form-switch>
-        <div class="gf-form" ng-if="false">
-          <input type="text" class="gf-form-input max-width-14" ng-model='ctrl.row.title'></input>
-          <input type="text" ng-model="ctrl.row.align.value" bs-typeahead="['teldCenter']" class="gf-form-input">
-        </div>
-        <gf-form-switch class="gf-form" label="页签模式" checked="ctrl.row.tabGroup"></gf-form-switch>
-      </div>
-		</div>
-	</div>
 </div>
