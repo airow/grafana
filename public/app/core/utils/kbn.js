@@ -726,7 +726,7 @@ function($, _, numeral, moment) {
         return false;
       }
     });
-
+    if (size < 0 && val > 0) { val *= -1; }
     return kbn.toFixed(val, decimals) + unit;
   };
 
