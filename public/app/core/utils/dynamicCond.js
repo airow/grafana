@@ -182,6 +182,25 @@ define([
 
             return originalOpt;
           }
+        },
+
+        CalcValidAvg: {
+          _: "计算区域对应单车订单日平均值",
+          exec: function (option, masterName, slaverName) {
+            var masterSerie = _.find(option.series, { name: masterName });
+            var slaverSerie = _.find(option.series, { name: slaverName });
+            if (masterSerie && slaverSerie) {
+              var master_xAxis = _.union(_.map(_.filter(masterSerie.data, '[1]'), '[0]'));
+              var cloneSlaver = _.cloneDeep(slaverSerie);
+              cloneSlaver.data = _.filter(cloneSlaver.data, function (item) { return _.includes(master_xAxis, item[0]); });
+              delete slaverSerie.markLine;
+              cloneSlaver.areaStyle.normal.opacity = 0;
+              cloneSlaver.markLine.data[0].lineStyle = { normal: { type: 'dotted' } };
+              cloneSlaver.lineStyle = { normal: { width: '0' } };
+
+              option.series.push(cloneSlaver);
+            }
+          }
         }
       }
     };
