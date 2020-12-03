@@ -409,7 +409,7 @@ export class ModuleCtrl extends MetricsPanelCtrl {
       if (_.isNil(cycle)) {
         cycle = _.first(this.getTimeButton());
       }
-      var intervalVariable = _.get(this.panelGenVars, `interval_${name}`);
+      var intervalVariable = _.get(this.panelGenVars, `interval_${this.panel.cycleVarSuffix}`);
       var intervalVariableValue = { text: cycle.name, value: cycle.interval };
       if (intervalVariable) {
         var current = intervalVariable.current;
