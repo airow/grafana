@@ -230,6 +230,7 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     this.initTabGroup();
 
     this.setCurrentTargetRefId(this.currentTarget);
+    this.setCurrentTabVar(this.currentTarget);
     this.row.notWatchHeight = true;
 
     _.each(this.panel.targets, (target, index) => {
@@ -1153,7 +1154,16 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     return options;
   }
 
+  setCurrentTabVar(cTarget) {
+    if (this.panel.recordCurrentTab) {
+      this.setGeneralVariable({ conf: { variablePrefix: "cTab" } },
+        { name: this.panel.currentTabVarName, text: cTarget.conf.title, value: cTarget.conf.title });
+    }
+  }
+
   manualChangeQueryBarTab(target) {
+    this.setCurrentTabVar(target);
+    console.log('manualChangeQueryBarTab', target);
     // this.tabGroup[target.conf.groupBy].showDDM = false;
     if (this.isMultiSyncLinkageModel()) {
       if (this.isFetchData || this.spin) {
