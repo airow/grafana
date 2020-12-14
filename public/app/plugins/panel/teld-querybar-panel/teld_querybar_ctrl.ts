@@ -1580,6 +1580,8 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     returnValue = _.slice(returnValue, 0, displayCount);
 
     let templateSettings = { imports: this.imports, variable: 'value' };
+    templateSettings.imports['dashVars'] = _.transform(this.templateSrv.variables,
+      (result, value, index) => { result[value.name] = value.current; }, {});
 
     returnValue = _.map(returnValue, item => {
 
