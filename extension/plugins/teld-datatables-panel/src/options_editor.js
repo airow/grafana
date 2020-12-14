@@ -85,8 +85,10 @@ export class optionsEditorCtrl {
     var column = _.find(columns, { text: this.addColumnSegment.value });
 
     if (column) {
-      this.panel.columns.push(column);
-      this.render();
+      if (_.isUndefined(_.find(this.panel.columns, { text: column.text }))) {
+        this.panel.columns.push(column);
+        this.render();
+      }
     }
 
     var plusButton = this.uiSegmentSrv.newPlusButton();

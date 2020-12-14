@@ -378,6 +378,7 @@ transformers['table'] = {
     if (!data || data.length === 0) {
       return [];
     }
+    return _.first(data).columns || [];
   },
   transform: function (data, panel, model) {
     if (!data || data.length === 0) {
@@ -390,6 +391,34 @@ transformers['table'] = {
 
     model.columns = data[0].columns;
     model.rows = data[0].rows;
+
+    if (_.size(panel.columns) > 0) {
+      var columns = [];
+      var findColIndex = _.transform(panel.columns, (r, col, i) => {
+        var colIndex = _.findIndex(model.columns, { text: col.text });
+        r.push(colIndex);
+        columns.push(model.columns[colIndex]);
+      }, []);
+      if (_.size(findColIndex) > 0) {
+        // var rows = [];      
+        // _.each(model.rows, row => {
+        //   var newRow = _.transform(findColIndex, (rr, vv) => {
+        //     rr.push(row[vv]);
+        //   }, []);
+        //   rows.push(newRow);
+        // });
+
+        var rows = _.transform(model.rows, (newRowR, row) => {
+          var newRow = _.transform(findColIndex, (rr, vv) => {
+            rr.push(row[vv]);
+          }, []);
+          newRowR.push(newRow);
+        }, []);
+
+        model.columns = columns;
+        model.rows = rows;
+      }
+    }
   }
 };
 

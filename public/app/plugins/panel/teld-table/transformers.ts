@@ -380,6 +380,7 @@ transformers['table'] = {
     if (!data || data.length === 0) {
       return [];
     }
+    return _.first(data).columns;
   },
   transform: function(data, panel, model) {
     if (!data || data.length === 0) {
