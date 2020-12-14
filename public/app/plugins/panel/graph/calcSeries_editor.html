@@ -3,7 +3,7 @@
   <div class="gf-form-inline">
     <div class="gf-form">
       <label class="gf-form-label"
-        ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target}}']</label>
+        ng-repeat="target in ctrl.metricsTarget() track by $index">series['{{target||"undefined"}}']</label>
     </div>
   </div>
   <h5 class="section-heading">Dash Vars</h5>
