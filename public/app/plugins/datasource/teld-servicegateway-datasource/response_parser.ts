@@ -82,6 +82,20 @@ export default class ResponseParser {
           };
           data.push(series);
           break;
+        case "sg_table":
+          var dsRows = _.isArray(queryRes.dataset) ? queryRes.dataset : [queryRes.dataset];
+          if (queryRes.dataset.rows) {
+            dsRows = _.isArray(queryRes.dataset.rows) ? queryRes.dataset.rows : [queryRes.dataset.rows];
+          }
+
+          let series_Rows = {
+            type: 'table',
+            refId: queryRes.refId,
+            columns: _.map(_.keys(dsRows[0]), function (item) { return { "text": item }; }),
+            rows: _.map(dsRows, function (item) { return _.values(item); })
+          };
+          data.push(series_Rows);
+          break;
       }
     }
 
