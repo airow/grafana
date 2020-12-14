@@ -223,9 +223,18 @@ export class TeldfilterCtrl extends PanelCtrl {
       if (this._panle.QueryList[i].Querytype === "date") {
         for (var j = 0; j < this._panle.QueryList[i].QueryOptions.length; j++) {
           if (this._panle.QueryList[i].QueryOptions[j].TimeClickValue) {
+            /* FireFox 浏览器转换日期有问题 会提示 Invalid Date
             this._panle.QueryList[i].QueryOptions[j].ClickValue = new Date(
-              _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })()
-            );
+               _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })()
+            );*/
+
+            //修复 上边逻辑在FireFox由于字符存在空格造成的转换失败
+            var tcValue = _.template(this._panle.QueryList[i].QueryOptions[j].TimeClickValue, { 'imports': { m: this.datemoment } })();
+            var cValue = new Date(tcValue);
+            if (isNaN(cValue.getTime())) {
+              cValue = moment(tcValue).toDate();
+            }
+            this._panle.QueryList[i].QueryOptions[j].ClickValue = cValue;
           }
         }
       } else if (this._panle.QueryList[i].expression) {
