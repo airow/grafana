@@ -18,15 +18,52 @@
           <i class="pointer fa fa-search"></i>
         </a>
       </label>
-    </span>    
-    <span ng-if="QueryOptions.Querytype!='input'" ng-class="{'OrerationTitleHeightKH':!QueryOptions.alwaysShow}" ng-repeat="QueryOptions in ctrl._panle.QueryList" ng-if='!QueryOptions.toTop'>
+    </span>
+    <span ng-if="inputGroups.isViewShow" ng-class="{'OrerationTitleHeightKH':!inputGroups.alwaysShow}" ng-repeat="inputGroups in ctrl.filterInputGroup()" ng-if='!inputGroups.toTop'>
+      <span ng-repeat="inputGroupItem in inputGroups.QueryOptions">
+        <span>
+          {{inputGroupItem.Title}}:
+        </span>        
+        <span ng-switch="inputGroupItem.inputConf.ctlType">
+          <select ng-switch-when="select"  ng-model="inputGroupItem.ClickValue"  ng-options="item for item in (inputGroupItem.inputConf.selectOpts||[])"></select>
+          <span ng-switch-when="text" ng-switch="inputGroupItem.inputConf.textCtlType">
+            <span ng-switch-when="date">
+              <input type="text" class="form-control date-pack" style="width:173px;"
+                datepicker-popup="{{inputGroupItem.inputDateFormat||ctrl.myDefaultDateFormat}}" ng-model="inputGroupItem.ClickValue"
+                is-open="inputGroupItem.openedAtBar" datepicker-options="ctrl.dateOptions" custom-class="ctrl.getDayClass(date, mode)"
+                ng-required="true" show-weeks="false" clear-text="清空" current-text="今天" close-text="确定" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default date-pack-button"
+                  ng-click="alert();ctrl.openedAtBar(inputGroupItem,$event)">
+                  <i class="fa fa-calendar"></i>
+                </button>
+              </span>
+            </span>
+            <span ng-switch-default>
+              <input type="{{inputGroupItem.inputConf.textCtlType}}" class="input-small gf-form-input"
+                style="display: inline-block;width: auto;" ng-model="inputGroupItem.ClickValue" ng-change="ctrl.render()"
+                ng-model-onblur />
+              <span ng-if="inputGroupItem.ClickValue" style="position: relative;left: -20px;cursor: pointer;">
+                <i ng-click='inputGroupItem.ClickValue=""' class="fa fa-remove"></i>
+              </span>
+            </span>
+          </span>          
+        </span>
+      </span>
+      <label ng-if="$last" ng-click="ctrl.updateInput()" class="gf-form-label inputGo">
+        <a>
+          <i class="pointer fa fa-search"></i>
+        </a>
+      </label>
+    </span>
+    <span ng-if="QueryOptions.Querytype!='input' && QueryOptions.Querytype!='inputGroup'" ng-class="{'OrerationTitleHeightKH':!QueryOptions.alwaysShow}" ng-repeat="QueryOptions in ctrl._panle.QueryList" ng-if='!QueryOptions.toTop'>
       <span
-        ng-if="QueryOptions.Querytype!='date' && QueryOptions.Querytype!='input' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow"
+        ng-if="QueryOptions.Querytype!='date' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow"
         style="color:black" ng-class="{teldfilterbuiltinpanelIsLocalStorage:QueryOptions.IsLocalStorage}">
         {{QueryOptions.QueryTitle}}:<span class="OrerationTitleHeightKHSpan">{{QueryOptions.QueryClickName}}</span>
       </span>
       <span
-        ng-if="QueryOptions.Querytype!='date'  && QueryOptions.Querytype!='input' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickName!=''"
+        ng-if="QueryOptions.Querytype!='date' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickName!=''"
         style="color:black">
         {{QueryOptions.QueryTitle}}:
         <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.isClick"
@@ -80,13 +117,43 @@
     ng-show="ctrl.KwHuTuCaoDropDown">
     <div ng-switch="QueryOptions.Querytype" style="display:inline-block;width:100%" ng-hide="QueryOptions.Querytype=='link'" ng-repeat="QueryOptions in ctrl._panle.QueryList">
       <div id="YunMonthOffTitle" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanal"
-        style="line-height:30px !important;" ng-if="QueryOptions.QueryTitle">
-        <span class="yunClass">{{QueryOptions.QueryTitle}}：</span>
+        style="line-height:30px !important;" ng-if="QueryOptions.QueryTitle || QueryOptions.Querytype=='inputGroup'">
+        <span ng-if="QueryOptions.Querytype!='inputGroup'" class="yunClass">{{QueryOptions.QueryTitle}}：</span>
         <span ng-switch-when="input" ng-switch="QueryOptions.inputConf.ctlType">
           <select ng-switch-when="select" ng-options="item for item in (QueryOptions.inputConf.selectOpts||[])"></select>
             <input ng-switch-default type="text" 
             class="input-small gf-form-input" style="display: inline-block;width: auto;" ng-model="QueryOptions.QueryClickName"
               ng-change="ctrl.render()" ng-model-onblur />
+        </span>
+        <span ng-switch-when="inputGroup" ng-switch="QueryOptions.inputConf.ctlType">
+          <span ng-repeat="inputGroupItem in QueryOptions.QueryOptions">
+            <span class="yunClass">{{inputGroupItem.Title}}：</span>
+            <span ng-switch="inputGroupItem.inputConf.ctlType">
+              <select ng-switch-when="select"  ng-model="inputGroupItem.ClickValue"  ng-options="item for item in (inputGroupItem.inputConf.selectOpts||[])"></select>
+              <span ng-switch-when="text" ng-switch="inputGroupItem.inputConf.textCtlType">
+                <span ng-switch-when="date">
+                  <input type="text" class="form-control date-pack" style="width:173px;"
+                    datepicker-popup="{{inputGroupItem.inputDateFormat||ctrl.myDefaultDateFormat}}" ng-model="inputGroupItem.ClickValue"
+                    is-open="inputGroupItem.opened" datepicker-options="ctrl.dateOptions" custom-class="ctrl.getDayClass(date, mode)"
+                    ng-required="true" show-weeks="false" clear-text="清空" current-text="今天" close-text="确定" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default date-pack-button"
+                      ng-click="ctrl.open(inputGroupItem,$event)">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
+                </span>
+                <span ng-switch-default>
+                  <input type="{{inputGroupItem.inputConf.textCtlType}}" class="input-small gf-form-input"
+                    style="display: inline-block;width: auto;" ng-model="inputGroupItem.ClickValue" ng-change="ctrl.render()"
+                    ng-model-onblur />
+                  <span ng-if="inputGroupItem.ClickValue" style="position: relative;left: -20px;cursor: pointer;">
+                    <i ng-click='inputGroupItem.ClickValue=""' class="fa fa-remove"></i>
+                  </span>
+                </span>
+              </span>          
+            </span>
+          </span>
         </span>
       </div>      
       <div ng-switch-default id="YunMonthOff" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanalKH">

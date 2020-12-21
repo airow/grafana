@@ -159,6 +159,23 @@ export class TeldfilterCtrl extends PanelCtrl {
               _.fill(_that._panle.QueryList, dataobj, findeindex, findeindex + 1);
             }
           }
+
+          if (item.Querytype === "inputGroup" && !item.IsLocalStorage) {
+            delete (item["$$hashvalue"]);
+            var selectdata = { "QueryAttributeName": item.QueryAttributeName };
+            var findeindex = _.findIndex(_that._panle.QueryList, selectdata);
+            if (findeindex > -1) {
+              var dataobj = _.find(_that._panle.QueryList, selectdata);
+              _.forEach(item.QueryOptions, (itemvalue) => {
+                if (itemvalue.IsLocalStorage) {
+                  var selectdatavalue = { "QueryAttributeName": itemvalue.QueryAttributeName };
+                  var findeindexvalue = _.findIndex(dataobj.QueryOptions, selectdatavalue);
+                  _.fill(dataobj.QueryOptions, itemvalue, findeindexvalue, findeindexvalue + 1);
+                }
+              });
+              _.fill(_that._panle.QueryList, dataobj, findeindex, findeindex + 1);
+            }
+          }
         });
       } else {
         localStorage.removeItem(this._panle.FilterTitle);
@@ -343,12 +360,19 @@ export class TeldfilterCtrl extends PanelCtrl {
     return _.filter(this._panle.QueryList, { Querytype: 'input' });
   }
 
+  filterInputGroup() {
+    return _.filter(this._panle.QueryList, { Querytype: 'inputGroup' });
+  }
+
   updateInput() {
+    // debugger;
     var refreshPanels = this.panel.refreshPanels;
     if (typeof (refreshPanels) === "string") {
       refreshPanels = refreshPanels.split(",");
     }
     if (this.panel.affected) {
+      this.setDashboardVariables();
+      this.saveLocalStorage();
       this.$scope.$root.appEvent("t-panel-refres", {
         emitPanel: this,
         refreshPanels: refreshPanels
@@ -370,7 +394,7 @@ export class TeldfilterCtrl extends PanelCtrl {
       this.fetch();
     }
   };
-  fetch() {
+  saveLocalStorage() {
     if (this._panle.IsLocalStorage) {
       var JSONQueryList = JSON.stringify(this._panle.QueryList);
       JSONQueryList = _.replace(JSONQueryList, /hashKey/g, 'hashvalue');
@@ -380,6 +404,9 @@ export class TeldfilterCtrl extends PanelCtrl {
       localStorage.removeItem(this._panle.FilterTitle);
       localStorage.removeItem(this._panle.FilterTitle + "versions");
     }
+  }
+  fetch() {
+    this.saveLocalStorage();
     this.timeSrv.refreshDashboard();
     this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'filter-builtin', target: this });
   };
@@ -394,6 +421,15 @@ export class TeldfilterCtrl extends PanelCtrl {
       QueryOptions.opened = true;
     }
   };
+  openedAtBar(QueryOptions, $event) {
+    if (QueryOptions.isMonthMode) {
+      QueryOptions.datepickerShow = !QueryOptions.datepickerShow;
+      $event.stopPropagation();
+    } else {
+      QueryOptions.openedAtBar = true;
+    }
+  };
+
   goYesterday(QueryOptions, conf, $event) {
     QueryOptions.ClickValue = moment(QueryOptions.ClickValue).subtract(1, conf.step || 'days').toDate();
   };
@@ -493,6 +529,34 @@ export class TeldfilterCtrl extends PanelCtrl {
                 variable = this.variableSrv.templateSrv.getVariable('$' + Variables.QueryAttributeName, 'teldCustom');
                 // this.variableSrv.templateSrv.removeVariable('$' + bindVariable.QueryAttributeName);
                 // let variable = _.get(this.querybarVariable, variablePath);
+
+                if (_.isNil(variable)) {
+                  variable = this.variableSrv.addVariable({
+                    hide: 2,
+                    type: 'teldCustom',
+                    name: `${Variables.QueryAttributeName}`,
+                    query: '',
+                    current: { value: value, text: text }
+                  });
+                }
+                variable.current = { text: text, value: value };
+              } else {
+                this.variableSrv.templateSrv.removeVariable('$' + Variables.QueryAttributeName, 'teldCustom');
+              }
+            });
+          } else if (bindVariable.Querytype === 'inputGroup') {
+            // debugger;
+            _.each(bindVariable.QueryOptions, Variables => {
+              if (Variables.ClickValue) {
+
+                value = Variables.ClickValue;
+                if (Variables.inputConf.textCtlType === "date") {
+                  value = this.formatDate(new Date(value));
+                }
+
+                let text = value;
+                //let variablePaths = `${bindVariable.QueryAttributeName}`;
+                variable = this.variableSrv.templateSrv.getVariable('$' + Variables.QueryAttributeName, 'teldCustom');
 
                 if (_.isNil(variable)) {
                   variable = this.variableSrv.addVariable({
