@@ -77,7 +77,7 @@
           <a ng-click="ctrl.addCycleConf()">
             <i class="fa fa-plus"></i>
           </a>
-        </label>        
+        </label>
       </div>
       <div ng-if='cycle.custom' class="section" ng-repeat="cycle in ctrl.panel.cycleConf">
         <div class="gf-form">
@@ -118,6 +118,29 @@
       <gf-form-switch class="gf-form" label="反序显示" label-class="width-6" checked="ctrl.panel.cycleReverseDisplay"
         on-change="ctrl.render()"></gf-form-switch>
     </div>
+    <div class="gf-form-inline">
+      <gf-form-switch class="gf-form" label="定向更新面板" label-class="width-9" checked="ctrl.panel.affected"
+        on-change="ctrl.render()"></gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label">
+            <a ng-click="ctrl.addRefreshPanels()">
+              <i class="fa fa-plus"></i>
+            </a>
+          </label>
+        </div>
+        <div ng-if='ctrl.panel.affected' ng-repeat="item in ctrl.panel.refreshPanels track by $index">
+          <div class="gf-form">
+            <input type="text" class="gf-form-input width-10" 
+            min-length="0" bs-typeahead='ctrl.panelExtNames' ng-model="ctrl.panel.refreshPanels[$index]"
+              ng-change="ctrl.refresh()" ng-model-onblur></input>          
+            <label class="gf-form-label">
+              <a ng-click="ctrl.removeVariable(ctrl.panel.refreshPanels,item)">
+                <i class="fa fa-remove"></i>
+              </a>
+            </label>
+          </div>
+        </div>
+    </div>
   </div>
 
   <div class="section gf-form-group">
@@ -152,7 +175,7 @@
         <label class="gf-form-label width-9">type</label>
         <!-- <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','input','select','date']"></select> -->
         <select class="gf-form-input" ng-model="QueryOptions.Querytype"
-          ng-options="item for item in ['button','date','link']"></select>
+          ng-options="item for item in ['button','date','link','input']"></select>
         <gf-form-switch class="gf-form" label="isViewShow" label-class="width-8" checked="QueryOptions.isViewShow"
           on-change="ctrl.render()"></gf-form-switch>
         <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8"
@@ -261,6 +284,11 @@
           <input type="text" class="input-small gf-form-input" placeholder="URL" ng-model="QueryOption.linkURL"
             ng-change="ctrl.render()" ng-model-onblur />
         </div>
+        <div class="gf-form gf-form--grow" ng-if="QueryOptions.Querytype=='input'">
+          <label class="gf-form-label width-9">控件类型</label>
+          <select class="gf-form-input" ng-model="QueryOptions.inputConf.ctlType" ng-options="item for item in ['text','select','sg']"></select>
+          
+        </div>
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(QueryOptions.QueryOptions,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>
@@ -294,35 +322,5 @@
       </div>
       <hr>
     </div>
-    <!-- <h5 class="section-heading">Variable</h5>
-    <div class="gf-form"  ng-repeat="Variable in ctrl.panel.VariableList">
-        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入变量名称" ng-model="Variable.VariableName" ng-change="ctrl.render()"
-          ng-model-onblur />
-        <input type="text" class="input-small gf-form-input max-width-9" placeholder="请输入变量公式"
-          ng-model="Variable.VariableValue" ng-change="ctrl.render()" ng-model-onblur />
-          <label class="gf-form-label" ng-hide="$last">
-              <a ng-click="ctrl.move(ctrl.panel.VariableList,$index,$index+1)">
-                <i class="pointer fa fa-arrow-down"></i>
-              </a>
-            </label>
-            <label class="gf-form-label" ng-hide="$first">
-              <a ng-click="ctrl.move(ctrl.panel.VariableList,$index,$index-1)">
-                <i class="pointer fa fa-arrow-up"></i>
-              </a>
-            </label>
-            <label class="gf-form-label" ng-if="$index!=0">
-              <a ng-click="ctrl.removeVariable(ctrl.panel.VariableList, Variable)">
-                <i class="fa fa-remove"></i>
-              </a>
-            </label>
-            <label class="gf-form-label" ng-if="$index==0">
-              <a ng-click="ctrl.panel.VariableList.push({
-                VariableName: '',
-                VariableValue: ''
-              })">
-                <i class="fa fa-plus"></i>
-              </a>
-            </label>
-      </div> -->
   </div>
 </div>

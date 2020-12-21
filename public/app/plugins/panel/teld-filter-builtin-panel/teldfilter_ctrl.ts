@@ -208,15 +208,27 @@ export class TeldfilterCtrl extends PanelCtrl {
     }.bind(this), $scope);
 
     $scope.$root.onAppEvent('teld-exitFullscreen', function (evt, payload) {
-      this._panle.QueryList = this.snapshot.QueryList;
-      localStorage.setItem(this._panle.FilterTitle, this.snapshot.localStorageFilter);
-      this.eh_emitCycle(this.snapshot.currentCycle);
-      this.variableSrv.templateSrv.updateTemplateData();
+      if (this.snapshot) {
+        this._panle.QueryList = this.snapshot.QueryList;
+        localStorage.setItem(this._panle.FilterTitle, this.snapshot.localStorageFilter);
+        this.eh_emitCycle(this.snapshot.currentCycle);
+        this.variableSrv.templateSrv.updateTemplateData();
+      }
     }.bind(this), $scope);
   }
   addCycleConf() {
     this.panel.cycleConf.push({ custom: true });
   }
+
+  panelExtNames = _.union(_.remove(_.map(this.dashboard.rows, 'panels[0].panelExtName')));
+
+  addRefreshPanels() {
+    if (_.isNil(this.panel.refreshPanels)) {
+      this.panel.refreshPanels = [];
+    }
+    this.panel.refreshPanels.push("");
+  }
+
   qsDefaultValue() {
     // debugger;
     for (var i = 0; i < this._panle.QueryList.length; i++) {
@@ -326,6 +338,26 @@ export class TeldfilterCtrl extends PanelCtrl {
     console.log('onRender');
     this.renderingCompleted();
   }
+
+  filterInput() {
+    return _.filter(this._panle.QueryList, { Querytype: 'input' });
+  }
+
+  updateInput() {
+    var refreshPanels = this.panel.refreshPanels;
+    if (typeof (refreshPanels) === "string") {
+      refreshPanels = refreshPanels.split(",");
+    }
+    if (this.panel.affected) {
+      this.$scope.$root.appEvent("t-panel-refres", {
+        emitPanel: this,
+        refreshPanels: refreshPanels
+      });
+    } else {
+      this.refreshFilter();
+    }
+  }
+
   divOperationFilter() {
     var that = this;
     if (that.KwHuTuCaoDropDown) {
@@ -480,6 +512,10 @@ export class TeldfilterCtrl extends PanelCtrl {
             value = bindVariable.QueryClickVal;
 
             let text = bindVariable.QueryClickName;
+
+            if (bindVariable.Querytype === 'input') {
+              text = value = bindVariable.QueryClickName;
+            }
 
             //let variablePath = `${bindVariable.QueryAttributeName}`;
             variable = this.variableSrv.templateSrv.getVariable('$' + bindVariable.QueryAttributeName, 'teldCustom');

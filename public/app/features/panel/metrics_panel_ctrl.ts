@@ -70,6 +70,16 @@ class MetricsPanelCtrl extends PanelCtrl {
     } else {
       this.events.on('refresh', this.onMetricsPanelRefresh.bind(this));
     }
+    if (this.panel.panelExtName) {
+      $scope.$root.onAppEvent("t-panel-refres", ((evt, payload) => {
+        // debugger;
+
+        var includes = _.includes(payload.refreshPanels || [], "" + this.panel.panelExtName);
+        if (includes) {
+          this.onMetricsPanelRefresh();
+        }
+      }).bind(this), $scope);
+    }
 
     // $scope.$watch(this.panel.panelRefresh, function (newValue) {
     //   alert(newValue);

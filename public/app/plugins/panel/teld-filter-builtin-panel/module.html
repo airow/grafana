@@ -1,14 +1,32 @@
 <div class="row" style="position: relative;">
   <div class="OrerationTitleHeightKH" style='float: left;display: inherit;'>
     <span>&nbsp;&nbsp;</span>
-    <span ng-class="{'OrerationTitleHeightKH':!QueryOptions.alwaysShow}" ng-repeat="QueryOptions in ctrl._panle.QueryList" ng-if='!QueryOptions.toTop'>
+    <span ng-if="QueryOptions.isViewShow" ng-class="{'OrerationTitleHeightKH':!QueryOptions.alwaysShow}" ng-repeat="QueryOptions in ctrl.filterInput()" ng-if='!QueryOptions.toTop'>
+      <span>
+        <span>
+          {{QueryOptions.QueryTitle}}:
+        </span>
+        <span ng-switch="QueryOptions.inputConf.ctlType">
+          <select ng-switch-when="select" ng-options="item for item in (QueryOptions.inputConf.selectOpts||[])"></select>
+          <input ng-switch-default type="text" 
+          class="input-small gf-form-input" style="display: inline-block;width: auto;" ng-model="QueryOptions.QueryClickName"
+            ng-change="ctrl.render()" ng-model-onblur />
+        </span>
+      </span>
+      <label ng-if="$last" ng-click="ctrl.updateInput()" class="gf-form-label inputGo">
+        <a>
+          <i class="pointer fa fa-search"></i>
+        </a>
+      </label>
+    </span>    
+    <span ng-if="QueryOptions.Querytype!='input'" ng-class="{'OrerationTitleHeightKH':!QueryOptions.alwaysShow}" ng-repeat="QueryOptions in ctrl._panle.QueryList" ng-if='!QueryOptions.toTop'>
       <span
-        ng-if="QueryOptions.Querytype!='date' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow"
+        ng-if="QueryOptions.Querytype!='date' && QueryOptions.Querytype!='input' && !QueryOptions.MultiClick && QueryOptions.QueryClickVal!='' && QueryOptions.isViewShow"
         style="color:black" ng-class="{teldfilterbuiltinpanelIsLocalStorage:QueryOptions.IsLocalStorage}">
         {{QueryOptions.QueryTitle}}:<span class="OrerationTitleHeightKHSpan">{{QueryOptions.QueryClickName}}</span>
       </span>
       <span
-        ng-if="QueryOptions.Querytype!='date' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickName!=''"
+        ng-if="QueryOptions.Querytype!='date'  && QueryOptions.Querytype!='input' && QueryOptions.MultiClick && QueryOptions.isViewShow && QueryOptions.QueryClickName!=''"
         style="color:black">
         {{QueryOptions.QueryTitle}}:
         <span ng-repeat="QueryOption in QueryOptions.QueryOptions" ng-if="QueryOption.isClick"
@@ -30,12 +48,12 @@
             aria-hidden="true"></i>
           <span ng-if="!$last">~</span>
         </span>
-      </span>
-    </span>
+      </span>      
+    </span>  
   </div>
   <div ng-hide="ctrl.panel.hideFilterButton" ng-click="ctrl.divOperationFilter()" class="btnFilterKH" style="float: right;margin-top: 0px;margin-right: 11px;">筛选
     <span ng-if="ctrl.btnFilterKHRed" class="btnFilterKHRed"></span>
-  </div>
+  </div>    
   <div class="cycle-filter" style="margin-top: 0px;" ng-if='ctrl.getTimeButton().length>0'>
     <div ng-class='{"currentCycle-filter":ctrl.currentCycle===cycle}'
       style="height: 25px;line-height: 23px;margin-bottom:0px;margin-top:0px;border: #43add7 1px solid;border-radius:0px;"
@@ -60,12 +78,18 @@
   </div>
   <div ng-click='ctrl.closeDatepickerShow()' class="KwHuTuCaoDropDownPanal form col-xs-12 col-md-6 col-md-offset-4"
     ng-show="ctrl.KwHuTuCaoDropDown">
-    <div style="display:inline-block;width:100%" ng-hide="QueryOptions.Querytype=='link'" ng-repeat="QueryOptions in ctrl._panle.QueryList">
+    <div ng-switch="QueryOptions.Querytype" style="display:inline-block;width:100%" ng-hide="QueryOptions.Querytype=='link'" ng-repeat="QueryOptions in ctrl._panle.QueryList">
       <div id="YunMonthOffTitle" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanal"
         style="line-height:30px !important;" ng-if="QueryOptions.QueryTitle">
         <span class="yunClass">{{QueryOptions.QueryTitle}}：</span>
-      </div>
-      <div id="YunMonthOff" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanalKH">
+        <span ng-switch-when="input" ng-switch="QueryOptions.inputConf.ctlType">
+          <select ng-switch-when="select" ng-options="item for item in (QueryOptions.inputConf.selectOpts||[])"></select>
+            <input ng-switch-default type="text" 
+            class="input-small gf-form-input" style="display: inline-block;width: auto;" ng-model="QueryOptions.QueryClickName"
+              ng-change="ctrl.render()" ng-model-onblur />
+        </span>
+      </div>      
+      <div ng-switch-default id="YunMonthOff" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 screenPanalKH">
         <input type="button" class="btnKeHuTuCaoScreen termRight"
           ng-if="QueryOptions.Querytype=='button' && !QueryOptions.MultiClick"
           ng-class="{searchCondBtnActive:QueryOptions.QueryClickName==QueryOption.OptionName}"

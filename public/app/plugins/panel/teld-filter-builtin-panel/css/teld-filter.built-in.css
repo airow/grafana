@@ -67,6 +67,13 @@ td{
       line-height: 27px;
       font-size: .875rem;
   }
+  .OrerationTitleHeightKH{
+    line-height: 27px;
+    font-size: .875rem;
+  }
+  .inputGo{
+    display: inline-block;
+  }
   .OrerationTitleHeightKHSpan{
       color: blue;
   }
@@ -191,6 +198,9 @@ td{
 
 @media (max-width: 768px){
   .OrerationTitleHeightKH{
+    display: none;
+  }
+  .inputGo{
     display: none;
   }
   .btnFilterKH{
