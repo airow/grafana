@@ -554,7 +554,7 @@ export class TeldfilterCtrl extends PanelCtrl {
                   value = this.formatDate(new Date(value));
                 }
 
-                let text = value;
+                let text = value = "" + value;
                 //let variablePaths = `${bindVariable.QueryAttributeName}`;
                 variable = this.variableSrv.templateSrv.getVariable('$' + Variables.QueryAttributeName, 'teldCustom');
 
