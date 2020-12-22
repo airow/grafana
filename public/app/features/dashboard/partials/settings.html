@@ -73,13 +73,22 @@
         </gf-form-switch>
         <gf-form-switch class="gf-form" label="隐藏面板取数" tooltip="编辑模式下动态隐藏面板也取数" checked="dashboard.dyHideLoad"
           label-class="width-11">
-        </gf-form-switch>
+		</gf-form-switch>
+		<gf-form-switch class="gf-form"
+                        label="记住行折叠状态"
+                        tooltip="记住行折叠状态"
+                        checked="dashboard.teldStorage.rowCollapse"
+                        label-class="width-11">
+		</gf-form-switch>
+		<div class="gf-form" ng-if="dashboard.teldStorage.rowCollapse">
+			<input type="text" class="gf-form-input" placeholder="折叠持久化前缀" ng-model='dashboard.teldStorage.rowCollapseLSKEY'></input>
+		  </div>
         <gf-form-switch class="gf-form"
                         label="Show Watermark"
                         tooltip="显示水印"
                         checked="dashboard.watermark.show"
                         label-class="width-11">
-        </gf-form-switch>
+		</gf-form-switch>
         <div class="gf-form" ng-if="dashboard.watermark.show">
           <input type="text" class="gf-form-input" placeholder="水印内容，默认显示时间" ng-model='dashboard.watermark.text'></input>
         </div>

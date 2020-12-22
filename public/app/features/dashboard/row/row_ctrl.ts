@@ -14,9 +14,18 @@ export class DashRowCtrl {
   dropView: number;
   draggable: true;
   activeIndex: number;
+  storageRowCollapseFlag: boolean;
+  rowCollapseLSKey: string;
 
   /** @ngInject */
   constructor(private $scope, private $rootScope, private $timeout, contextSrv) {
+    this.storageRowCollapseFlag = _.get(this.dashboard, 'teldStorage.rowCollapse', false);
+    var prefix = "";
+    if (this.storageRowCollapseFlag && this.dashboard.teldStorage.rowCollapseLSKEY) {
+      prefix = "_" + this.dashboard.teldStorage.rowCollapseLSKEY;
+    }
+    this.rowCollapseLSKey = `teld_${prefix}rowCollapse_${this.dashboard.meta.slug}`;
+    this.checkRowCollapse(this.initRowCollapse.bind(this));
     this.row.title = this.row.title || 'Row title';
     this.draggable = contextSrv.isEditor;
     this.activeIndex = 0;
@@ -98,9 +107,39 @@ export class DashRowCtrl {
     }
   }
 
+  checkRowCollapse(callback) {
+    if (this.storageRowCollapseFlag && !this.draggable && this.row.showTitle) {
+      callback();
+    }
+  }
+
   toggleCollapse() {
     this.closeDropView();
     this.row.collapse = !this.row.collapse;
+    // debugger;
+    this.checkRowCollapse(this.storageRowCollapse.bind(this));
+  }
+
+  storageRowCollapse() {
+    var collapseRows = _.filter(this.dashboard.rows, 'showTitle');
+    var collapseStatus = _.transform(collapseRows, function (result, value, index) {
+      //(result[value] || (result[value] = [])).push(key);//
+      result[value.title] = value.collapse;
+    }, {});
+    window.localStorage.setItem(this.rowCollapseLSKey, JSON.stringify(collapseStatus));
+  }
+
+  initRowCollapse() {
+    var row = this.row;
+    try {
+      var lsString = window.localStorage.getItem(this.rowCollapseLSKey);
+      if (lsString) {
+        var collapseStatus = JSON.parse(lsString);
+        row.collapse = _.get(collapseStatus, row.title, row.collapse);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   onMenuAddPanel() {

@@ -28,6 +28,7 @@ export class DashboardModel {
   unsavedChangesCheck: any;
   dashLocalStorage: any;
   watermark: any;
+  teldStorage: any;
   templating: any;
   annotations: any;
   refresh: any;
@@ -63,6 +64,7 @@ export class DashboardModel {
     this.unsavedChangesCheck = data.unsavedChangesCheck || false;
     this.dashLocalStorage = data.dashLocalStorage || '';
     this.watermark = data.watermark || { show: false, text: '' };
+    this.teldStorage = data.teldStorage || { rowCollapse: false };
     this.time = data.time || { from: 'now-6h', to: 'now' };
     this.timepicker = data.timepicker || {};
     this.templating = this.ensureListExist(data.templating);
