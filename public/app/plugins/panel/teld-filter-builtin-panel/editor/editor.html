@@ -177,9 +177,9 @@
         <gf-form-switch class="gf-form" label="aloneRelease" ng-if="QueryOptions.MultiClick" label-class="width-8"
           checked="QueryOptions.aloneReleaseAttribute" on-change="ctrl.render()"></gf-form-switch>
         <label class="gf-form-label width-9">type</label>
-        <!-- <select class="gf-form-input" ng-model="QueryOptions.Querytype" ng-options="item for item in ['button','input','select','date']"></select> -->
+
         <select class="gf-form-input" ng-model="QueryOptions.Querytype"
-          ng-options="item for item in ['button','date','link','input','inputGroup']"></select>
+          ng-options="item for item in ['button','date','link','inputGroup']"></select>
         <gf-form-switch class="gf-form" label="isViewShow" label-class="width-8" checked="QueryOptions.isViewShow"
           on-change="ctrl.render()"></gf-form-switch>
         <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8"
@@ -254,7 +254,7 @@
           <input ng-if="QueryOptions.Querytype=='button' || QueryOptions.Querytype=='select' " type="text"
             class="input-small gf-form-input max-width-9" placeholder="请输入名称" ng-model="QueryOption.OptionName"
             ng-change="ctrl.render()" ng-model-onblur />
-          <input ng-if="QueryOptions.Querytype!='date' && QueryOptions.Querytype!='input' && QueryOptions.Querytype!='inputGroup'" type="text" class="input-small gf-form-input max-width-9"
+          <input ng-if="QueryOptions.Querytype!='date' && QueryOptions.Querytype!='inputGroup'" type="text" class="input-small gf-form-input max-width-9"
             placeholder="请输入查询值" ng-model="QueryOption.ClickValue" ng-change="ctrl.render()" ng-model-onblur />
           <input ng-if="QueryOptions.Querytype=='date'" type="text" class="input-small gf-form-input max-width-9"
             placeholder="请输入查询值" ng-model="QueryOption.TimeClickValue" ng-change="ctrl.render()" ng-model-onblur />
@@ -288,11 +288,7 @@
           <input type="text" class="input-small gf-form-input" placeholder="URL" ng-model="QueryOption.linkURL"
             ng-change="ctrl.render()" ng-model-onblur />
         </div>
-        <div class="gf-form" ng-if="QueryOptions.Querytype=='input'">
-          <label class="gf-form-label width-9">控件类型</label>
-          <select class="gf-form-input" ng-model="QueryOptions.inputConf.ctlType" ng-options="item for item in ['text','select','sg']"></select>
-          
-        </div>
+        <!-- inputGroup -->
         <div ng-switch-when='inputGroup' ng-switch='QueryOption.inputConf.ctlType' class="gf-form">
           <input type="{{QueryOption.inputConf.textCtlType=='number' ? 'number' : 'text' }}" class="input-small gf-form-input max-width-9"
             placeholder="默认值" ng-model="QueryOption.ClickValue" ng-change="ctrl.render()" ng-model-onblur />
@@ -315,6 +311,7 @@
           <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8"
             checked="QueryOption.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         </div>
+        <!-- inputGroup -->
         <label class="gf-form-label" ng-hide="$last">
           <a ng-click="ctrl.move(QueryOptions.QueryOptions,$index,$index+1)">
             <i class="pointer fa fa-arrow-down"></i>
