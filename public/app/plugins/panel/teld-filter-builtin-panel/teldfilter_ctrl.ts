@@ -364,24 +364,6 @@ export class TeldfilterCtrl extends PanelCtrl {
     return _.filter(this._panle.QueryList, { Querytype: 'inputGroup' });
   }
 
-  updateInput() {
-    // debugger;
-    var refreshPanels = this.panel.refreshPanels;
-    if (typeof (refreshPanels) === "string") {
-      refreshPanels = refreshPanels.split(",");
-    }
-    if (this.panel.affected) {
-      this.setDashboardVariables();
-      this.saveLocalStorage();
-      this.$scope.$root.appEvent("t-panel-refres", {
-        emitPanel: this,
-        refreshPanels: refreshPanels
-      });
-    } else {
-      this.refreshFilter();
-    }
-  }
-
   divOperationFilter() {
     var that = this;
     if (that.KwHuTuCaoDropDown) {
@@ -405,11 +387,62 @@ export class TeldfilterCtrl extends PanelCtrl {
       localStorage.removeItem(this._panle.FilterTitle + "versions");
     }
   }
-  fetch() {
+  fetch_BAK() {
     this.saveLocalStorage();
     this.timeSrv.refreshDashboard();
     this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'filter-builtin', target: this });
   };
+  refreshFilter() {
+    this.setDashboardVariables();
+    this.fetch();
+  }
+  updateInput_BAK() {
+    // debugger;
+    var refreshPanels = this.panel.refreshPanels;
+    if (typeof (refreshPanels) === "string") {
+      refreshPanels = refreshPanels.split(",");
+    }
+    if (this.panel.affected) {
+      this.setDashboardVariables();
+      this.saveLocalStorage();
+      this.$scope.$root.appEvent("t-panel-refres", {
+        emitPanel: this,
+        refreshPanels: refreshPanels
+      });
+    } else {
+      this.refreshFilter();
+    }
+  }
+
+  fetchDispatch() {
+    var refreshPanels = this.panel.refreshPanels;
+    if (typeof (refreshPanels) === "string") {
+      refreshPanels = refreshPanels.split(",");
+    }
+    if (this.panel.affected) {
+      this.$scope.$root.appEvent("t-panel-refres", {
+        emitPanel: this,
+        refreshPanels: refreshPanels
+      });
+    } else {
+      this.fetchhDashboard();
+    }
+  }
+
+  fetch() {
+    this.saveLocalStorage();
+    this.fetchDispatch();
+  };
+  fetchhDashboard() {
+    this.timeSrv.refreshDashboard();
+    this.$scope.$root.appEvent("gfilter-fetch", { panelType: 'filter-builtin', target: this });
+  }
+  updateInput() {
+    this.setDashboardVariables();
+    this.saveLocalStorage();
+    this.fetchDispatch();
+  }
+
   move(variableArray, index, newIndex) {
     _.move(variableArray, index, newIndex);
   }
@@ -436,11 +469,6 @@ export class TeldfilterCtrl extends PanelCtrl {
   goTomorrow(QueryOptions, conf, $event) {
     QueryOptions.ClickValue = moment(QueryOptions.ClickValue).add(1, conf.step || 'days').toDate();
   };
-
-  refreshFilter() {
-    this.setDashboardVariables();
-    this.fetch();
-  }
 
   imports = {
     '_': _,
@@ -492,6 +520,9 @@ export class TeldfilterCtrl extends PanelCtrl {
     });
 
     this.variableSrv.templateSrv.updateTemplateData();
+  }
+  setStyle(object, sources) {
+    return _.assign(object, _.pickBy(sources, item => item));
   }
   setDashboardVariables() {
     var reusts = false;

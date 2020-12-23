@@ -37,6 +37,10 @@
     </div>
     <gf-form-switch class="gf-form" label="隐藏过滤按钮" label-class="width-8" checked="ctrl.panel.hideFilterButton"
       on-change="ctrl.render()"></gf-form-switch>
+    <div class="gf-form">
+      <label class="gf-form-label width-9">过滤按钮名称</label>
+      <input class="input-small gf-form-input" placeholder="筛选" ng-model="ctrl.panel.filterButtonName" />
+    </div>
   </div>
 
   <div class="section gf-form-group">
@@ -300,11 +304,14 @@
             ng-model="QueryOption.QueryAttributeName" ng-change="ctrl.render()" ng-model-onblur />
           <label class="gf-form-label width-9">控件类型</label>
           <select class="gf-form-input" ng-model="QueryOption.inputConf.ctlType"
-            ng-options="item for item in ['text','select','sg']"></select>
+            ng-options="item for item in ['text']"></select>
           <div ng-switch-when='text' class="gf-form-input" style="padding: 0px;">
             <select class="gf-form-input" ng-model="QueryOption.inputConf.textCtlType"
               ng-options="item for item in ['text','date','number']"></select>
           </div>
+          <label class="gf-form-label width-9">控件宽度</label>
+          <input type="text" class="input-small gf-form-input max-width-9" placeholder=""
+            ng-model="(QueryOption.inputConf.style).width" ng-change="ctrl.render()" ng-model-onblur />
           <gf-form-switch class="gf-form" label="IsLocalStorage" label-class="width-8"
             checked="QueryOption.IsLocalStorage" on-change="ctrl.render()"></gf-form-switch>
         </div>
