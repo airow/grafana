@@ -12,7 +12,7 @@ module.exports = function(config) {
         // '<%= genDir %>/vendor/DataTables/css/dataTables.foundation.css',
         // '<%= genDir %>/vendor/angular-datatables/css/angular-datatables.css',
 
-        '<%= genDir %>/vendor/DataTables/dataTables.css',
+        '<%= genDir %>/vendor/DataTables/datatables.css',
 
         '<%= genDir %>/css/grafana.dark.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
@@ -30,7 +30,7 @@ module.exports = function(config) {
         // '<%= genDir %>/vendor/DataTables/css/dataTables.foundation.css',
         // '<%= genDir %>/vendor/angular-datatables/css/angular-datatables.css',
 
-        '<%= genDir %>/vendor/DataTables/dataTables.css',
+        '<%= genDir %>/vendor/DataTables/datatables.css',
 
         '<%= genDir %>/css/grafana.light.css',
         '<%= genDir %>/vendor/css/font-awesome.min.css'
