@@ -390,6 +390,8 @@
         <input type="text" ng-model="ctrl.panel.baseTS" bs-typeahead="ctrl.metricsTarget" min-length="0"
           class="gf-form-input" placeholder="metric">
       </div>
+      <gf-form-switch class="gf-form" label="闰年Fix" label-class="width-8" checked="ctrl.panel.baseTSConf.FixLeapYear"
+        on-change="ctrl.render()"></gf-form-switch>      
       <div class="gf-form">
         <label class="gf-form-label width-8">对其方式</label>
         <input type="text" ng-model="ctrl.panel.baseTSConf.strategy" bs-typeahead="['按基准时间对齐']" min-length="0" class="gf-form-input"

@@ -910,8 +910,15 @@ export class ModuleCtrl extends MetricsPanelCtrl {
           }
           var offset = baseTS - firstTs(itemDatapoints);
           _.each(item.datapoints, dp => {
+            var changeMoment = moment(dp[1]);
             dp.push(dp[1]);
             dp[1] += offset;
+            if (_.get(this.panel, 'baseTSConf.FixLeapYear', false)) {
+              var oneDayms = 86400000;
+              if (changeMoment.isLeapYear() && changeMoment.month() >= 2) {
+                dp[1] += oneDayms * (offset > 0 ? 1 : -1);
+              }
+            }
           });
         });
       }
