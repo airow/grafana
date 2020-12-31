@@ -100,6 +100,10 @@ export class TimePickerCtrl {
     this.timeSrv.setTime({from: moment.utc(from), to: moment.utc(to)});
   }
 
+  isShowTime() {
+    return this.$location.search().isShowTime === "Y";
+  }
+
   openDropdown() {
     this.init();
     this.isOpen = true;

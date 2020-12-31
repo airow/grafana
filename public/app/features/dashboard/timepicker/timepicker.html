@@ -1,14 +1,14 @@
 <ul class="nav gf-timepicker-nav">
 
-	<li class="dashnav-move-timeframe gf-timepicker-time-control" bs-tooltip="'Shift time backward <br> (left arrow key)'" data-placement="bottom">
-		<a ng-click='ctrl.move(-1)'><i class="fa fa-chevron-left"></i></a>
-	</li>
-	<li class="dashnav-zoom-out gf-timepicker-time-control" bs-tooltip="'Time range zoom out <br> CTRL+Z'" data-placement="bottom">
-		<a ng-click='ctrl.zoom(2)'>Zoom Out</a></li>
-	</li>
-	<li class="dashnav-move-timeframe gf-timepicker-time-control" bs-tooltip="'Shift time forward <br> (right arrow key)'" data-placement="bottom">
-		<a ng-click='ctrl.move(1)'><i class="fa fa-chevron-right"></i></a>
-	</li>
+    <li class="dashnav-move-timeframe gf-timepicker-time-control" data-placement="bottom">
+        <a ng-click='ctrl.move(-1)'><i class="fa fa-chevron-left"></i></a>
+    </li>
+    <!-- <li class="dashnav-zoom-out gf-timepicker-time-control" data-placement="bottom">
+    		<a style="font-size: 14px;" ng-click='ctrl.zoom(2)'>缩小</a></li>
+    	</li> -->
+    <li class="dashnav-move-timeframe gf-timepicker-time-control" data-placement="bottom">
+        <a ng-click='ctrl.move(1)'><i class="fa fa-chevron-right"></i></a>
+    </li>
 
 	<li>
 		<a bs-tooltip="ctrl.tooltip" data-placement="bottom" ng-click="ctrl.openDropdown()" class="gf-timepicker-nav-btn">
@@ -20,7 +20,7 @@
 
 			<span ng-show="ctrl.dashboard.refresh" class="text-warning">
 				&nbsp;
-				Refresh every {{ctrl.dashboard.refresh}}
+				刷新频率 {{ctrl.dashboard.refresh}}
 			</span>
 		</a>
 	</li>
