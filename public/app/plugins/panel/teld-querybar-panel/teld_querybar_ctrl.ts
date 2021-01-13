@@ -1175,8 +1175,9 @@ export class TeldQuerybarCtrl extends PanelCtrl {
       this.alertSrv.set("警告", "数据加载中请等待", "warning", 2000);
       return;
     }
-    // this.forbiddenRefreshDashboard = true;
+    // this.forbiddenRefreshDashboard = true;    
     this.changeQueryBarTab(target);
+    this.refreshDashboard();
   }
 
   changeQueryBarTab(target) {
@@ -1920,6 +1921,25 @@ export class TeldQuerybarCtrl extends PanelCtrl {
     } else {
       this.getExprVariables();
     }
+  }
+
+  refreshDashboard() {
+    if (false === this.forbiddenRefreshDashboard) {
+      if (this.panel.isShadowInstance) {
+        if (this.panel.shadowInitialized) {
+          return;
+        } else {
+
+        }
+      } else {
+        return;
+      }
+    }
+    if (this.panel.recordCurrentTab && this.panel.tabChangeRefresh) {
+      this.timeSrv.refreshDashboard();
+    }
+    // this.eh_clearCycle();
+    // this.eh_query();
   }
 
   quering = false;

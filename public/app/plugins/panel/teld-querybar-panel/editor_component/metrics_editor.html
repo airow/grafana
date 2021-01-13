@@ -55,6 +55,9 @@
     <label class="gf-form-label query-keyword width-6" ng-if="ctrl.panel.recordCurrentTab" >$cTab_{{ctrl.panel.currentTabVarName}}</label>
     <input type="text" ng-if="ctrl.panel.recordCurrentTab" class="gf-form-input width-8"
       ng-model="ctrl.panel.currentTabVarName" spellcheck="false" placeholder="当前Tab变量名">
+    <gf-form-switch ng-if="ctrl.panel.recordCurrentTab" class="gf-form" label="切换页签时刷新" label-class="query-keyword width-8"
+      checked="ctrl.panel.tabChangeRefresh">
+    </gf-form-switch>
   </div>
   <div class="gf-form">
     <label class="gf-form-label query-keyword width-6">Cycle</label>

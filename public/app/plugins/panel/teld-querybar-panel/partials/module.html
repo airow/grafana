@@ -9,7 +9,7 @@
           ng-repeat="target in ctrl.panel.targets">
           <a class="gf-tabs-link ddd" bs-tooltip="target.conf.tooltip"
             ng-style="{color:target.conf.required?'red':'inherit'}"
-            ng-click="ctrl.forbiddenRefreshDashboard = true;ctrl.manualChangeQueryBarTab(target);ctrl.hideDropdownMenu(target)"
+            ng-click="ctrl.forbiddenRefreshDashboard = true;ctrl.manualChangeQueryBarTab(target);ctrl.hideDropdownMenu(target);"
             ng-class="{active: ctrl.currentTargetRefId === target.refId}">
             <i class="fa fa-info-circle" ng-if='ctrl.currentTarget.conf.tooltip && ctrl.currentTarget === target'
               bs-tooltip="target.conf.tooltip" aria-hidden="true"></i>
