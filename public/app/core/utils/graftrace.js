@@ -23,6 +23,9 @@ function(_) {
         UserAgent: window.navigator.userAgent,
         LocationHref: window.location.href
       };
+      if (_.size(_graftrace_.LocationHref) > 10000) {
+        _graftrace_.LocationHref = _graftrace_.LocationHref.substring(0, 10000) + "...";
+      }
       return _graftrace_;
     },
 
