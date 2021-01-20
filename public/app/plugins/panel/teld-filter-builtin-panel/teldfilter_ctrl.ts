@@ -364,6 +364,10 @@ export class TeldfilterCtrl extends PanelCtrl {
     return _.filter(this._panle.QueryList, { Querytype: 'inputGroup' });
   }
 
+  filterInputGroupWithIsViewShow() {
+    return _.filter(this.filterInputGroup(), { isViewShow: true });
+  }
+
   divOperationFilter() {
     var that = this;
     if (that.KwHuTuCaoDropDown) {
