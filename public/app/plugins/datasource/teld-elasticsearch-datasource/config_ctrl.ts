@@ -24,6 +24,7 @@ export class ElasticConfigCtrl {
   esVersions = [
     {name: '2.x', value: 2},
     {name: '5.x', value: 5},
+    {name: '7.x', value: 7},
   ];
 
   indexPatternTypeChanged() {

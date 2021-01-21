@@ -183,14 +183,17 @@ function (queryDef, _) {
       query.fields = ["*", "_source"];
     }
 
-    query.script_fields = {},
-    query.fielddata_fields = [this.timeField];
+    query.script_fields = {};
+    if (this.esVersion < 7) {
+      query.fielddata_fields = [this.timeField];
+    }
     return query;
   };
 
   ElasticQueryBuilder.prototype.documentQuerySort = function (query, target) {
     this.documentQuery(query);
     this.attachScript_fields(query, target);
+    delete query.fielddata_fields;
     return query;
   };
 
