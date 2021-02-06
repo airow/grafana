@@ -505,6 +505,16 @@ export class TeldfilterCtrl extends PanelCtrl {
     var index = _.indexOf(variableArray, variable);
     variableArray.splice(index, 1);
   }
+
+  pushQueryOptions(QueryOptions) {
+    QueryOptions.push({
+      OptionName: '', ClickValue: '',
+      TimeClickValue: '', QueryAttributeName: '',
+      CheckoutTimeAttribute: '', Checkoutwhere: '',
+      isClick: false, opened: false, IsLocalStorage: false,
+    });
+  }
+
   selectVariable(variableArray, Name, Value) {
     variableArray.QueryClickName = Name;
     variableArray.QueryClickVal = Value;

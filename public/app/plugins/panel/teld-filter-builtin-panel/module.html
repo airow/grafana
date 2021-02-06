@@ -36,10 +36,10 @@
     <span ng-if="inputGroups.isViewShow"  style="display: inline-block;" ng-class="{'OrerationTitleHeightKH':!inputGroups.alwaysShow}" ng-repeat="inputGroups in ctrl.filterInputGroup()" ng-if='!inputGroups.toTop'>
       <span class="OrerationTitleHeightKH" ng-repeat="inputGroupItem in inputGroups.QueryOptions" >
         <span>
-          {{inputGroupItem.Title}}:
+          {{inputGroupItem.Title}}<span ng-if='inputGroupItem.Title && true!=inputGroupItem.hideColon'>:</span>
         </span>        
         <span ng-switch="inputGroupItem.inputConf.ctlType">
-          <select ng-switch-when="select"  ng-model="inputGroupItem.ClickValue"  ng-options="item for item in (inputGroupItem.inputConf.selectOpts||[])"></select>
+          <select ng-switch-when="select"  ng-model="inputGroupItem.ClickValue"  ng-options="item.value as item.text for item in (inputGroupItem.inputConf.selectOpts||[])"></select>
           <span ng-switch-when="text" ng-switch="inputGroupItem.inputConf.textCtlType">
             <span ng-switch-when="date" class="gf-timepicker-component-v">
               <input type="text" class="input-small gf-form-input" style="display: inline-block;width:100px;"
@@ -63,6 +63,7 @@
             </span>
           </span>          
         </span>
+        <span class="yunClass"  ng-if='inputGroupItem.suffix'>{{inputGroupItem.suffix}}</span>
       </span>
       
     </span>
@@ -124,11 +125,13 @@
             class="input-small gf-form-input" style="display: inline-block;width: auto;" ng-model="QueryOptions.QueryClickName"
               ng-change="ctrl.render()" ng-model-onblur />
         </span>
-        <div ng-if="!QueryOptions.isViewShow" ng-switch-when="inputGroup" style="margin-bottom: 5px;" ng-switch="QueryOptions.inputConf.ctlType">
+        
+        <span ng-switch-when="inputGroup" ng-if="QueryOptions.QueryTitle" class="yunClass">{{QueryOptions.QueryTitle}}：</span>
+        <div ng-if="!QueryOptions.isViewShow" ng-switch-when="inputGroup" style="margin-bottom: 5px;" ng-switch="QueryOptions.inputConf.ctlType">          
           <span ng-repeat="inputGroupItem in QueryOptions.QueryOptions">
-            <span class="yunClass">{{inputGroupItem.Title}}：</span>
+            <span class="yunClass">{{inputGroupItem.Title}}<span ng-if='inputGroupItem.Title && true!=inputGroupItem.hideColon'>:</span></span>
             <span ng-switch="inputGroupItem.inputConf.ctlType">
-              <select ng-switch-when="select"  ng-model="inputGroupItem.ClickValue"  ng-options="item for item in (inputGroupItem.inputConf.selectOpts||[])"></select>
+              <select ng-switch-when="select"  ng-model="inputGroupItem.ClickValue"  ng-options="item.value as item.text for item in (inputGroupItem.inputConf.selectOpts||[])"></select>
               <span ng-switch-when="text" ng-switch="inputGroupItem.inputConf.textCtlType">
                 <span ng-switch-when="date" class="gf-timepicker-component-v">
                   <input type="text" class="input-small gf-form-input" style="display: inline-block;width:100px;"
@@ -152,6 +155,7 @@
                 </span>
               </span>          
             </span>
+            <span class="yunClass"  ng-if='inputGroupItem.suffix'>{{inputGroupItem.suffix}}</span>
           </span>
         </div>
       </div>      
